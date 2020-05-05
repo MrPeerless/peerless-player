@@ -1,0 +1,52 @@
+<div class="divLayout">
+    <div style="margin-left: 1em;">
+        <h1 style="margin-left: 0em; margin-right: 0em;" id="searchTitle"></h1>
+    </div>
+    <br style="clear: both;" />
+
+    <div class="divJointClick">
+        <!-- Artist Results-->
+        <div class="divAlbums">
+            <h1 style="margin-left: 0.5em;">Artists</h1><span id="artistsSearchText"></span>
+            <br style="clear: both;" />
+            <ul id="ulArtistsSearch"></ul>
+
+        </div>
+        <br style="clear: both;" />
+
+        <!-- Album Results-->
+        <div class="divAlbums">
+            <h1 style="margin-left: 0.5em;">Albums</h1><span id="albumsSearchText"></span>
+            <br style="clear: both;" />
+            <ul id="ulAlbumsSearch"></ul>
+
+        </div>
+        <br style="clear: both;" />
+
+        <!-- Song Results-->
+        <div style="margin-left: 0.5em;">
+            <h1 style="margin-right: 0em;">Songs</h1><span id="songsSearchText"></span>
+            <br style="clear: both;" />
+        </div>
+        <table class="tblTrackTable" id="tblSongs">
+            <thead>
+                <tr>
+                    <th>Song Name</th>
+                    <th>Artist Name</th>
+                    <th>Album Name</th>
+                    <th>Plays</th>
+                    <th>Last Play</th>
+                    <th><img src="./graphics/favourite_white.png" alt="Favourite" /></th>
+                </tr>
+            </thead>
+            <tbody id="tblSongsBody"></tbody>
+        </table>
+
+        <br style="clear: both;" />
+    </div>
+</div>
+
+<table id="tblSongs"></table>
+
+<!-- Link to page's Javacript file-->
+<script src="./js/search.js" type="text/javascript"></script>

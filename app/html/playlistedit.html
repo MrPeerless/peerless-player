@@ -1,0 +1,28 @@
+<div class="divPlayingText">
+    <h2>Playlists</h2>
+    <div class="divInnerPlayingText">
+        <p>Edit playlist</p>
+        <form id="frmUpdatePlaylist">
+            <input id="inpPlaylistName" name="inpPlaylistName" type="text" value="" />
+            <button class="btnMenu" id="btnUpdatePlaylist">Save</button>
+            <br><br>
+
+            <select name="sltPlaylist" id="sltPlaylist" multiple></select>
+
+            <input class="hidden" id="inpEditPlaylistID" name="inpEditPlaylistID" type="text" value="" />
+        </form>
+        <button class="btnMenu2" id="btnUpPlaylist">Up</button> Move track up
+        <br />
+        <button class="btnMenu2" id="btnAddToPlaylist">Add</button> Selected track
+        <br />
+        <button class="btnMenu2" id="btnDeleteFromPlaylist">Delete</button> Selected track
+        <br />
+        <button class="btnMenu2" id="btnDownPlaylist">Down</button> Move track down
+        <br />
+        <button class="btnMenu2" id="btnClosePlaylist">Close</button> Without saving
+        <br />
+    </div>
+</div>
+
+<!--Links to scripts-->
+<script src="./js/playlistedit.js" type="text/javascript"></script>

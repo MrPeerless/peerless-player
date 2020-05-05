@@ -1,0 +1,38 @@
+{
+  "name": "peerless-player",
+  "version": "0.0.0",
+  "description": "Peerless Player - listen, discover, explore music",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder build --win --publish never",
+    "deploy": "electron-builder build --win --publish always",
+    "postinstall": "electron-builder install-app-deps && electron-rebuild -f -w sqlite3"
+  },
+  "license": "ISC",
+  "author": {
+    "name": "Geoff Peerless"
+  },
+  "win": {
+    "icon": "app/icons/icon.ico"
+  },
+  "dependencies": {
+    "csv-writer": "^1.6.0",
+    "electron-updater": "^4.3.1",
+    "jimp": "^0.6.1",
+    "jquery": "^3.4.1",
+    "jquery-csv": "^1.0.11",
+    "jquery-validation": "^1.19.0",
+    "request": "^2.88.2",
+    "sqlite3": "^4.0.6"
+  },
+  "devDependencies": {
+    "electron": "4.0.3",
+    "electron-builder": "^22.6.0",
+    "electron-rebuild": "^1.8.4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MrPeerless/peerless-player.git"
+  }
+}

@@ -1,0 +1,30 @@
+<div class="divAlbumHeader">
+    <a id="displayAlbumArtwork" title="Click to enlarge artwork">
+        <img id="imgArtwork" alt="Album Artwork">
+    </a>    
+</div>
+
+<div class="divAlbumText">
+    <h1 id="displayAlbumName"></h1>
+    <h2 id="displayAlbumDetails"></h2>
+    <button class="btnTrackListing" id="btnEditAlbum">Edit</button>
+    <button class="btnTrackListing" id="btnQueueAlbum">Queue</button>
+    <button class="btnTrackListing" id="btnClose">Close</button>
+</div>
+
+<table class="tblTrackTable" id="tblTracks">
+    <tr>
+        <th class="rowTrackTitle">Title</th>
+        <th class="rowTrackTime">Play Time</th>
+        <th class="rowTrackPlays">Plays</th>
+        <th class="rowTrackLast">Last Play</th>
+        <th class="rowTrackFavourite"><img style="vertical-align: text-top;" src="./graphics/favourite_white.png" alt="Favourite"></th>
+    </tr>
+    <tbody></tbody>
+</table>
+
+<p class="hidden" id="artistID"></p>
+<p class="hidden" id="albumID"></p>
+
+<!-- Link to page's Javacript file-->
+<script src="./js/displayalbum.js" type="text/javascript"></script>

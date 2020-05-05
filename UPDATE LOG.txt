@@ -1,0 +1,7 @@
+**** UPDATE LOG ****
+**** LOG UPDATES MADE FOR RELEASE NOTES ****
+--------------------------------------------
+**** VERSION 0.0.4 UPADTES *****
+
+1. HELP menu completed.
+2. SHOP menu updated.

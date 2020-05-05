@@ -1,0 +1,102 @@
+<div class="appMainHeading">
+    <h1 id="appName"></h1>
+</div>
+
+<div class="nowPlaying">
+    <div class="divDefaultPlayingText">
+        <div class="divJointClick">
+            <a id="playingAlbum">
+                <img id="imgNowPlaying" alt="Album Artwork">
+            </a>
+            <div class="divDefaultInnerText">
+                <span id="trackDetails"></span>
+                <progress id="seekbar" value="0" max="1"></progress>
+                <span id="timePlaying"></span>
+                <p><button id="btnRewind"></button><span id="time"></span> of <span id="playTime"></span><button id="btnFastForward"></button></p>
+                <br>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="defaultPlaying">
+    <div class="divDefaultPlayingText">
+        <h2><button id="btnLibraryExpand"></button> Music Library</h2>
+        <div id="divMusicLibrary" class="divInnerPlayingText">
+            <p>
+                Artists:<span id="artistCount"></span><br>
+                Albums:<span id="albumCount"></span><br>
+                Genres:<span id="genreCount"></span><br>
+                Years:<span id="yearCount"></span><br>
+                Songs:<span id="trackCount"></span><br>
+                Playlists:<span id="playlistCount"></span><br>
+                <span id="playingTime"></span><br>
+                <br>
+            </p>
+        </div>
+    </div>
+</div>
+
+<div class="defaultPlaying">
+    <div class="divPlayingText">
+        <!--Mood Music-->
+        <h2><button id="btnMoodExpand"></button> Create Mood Music</h2>
+        <div id="divMoodSelect" class="divInnerPlayingText">
+            <p>Create a music mix by mood.</p>
+            <!--Selection dropdown list for mood1-->
+            <select id="sltMood"></select>
+            <button class="btnMenu" id="btnMood">Play</button>
+            <p> </p><br>
+        </div>
+    </div>
+</div>
+<div class="allPlaying">
+    <div class="divPlayingText">
+        <!--Explore Sub Genres-->
+        <h2><button id="btnGenreExpand"></button> Explore Sub Genres</h2>
+        <div id="divGenreSelect" class="divInnerPlayingText">
+            <p>Select a music sub genre.</p>
+            <!--Selection dropdown list for genre1-->
+            <select id="sltGenre"></select>
+            <button class="btnMenu" id="btnGenre">Show</button>
+            <p> </p><br>
+        </div>
+    </div>
+</div>
+<div class="allPlaying">
+    <div class="divPlayingText">
+        <!--Player functions-->
+        <h2><button id="btnPlayerExpand"></button> Player Functions</h2>
+
+        <div id="divPlayerFunctions" class="divInnerPlayingText">
+            <button class="btnMenu2" id="btnCreate">New</button> Playlist<br />
+            <button class="btnMenu2" id="btnSmart">Smart</button> Playlist<br />
+            <button class="btnMenu2" id="btnExportedPlaylists">View</button> Exported Playlists<br />
+            <button class="btnMenu2" id="btnClearQueued">Clear</button> Queued Music<br />
+            <div class="nowPlaying">
+                <button class="btnMenu2" id="btnQueue">Queue</button> Track<br />
+
+            </div>
+            <p> </p><br>
+        </div>
+
+        <!--Database functions-->
+        <h2><button id="btnDatabaseExpand"></button> Database Functions</h2>
+        <div id="divDatabaseFunctions" class="divInnerPlayingText">
+
+            <button class="btnMenu2" id="btnSync">Sync</button> Music Database<br />
+            <button class="btnMenu2" id="btnUpdateMeta">Update</button> Smart Results<br />
+            <button class="btnMenu2" id="btnSyncDir">Sync</button> External Directory<br />
+            <p> </p><br>
+        </div>
+    </div>
+</div>
+
+<!--Div to display smart playlist ID retrieved from database-->
+<div id="divSmartPlaylist">
+</div>
+
+<p class="hidden" id="nowPlayingTrackID">0</p>
+<p class="hidden" id="nowPlayingTrackIndex">0</p>
+
+<script src="./js/playing.js" type="text/javascript"></script>

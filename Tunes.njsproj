@@ -1,0 +1,212 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">14.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+    <Name>Tunes</Name>
+    <RootNamespace>Tunes</RootNamespace>
+    <SaveNodeJsSettingsInProjectFile>True</SaveNodeJsSettingsInProjectFile>
+    <NodeExePath>C:\Users\geoff\Documents\Tunes\Tunes\node_modules\electron\dist\electron.exe </NodeExePath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>815ee4e3-8052-438b-bda9-aeddf095d9bf</ProjectGuid>
+    <ProjectHome>.</ProjectHome>
+    <StartupFile>main.js</StartupFile>
+    <StartWebBrowser>False</StartWebBrowser>
+    <SearchPath>
+    </SearchPath>
+    <WorkingDirectory>.</WorkingDirectory>
+    <OutputPath>.</OutputPath>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <ProjectTypeGuids>{3AF33F2E-1136-4D97-BBB7-1795711AC8B8};{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}</ProjectTypeGuids>
+    <StartWebBrowser>False</StartWebBrowser>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="App\js\biography.js" />
+    <Compile Include="app\js\colour.js" />
+    <Compile Include="app\js\databaseadd.js" />
+    <Compile Include="app\js\databaseedit.js" />
+    <Compile Include="App\js\discography.js" />
+    <Compile Include="App\js\exporttable.js" />
+    <Compile Include="App\js\importtable.js" />
+    <Compile Include="App\js\importtodatabase.js" />
+    <Compile Include="App\js\albums.js" />
+    <Compile Include="App\js\artistalbums.js" />
+    <Compile Include="App\js\artists.js" />
+    <Compile Include="App\js\controlsheader.js" />
+    <Compile Include="App\js\editalbum.js" />
+    <Compile Include="app\js\mainmenu.js" />
+    <Compile Include="app\js\playlistfunctions.js" />
+    <Compile Include="App\js\playlistsexported.js" />
+    <Compile Include="App\js\recommends.js" />
+    <Compile Include="App\js\search.js" />
+    <Compile Include="App\js\settings.js" />
+    <Compile Include="app\js\smartplaylist.js" />
+    <Compile Include="app\js\sqlite_async.js" />
+    <Compile Include="App\js\syncdirectory.js" />
+    <Compile Include="App\js\displayalbum.js" />
+    <Compile Include="App\js\displayplaylist.js" />
+    <Compile Include="App\js\favouritesongs.js" />
+    <Compile Include="App\js\genrealbums.js" />
+    <Compile Include="App\js\genres.js" />
+    <Compile Include="App\js\home.js" />
+    <Compile Include="App\js\newmusic.js" />
+    <Compile Include="App\js\playing.js" />
+    <Compile Include="App\js\playlistedit.js" />
+    <Compile Include="App\js\subgenrealbums.js" />
+    <Compile Include="App\js\yearalbums.js" />
+    <Compile Include="App\js\index.js" />
+    <Compile Include="App\js\playlists.js" />
+    <Compile Include="App\js\songs.js" />
+    <Compile Include="App\js\years.js" />
+    <Compile Include="main.js" />
+    <Content Include=".gitignore" />
+    <Content Include="App\App_Data\Tunes - BLANK.db" />
+    <Content Include="App\App_Data\Tunes - LIVE.db" />
+    <Content Include="App\App_Data\Tunes - TEST.db" />
+    <Content Include="app\css\skinblue.css" />
+    <Content Include="app\css\skindark.css" />
+    <Content Include="app\css\skinlight.css" />
+    <Content Include="app\css\style.css" />
+    <Content Include="App\Graphics\collapse.png" />
+    <Content Include="App\Graphics\collapse_large.png" />
+    <Content Include="App\Graphics\expand.png" />
+    <Content Include="App\Graphics\expand_large.png" />
+    <Content Include="App\Graphics\fast_forward.png" />
+    <Content Include="App\Graphics\fast_forward_black.png" />
+    <Content Include="App\Graphics\favourite_black.png" />
+    <Content Include="App\Graphics\favourite_large.png" />
+    <Content Include="App\Graphics\favourite_red.png" />
+    <Content Include="App\Graphics\favourite_white.png" />
+    <Content Include="App\Graphics\genres\Alternative &amp; Punk.gif" />
+    <Content Include="App\Graphics\genres\Blues.gif" />
+    <Content Include="App\Graphics\genres\Christmas.gif" />
+    <Content Include="App\Graphics\genres\Classical.gif" />
+    <Content Include="App\Graphics\genres\Comedy.gif" />
+    <Content Include="App\Graphics\genres\Country.gif" />
+    <Content Include="App\Graphics\genres\Dance.gif" />
+    <Content Include="App\Graphics\genres\Electronic.gif" />
+    <Content Include="App\Graphics\genres\Electronica.gif" />
+    <Content Include="App\Graphics\genres\Folk.gif" />
+    <Content Include="App\Graphics\genres\Hip-Hop.gif" />
+    <Content Include="App\Graphics\genres\Indie.gif" />
+    <Content Include="App\Graphics\genres\Jazz.gif" />
+    <Content Include="App\Graphics\genres\Metal.gif" />
+    <Content Include="App\Graphics\genres\Other.gif" />
+    <Content Include="App\Graphics\genres\Pop.gif" />
+    <Content Include="App\Graphics\genres\Rap.gif" />
+    <Content Include="App\Graphics\genres\Reggae.gif" />
+    <Content Include="App\Graphics\genres\Rock.gif" />
+    <Content Include="App\Graphics\genres\Singer Songwriter.gif" />
+    <Content Include="App\Graphics\genres\Soul.gif" />
+    <Content Include="App\Graphics\genres\Soundtrack.gif" />
+    <Content Include="App\Graphics\genres\Traditional.gif" />
+    <Content Include="App\Graphics\genres\Urban.gif" />
+    <Content Include="App\Graphics\genres\World.gif" />
+    <Content Include="App\Graphics\Icons.pptx" />
+    <Content Include="App\Graphics\information.png" />
+    <Content Include="App\Graphics\mute_off.png" />
+    <Content Include="App\Graphics\mute_on.png" />
+    <Content Include="App\graphics\indy_Tunes.ico" />
+    <Content Include="App\Graphics\new.png" />
+    <Content Include="App\Graphics\new_player_buttons.pdn" />
+    <Content Include="App\Graphics\notFound.gif" />
+    <Content Include="App\Graphics\pause1.png" />
+    <Content Include="App\Graphics\play1.png" />
+    <Content Include="App\Graphics\playlist_background.png" />
+    <Content Include="App\Graphics\question.png" />
+    <Content Include="App\Graphics\queued.png" />
+    <Content Include="App\Graphics\record.gif" />
+    <Content Include="App\Graphics\rewind.png" />
+    <Content Include="App\Graphics\rewind_15.png" />
+    <Content Include="App\Graphics\rewind_black.png" />
+    <Content Include="App\Graphics\search.png" />
+    <Content Include="App\Graphics\search_large.png" />
+    <Content Include="App\Graphics\shuffle1.png" />
+    <Content Include="App\Graphics\skip_next1.png" />
+    <Content Include="App\Graphics\skip_previous1.png" />
+    <Content Include="App\Graphics\smart.png" />
+    <Content Include="App\Graphics\socialmedia\bandcamp_black.png" />
+    <Content Include="App\Graphics\socialmedia\bandcamp_white.png" />
+    <Content Include="App\Graphics\socialmedia\discogs_black.png" />
+    <Content Include="App\Graphics\socialmedia\discogs_white.png" />
+    <Content Include="App\Graphics\socialmedia\facebook_blue.png" />
+    <Content Include="App\Graphics\socialmedia\facebook_white.png" />
+    <Content Include="App\Graphics\socialmedia\homepage_black.png" />
+    <Content Include="App\Graphics\socialmedia\homepage_white.png" />
+    <Content Include="App\Graphics\socialmedia\instagram_black.png" />
+    <Content Include="App\Graphics\socialmedia\instagram_white.png" />
+    <Content Include="App\Graphics\socialmedia\lastfm_red.png" />
+    <Content Include="App\Graphics\socialmedia\twitter_blue.png" />
+    <Content Include="App\Graphics\socialmedia\twitter_white.png" />
+    <Content Include="App\Graphics\socialmedia\youtube_red.png" />
+    <Content Include="App\Graphics\spacer.png" />
+    <Content Include="App\Graphics\speaker_black.png" />
+    <Content Include="App\Graphics\speaker_original.png" />
+    <Content Include="App\Graphics\speaker_white.png" />
+    <Content Include="App\Graphics\stop1.png" />
+    <Content Include="App\Graphics\top_30.png" />
+    <Content Include="App\Graphics\update.png" />
+    <Content Include="App\Graphics\warning.png" />
+    <Content Include="App\html\biography.html" />
+    <Content Include="App\html\discography.html" />
+    <Content Include="App\html\exporttable.html" />
+    <Content Include="App\html\importtable.html" />
+    <Content Include="App\html\importtodatabase.html" />
+    <Content Include="App\html\albums.html" />
+    <Content Include="App\html\artistalbums.html" />
+    <Content Include="App\html\artists.html" />
+    <Content Include="App\html\controlsheader.html" />
+    <Content Include="App\html\editalbum.html" />
+    <Content Include="App\html\keyboardshortcuts.html" />
+    <Content Include="App\html\playlistsexported.html" />
+    <Content Include="App\html\recommends.html" />
+    <Content Include="App\html\search.html" />
+    <Content Include="App\html\settings.html" />
+    <Content Include="App\html\syncdirectory.html" />
+    <Content Include="App\html\userguide.html" />
+    <Content Include="app\icons\icon.ico" />
+    <Content Include="electron-builder.yml" />
+    <Content Include="App\html\displayplaylist.html" />
+    <Content Include="App\html\displayalbum.html" />
+    <Content Include="App\html\favouritesongs.html" />
+    <Content Include="App\html\genrealbums.html" />
+    <Content Include="App\html\genres.html" />
+    <Content Include="App\html\home.html" />
+    <Content Include="App\html\newmusic.html" />
+    <Content Include="App\html\playing.html" />
+    <Content Include="App\html\playlistcreate.html" />
+    <Content Include="App\html\playlistedit.html" />
+    <Content Include="App\html\playlists.html" />
+    <Content Include="App\html\songs.html" />
+    <Content Include="App\html\subgenrealbums.html" />
+    <Content Include="App\html\yearalbums.html" />
+    <Content Include="App\html\years.html" />
+    <Content Include="App\index.html" />
+    <Content Include="LICENSE.txt" />
+    <Content Include="package.json" />
+    <Content Include="README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App\" />
+    <Folder Include="App\App_Data\" />
+    <Folder Include="app\css\" />
+    <Folder Include="App\graphics\" />
+    <Folder Include="App\graphics\genres\" />
+    <Folder Include="App\graphics\socialmedia\" />
+    <Folder Include="App\html\" />
+    <Folder Include="app\icons\" />
+    <Folder Include="App\js\" />
+  </ItemGroup>
+  <!-- Do not delete the following Import Project.  While this appears to do nothing it is a marker for setting TypeScript properties before our import that depends on them. -->
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="False" />
+  <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsTools.targets" />
+</Project>

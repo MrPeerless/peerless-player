@@ -1,0 +1,92 @@
+<div class="divLayout">
+    <form class="frmDatabase" id="frmEdit" enctype="multipart/form-data">
+        <div class="divAlbumHeader">
+            <a id="editAlbum" title="Click to manually select image file">
+                <img id="imgCoverArt" width="200" height="200" src="./graphics/spacer.png" alt="Cover Art NOT Found">
+            </a>
+        </div>
+
+        <div class="divAlbumText">
+            <h1 style="margin-right: 1em;">Edit Music Database<br /></h1>
+            <h2 id="editAlbumDetails"></h2>
+            <p id="editAlbumInfo"></p>
+            <button class="btnTrackListing" id="btnGetGracenote" disabled="disabled">Get</button>
+            <button class="btnTrackListing" id="btnArtworkAlbum" disabled="disabled">Artwork</button>
+            <button class="btnTrackListing" id="btnSaveAlbum">Save</button>
+            <button class="btnTrackListing" id="btnDeleteAlbum">Delete</button>
+            <button class="btnTrackListing" id="btnImportCancel">Cancel</button>
+            <p>&nbsp;<br></p>
+        </div>
+
+        <input class="hidden" id="inpEditCoverArtURL" name="inpEditCoverArtURL" type="text" value="" />
+        <br><br>
+
+        <table id="tblGracenote">           
+            <tbody></tbody>
+        </table>
+
+        <br />
+        <fieldset>
+            <legend>Artist Details</legend>
+            <p>
+                <label id="lblArtistName">Name:</label>
+                <input required id="inpArtistName" name="inpArtistName" type="text" size="75" value="" />
+                <label id="lblArtistOrigin">Origin:</label>
+                <input id="inpArtistOrigin" name="inpArtistOrigin" type="text" size="100" value="" />
+                <!--Hidden input for original artist name in case it is changed to then update the music directory-->
+                <input class="hidden" id="inpOriginalArtistName" name="inpOriginalArtistName" type="text" size="75" value="" />
+            </p>
+        </fieldset>
+        <br>
+        <fieldset>
+            <legend>Album Details</legend>
+            <p>
+                <label id="lblAlbumName">Name:</label>
+                <input required id="inpAlbumName" name="inpAlbumName" type="text" size="75" value="" />
+                <!--Hidden input for original album name in case it is changed to then update the music directory-->
+                <input class="hidden" id="inpOriginalAlbumName" name="inpOriginalAlbumName" type="text" size="75" value="" />
+                <label id="lblReleaseDate">Release Date:</label>
+                <input required id="inpReleaseDate" name="inpReleaseDate" type="text" size="5" value="" />
+                <label id="lblAlbumTime">Time:</label>
+                <input required id="inpEditAlbumTime" name="inpAlbumTime" type="text" size="8" value="" readonly />
+                <label id="lblGenre">Genre:</label>
+
+                <select class='sltGenre' id='sltGenre' name='sltGenre'>
+                    <option></option>
+                    <option value='Alternative & Punk'>Alternative & Punk</option>
+                    <option value='Blues'>Blues</option>
+                    <option value='Christmas'>Christmas</option>
+                    <option value='Classical'>Classical</option>"
+                    <option value='Comedy'>Comedy</option>"
+                    <option value='Country'>Country</option>"
+                    <option value='Dance'>Dance</option>"
+                    <option value='Electronic'>Electronic</option>"
+                    <option value='Electronica'>Electronica</option>"
+                    <option value='Folk'>Folk</option>"
+                    <option value='Hip-Hop'>Hip-Hop</option>"
+                    <option value='Indie'>Indie</option>"
+                    <option value='Jazz'>Jazz</option>"
+                    <option value='Metal'>Metal</option>"
+                    <option value='Pop'>Pop</option>"
+                    <option value='Rap'>Rap</option>"
+                    <option value='Reggae'>Reggae</option>"
+                    <option value='Rock'>Rock</option>"
+                    <option value='Singer Songwriter'>Singer Songwriter</option>"
+                    <option value='Soul'>Soul</option>"
+                    <option value='Soundtrack'>Soundtrack</option>"
+                    <option value='Traditional'>Traditional</option>"
+                    <option value='Urban'>Urban</option>"
+                    <option value='World'>World</option>"
+                    <option value='Other'>Other</option>"
+                </select>
+            </p>
+            <input id="inpCount" name="inpCount" class="hidden" type="text" value="" />
+        </fieldset>
+        <br>
+    </form>
+
+    <div id="divAudioElements"></div>
+</div>
+
+<!-- Link to page's Javacript file-->
+<script src="./js/editalbum.js" type="text/javascript"></script>

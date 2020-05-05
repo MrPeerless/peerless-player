@@ -1,0 +1,22 @@
+<div class="divPlayingText">
+	<h2>Playlists</h2>
+	<div class="divInnerPlayingText">
+		<p>Create a new playlist</p>
+		<form id="frmNewPlaylist">
+			<input id="inpPlaylistName" name="inpPlaylistName" type="text" onfocus="if(this.value == 'Playlist Name') { this.value = ''; }" placeholder="Playlist Name" />
+			<button class="btnMenu" id="btnSavePlaylist">Save</button>
+			<br><br>
+			<select name="sltPlaylist" id="sltPlaylist" multiple></select>
+
+		</form>
+		<button class="btnMenu2" id="btnUpPlaylist">Up</button> Move track up
+		<br />
+		<button class="btnMenu2" id="btnAddToPlaylist">Add</button> Selected track
+		<br>
+		<button class="btnMenu2" id="btnDeleteFromPlaylist">Delete</button> Selected track
+		<br>
+		<button class="btnMenu2" id="btnDownPlaylist">Down</button> Move track down
+		<br />
+		<button class="btnMenu2" id="btnClosePlaylist">Close</button> Without saving
+	</div>
+</div>

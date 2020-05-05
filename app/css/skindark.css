@@ -1,0 +1,374 @@
+/*MAIN SITE STYLE
+#################*/
+body {
+    background: #111111;
+}
+
+h1 {
+    color: white;
+}
+
+h2 {
+    color: white;
+}
+
+h3 {
+    color: white;
+}
+
+a:link {
+    color: white;
+}
+
+a:visited {
+    color: white;
+}
+
+a:hover {
+    color: #9E0000;
+}
+
+select {
+    border: 1px solid #AAA;
+    color: #430100;
+}
+
+/* PAGE BUTTON STYLES
+###########################*/
+
+.btnMenu {
+    background-image: linear-gradient(to top, #d5d5d5 50%, #F9F9F9 75%);
+    color: #111111;
+}
+
+    .btnMenu:hover {
+        background-image: linear-gradient(to top, #430100 25%, #6D1317 50%);
+        color: #F0F0F0;
+    }
+
+.btnMenu2 {
+    background-image: linear-gradient(to top, #d5d5d5 50%, #F9F9F9 75%);
+    color: #111111;
+}
+
+    .btnMenu2:hover {
+        background-image: linear-gradient(to top, #430100 25%, #6D1317 50%);
+        color: #F0F0F0;
+    }
+
+.btnMenu3 {
+    background-image: linear-gradient(to top, #d5d5d5 50%, #F9F9F9 75%);
+    color: #111111;
+}
+
+    .btnMenu3:hover {
+        background-image: linear-gradient(to top, #430100 25%, #6D1317 50%);
+        color: #F0F0F0;
+    }
+
+.btnContent {
+    background-image: linear-gradient(to top, #d5d5d5 50%, #F9F9F9 75%);
+    color: #111111;
+}
+
+    .btnContent:hover {
+        background-image: linear-gradient(to top, #430100 25%, #6D1317 50%);
+        color: #F0F0F0;
+    }
+
+.btnDatabase {
+    background-color: #666666;
+    color: #F0F0F0;
+}
+
+    .btnDatabase:hover {
+        background-color: #6D1317;
+        color: #F0F0F0;
+    }
+
+.btnTrackListing {
+    background-image: linear-gradient(to top, #d5d5d5 50%, #F9F9F9 75%);
+    color: black;
+}
+
+    .btnTrackListing:hover {
+        background-image: linear-gradient(to top, #430100 25%, #6D1317 50%);
+        color: #F0F0F0;
+    }
+
+button:disabled,
+button[disabled] {
+    color: darkgray;
+}
+
+    button:disabled,
+    button[disabled]:hover {
+        background-image: linear-gradient(to top, #d5d5d5 50%, #F9F9F9 75%);
+        color: darkgray;
+    }
+
+
+/*PAGE DIVS CODE
+#######################*/
+
+#divControlsHeader {
+    /*background: #555555;*/
+    background: #555555;
+    color: #404040;
+}
+
+#divPlaying {
+    background: #000000;
+    color: white;
+}
+
+#divPlaylist {
+    background: black;
+    color: white;
+}
+
+#divContent {
+    background: #111111;
+    color: #F0F0F0;
+}
+
+#divTrackListing {
+    background: #333333;
+    color: #F0F0F0;
+}
+
+.divLayout {
+    background: #111111;
+    color: white;
+}
+
+.flex-container {
+    background: #111111;
+}
+
+/*ADD TO DATABASE FORM
+##########################*/
+
+#imgCoverArt {
+    border: 2px solid #ffffff;
+}
+
+.frmDatabase {
+    background: #303030;
+}
+
+    .frmDatabase fieldset {
+        border: 2px solid #666666;
+    }
+
+/*PLAYER BUTTON CONTROLS
+###########################*/
+
+button#btnRewind {
+    background: url(../graphics/rewind.png) no-repeat;
+}
+
+button#btnFastForward {
+    background: url(../graphics/fast_forward.png) no-repeat;
+}
+
+/*MENU CODE
+############################*/
+
+#ulMenu a {
+    color: #F0F0F0;
+}
+
+    #ulMenu a:hover {
+        color: #9E0000;
+    }
+
+/*ALBUM ART DISPLAY STYLE SMALL
+##############################*/
+
+.divAlbums ul {
+    color: white;
+}
+
+.albumDisplay li img {
+    border: 2px solid #ffffff;
+}
+
+    .albumDisplay li img.round {
+        border: 2px solid #ffffff;
+    }
+
+/*ALBUM ART DISPLAY STYLE LARGE
+##############################*/
+
+.albumDisplayLarge ul {
+    color: white;
+}
+
+.albumDisplayLarge li img {
+    border: 2px solid #ffffff;
+}
+
+    .albumDisplayLarge li img.round {
+        border: 2px solid #ffffff;
+    }
+
+.overlay {
+    background-color: #430100;
+}
+
+.overlayRound {
+    background-color: #430100;
+}
+
+.textAlbum {
+    color: white;
+}
+
+#imgNowPlaying {
+    border: 2px solid #d2d2d2;
+}
+
+    #imgNowPlaying:hover {
+        border: 2px solid #6D1317;
+    }
+
+/*OTHER STYLE
+#####################*/
+
+.divAlbumHeader img {
+    border: 2px solid #d2d2d2;
+}
+
+.divBioHeader img {
+    border: 2px solid #d2d2d2;
+}
+
+/*TABLE STYLES
+#######################*/
+
+/*Track table*/
+#tblTracks {
+    background: #333333;
+}
+
+    #tblTracks th {
+        background: #430100;
+    }
+
+    #tblTracks tr:nth-child(even) {
+        background: #666666;
+    }
+
+/*Classes for Track table*/
+.highlight {
+    background-color: #6D1317 !important;
+    color: white;
+}
+
+/*Song Table*/
+#tblSongs {
+    background: #333333;
+}
+
+    #tblSongs th {
+        background: #430100;
+        color: white;
+    }
+
+    #tblSongs tr:nth-child(odd) {
+        background: #222222;
+    }
+
+/*Discog Table*/
+#tblDiscog {
+    background: #333333;
+}
+
+    #tblDiscog th {
+        background: #430100;
+        color: white;
+    }
+
+    #tblDiscog tr:nth-child(odd) {
+        background: #222222;
+    }
+
+/*Gracenote search table*/
+#tblGracenote th {
+    background: #430100;
+}
+
+#tblGracenote tr:nth-child(even) {
+    background: #666666;
+}
+
+/*Sync Directory search table*/
+#tblSyncDirectory th {
+    background: #430100;
+}
+
+#tblSyncDirectory tr:nth-child(even) {
+    background: #666666;
+}
+
+/*View Exported Playlists table*/
+#tblExportedPlaylists th {
+    background: #430100;
+}
+
+#tblExportedPlaylists tr:nth-child(even) {
+    background: #666666;
+}
+
+/*Shortcuts Table*/
+#tblShortcuts {
+    background: #333333;
+}
+
+    #tblShortcuts th {
+        background: #430100;
+        color: white;
+    }
+
+    #tblShortcuts tr:nth-child(odd) {
+        background: #222222;
+    }
+
+/*Seekbar*/
+#seekbar {
+    background: white;
+}
+
+    #seekbar::-moz-progress-bar {
+        background: #9E0000;
+    }
+
+    #seekbar::-webkit-progress-bar {
+        background: white;
+    }
+
+    #seekbar::-webkit-progress-value {
+        background: #9E0000;
+    }
+
+/*MODAL POP UP BOXES
+#################################*/
+
+.modalContent {
+    background-color: #f0f0f0;
+}
+
+.modalHeader {
+    background-color: #606060;
+    color: white;
+}
+
+.modalBody {
+    color: #333333;
+}
+
+.modalFooter {
+    background-color: #606060;
+    color: #666666;
+}

@@ -1,0 +1,386 @@
+/*MAIN SITE STYLE
+#################*/
+body {
+    background: #eeeeee;
+}
+
+h1 {
+    color: black;
+}
+
+h2 {
+    color: black;
+}
+
+h3 {
+    color: black;
+}
+
+a:link {
+    color: black;
+}
+
+a:visited {
+    color: black;
+}
+
+a:hover {
+    color: #005b96;
+}
+
+select {
+    border: 1px solid #AAA;
+    color: #430100;
+}
+
+/* PAGE BUTTON STYLES
+###########################*/
+
+.btnMenu {
+    background-image: linear-gradient(to top, #444444 50%, #888888 75%);
+    color: white;
+}
+
+    .btnMenu:hover {
+        background-image: linear-gradient(to top, #03396c 25%, #005b96 50%);
+        color: #F0F0F0;
+    }
+
+.btnMenu2 {
+    background-image: linear-gradient(to top, #444444 50%, #888888 75%);
+    color: white;
+}
+
+    .btnMenu2:hover {
+        background-image: linear-gradient(to top, #03396c 25%, #005b96 50%);
+        color: #F0F0F0;
+    }
+
+.btnMenu3 {
+    background-image: linear-gradient(to top, #444444 50%, #888888 75%);
+    color: white;
+}
+
+    .btnMenu3:hover {
+        background-image: linear-gradient(to top, #03396c 25%, #005b96 50%);
+        color: #F0F0F0;
+    }
+
+.btnContent {
+    background-image: linear-gradient(to top, #999999 50%, #d5d5d5 75%);
+    color: #111111;
+}
+
+    .btnContent:hover {
+        background-image: linear-gradient(to top, #03396c 25%, #005b96 50%);
+        color: #F0F0F0;
+    }
+
+.btnDatabase {
+    background-color: #666666;
+    color: #F0F0F0;
+}
+
+    .btnDatabase:hover {
+        background-color: #6D1317;
+        color: #F0F0F0;
+    }
+
+.btnTrackListing {
+    background-image: linear-gradient(to top, #444444 50%, #888888 75%);
+    color: white;
+}
+
+    .btnTrackListing:hover {
+        background-image: linear-gradient(to top, #03396c 25%, #005b96 50%);
+        color: white;
+    }
+
+button:disabled,
+button[disabled] {
+    color: black;
+}
+
+    button:disabled,
+    button[disabled]:hover {
+        background-image: linear-gradient(to top, #999999 50%, #d5d5d5 75%);
+        color: black;
+    }
+
+
+/*PAGE DIVS CODE
+#######################*/
+
+#divControlsHeader {
+    background: #777777;
+    color: white;
+}
+
+#divPlaying {
+    background: #dddddd;
+    color: black;
+}
+
+#divPlaylist {
+    background: #dddddd;
+    color: black;
+}
+
+#divContent {
+    background: #eeeeee;
+    color: #F0F0F0;
+}
+
+#divTrackListing {
+    background: white;
+    color: black;
+}
+
+.divLayout {
+    background: #eeeeee;
+    color: black;
+}
+
+.flex-container {
+    background: #eeeeee;
+}
+
+/*ADD TO DATABASE FORM
+##########################*/
+
+#imgCoverArt {
+    border: 2px solid #000000;
+}
+
+.frmDatabase {
+    background: #bbbbbb;
+}
+
+    .frmDatabase fieldset {
+        border: 2px solid #666666;
+    }
+
+/*PLAYER BUTTON CONTROLS
+###########################*/
+
+button#btnRewind {
+    background: url(../graphics/rewind_black.png) no-repeat;
+}
+
+button#btnFastForward {
+    background: url(../graphics/fast_forward_black.png) no-repeat;
+}
+
+/*MENU CODE
+############################*/
+#ulMenu a {
+    color: white;
+}
+
+    #ulMenu a:hover {
+        color: #005b96;
+    }
+
+/*ALBUM ART DISPLAY STYLE SMALL
+##############################*/
+
+.divAlbums ul {
+    color: white;
+}
+
+.albumDisplay li img {
+    border: 2px solid #000000;
+}
+
+    .albumDisplay li img.round {
+        border: 2px solid #000000;
+    }
+
+/*ALBUM ART DISPLAY STYLE LARGE
+##############################*/
+
+.albumDisplayLarge ul {
+    color: black;
+}
+
+.albumDisplayLarge li img {
+    border: 2px solid #000000;
+}
+
+    .albumDisplayLarge li img.round {
+        border: 2px solid #000000;
+    }
+
+.overlay {
+    background-color: #005b96;
+}
+
+.overlayRound {
+    background-color: #005b96;
+}
+
+.textAlbum {
+    color: white;
+}
+
+#imgNowPlaying {
+    border: 2px solid #000000;
+}
+
+    #imgNowPlaying:hover {
+        border: 2px solid #03396c;
+    }
+
+/*OTHER STYLE
+#####################*/
+
+.divAlbumHeader img {
+    border: 2px solid black;
+}
+
+.divBioHeader img {
+    border: 2px solid black;
+}
+
+/*TABLE STYLES
+#######################*/
+
+/*Track table*/
+#tblTracks {
+    background: white;
+    color: black;
+}
+
+    #tblTracks th {
+        background: #03396c;
+        color: white;
+    }
+
+    #tblTracks tr:nth-child(even) {
+        background: #dddddd;
+    }
+
+/*Classes for Track table*/
+.highlight {
+    background-color: #005b96 !important;
+    color: white;
+
+}
+
+/*Song Table*/
+#tblSongs {
+    background: #eeeeee;
+}
+
+    #tblSongs th {
+        background: #03396c;
+        color: white;
+    }
+
+    #tblSongs tr:nth-child(odd) {
+        background: #dddddd;
+    }
+
+/*Discog Table*/
+#tblDiscog {
+    background: white;
+}
+
+    #tblDiscog th {
+        background: #03396c;
+        color: white;
+    }
+
+    #tblDiscog tr:nth-child(odd) {
+        background: #dddddd;
+    }
+
+/*Gracenote search table*/
+tblGracenote {
+    color: black;
+}
+
+#tblGracenote th {
+    background: #03396c;
+    color: white;
+}
+
+#tblGracenote tr:nth-child(even) {
+    background: #dddddd;
+}
+
+/*Sync Directory search table*/
+#tblSyncDirectory th {
+    background: #03396c;
+    color: white;
+}
+
+#tblSyncDirectory tr:nth-child(even) {
+    background: #dddddd;
+}
+
+/*View Exported Playlists table*/
+#tblExportedPlaylists th {
+    background: #03396c;
+    color: white;
+}
+
+#tblExportedPlaylists tr:nth-child(even) {
+    background: #dddddd;
+}
+
+/*Shortcuts Table*/
+#tblShortcuts {
+    background: white;
+}
+
+    #tblShortcuts th {
+        background: #03396c;
+        color: white;
+    }
+
+    #tblShortcuts tr:nth-child(odd) {
+        background: #dddddd;
+    }
+
+/*Seekbar*/
+#seekbar {
+    background: white;
+}
+
+    #seekbar::-moz-progress-bar {
+        background: #005b96;
+    }
+
+    #seekbar::-webkit-progress-bar {
+        background: white;
+    }
+
+    #seekbar::-webkit-progress-value {
+        background: #005b96;
+    }
+
+/*MODAL POP UP BOXES
+#################################*/
+
+.modalContent {
+    background-color: white;
+}
+
+.modalHeader {
+    background-color: #606060;
+    color: white;
+}
+
+    .modalHeader h2 {
+        color: white;
+    }
+
+.modalBody {
+    color: #333333;
+}
+
+.modalFooter {
+    background-color: #606060;
+    color: #666666;
+}
