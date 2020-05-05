@@ -1,6 +1,6 @@
 {
   "name": "peerless-player",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Peerless Player - listen, discover, explore music",
   "main": "main.js",
   "scripts": {
@@ -31,5 +31,8 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/MrPeerless/peerless-player.git"
+  },
+  "win": {
+    "icon": "build/icon.ico"
   }
 }
