@@ -13,11 +13,6 @@
   "author": {
     "name": "Geoff Peerless"
   },
-  "build": {
-    "win": {
-      "icon": "app/icons/icon.ico"
-    }
-  },
   "dependencies": {
     "csv-writer": "^1.6.0",
     "electron-updater": "^4.3.1",
