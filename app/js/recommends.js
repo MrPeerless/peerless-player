@@ -20,7 +20,7 @@ $(document).ready(function () {
     // Function to send ajax xml query to Musicbrainz server
     function artistIDQuery(query) {
         var queryArtist = query;
-        var url = "http://musicbrainz.org/ws/2/artist/?"
+        var url = musicbrainzUrl + "artist/?"
         // Send ajax request to musicbrainz
         return $.ajax({
             url: url,
@@ -48,7 +48,7 @@ $(document).ready(function () {
             function recommendsQuery(query) {
                 var queryArtist = query;
                 // Recommends search url
-                var url = "https://c12398848.web.cddbp.net/webapi/xml/1.0/radio/recommend?";
+                var url = gracenoteUrl + "radio/recommend?";
                 return $.ajax({
                     url: url,
                     data: {
@@ -85,7 +85,7 @@ $(document).ready(function () {
                         var titleLink = title.split(' [')[0];
 
                         // Napster search link for album
-                        var albumLink = "https://us.napster.com/search?query=" + artist + "+" + titleLink;
+                        var albumLink = napsterUrl + artist + "+" + titleLink;
                         var encodedUrl = encodeURI(albumLink);
 
                         // Check if cover art found
@@ -123,7 +123,7 @@ $(document).ready(function () {
                             function albumQuery(query) {
                                 var queryTracks = query;
                                 return $.ajax({
-                                    url: "https://c12398848.web.cddbp.net/webapi/xml/1.0/",
+                                    url: gracenoteUrl,
                                     data: queryTracks,
                                     type: "POST",
                                     datatype: "xml"
@@ -139,7 +139,7 @@ $(document).ready(function () {
                                 var titleLink = title.split(' [')[0];
 
                                 // Napster search link for album
-                                var albumLink = "https://us.napster.com/search?query=" + artist + "+" + titleLink;
+                                var albumLink = napsterUrl + artist + "+" + titleLink;
 
                                 var encodedUrl = encodeURI(albumLink);
 

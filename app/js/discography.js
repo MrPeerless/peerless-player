@@ -18,8 +18,8 @@ $(document).ready(function () {
     // Function to send ajax xml query to Musicbrainz server
     function artistIDQuery(query) {
         var queryArtist = query;
-        // Artist serach url
-        var url = "http://musicbrainz.org/ws/2/artist/?query=artist:" + queryArtist;
+        // Artist search url
+        var url = musicbrainzUrl + "artist/?query=artist:" + queryArtist;
         // Encode url
         var encodedUrl = encodeURI(url);
         return $.ajax({
@@ -101,7 +101,7 @@ $(document).ready(function () {
                 console.log(query)
                 var queryArtistID = query;
                 // Artist serach url
-                var url = "http://musicbrainz.org/ws/2/release-group?artist=" + queryArtistID + "&limit=100&type=album"
+                var url = musicbrainzUrl + "release-group?artist=" + queryArtistID + "&limit=100&type=album"
                 return $.ajax({
                     url: url
                 });
@@ -130,11 +130,11 @@ $(document).ready(function () {
                         var date = $release.find('first-release-date').text();
                         // If type is Album link to Napster for samples
                         if (type == "Album") {
-                            var albumLink = "https://us.napster.com/search?query=" + artist + "+" + title;
+                            var albumLink = napsterUrl + artist + "+" + title;
                         }
                         // Anything else link to Google for a search result
                         else {
-                            var albumLink = "https://www.google.co.uk/search?q=" + artist + "+" + title;
+                            var albumLink = googleUrl + artist + "+" + title;
                         }
                         var encodedUrl = encodeURI(albumLink);
 
@@ -158,7 +158,7 @@ $(document).ready(function () {
             // Function to send ajax xml query to Musicbrainz server to get URLs
             function artistLinksQuery(query) {
                 var queryArtist = query;
-                var url = "http://musicbrainz.org/ws/2/artist/" + queryArtist + "?inc=url-rels"
+                var url = musicbrainzUrl + "artist/" + queryArtist + "?inc=url-rels"
                 // Send ajax request to musicbrainz
                 return $.ajax({
                     url: url

@@ -22,12 +22,12 @@ function createWindow() {
         width,
         height,
         frame: true,
-        icon: (path.join(__dirname, './app/graphics/indy_Tunes.ico')),
+        icon: (path.join(__dirname, './app/graphics/peerless_player.ico')),
         backgroundColor: '#ffffff',
     })
 
     // and load the index.html of the app.
-    win.loadURL(`file://${__dirname}/app/index.html`);
+    win.loadFile('./app/index.html');
 
     // Show window once all contents loaded
     win.once('ready-to-show', () => {
@@ -92,6 +92,17 @@ autoUpdater.on('update-downloaded', () => {
 // Restart app after download
 ipcMain.on('restart_app', () => {
     autoUpdater.quitAndInstall();
+});
+
+// Prevent any new windows being created.
+app.on("web-contents-created", (event, contents) => {
+    contents.on("new-window", async (event, navigationUrl) => {
+        // Log and prevent opening up a new window
+        console.error(`The app tried to open a new window at the following address: '${navigationUrl}'. This attempt was blocked.`);
+        event.preventDefault();
+        return;
+    });
+
 });
 
 

@@ -133,7 +133,7 @@ function albumMatches() {
     function albumQuery(query) {
         var queryAlbum = query;
         return $.ajax({
-            url: "https://c12398848.web.cddbp.net/webapi/xml/1.0/",
+            url: gracenoteUrl,
             data: queryAlbum,
             type: "POST",
             datatype: "xml"
@@ -230,7 +230,7 @@ function albumMetadata() {
         if (global_ImportMode == "auto") {
             var queryTracks = query;
             return $.ajax({
-                url: "https://c12398848.web.cddbp.net/webapi/xml/1.0/",
+                url: gracenoteUrl,
                 data: queryTracks,
                 type: "POST",
                 datatype: "xml"

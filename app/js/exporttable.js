@@ -192,7 +192,7 @@ $(document).ready(function () {
                     // Show OK modal box to confirm table added to database
                     $('#okModal').css('display', 'block');
                     $(".modalFooter").empty();
-                    $('.modalHeader').html('<span id="btnXModal">&times;</span><h2>Indy Tunes</h2>');
+                    $('.modalHeader').html('<span id="btnXModal">&times;</span><h2>Peerless Player</h2>');
                     $('#okModalText').html("<div class='modalIcon'><img src='./graphics/information.png'></div><p>&nbsp<br>All tables have been successfully exported to " + destFolder + ".<br>&nbsp<br>&nbsp</p >");
                     var buttons = $("<button class='btnContent' id='btnOkImportTable'>OK</button>");
                     $('.modalFooter').append(buttons);

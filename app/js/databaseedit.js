@@ -53,7 +53,7 @@ function editAlbumMatches(artist, album) {
         function editAlbumQuery(query) {
             var queryAlbum = query;
             return $.ajax({
-                url: "https://c12398848.web.cddbp.net/webapi/xml/1.0/",
+                url: gracenoteUrl,
                 data: queryAlbum,
                 type: "POST",
                 datatype: "xml"
@@ -115,7 +115,7 @@ function getArtwork() {
     function artQuery(query) {
         var queryTracks = query;
         return $.ajax({
-            url: "https://c12398848.web.cddbp.net/webapi/xml/1.0/",
+            url: gracenoteUrl,
             data: queryTracks,
             type: "POST",
             datatype: "xml"
@@ -173,7 +173,7 @@ function getMetadata() {
     function metaQuery(query) {
         var queryTracks = query;
         return $.ajax({
-            url: "https://c12398848.web.cddbp.net/webapi/xml/1.0/",
+            url: gracenoteUrl,
             data: queryTracks,
             type: "POST",
             datatype: "xml"

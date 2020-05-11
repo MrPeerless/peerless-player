@@ -1,8 +1,6 @@
 $(document).ready(function () {
     // Declare artist variable
     var artistID = "";
-    // Declare wikipedia and Musicbrainz api url
-    var wikiQueryUrl = "https://en.wikipedia.org/w/api.php?"
 
     // Get artist name from hidden field
     artist = $("#hiddenArtistName").text();
@@ -13,7 +11,7 @@ $(document).ready(function () {
     // Function to send ajax xml query to Musicbrainz server
     function artistIDQuery(query) {
         var queryArtist = query;
-        var url ="http://musicbrainz.org/ws/2/artist/?"
+        var url = musicbrainzUrl + "artist/?"
         // Send ajax request to musicbrainz
         return $.ajax({
             url: url,
@@ -215,7 +213,7 @@ $(document).ready(function () {
                     // Function to send ajax xml query to Musicbrainz server to get URLs
                     function artistLinksQuery(query) {
                         var queryArtist = query;
-                        var url = "http://musicbrainz.org/ws/2/artist/" + queryArtist + "?inc=url-rels"
+                        var url = musicbrainzUrl + "artist/" + queryArtist + "?inc=url-rels"
                         // Send ajax request to musicbrainz
                         return $.ajax({
                             url: url

@@ -336,7 +336,9 @@ $(document).on('click', '#btnExportedDelete', function () {
         // Get checked playlist names from exported playlists table
         $("#tblExportedPlaylists input[type=checkbox]:checked").each(function () {
             var row = $(this).closest("tr")[0];
-            var playlist = row.cells[1].innerHTML;
+            var playlist = row.cells[1].innerText;
+
+            console.log("playlist = " + playlist)
             // Check if table header row is checked and ignore
             if (playlist != "Playlist Name") {
                 // Add file extension to playlist name

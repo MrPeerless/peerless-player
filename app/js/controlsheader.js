@@ -582,7 +582,7 @@ async function displayTrack(position) {
         if (global_notifications != 0) {
             let myNotification = new Notification(row.albumName, {
                 body: row.trackName,
-                icon: './graphics/indy_Tunes.ico',
+                icon: './graphics/peerless_player.ico',
                 silent: true
             })
         }

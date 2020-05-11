@@ -69,9 +69,6 @@
     <Compile Include="App\js\years.js" />
     <Compile Include="main.js" />
     <Content Include=".gitignore" />
-    <Content Include="App\App_Data\Tunes - BLANK.db" />
-    <Content Include="App\App_Data\Tunes - LIVE.db" />
-    <Content Include="App\App_Data\Tunes - TEST.db" />
     <Content Include="app\css\skinblue.css" />
     <Content Include="app\css\skindark.css" />
     <Content Include="app\css\skinlight.css" />
@@ -198,7 +195,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App\" />
-    <Folder Include="App\App_Data\" />
     <Folder Include="app\css\" />
     <Folder Include="App\graphics\" />
     <Folder Include="App\graphics\genres\" />

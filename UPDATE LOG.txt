@@ -1,7 +1,15 @@
 **** UPDATE LOG ****
 **** LOG UPDATES MADE FOR RELEASE NOTES ****
 --------------------------------------------
-**** VERSION 0.0.4 UPADTES *****
+**** VERSION 0.0.3 UPADTES ****
 
-1. HELP menu completed.
-2. SHOP menu updated.
+1. Update Icon replaced.
+2. User guide updated.
+3. Name change.
+4. Bug fix in saving settings data.
+5. Updated to Electron ^8.2.3
+
+**** VERSION 0.0.4 UPDATES ****
+
+1. 
+

@@ -115,7 +115,7 @@ $(document).ready(function () {
                 // Show OK modal box to confirm table added to database
                 $('#okModal').css('display', 'block');
                 $(".modalFooter").empty();
-                $('.modalHeader').html('<span id="btnXModal">&times;</span><h2>Indy Tunes</h2>');
+                $('.modalHeader').html('<span id="btnXModal">&times;</span><h2>Peerless Player</h2>');
                 $('#okModalText').html("<div class='modalIcon'><img src='./graphics/information.png'></div><p>&nbsp<br>" + table + " table has been successfully added to " + global_AppName + ".<br>&nbsp<br>&nbsp</p >");
                 var buttons = $("<button class='btnContent' id='btnOkImportTable'>OK</button>");
                 $('.modalFooter').append(buttons);
@@ -134,7 +134,7 @@ $(document).ready(function () {
             // Show ERROR modal to display
             $('#okModal').css('display', 'block');
             $(".modalFooter").empty();
-            $('.modalHeader').html('<span id="btnXModal">&times;</span><h2>Indy Tunes</h2>');
+            $('.modalHeader').html('<span id="btnXModal">&times;</span><h2>Peerless Player</h2>');
             $('#okModalText').html("<div class='modalIcon'><img src='./graphics/warning.png'></div><p>&nbsp<br><b>DATABASE ERROR</b> - table not added to database. Check console for more details.<br>&nbsp<br>&nbsp</p >");
             var buttons = $("<button class='btnContent' id='btnOkImportTable'>OK</button>");
             $('.modalFooter').append(buttons);

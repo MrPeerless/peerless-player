@@ -51,7 +51,19 @@ var global_Tracks = [];
 var global_TrackSelected;
 var global_YearID;
 
+// URLs
+var gracenoteUrl = "https://c12398848.web.cddbp.net/webapi/xml/1.0/";
+var musicbrainzUrl = "https://musicbrainz.org/ws/2/";
+var wikiQueryUrl = "https://en.wikipedia.org/w/api.php?"
+var napsterUrl = "https://us.napster.com/search?query="
+var googleUrl = "https://www.google.co.uk/search?q="
+
 // Constant variables
+// JQuery
+window.$ = window.jQuery = require('jquery');
+
+//$.globalEval = function () { };
+
 var MUSIC_PATH;
 const { ipcRenderer } = require('electron')
 const { remote } = require('electron') 
@@ -114,7 +126,7 @@ async function openDatabase(query) {
 
         // If settings table is empty insert default settings values
         if (rows.length == 0) {
-            var entry = `"${'Indy'}","${'large'}","${'square'}","${'1'}","${'1'}","${'skinlight'}"`;
+            var entry = `"${'Peerless'}","${'large'}","${'square'}","${'1'}","${'1'}","${'skinlight'}"`;
             var sql = "INSERT INTO settings (appName, artSize, artShape, zoom, notifications, theme) " + "VALUES (" + entry + ")";
             var insert = await dBase.run(sql);
         }
@@ -130,7 +142,7 @@ async function openDatabase(query) {
     console.log("GN User ID: " + global_UserID)
 
     // Get App settings
-    global_AppName = row.appName + " Tunes";
+    global_AppName = row.appName + " Player";
     global_ArtIconSize = row.artSize;
     global_ArtIconShape = row.artShape;
     global_notifications = row.notifications;
@@ -183,7 +195,7 @@ function newUser() {
     function registerQuery(query) {
         var queryRegister = query;
         return $.ajax({
-            url: "https://c12398848.web.cddbp.net/webapi/xml/1.0/",
+            url: gracenoteUrl,
             data: queryRegister,
             type: "POST",
             datatype: "xml"
@@ -213,7 +225,7 @@ ipcRenderer.send('app_version');
 ipcRenderer.on('app_version', (event, arg) => {
     ipcRenderer.removeAllListeners('app_version');
     global_Version = arg.version;
-    console.log("indy Tunes Version: " + arg.version);
+    console.log("Peerless Player Version: " + arg.version);
 });
 
 // Display message box that update is available and downloading
@@ -285,8 +297,8 @@ ipcRenderer.on('Help About', (event) => {
     // Display modal box updating directory
     $('#okModal').css('display', 'block');
     $(".modalFooter").empty();
-    $('.modalHeader').html('<span id="btnXModal">&times;</span><h2>About Indy Tunes</h2>');
-    $('#okModalText').html("<div class='modalIcon'><img src='./graphics/indy_Tunes_thumb.png'></div><p><b>AUTHOR:</b> Geoff Peerless &copy 2020<br><b>VERSION:</b> " + global_Version + "<br><b>WEBSITE:</b> indy-tunes.rocks<br><b>EMAIL:</b> geoff@indy-tunes.rocks<br><b>LICENSE:</b> ISC&nbsp<br>&nbsp</p >");
+    $('.modalHeader').html('<span id="btnXModal">&times;</span><h2>About Peerless Player</h2>');
+    $('#okModalText').html("<div class='modalIcon'><img src='./graphics/peerless_player_thumb.png'></div><p><b>Author:</b> Geoff Peerless &copy 2020<br><b>Version:</b> " + global_Version + "<br><b>Website:</b> github.com/MrPeerless/peerless-player<br><b>Email:</b> geoffpeerless@hotmail.com<br><b>License:</b> ISC&nbsp<br>&nbsp</p >");
     var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
     $('.modalFooter').append(buttons);
     $("#btnOkModal").focus();
@@ -298,7 +310,7 @@ ipcRenderer.on('Help Release', (event) => {
     $('#okModal').css('display', 'block');
     $(".modalFooter").empty();
     $('.modalHeader').html('<span id="btnXModal">&times;</span><h2>Release Notes Version: ' + global_Version + '</h2>');
-    $('#okModalText').html("<div class='modalIcon'><img src='./graphics/indy_Tunes_thumb.png'></div><p>1. HELP menu completed.<br>2. SHOP menu updated.<br> <br> <br>&nbsp</p >");
+    $('#okModalText').html("<div class='modalIcon'><img src='./graphics/peerless_player_thumb.png'></div><p>1. Update Icon replaced.<br>2. User guide updated.<br>3. Name change.<br>4. Bug fix in saving settings data.<br>5. Updated to Electron ^8.2.3<br>&nbsp</p >");
     var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
     $('.modalFooter').append(buttons);
     $("#btnOkModal").focus();
@@ -651,7 +663,7 @@ $(document).on('click', '#btnSettingsSave', function (event) {
     async function updateSettings() {
         try {
             // Update settings table
-            var sql = "UPDATE settings SET appName='" + appName + "', musicDirectory='" + musicDirectory + "', artSize='" + artSize + "', artShape='" + artShape + "', zoom='" + global_ZoomFactor + "', notifications='" + notifications + "', theme='" + theme + "' WHERE settingsID=" + settingsID;
+            var sql = 'UPDATE settings SET appName="' + appName + '", musicDirectory="' + musicDirectory + '", artSize="' + artSize + '", artShape="' + artShape + '", zoom="' + global_ZoomFactor + '", notifications="' + notifications + '", theme="' + theme + '" WHERE settingsID=' + settingsID;
             var update = await dBase.run(sql);
 
             // Reload CSS file for theme
@@ -670,7 +682,7 @@ $(document).on('click', '#btnSettingsSave', function (event) {
             }
 
             // Update global variables
-            global_AppName = appName + " Tunes";
+            global_AppName = appName + " Player";
             global_ArtIconSize = artSize;
             global_ArtIconShape = artShape;
             global_notifications = notifications;
@@ -800,8 +812,8 @@ function syncDirectory() {
     // Get name of artist and album from table with checked checkboxes
     $("#tblSyncDirectory input[type=checkbox]:checked").each(function () {
         var row = $(this).closest("tr")[0];
-        var artist = row.cells[1].innerHTML;
-        var album = row.cells[2].innerHTML;
+        var artist = row.cells[1].innerText;
+        var album = row.cells[2].innerText;
         // Replace encoded &amp with &
         artist = artist.replace(/&amp;/g, '&');
         album = album.replace(/&amp;/g, '&');

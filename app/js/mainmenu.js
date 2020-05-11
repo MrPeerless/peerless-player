@@ -33,6 +33,7 @@ const template = [
             {
                 type: 'separator'
             },
+            /*
             {
                 label: 'Export Database Table',
                 click: function (menuItem, currentWindow) {
@@ -48,6 +49,7 @@ const template = [
             {
                 type: 'separator'
             },
+            */
             {
                 role: 'quit'
             }

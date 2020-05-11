@@ -1,5 +1,5 @@
 ﻿
-<img src="app/graphics/indy_Tunes.png" width =75>
+<img src="app/graphics/peerless_player.png" width =75>
 
 # Peerless Player
 ## Listen & Explore Music
@@ -9,32 +9,31 @@ A desktop app to organise and listen to your music collection. Available as a fr
 ### Main Features
 **Listening to music**
 
-Organise your albums by:
-- Artist
-- Album
-- Genre
-- Sub Genre
-- Year
-- Songs
+- Organise your albums by:
+  - Artist
+  - Album
+  - Genre
+  - Sub Genre
+  - Year
+  - Songs
 
-Sort your albums by:
-- Alphabetically
-- Artist
-- Date Added
-- Date Last Played
-- Most played
+- Sort your albums by:
+  - Alphabetically
+  - Artist
+  - Date Added
+  - Date Last Played
+  - Most played
 
-Create playlists.
+- Create playlists.
 
-Create a playlist based on a seed track.
+- Create a playlist based on a seed track.
 
 **Exploring music**
 
-View artist discographies.
-
-View artist biographies.
-
-View artist recommendations.
+- View artist discographies.
+- View artist biographies.
+- View artist recommendations.
+- Links to artist's social media.
 
 
 
