@@ -66,8 +66,11 @@ $(document).ready(function () {
             totalSecs += tock;
 
             // Format date for lastPlay
-            var lastPlay = formatDate(row.lastPlay);
-            if (lastPlay == null) {
+            var lastPlay;
+            if (row.lastPlay) {
+                lastPlay = formatDate(row.lastPlay);
+            }
+            else {
                 lastPlay = "";
             }
 

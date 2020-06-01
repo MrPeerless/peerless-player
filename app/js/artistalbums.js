@@ -70,16 +70,10 @@ $(document).ready(function () {
 
         rows.forEach((row) => {
             var albumName = row.albumName;
-            // Get folder.jpg file path
-            var sourceFile = MUSIC_PATH + artistName + "/" + albumName + "/folder.jpg";
-            // Find folder.jpg last modified date
-            try {
-                var modifiedDate = fs.statSync(sourceFile).mtime;
-                var artworkSource = MUSIC_PATH + artistName + "/" + albumName + "/folder.jpg?modified=" + modifiedDate;
-            }
-            catch{
-                var artworkSource = "./graphics/notFound.gif"
-            }
+
+            // Force browser to update cache for album images if they have been changed with the database edit function
+            var modifiedDate = Date().toLocaleString();
+            var artworkSource = MUSIC_PATH + artistName + "/" + albumName + "/folder.jpg?modified=" + modifiedDate;
 
             var albumLink = "./html/displayalbum.html?artist=" + global_ArtistID + "&album=" + row.albumID;
 

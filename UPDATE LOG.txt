@@ -8,8 +8,20 @@
 3. Name change.
 4. Bug fix in saving settings data.
 5. Updated to Electron ^8.2.3
-
+-------------------------------
 **** VERSION 0.0.4 UPDATES ****
 
-1. 
+1. Updated build/icon.ico file
+-------------------------------
+**** VERSION 0.0.5 UPDATES ****
+
+1. Removed import/export.js db files.
+2. Moved shell operations to main.js
+3. Moved image operations to main.js
+4. Moved directory operations to main.js
+5. Added blur effect to modal background.
+
+
+
+
 

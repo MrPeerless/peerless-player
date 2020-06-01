@@ -7,7 +7,7 @@ $(document).ready(function () {
     artist = $("#hiddenArtistName").text();
 
     // Display heading with artist name
-    $("#discographyArtistName").html("Discography of Albums by " + artist);
+    $("#discographyArtistName").append("Discography of Albums by " + artist);
 
     // variable for Discog table
     var table = $("#tblDiscog")
@@ -87,7 +87,7 @@ $(document).ready(function () {
                 else {
                     discographyDetails = "";
                 }
-                $("#discographyDetails").html(discographyDetails);
+                $("#discographyDetails").append(discographyDetails);
             }
         }         
 
@@ -118,7 +118,7 @@ $(document).ready(function () {
                 }
 
                 // Dsiplay number of albums found
-                $("#discographyCount").html(count + " albums found. Click album name to search for more details.");
+                $("#discographyCount").append(count + " albums found. Click album name to search for more details.");
 
                 // Check if any albums found
                 if (count != "0") {
@@ -150,7 +150,7 @@ $(document).ready(function () {
                 }
             }
             // Artist Links
-            $("#bioArtistLink").html(artist + " Links")
+            $("#bioArtistLink").append(artist + " Links")
 
             // Call ajax function artistLinksQuery
             artistLinksQuery(artistID).done(processLinksQuery);
@@ -223,12 +223,11 @@ $(document).ready(function () {
 
                     if (linkType == "official homepage" && homepageUrl == "") {
                         homepageUrl = $link.find('target').text();
-
                         var li = $('<li><a><img><span></span></a></li>');
                         li.find('img').attr('src', homepageIcon);
                         li.find('a').attr('href', homepageUrl);
                         li.find('a').attr('target', '_blank');
-                        li.find('span').html('<br>Homepage<br>');
+                        li.find('span').append('<br>Homepage<br>');
                         li.appendTo(ul);
                     }
                     if (linkType == "youtube" && youtubeUrl == "") {
@@ -237,7 +236,7 @@ $(document).ready(function () {
                         li.find('img').attr('src', youtubeIcon);
                         li.find('a').attr('href', youtubeUrl);
                         li.find('a').attr('target', '_blank');
-                        li.find('span').html('<br>YouTube<br>');
+                        li.find('span').append('<br>YouTube<br>');
                         li.appendTo(ul);
                     }
                     if (linkType == "discogs" && discogsUrl == "") {
@@ -246,7 +245,7 @@ $(document).ready(function () {
                         li.find('img').attr('src', discogsIcon);
                         li.find('a').attr('href', discogsUrl);
                         li.find('a').attr('target', '_blank');
-                        li.find('span').html('<br>Discogs<br>');
+                        li.find('span').append('<br>Discogs<br>');
                         li.appendTo(ul);
                     }
                     if (linkType == "last.fm" && lastfmUrl == "") {
@@ -255,7 +254,7 @@ $(document).ready(function () {
                         li.find('img').attr('src', lastfmIcon);
                         li.find('a').attr('href', lastfmUrl);
                         li.find('a').attr('target', '_blank');
-                        li.find('span').html('<br>Last FM<br>');
+                        li.find('span').append('<br>Last FM<br>');
                         li.appendTo(ul);
                     }
                     if (linkType == "bandcamp" && lastfmUrl == "") {
@@ -264,7 +263,7 @@ $(document).ready(function () {
                         li.find('img').attr('src', bandcampIcon);
                         li.find('a').attr('href', lastfmUrl);
                         li.find('a').attr('target', '_blank');
-                        li.find('span').html('<br>Bandcamp<br>');
+                        li.find('span').append('<br>Bandcamp<br>');
                         li.appendTo(ul);
                     }
                     if (linkType == "social network") {
@@ -275,7 +274,7 @@ $(document).ready(function () {
                             li.find('img').attr('src', twitterIcon);
                             li.find('a').attr('href', twitterUrl);
                             li.find('a').attr('target', '_blank');
-                            li.find('span').html('<br>Twitter<br>');
+                            li.find('span').append('<br>Twitter<br>');
                             li.appendTo(ul);
                         }
                         if (checkUrl.includes("instagram") && instagramUrl == "") {
@@ -284,7 +283,7 @@ $(document).ready(function () {
                             li.find('img').attr('src', instagramIcon);
                             li.find('a').attr('href', instagramUrl);
                             li.find('a').attr('target', '_blank');
-                            li.find('span').html('<br>Instagram<br>');
+                            li.find('span').append('<br>Instagram<br>');
                             li.appendTo(ul);
                         }
                         if (checkUrl.includes("facebook") && facebookUrl == "") {
@@ -293,7 +292,7 @@ $(document).ready(function () {
                             li.find('img').attr('src', facebookIcon);
                             li.find('a').attr('href', facebookUrl);
                             li.find('a').attr('target', '_blank');
-                            li.find('span').html('<br>Facebook<br>');
+                            li.find('span').append('<br>Facebook<br>');
                             li.appendTo(ul);
                         }
                     }
@@ -309,8 +308,8 @@ $(document).ready(function () {
         // Display modal box if no artistID found in Musicbrainz database
         $('#okModal').css('display', 'block');
         $(".modalFooter").empty();
-        $('.modalHeader').html('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
-        $('#okModalText').html("<div class='modalIcon'><img src='./graphics/information.png'></div><p>&nbsp<br><b>" + artist + "</b> not found in discography database.<br>&nbsp</p>");
+        $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
+        $('#okModalText').append("<div class='modalIcon'><img src='./graphics/information.png'></div><p>&nbsp<br><b>" + artist + "</b> not found in discography database.<br>&nbsp</p>");
         var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
         $('.modalFooter').append(buttons);
         $("#btnOkModal").focus();

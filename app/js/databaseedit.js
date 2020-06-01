@@ -26,6 +26,7 @@ function editAlbumMatches(artist, album) {
         var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
         $('.modalFooter').append(buttons);
         $("#btnOkModal").focus();
+        $('.background').css('filter', 'blur(5px)');
     }
     else {
         // Check there is a global_userID, if not run function newUser() to get gracenote userID
@@ -33,7 +34,7 @@ function editAlbumMatches(artist, album) {
             newUser()
         }
 
-        // Replace ampersand in aalbum and artist name for XML query to Gracenote
+        // Replace ampersand in album and artist name for XML query to Gracenote
         album = album.replace('&', 'and');
         artist = artist.replace('&', 'and');
 
@@ -105,6 +106,7 @@ function getArtwork() {
     var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
     $('.modalFooter').append(buttons);
     $("#btnOkModal").focus();
+    $('.background').css('filter', 'blur(5px)');
 
     var gnID = $("#tblGracenote tr.highlight").find('td:last').html();
     // Create XMl string query to query album tracks
@@ -131,6 +133,7 @@ function getArtwork() {
             $("#inpEditCoverArtURL").val(coverArt);
             // Hide modal box
             $('#okModal').css('display', 'none');
+            $('.background').css('filter', 'blur(0px)');
         }
         else {
             $("#inpEditCoverArtURL").val("");
@@ -144,6 +147,7 @@ function getArtwork() {
             var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
             $('.modalFooter').append(buttons);
             $("#btnOkModal").focus();
+            $('.background').css('filter', 'blur(5px)');
         }
     }
 }
@@ -159,6 +163,7 @@ $(document).on('click', '#btnGetGracenote', function (event) {
     var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
     $('.modalFooter').append(buttons);
     $("#btnOkModal").focus();
+    $('.background').css('filter', 'blur(5px)');
     getMetadata();
 });
 
@@ -311,6 +316,7 @@ function getMetadata() {
         }
         // Hide modal box
         $('#okModal').css('display', 'none');
+        $('.background').css('filter', 'blur(0px)');
     }
 }
 
@@ -343,48 +349,11 @@ $(document).on('click', '#btnSaveAlbum', function (event) {
             // Get todays date and convert
             var todayDate = new Date();
             var dateAdd = convertDate(todayDate);
+
+            // Rename directories if changed on input
+            ipcRenderer.send("rename_directory", [MUSIC_PATH, originalArtistName, originalAlbumName, artist, album, "edit"]);
+
             try {
-                // RENAME DIRECTORIES IF CHANGED ON INPUT
-                // First check if album name has been changed and if so update directory name
-                var dirAlbumName = path.basename(MUSIC_PATH + originalArtistName + "/" + originalAlbumName);
-                var dirPath = path.dirname(MUSIC_PATH + originalArtistName + "/" + originalAlbumName);
-                // Rename album directory name if it doesn't match original
-                if (album != dirAlbumName) {
-                    fs.rename(dirPath + "/" + dirAlbumName, dirPath + "/" + album, (error) => {
-                        if (error) throw error;
-                    });
-                }
-
-                // Check if artist name has been changed and if so update directory name
-                var dirArtistName = path.basename(MUSIC_PATH + originalArtistName);
-                var dirPath = path.dirname(MUSIC_PATH + originalArtistName);
-                // Rename artist directory name if it doesn't match original
-                if (artist != dirArtistName) {
-                    // If the new artist name directory doesn't create it
-                    if (!fs.existsSync(dirPath + "/" + artist)) {
-                        // Create new directory for artist
-                        fs.mkdirSync(dirPath + "/" + artist);
-                        // Rename old artist directory to new artist directory
-                        fs.rename(dirPath + "/" + dirArtistName + "/" + album, dirPath + "/" + artist + "/" + album, (error) => {
-                            if (error) throw error;
-                        });
-                    }
-                    else {
-                        // The new artist directory exists so rename old artist directory to new artist directory
-                        fs.rename(dirPath + "/" + dirArtistName + "/" + album, dirPath + "/" + artist + "/" + album, (error) => {
-                            if (error) throw error;
-                        })
-                    }
-                    // Check to see if original artist directory is now empty and if so delete directory
-                    var sql = "SELECT n.artistID, COALESCE(t.albumCount, 0) AS albumCount, n.artistName FROM artist n LEFT JOIN(SELECT artistID, COUNT(*) AS albumCount FROM album GROUP BY artistID) t ON n.artistID = t.artistID WHERE n.artistName=?";
-                    var row = await dBase.get(sql, originalArtistName);
-                    // If there was only 1 album for artist delete artist from database
-                    if (row.albumCount == 1) {
-                        var sql = "DELETE FROM artist WHERE artistID=" + row.artistID;
-                        var del = await dBase.run(sql);
-                    }
-                }
-
                 // ARTIST TABLE
                 // Check if artist name has changed
                 if (artist != originalArtistName) {
@@ -408,6 +377,8 @@ $(document).on('click', '#btnSaveAlbum', function (event) {
                 var sql = "SELECT artistID FROM artist WHERE artistName=?";
                 var response = await dBase.get(sql, artist);
                 var artistID = response.artistID;
+                // Update global_ArtistID
+                global_ArtistID = artistID;
 
                 // GENRE TABLE
                 // Get genreID from genre table and add genre if not present
@@ -461,43 +432,18 @@ $(document).on('click', '#btnSaveAlbum', function (event) {
                     // Save cover art to album folder in music directory
                     var artFilePath = MUSIC_PATH + artist + "/" + album + "/AlbumArtXLarge.jpg";
                     var resizedFilePath = MUSIC_PATH + artist + "/" + album + "/folder.jpg";
-
-                    // Function to save art image
-                    var saveImage = function (url, fileName, callback) {
-                        request(url).pipe(fs.createWriteStream(fileName)).on('close', callback);
-                    }
-                    // Call function to save art image
-                    saveImage(coverArtUrl, artFilePath, function () {
-                        // Delete folder.jpg if it exists because Windows Media Player rips files as hidden system files, which don't overwrite.
-                        if (fs.existsSync(resizedFilePath)) {
-                            fs.unlinkSync(resizedFilePath);
-                        }
-                        // resize image
-                        // Use Jimp to copy and resize art file
-                        Jimp.read(artFilePath).then(tpl => (tpl.clone().resize(250, 250).write(resizedFilePath)))
-                    });
+                    // Send message to main.js to save and resize art image
+                    ipcRenderer.send("save_artXlarge_URL", [coverArtUrl, artFilePath, resizedFilePath]);
                 }
 
                 // coverArtUrl is a filepath
                 if (coverArtUrl != "" && check != "http") {
                     var artFilePath = MUSIC_PATH + artist + "/" + album + "/AlbumArtXLarge.jpg";
                     var resizedFilePath = MUSIC_PATH + artist + "/" + album + "/folder.jpg";
-
-                    // Save AlbumArtXLarge.jpg
-                    Jimp.read(coverArtUrl, function (err, image) {
-                        if (err) throw err;
-                        image.write(artFilePath);
-                    });
-
-                    // Resize and save folder.jpg
-                    Jimp.read(coverArtUrl, function (err, image) {
-                        if (err) throw err;
-                        // Delete folder.jpg if it exists because Windows Media Player rips files as hidden system files, which don't overwrite.
-                        if (fs.existsSync(resizedFilePath)) {
-                            fs.unlinkSync(resizedFilePath);
-                        }
-                        image.resize(250, 250).write(resizedFilePath);
-                    });
+                    // Send message to main.js to save AlbumArtXLarge image
+                    ipcRenderer.send("save_artXlarge_file", [coverArtUrl, artFilePath]);
+                    // Send message to main.js to resize folder image
+                    ipcRenderer.send("save_folder_file", [coverArtUrl, resizedFilePath]);
                 }
 
                 // Show OK modal box to confirm album updated in database
@@ -505,9 +451,10 @@ $(document).on('click', '#btnSaveAlbum', function (event) {
                 $(".modalFooter").empty();
                 $('.modalHeader').html('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
                 $('#okModalText').html("<div class='modalIcon'><img src='./graphics/information.png'></div><p>&nbsp<br>Album has been successfully updated in " + global_AppName + ".<br>&nbsp<br>&nbsp</p >");
-                var buttons = $("<button class='btnContent' id='btnOkImport'>OK</button>");
+                var buttons = $("<button class='btnContent' id='btnOkEdit'>OK</button>");
                 $('.modalFooter').append(buttons);
-                $("#btnOkImport").focus();
+                $("#btnOkEdit").focus();
+                $('.background').css('filter', 'blur(5px)');
                 // Enable btnSync
                 $("#btnSync").prop("disabled", false);
             }
@@ -521,6 +468,7 @@ $(document).on('click', '#btnSaveAlbum', function (event) {
                 var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
                 $('.modalFooter').append(buttons);
                 $("#btnOkModal").focus();
+                $('.background').css('filter', 'blur(5px)');
                 // Enable btnSync
                 $("#btnSync").prop("disabled", false);
             }
@@ -531,18 +479,38 @@ $(document).on('click', '#btnSaveAlbum', function (event) {
     }
 });
 
+// Message received once function in main.js completed
+ipcRenderer.on("renamed_artist_directory", (event, data) => {
+    deleteDirectory(data[0]);
+    async function deleteDirectory(data) {
+        var originalArtistName = data;
+        // Check to see if original artist directory is now empty and if so delete directory
+        var sql = "SELECT n.artistID, COALESCE(t.albumCount, 0) AS albumCount, n.artistName FROM artist n LEFT JOIN(SELECT artistID, COUNT(*) AS albumCount FROM album GROUP BY artistID) t ON n.artistID = t.artistID WHERE n.artistName=?";
+        var row = await dBase.get(sql, originalArtistName);
+        // If there was only 1 album for artist delete artist from database
+        //if (row.albumCount == 1) {
+        if (!row.albumCount) {
+            var sql = "DELETE FROM artist WHERE artistID=" + row.artistID;
+            var del = await dBase.run(sql);
+        }
+    }
+});
+
 // Manual add artwork
 // Click event from clicking on artwork in edit album
 $(document).on('click', '#editAlbum', function (event) {
     event.preventDefault();
-    // Open dialog box to browse for image file
-    var options = { title: "Select Album Artwork Image File", defaultPath: "C:\\", buttonLabel: "Select File", filters: [{ name: 'Images', extensions: ['jpg', 'png', 'gif'] }], properties: ["openFile"] }
-    var selectedFile = dialog.showOpenDialog(options)
-    // Get value from dialog box    
-    var coverArt = selectedFile[0];
+    // Send message to main.js to open dialog box
+    ipcRenderer.send("open_file_dialog", ["manual_artwork", "Select Album Artwork Image File", "C:\\", "Select File", [{ name: 'Images', extensions: ['jpg'] }], "openFile"]);
+});
+
+// Response from selecting manual artwork browse dialog box
+ipcRenderer.on("manual_artwork", (event, data) => {
+    var coverArt = data[0];
     $("#imgCoverArt").attr('src', coverArt);
     $("#inpEditCoverArtURL").val(coverArt);
 });
+
 
 //###########################
 // DELETE ALBUM FROM DATABASE
@@ -589,6 +557,7 @@ $(document).on('click', '#btnDeleteOkAlbum', async function (event) {
         var buttons = $("<button class='btnContent' id='btnOkImport'>OK</button>");
         $('.modalFooter').append(buttons);
         $("#btnOkImport").focus();
+        $('.background').css('filter', 'blur(5px)');
         // Enable btnSync
         $("#btnSync").prop("disabled", false);
         // Update library stats in playing div
@@ -604,5 +573,6 @@ $(document).on('click', '#btnDeleteOkAlbum', async function (event) {
         var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
         $('.modalFooter').append(buttons);
         $("#btnOkModal").focus();
+        $('.background').css('filter', 'blur(5px)');
     }
 });

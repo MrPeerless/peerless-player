@@ -1,2 +1,3 @@
 C:\Users\geoff\Documents\Tunes\Tunes\obj\Debug\Tunes.njsproj.CoreCompileInputs.cache
 C:\Users\geoff\Documents\Tunes\Tunes\bin\Microsoft.NodejsTools.WebRole.dll
+C:\Users\geoff\Documents\Tunes\Tunes\obj\Debug\Tunes.njsprojAssemblyReference.cache

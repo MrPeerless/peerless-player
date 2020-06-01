@@ -30,11 +30,11 @@ $(document).ready(function () {
         $("#songTitle").text(numberTracks + " Songs");
 
         rows.forEach((row) => {
-            if (row.lastPlay == null) {
-                row.lastPlay = "";
+            if (row.lastPlay) {
+                row.lastPlay = formatDate(row.lastPlay);
             }
             else {
-                row.lastPlay = formatDate(row.lastPlay);
+                row.lastPlay = "";
             }
             // Split trackName on first space to get track name without track number
             var trackName = row.trackName.split(/\s(.+)/)[1]

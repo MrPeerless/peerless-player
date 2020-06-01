@@ -33,23 +33,6 @@ const template = [
             {
                 type: 'separator'
             },
-            /*
-            {
-                label: 'Export Database Table',
-                click: function (menuItem, currentWindow) {
-                    currentWindow.webContents.send('Export Table');
-                }
-            },
-            {
-                label: 'Import Database Table',
-                click: function (menuItem, currentWindow) {
-                    currentWindow.webContents.send('Import Table');
-                }
-            },
-            {
-                type: 'separator'
-            },
-            */
             {
                 role: 'quit'
             }

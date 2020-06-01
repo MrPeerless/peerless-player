@@ -1,13 +1,6 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-    <!--
-            <meta http-equiv="Content-Security-Policy" content="default-src 'self'">
-
-
-        <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'sha256-SyXqdycH2UlWvPd2sDD0eALQECBxxMRKAVBNR3eIxfo=' 'sha256-+oRI/lvWaYHMLj1Z1fiWzcnCq6nwdCKYve9oqAcBnHw=' 'sha256-YcUT7jM8qjFqxOFqc9iodRn8s58EKegHZe4UZ3EP+Nw=' 'sha256-SPIhYweNQa4tMhX/qJeb4GlOaxhF1TAEf4L/MBLSczk=' https://code.jquery.com">
-    -->
-
     <meta charset="utf-8" />
 
     <title>Peerless Player</title>
@@ -55,29 +48,30 @@
     </div>
 
     <!--Controls Div-->
-    <div id="divControlsHeader"></div>
+    <div class="background" id="divControlsHeader"></div>
 
     <!--Now playing left side bar-->
-    <div id="divPlaying"></div>
-    <div id="divPlaylist"></div>
+    <div class="background" id="divPlaying"></div>
+    <div class="background" id="divPlaylist"></div>
 
     <div class="flex-container">
 
         <!--Main content div-->
-        <div id="divContent"></div>
+        <div class="background" id="divContent"></div>
         <!--Track listing div-->
-        <div id="divTrackListing"></div>
+        <div class="background" id="divTrackListing"></div>
 
     </div>
 
-    <!--Links to scripts
-    <script>window.$ = window.jQuery = require('jquery');</script>-->
+    <!--Links to scripts-->
     <script src="js/index.js" type="text/javascript"></script>
+    <!---->
     <script src="js/colour.js" type="text/javascript"></script>
     <script src="js/databaseadd.js" type="text/javascript"></script>
     <script src="js/databaseedit.js" type="text/javascript"></script>
     <script src="js/smartplaylist.js" type="text/javascript"></script>
     <script src="js/playlistfunctions.js" type="text/javascript"></script>
+    <script src="js/ipcreply.js" type="text/javascript"></script>
 
 </body>
 </html>

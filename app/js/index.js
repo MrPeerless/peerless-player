@@ -58,38 +58,32 @@ var wikiQueryUrl = "https://en.wikipedia.org/w/api.php?"
 var napsterUrl = "https://us.napster.com/search?query="
 var googleUrl = "https://www.google.co.uk/search?q="
 
-// Constant variables
-// JQuery
-window.$ = window.jQuery = require('jquery');
-
-//$.globalEval = function () { };
-
+// CONSTANT VARIABLES
+// Path to users music directory
 var MUSIC_PATH;
-const { ipcRenderer } = require('electron')
-const { remote } = require('electron') 
-var dialog = remote.dialog
-var fs = require('fs');
-var path = require('path');
-const jqueryValidation = require('jquery-validation');
-var https = require('https');
-var request = require('request');
-var Jimp = require('jimp');
-const shell = require('electron').shell;
 
-// Create path for database
-const app = remote.app;
-const app_path = (app.getPath('userData'));
+// Get app_path and sqlite script from query string in index.html
+var queryString = global.location.search
+var splitString = queryString.split("=");
+// App path
+const app_path = splitString[1];
+// Sqlite script path
+const dBase = require(splitString[3]);
 
+// Path to database file
 //const DB_PATH = app_path + "/peerless-player-TEST.db";
 const DB_PATH = app_path + "/peerless-player-database.db";
-console.log("Peerless Player Database Path: " + DB_PATH);
+//const DB_PATH = app_path + "/peerless-player-music_test.db";
 
-// For setting zoom level of window
-const { webFrame } = require('electron')
+// JQuery
+window.$ = window.jQuery = require('jquery')
+// Below requires to be removed once preload.js enabled
+const { ipcRenderer } = require('electron')
+const jqueryValidation = require('jquery-validation'); // Used for validating form input
+const { webFrame } = require('electron') // For setting zoom level; webframe can't be used in main.js
+const sanitizeHtml = require('sanitize-html'); // For screening html content retrieved from Wikipedia
 
-// Create variable for async/await/promise functions to database and open database
-const dBase = require(path.resolve(__dirname + "/js/sqlite_async"));
-
+// START HERE WITH OPENING THE DATABASE
 openDatabase("start")
 
 // OPEN DATABASE
@@ -180,6 +174,9 @@ async function openDatabase(query) {
         $("#divPlaying").load("./html/playing.html");
         $("#divContent").load("./html/home.html");
     }
+
+    // Send message to main to check for playlists directory in music folder
+    ipcRenderer.send("check_playlists", [MUSIC_PATH, "Playlists/"])
 }
 
 // FUNCTION TO GET NEW GRAVENOTE USER ID
@@ -240,6 +237,7 @@ ipcRenderer.on('update_available', () => {
     var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
     $('.modalFooter').append(buttons);
     $("#btnOkModal").focus();
+    $('.background').css('filter', 'blur(5px)');
 });
 
 // Display message box that download complete; restart now?
@@ -302,6 +300,7 @@ ipcRenderer.on('Help About', (event) => {
     var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
     $('.modalFooter').append(buttons);
     $("#btnOkModal").focus();
+    $('.background').css('filter', 'blur(5px)');
 });
 
 ipcRenderer.on('Help Release', (event) => {
@@ -310,10 +309,11 @@ ipcRenderer.on('Help Release', (event) => {
     $('#okModal').css('display', 'block');
     $(".modalFooter").empty();
     $('.modalHeader').html('<span id="btnXModal">&times;</span><h2>Release Notes Version: ' + global_Version + '</h2>');
-    $('#okModalText').html("<div class='modalIcon'><img src='./graphics/peerless_player_thumb.png'></div><p>1. Update Icon replaced.<br>2. User guide updated.<br>3. Name change.<br>4. Bug fix in saving settings data.<br>5. Updated to Electron ^8.2.3<br>&nbsp</p >");
+    $('#okModalText').html("<div class='modalIcon'><img src='./graphics/peerless_player_thumb.png'></div><p>1. Update Icon replaced.<br>2. User guide updated.<br>3. Name change.<br>4. Bug fix in saving settings data.<br>5. Updated to Electron ^8.2.3<br>6. File operations moved to main and ipc implemented.<br>7. Sanitize-html added to codebase.<br> &nbsp</p >");
     var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
     $('.modalFooter').append(buttons);
     $("#btnOkModal").focus();
+    $('.background').css('filter', 'blur(5px)');
 });
 
 ipcRenderer.on('Help Shortcuts', (event) => {
@@ -347,6 +347,7 @@ ipcRenderer.on('Export Table', (event) => {
     // Enable btnSync
     $("#btnSync").prop("disabled", false);
 });
+
 
 //#########################
 // FUNCTIONS
@@ -634,16 +635,8 @@ $(document).on('click', '#btnSettingsClose', function (event) {
 // Click event for settimgs browse button
 $(document).on('click', '#btnMusicDirectory', function (event) {
     event.preventDefault();
-    // Open dialog box to browse directory
-    var options = { title: "Select Your Music Directory", defaultPath: "C:\\", buttonLabel: "Select Folder", properties: ["openDirectory"] }
-    var dir = dialog.showOpenDialog(options)
-    // Get value from dialog box
-    var musicPath = dir[0];
-    if (musicPath) {
-        // Replace backward slashes with fporward slashes
-        musicPath = musicPath.replace(/\\/g, "/") + "/";
-        $("#ipnMusicDirectory").val(musicPath);
-    }
+    // Send message to main.js to open dialog box
+    ipcRenderer.send("open_folder_dialog", ["music_directory", "Select Your Music Directory", "C:\\", "Select Folder", "openDirectory"]);
 });
 
 // Click event for settings save button
@@ -657,6 +650,9 @@ $(document).on('click', '#btnSettingsSave', function (event) {
     var theme = $("input[name='theme']:checked").val();
     var global_ZoomFactor = $('#sltZoom').val();
     var notifications = $("input[name='notifications']:checked").val();
+
+    // Regex to only allow alphanumeric characters and apostrophe
+    appName = appName.replace(/[^a-z0-9']+/gi, "");
 
     updateSettings()
 
@@ -696,6 +692,7 @@ $(document).on('click', '#btnSettingsSave', function (event) {
             var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
             $('.modalFooter').append(buttons);
             $("#btnOkModal").focus();
+            $('.background').css('filter', 'blur(5px)');
 
             // Update placeholder in search box
             $("#ipnSearch").attr("placeholder", "Search " + global_AppName);
@@ -729,38 +726,8 @@ $(document).on('click', '#btnSyncDir', function (event) {
 function btnSyncDirClick() {
     // Clear any previous selected directory
     $("#selectedDir").text("");
-    // Open dialog box to browse directory
-    var options = { title: "Select Music Directory to Sync to Database", defaultPath: "C:\\", buttonLabel: "Select Folder", properties: ["openDirectory"] }
-    var dir = dialog.showOpenDialog(options)
-
-    try {
-        // Get value from dialog box
-        var musicDir = dir[0];
-        // Replace backward slashes with forward slashes
-        musicDir = musicDir.replace(/\\/g, "/") + "/";
-
-        // Load Sync Directory Page
-        $("#divContent").css("width", "475px");
-        // Hide A to Z menu
-        $('#spnAtoZmenu').css('display', 'none');
-        // Hide Artist and Album column of Song table
-        $("#tblSongs td:nth-child(2)").css("display", "none");
-        $("#tblSongs th:nth-child(2)").css("display", "none");
-        $("#tblSongs td:nth-child(3)").css("display", "none");
-        $("#tblSongs th:nth-child(3)").css("display", "none");
-        // Show and load newmusic.html file
-        $("#divTrackListing").css("display", "block");
-        $('#divTrackListing').load("./html/syncdirectory.html");
-        // Enable btnSync
-        $("#btnSync").prop("disabled", false);
-        $(document).ajaxComplete(function () {
-            $(document).scrollTop(0);
-            $("#selectedDir").text(musicDir);
-        });
-    }
-    catch{
-        return;
-    }
+    // Send message to main.js to open dialog box
+    ipcRenderer.send("open_folder_dialog", ["sync_directory", "Select Music Directory to Sync to Database", "C:\\", "Select Folder", "openDirectory"]);
 }
 
 // Cancel button on sync directory page
@@ -802,6 +769,7 @@ $(document).on('click', '#btnSyncChecked', function () {
     var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
     $('.modalFooter').append(buttons);
     $("#btnOkModal").focus();
+    $('.background').css('filter', 'blur(5px)');
 
     // Sync functions
     syncDirectory();
@@ -817,99 +785,7 @@ function syncDirectory() {
         // Replace encoded &amp with &
         artist = artist.replace(/&amp;/g, '&');
         album = album.replace(/&amp;/g, '&');
-
-        // Check if Playlists selected
-        if (artist == "Exported Playlists") {
-            // Delete all playlist files from external playlist folder
-            var dir = musicDir + "Playlists/";
-            var files = fs.readdirSync(dir);
-            files.forEach(file => {
-                fs.unlinkSync(path.join(dir, file));
-            });
-
-            // Delete birthdates.txt file if it exists
-            var birthdateFile = musicDir + "Playlists/birthdates.txt"
-            if (fs.existsSync(birthdateFile)) {
-                fs.unlinkSync(birthdateFile);
-            }
-
-            // Read all files from Playlists directory
-            var playlistFiles = [];
-            playlistFiles = fs.readdirSync(MUSIC_PATH + "Playlists/");
-
-            // Loop through each file and copy
-            playlistFiles.forEach(function (playlistFile) {
-                // Get birthtime of playlist file
-                var stats = fs.statSync(MUSIC_PATH + "Playlists/" + playlistFile);
-                // Write file birthtime to file
-                var data = stats.mtimeMs + "\n";
-                fs.appendFile(birthdateFile, data, function (err) {
-                    if (err) {
-                        console.log("ERROR = " + err)
-                    }
-                })
-
-                var sourceFile = MUSIC_PATH + "Playlists/" + playlistFile;
-                var destFile = musicDir + "Playlists/" + playlistFile;
-                // Copy playlist file from MUSIC directory to External directory
-                fs.copyFile(sourceFile, destFile, (err) => {
-                    if (err) {
-                        // Log error
-                        console.log(err)
-                        return;
-                    }
-                });
-            });
-            return;
-        }
-
-        // Check if artist already exists in directory if not create artist folder
-        var artistDir = musicDir + artist;
-        var albumDir = musicDir + artist + "/" + album
-        var files = [];
-
-        if (artist != "Artist") {
-            fs.stat(artistDir, async function (err, stats) {
-                try {
-                    if (err.code === 'ENOENT') {
-                        // Create new directory
-                        fs.mkdirSync(artistDir, { recursive: true });
-                    } else {
-                        // Log error
-                        console.log(err)
-                    }
-                }
-                catch {
-                    console.log("Directory Exists")
-                }
-                // Create album directory in artist folder
-                fs.mkdirSync(albumDir, { recursive: true });
-
-                // Read all files from album directory
-                files = fs.readdirSync(MUSIC_PATH + artist + "/" + album + "/");
-
-                // Loop through each file and copy
-                files.forEach(function (file) {
-                    var sourceFile = MUSIC_PATH + artist + "/" + album + "/" + file;
-                    var destFile = musicDir + artist + "/" + album + "/" + file;
-
-                    fs.copyFile(sourceFile, destFile, (err) => {
-                        if (err) {
-                            $('#okModal').css('display', 'none');
-                            // Display modal box updating directory
-                            $('#okModal').css('display', 'block');
-                            $(".modalFooter").empty();
-                            $('.modalHeader').html('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
-                            $('#okModalText').html("<div class='modalIcon'><img src='./graphics/warning.png'></div><p>&nbsp<br><b>ERROR</b> copying below file.<br>" + destFile + "<br>&nbsp<br>&nbsp</p >");
-                            var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
-                            $('.modalFooter').append(buttons);
-                            $("#btnOkModal").focus();
-                            return;
-                        }                        
-                    });
-                });
-            });
-        }   
+        ipcRenderer.send("sync_external_directory", [musicDir, MUSIC_PATH, artist, album])
     });
     $('#okModal').css('display', 'none');
 
@@ -922,6 +798,7 @@ function syncDirectory() {
     var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
     $('.modalFooter').append(buttons);
     $("#btnOkModal").focus();
+    $('.background').css('filter', 'blur(5px)');
     // Load home page and return
     $("#divTrackListing").css("display", "none");
     $('#spnAtoZmenu').css('display', 'inline');
@@ -1101,6 +978,7 @@ $(document).ready(function () {
             var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
             $('.modalFooter').append(buttons);
             $("#btnOkModal").focus();
+            $('.background').css('filter', 'blur(5px)');
             return
         }
     });
@@ -1140,6 +1018,7 @@ $(document).ready(function () {
             var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
             $('.modalFooter').append(buttons);
             $("#btnOkModal").focus();
+            $('.background').css('filter', 'blur(5px)');
             return
         }
     });
@@ -1178,32 +1057,29 @@ $(document).ready(function () {
             var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
             $('.modalFooter').append(buttons);
             $("#btnOkModal").focus();
+            $('.background').css('filter', 'blur(5px)');
             return
         }
     });
 
     // Open external web link from recommendations page
     $(document).on('click', '.divRecommends a', function (event) {
-        event.preventDefault();
-        shell.openExternal(this.href);
+        ipcRenderer.send('open_external', this.href)
     });
 
     // Open external web link from discography page
     $(document).on('click', '#tblDiscog tr a', function (event) {
-        event.preventDefault();
-        shell.openExternal(this.href);
+        ipcRenderer.send('open_external', this.href)
     });
 
     // Open external wikipedia link from biography page
-    $(document).on('click', '#bioWikiLink', function (event) {
-        event.preventDefault();
-        shell.openExternal(this.href);
+    $(document).on('click', '#bioWikiLink', function () {
+        ipcRenderer.send('open_external', this.href)
     });
 
     // Open external web link from biography page
     $(document).on('click', '#ulLinks li a', function (event) {
-        event.preventDefault();
-        shell.openExternal(this.href);
+        ipcRenderer.send('open_external', this.href)
     });
 
     // Highlight track in display album when clicked on
@@ -1278,18 +1154,17 @@ $(document).ready(function () {
         var album = row.albumName;
 
         // Get AlbumArtXLarge.jpg file path
-        // Find AlbumArtXLarge.jpg last modified date
-        try {
-            var sourceFile = MUSIC_PATH + artist + "/" + album + "/AlbumArtXLarge.jpg";
-            var modifiedDate = fs.statSync(sourceFile).mtime;
-            var artworkSource = MUSIC_PATH + artist + "/" + album + "/AlbumArtXLarge.jpg?modified=" + modifiedDate;
-        }
+        //try {
+        var modifiedDate = Date().toLocaleString();
+        var artworkSource = MUSIC_PATH + artist + "/" + album + "/AlbumArtXLarge.jpg?modified=" + modifiedDate;
+        //}
         // If AlbumArtXLarge file doesn't exist use folder file
-        catch{
-            var sourceFile = MUSIC_PATH + artist + "/" + album + "/folder.jpg";
-            var modifiedDate = fs.statSync(sourceFile).mtime;
-            var artworkSource = MUSIC_PATH + artist + "/" + album + "/folder.jpg?modified=" + modifiedDate;
+        //catch{
+        if (!artworkSource) {
+            artworkSource = MUSIC_PATH + artist + "/" + album + "/folder.jpg";
         }
+        //var artworkSource = MUSIC_PATH + artist + "/" + album + "/folder.jpg";
+        //}
 
         colour()
 
@@ -1302,6 +1177,7 @@ $(document).ready(function () {
             domColour = domColour + ",0.75)";
 
             // Display large artwork modal box
+            $('.background').css('filter', 'blur(5px)');
             $('.artModal').css('display', 'block');
             $("#artModalImage").attr('src', artworkSource);
             $('.artModal').css('background-color', domColour);
@@ -1324,6 +1200,7 @@ $(document).ready(function () {
             domColour = domColour + ",0.75)";
 
             // Display large artwork modal box
+            $('.background').css('filter', 'blur(5px)');
             $('.bioArtModal').css('display', 'block');
             $("#bioArtModalImage").attr('src', artworkSource);
             $('.bioArtModal').css('background-color', domColour);
@@ -1498,6 +1375,7 @@ $(document).ready(function () {
         $('#okModalText').empty();
         $(".modalFooter").empty();
         $('#okModal').css('display', 'none');
+        $('.background').css('filter', 'blur(0px)');
     })
 
     // Button click to close modal box from import to database
@@ -1507,25 +1385,40 @@ $(document).ready(function () {
         $("#divContent").load("./html/home.html");
         // Update library stats in playing div
         libraryStats()
+        $('.background').css('filter', 'blur(0px)');
+    })
+
+    // Button click to close modal box from edit to database
+    $(document).on('click', '#btnOkEdit', function () {
+        $('#okModal').css('display', 'none');
+        // Load artist page
+        $("#divContent").load("./html/artistalbums.html?artist=" + global_ArtistID);
+        // Update library stats in playing div
+        libraryStats()
+        $('.background').css('filter', 'blur(0px)');
     })
 
     // Close OK modal box on X in header
     $(document).on('click', '#btnXModal', function () {
         $('#okModal').css('display', 'none');
+        $('.background').css('filter', 'blur(0px)');
         
     })
 
     $(document).on('click', '#artModalImage', function () {
         $('#artModal').css('display', 'none');
+        $('.background').css('filter', 'blur(0px)');
     })
 
     $(document).on('click', '#bioArtModalImage', function () {
         $('#bioArtModal').css('display', 'none');
+        $('.background').css('filter', 'blur(0px)');
     })
 
     // Button click to cancel modal box
     $(document).on('click', '#btnCancelModal', function () {
         $('#okModal').css('display', 'none');
+        $('.background').css('filter', 'blur(0px)');
     })
 });
 

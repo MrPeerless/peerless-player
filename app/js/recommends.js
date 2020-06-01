@@ -8,8 +8,8 @@ $(document).ready(function () {
     var artist = $("#hiddenArtistName").text();
 
     // Display heading with artist name
-    $("#recommendsArtistName").html(global_AppName + " Recommendations");
-    $("#recommendsDetails").html("Based on " + artist);
+    $("#recommendsArtistName").append(global_AppName + " Recommendations");
+    $("#recommendsDetails").append("Based on " + artist);
 
     // Variable for album list
     var ul = $('#ulRecommends');
@@ -97,7 +97,7 @@ $(document).ready(function () {
                                 li.find('img').attr('src', artURL);
                                 li.find('a').attr('href', encodedUrl);
                                 li.find('a').attr('target', '_blank');
-                                li.find('span').html('<br><b>' + artist + '</b><br>' + title);
+                                li.find('span').append('<br><b>' + artist + '</b><br>' + title);
                                 li.appendTo(ul);
                             }
 
@@ -108,7 +108,7 @@ $(document).ready(function () {
                                 li.find('img').attr('src', artURL);
                                 li.find('a').attr('href', encodedUrl);
                                 li.find('a').attr('target', '_blank');
-                                li.find('span').html('<br><b>' + artist + '</b><br>' + title);
+                                li.find('span').append('<br><b>' + artist + '</b><br>' + title);
                                 li.appendTo(ul);
                             }
                             albumCount += 1;
@@ -151,7 +151,7 @@ $(document).ready(function () {
                                         li.find('img').attr('src', coverArt);
                                         li.find('a').attr('href', encodedUrl);
                                         li.find('a').attr('target', '_blank');
-                                        li.find('span').html('<br><b>' + artist + '</b><br>' + title);
+                                        li.find('span').append('<br><b>' + artist + '</b><br>' + title);
                                         li.appendTo(ul);
                                     }
 
@@ -162,25 +162,26 @@ $(document).ready(function () {
                                         li.find('img').attr('src', coverArt);
                                         li.find('a').attr('href', encodedUrl);
                                         li.find('a').attr('target', '_blank');
-                                        li.find('span').html('<br><b>' + artist + '</b><br>' + title);
+                                        li.find('span').append('<br><b>' + artist + '</b><br>' + title);
                                         li.appendTo(ul);
                                     }
                                     // Increase album counter
                                     albumCount += 1;
-                                    $("#recommendsCount").html(albumCount + " albums recommended. Click to search Napster for samples.");
+                                    $("#recommendsCount").text(albumCount + " albums recommended. Click to search Napster for samples.");
                                 }
                             }
                         }
                         count += 1;
-                    }
-                }
 
+                    }
+
+                }
                 else {
                     // Display modal box if no recommendations found in Gracenote database
                     $('#okModal').css('display', 'block');
                     $(".modalFooter").empty();
-                    $('.modalHeader').html('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
-                    $('#okModalText').html("<div class='modalIcon'><img src='./graphics/information.png'></div><p>&nbsp<br>No recommendations found for <b>" + seedArtist + "</b> in Gracenote database.<br>&nbsp</p>");
+                    $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
+                    $('#okModalText').append("<div class='modalIcon'><img src='./graphics/information.png'></div><p>&nbsp<br>No recommendations found for <b>" + seedArtist + "</b> in Gracenote database.<br>&nbsp</p>");
                     var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
                     $('.modalFooter').append(buttons);
                     $("#btnOkModal").focus();

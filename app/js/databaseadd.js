@@ -7,6 +7,19 @@ $(document).on('click', '#btnSync', function (event) {
 });
 
 function btnSyncClick() {
+    // Check if there is a MUSIC_PATH
+    if (!MUSIC_PATH) {
+        // If no MUSIC_PATH display warning
+        $('#okModal').css('display', 'block');
+        $(".modalFooter").empty();
+        $('.modalHeader').html('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
+        $('#okModalText').html("<div class='modalIcon'><img src='./graphics/warning.png'></div><p>&nbsp<br><b>WARNING. No Music Path has been set.</b><br>Please go to Settings and set your Music Path.&nbsp</p >");
+        var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
+        $('.modalFooter').append(buttons);
+        $("#btnOkModal").focus();
+        $('.background').css('filter', 'blur(5px)');
+        return
+    }
     // Check if online
     var connection = navigator.onLine;
 
@@ -44,6 +57,7 @@ function btnSyncClick() {
         var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
         $('.modalFooter').append(buttons);
         $("#btnOkModal").focus();
+        $('.background').css('filter', 'blur(5px)');
         return
     }
 }
@@ -67,6 +81,7 @@ $(document).on('click', '#btnSearchGracenote', function (event) {
         var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
         $('.modalFooter').append(buttons);
         $("#btnOkModal").focus();
+        $('.background').css('filter', 'blur(5px)');
         albumMatches();
     }
 });
@@ -146,14 +161,22 @@ function albumMatches() {
         // Convert albumsFound to an integer
         var c = parseInt(albumsFound);
 
+        // Get number of tracks for album from main.js
+        ipcRenderer.send("count_tracks", [MUSIC_PATH, $("#selectedArtist").text(), $("#selectedAlbum").text()])
+
+        // Display details of album selected with numbr of tracks
+        ipcRenderer.on("from_count_tracks", (event, data) => {
+            var numberTracks = data[0];
+            $('#displayNewMusicDetails').html(albumsFound + " Album matches have been found in the Gracenote database.<br>" + "Searched for: " + $("#selectedArtist").text() + ", " + $("#selectedAlbum").text() + ", No. Tracks " + numberTracks);
+        });
+
         // Clear existing elments from New Music search
         $('#tblGracenote').empty();
         $('#displayNewMusicDetails').empty();
         $('#displayNewMusicInfo').empty();
-
-        $('#displayNewMusicDetails').html(albumsFound + " Album matches have been found in the Gracenote database.<br>" + "Searched for: " + $("#selectedArtist").text() + ", " + $("#selectedAlbum").text() + ", No. Tracks " + $("#selectedNoTracks").text());
         $('#displayNewMusicInfo').html("Select the closest match and click on GET button to get album metadata.<br>If no suitable matches found click on MANUAL button to manually import album metadata.")
 
+        $('.background').css('filter', 'blur(0px)');
         $('#btnSearchGracenote').css('display', 'none');
         $('#btnDownloadGracenote').css('display', 'inline-block');
         $("#btnDownloadGracenote").prop("disabled", true);
@@ -197,6 +220,7 @@ $(document).on('click', '#btnDownloadGracenote', function (event) {
         var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
         $('.modalFooter').append(buttons);
         $("#btnOkModal").focus();
+        $('.background').css('filter', 'blur(5px)');
 
         global_ImportMode = "auto";
         // Set variables for screen width
@@ -212,8 +236,74 @@ $(document).on('click', '#btnDownloadGracenote', function (event) {
         var url = ("./html/importtodatabase.html");
         // Load Add to Database page
         $("#divContent").load(url);
+        $('.background').css('filter', 'blur(0px)');
         //$("#divTrackListing").load(url);
     }
+});
+
+// Array to store list of files sent back by IPC from main.js
+var files = [];
+
+// Message recieved from main.js with files in album directory
+// files_album_directory
+// Receive all files in album directory
+ipcRenderer.on("files_album_directory", (event, data) => {
+    var sender = data[0];
+    if (sender == "importtodatabase") {
+        files = data[1];
+        var artist = data[2];
+        var album = data[3];
+        var counter = 1;
+        var form = $("#frmAdd")
+
+        // Loop through each music file in album directory
+        for (var i = 0; i < files.length; i++) {
+            var audioSource = MUSIC_PATH + artist + "/" + album + "/" + files[i];
+            var audio = $('<audio class="player" id="' + i + '" src="' + audioSource + '"></audio>');
+
+            $("#divAudioElements").append(audio);
+            var fieldset = $("<fieldset><legend>Track " + counter + "</legend><label class='lblTrackName'>Name: </label><input required class='inpTrackName' id='" + counter + "trackName' name=" + counter + "trackName' type='text' size='79' value='' /><label class='lblFileName'>File Name:</label><input required class='inpFileName' id='" + counter + "fileName' name='" + counter + "fileName' type='text' size='75' value='' readonly /><label class='lblTrackTime'>Time:</label><input required class='inpTrackTime' id='" + counter + "pTime' name='" + counter + "pTime' type='text' size='8 value='' /><br><label class='lblTrackName'>Mood 1:</label><select class='sltMood1' id='" + counter + "mood1' name=" + counter + "mood1'><option value=''></option><option value='Peaceful'>Peaceful</option><option value='Romantic'>Romantic</option><option value='Sentimental'>Sentimental</option><option value='Tender'>Tender</option><option value='Easygoing'>Easygoing</option><option value='Yearning'>Yearning</option><option value='Sophisticated'>Sophisticated</option><option value='Sensual'>Sensual</option><option value='Cool'>Cool</option><option value='Gritty'>Gritty</option><option value='Somber'>Somber</option><option value='Melancholy'>Melancholy</option><option value='Serious'>Serious</option><option value='Brooding'>Brooding</option><option value='Fiery'>Fiery</option><option value='Urgent'>Urgent</option><option value='Defiant'>Defiant</option><option value='Aggressive'>Aggressive</option><option value='Rowdy'>Rowdy</option><option value='Excited'>Excited</option><option value='Energizing'>Energizing</option><option value='Empowering'>Empowering</option><option value='Stirring'>Stirring</option><option value='Lively'>Lively</option><option value='Upbeat'>Upbeat</option><option value='Other'>Other</option></select><label class='lblFileName'>Mood 2:</label><select class='sltMood2' id='" + counter + "mood2' name=" + counter + "mood2'></select><br><label class='lblTrackName'>Tempo 1:</label><input class='inpTrackName' id='" + counter + "tempo1' name=" + counter + "tempo1' type='text' size='25' value='' /><label class='lblFileName'>Tempo 2:</label><input class='inpTrackName' id='" + counter + "tempo2' name=" + counter + "tempo2' type='text' size='25' value='' /><br><label class='lblTrackName'>Genre 2:</label><input class='inpTrackName' id='" + counter + "genre2' name=" + counter + "genre2' type='text' size='40' value='' /><label class='lblFileName'>Genre 3:</label><input class='inpTrackName' id='" + counter + "genre3' name=" + counter + "genre3' type='text' size='40' value='' /></fieldset>");
+
+            // Append fieldset to form
+            fieldset.appendTo(form);
+
+            // Increase counter
+            counter += 1;
+        }
+        // Get audio file and total album duration
+        var totalTime = 0;
+        var albumTime = 0;
+        $(".player").each(function () {
+            $(this).on('loadedmetadata', function () {
+                var id = $(this).attr('id');
+                // Use the audio id number to to create a reference to the playTime input box
+                var count = parseInt(id);
+                count += 1;
+                var pTime = "#" + count + "pTime";
+                // Get file duration
+                var seconds = (this.duration);
+                // Add duration to the total time of the album
+                var secs = parseInt(seconds);
+                totalTime += secs;
+                // Convert seconds to minuntes and seconds
+                var minutes = Math.floor(seconds / 60);
+                seconds = Math.floor(seconds % 60);
+                seconds = (seconds >= 10) ? seconds : "0" + seconds;
+                var time = (minutes + ":" + seconds);
+                // Calculate total album time
+                var albumMinutes = Math.floor(totalTime / 60);
+                var albumSeconds = Math.floor(totalTime % 60);
+                albumSeconds = (albumSeconds >= 10) ? albumSeconds : "0" + albumSeconds;
+                albumTime = (albumMinutes + ":" + albumSeconds);
+                // Add the time value to the playTime input box
+                $(pTime).val(time);
+
+                $("#inpAlbumTime").val(albumTime);
+            });
+        });
+    }
+    // Function go get meta data fromn Gracenote in index.js
+    albumMetadata();
 });
 
 //#########################################
@@ -253,10 +343,6 @@ function albumMetadata() {
         // Replace encoded &amp with &
         artist = artist.replace(/&amp;/g, '&');
         album = album.replace(/&amp;/g, '&');
-
-        // Get all files in album directory
-        var files = fs.readdirSync(MUSIC_PATH + artist + "/" + album + "/");
-
         var counter = 1;
 
         // moodCount is a separte counter for when mood1 = other and there is no mood2, increase the moodcount by 1 
@@ -265,7 +351,7 @@ function albumMetadata() {
 
         // Get main genre for album
         var genre1 = $(response).find('GENRE[ORD="1"]').eq(0).text();
-        //$("#inpGenre").val(genre1);
+
         $('[name=sltGenre]').val(genre1);
 
         // Genre 2
@@ -275,252 +361,236 @@ function albumMetadata() {
 
         // Loop through each music file and populate XML data
         for (var i = 0; i < files.length; i++) {
-            var ext = (path.extname(MUSIC_PATH + artist + "/" + album + "/" + files[i]));
+            var tName = files[i].slice(0, -4);
 
-            // Check if file is a music file
-            if ((ext == '.mp3') || (ext == '.m4a') || (ext == '.wav')) {
-                // Get filename
-                var f = path.basename(MUSIC_PATH + artist + "/" + album + "/" + files[i]);
-                // Remove file extenstion to get track name
-                var tName = f.slice(0, -4);
-
-                // Check filename format if downloaded from Amazon in format "01 - SongName" and remove the dash after the track number
-                var format = tName.substring(2, 5);
-                if (format == " - ") {
-                    // Slice tName around the " - " in order to remove the dash
-                    tName = tName.slice(0, 2) + tName.slice(4, tName.length);
-                    // Create variable for new filename
-                    newtName = tName + ext;
-                    // Rename file in directory
-                    fs.rename(MUSIC_PATH + artist + "/" + album + "/" + f, MUSIC_PATH + artist + "/" + album + "/" + newtName, (error) => {
-                        if (error) throw error;
-                    });
-                    // Update f with new filename
-                    f = newtName;
-                }
-
-                // Get the track number from start of track name
-                var tNumber = f.substr(0, f.indexOf(' '));
-                // Remove leading zero
-                tNumber = tNumber.replace(/^0+/, '');
-                // number = for accessing the xml data which is zero indexed
-                var number = parseInt(tNumber);
-
-                number -= 1;
-                // Trackname
-                $("#" + counter + "trackName").val(tName);
-                // Filename
-                $("#" + counter + "fileName").val(f);
-                // Get XML data for each track
-                // Mood 1;
-                var mood1 = $(response).find('TRACK MOOD[ORD="1"]').eq(number).text();
-                $("#" + counter + "mood1").val(mood1);
-                // Tempo 1
-                var tempo1 = $(response).find('TRACK TEMPO[ORD="1"]').eq(number).text();
-                $("#" + counter + "tempo1").val(tempo1);
-                // Tempo 2
-                var tempo2 = $(response).find('TRACK TEMPO[ORD="2"]').eq(number).text();
-                $("#" + counter + "tempo2").val(tempo2);
-                // Genre  2
-                $("#" + counter + "genre2").val(genre2);
-                // Genre 3
-                $("#" + counter + "genre3").val(genre3);
-                // Mood 2
-                switch (mood1) {
-                    case "Peaceful":
-                        $("#" + counter + "mood2").append("<option></option>");
-                        $("#" + counter + "mood2").append("<option>Reverent / Healing</option>");
-                        $("#" + counter + "mood2").append("<option>Quiet / Introspective</option>");
-                        $("#" + counter + "mood2").append("<option>Delicate / Tranquil</option>");
-                        $("#" + counter + "mood2").append("<option>Pastoral / Serene</option>");
-                        break;
-                    case "Romantic":
-                        $("#" + counter + "mood2").append("<option></option>");
-                        $("#" + counter + "mood2").append("<option>Lush / Romantic</option>");
-                        $("#" + counter + "mood2").append("<option>Sweet / Sincere</option>");
-                        $("#" + counter + "mood2").append("<option>Heartfelt Passion</option>");
-                        $("#" + counter + "mood2").append("<option>Dramatic / Romantic</option>");
-                        break;
-                    case "Sentimental":
-                        $("#" + counter + "mood2").append("<option></option>");
-                        $("#" + counter + "mood2").append("<option>Lyrical Sentimental</option>");
-                        $("#" + counter + "mood2").append("<option>Gentle Bittersweet</option>");
-                        $("#" + counter + "mood2").append("<option>Tender / Sincere</option>");
-                        $("#" + counter + "mood2").append("<option>Cool Melancholy</option>");
-                        break;
-                    case "Tender":
-                        $("#" + counter + "mood2").append("<option></option>");
-                        $("#" + counter + "mood2").append("<option>Romantic / Lyrical</option>");
-                        $("#" + counter + "mood2").append("<option>Refined / Mannered</option>");
-                        $("#" + counter + "mood2").append("<option>Awakening / Stately</option>");
-                        $("#" + counter + "mood2").append("<option>Light Groovy</option>");
-                        break;
-                    case "Easygoing":
-                        $("#" + counter + "mood2").append("<option></option>");
-                        $("#" + counter + "mood2").append("<option>Friendly</option>");
-                        $("#" + counter + "mood2").append("<option>Hopeful / Breezy</option>");
-                        $("#" + counter + "mood2").append("<option>Cheerful / Playful</option>");
-                        $("#" + counter + "mood2").append("<option>Charming / Easygoing</option>");
-                        break;
-                    case "Yearning":
-                        $("#" + counter + "mood2").append("<option></option>");
-                        $("#" + counter + "mood2").append("<option>Sensitive / Exploring</option>");
-                        $("#" + counter + "mood2").append("<option>Energetic Yearning</option>");
-                        $("#" + counter + "mood2").append("<option>Energetic Dreamy</option>");
-                        $("#" + counter + "mood2").append("<option>Bittersweet Pop</option>");
-                        break;
-                    case "Sophisticated":
-                        $("#" + counter + "mood2").append("<option></option>");
-                        $("#" + counter + "mood2").append("<option>Smoky / Romantic</option>");
-                        $("#" + counter + "mood2").append("<option>Intimate Bittersweet</option>");
-                        $("#" + counter + "mood2").append("<option>Suave / Sultry</option>");
-                        $("#" + counter + "mood2").append("<option>Dark Playful</option>");
-                        break;
-                    case "Sensual":
-                        $("#" + counter + "mood2").append("<option></option>");
-                        $("#" + counter + "mood2").append("<option>Soft Soulful</option>");
-                        $("#" + counter + "mood2").append("<option>Sensual Groove</option>");
-                        $("#" + counter + "mood2").append("<option>Intimate</option>");
-                        $("#" + counter + "mood2").append("<option>Dreamy Pulse</option>");
-                        break;
-                    case "Cool":
-                        $("#" + counter + "mood2").append("<option></option>");
-                        $("#" + counter + "mood2").append("<option>Cool Confidence</option>");
-                        $("#" + counter + "mood2").append("<option>Casual Groove</option>");
-                        $("#" + counter + "mood2").append("<option>Dark Groovy</option>");
-                        $("#" + counter + "mood2").append("<option>Wary / Defiant</option>");
-                        break;
-                    case "Gritty":
-                        $("#" + counter + "mood2").append("<option></option>");
-                        $("#" + counter + "mood2").append("<option>Depressed / Lonely</option>");
-                        $("#" + counter + "mood2").append("<option>Sober / Determined</option>");
-                        $("#" + counter + "mood2").append("<option>Gritty / Soulful</option>");
-                        $("#" + counter + "mood2").append("<option>Strumming Yearning</option>");
-                        break;
-                    case "Somber":
-                        $("#" + counter + "mood2").append("<option></option>");
-                        $("#" + counter + "mood2").append("<option>Dark Cosmic</option>");
-                        $("#" + counter + "mood2").append("<option>Enigmatic / Mysterious</option>");
-                        $("#" + counter + "mood2").append("<option>Creepy / Ominous</option>");
-                        $("#" + counter + "mood2").append("<option>Solemn / Spiritual</option>");
-                        break;
-                    case "Melancholy":
-                        $("#" + counter + "mood2").append("<option></option>");
-                        $("#" + counter + "mood2").append("<option>Mysterious / Dreamy</option>");
-                        $("#" + counter + "mood2").append("<option>Wistful / Forlorn</option>");
-                        $("#" + counter + "mood2").append("<option>Light Melancholy</option>");
-                        $("#" + counter + "mood2").append("<option>Sad / Soulful</option>");
-                        break;
-                    case "Serious":
-                        $("#" + counter + "mood2").append("<option></option>");
-                        $("#" + counter + "mood2").append("<option>Thrilling</option>");
-                        $("#" + counter + "mood2").append("<option>Melodramatic</option>");
-                        $("#" + counter + "mood2").append("<option>Serious / Cerebral</option>");
-                        $("#" + counter + "mood2").append("<option>Hypnotic Rhythm</option>");
-                        break;
-                    case "Brooding":
-                        $("#" + counter + "mood2").append("<option></option>");
-                        $("#" + counter + "mood2").append("<option>Energetic Melancholy</option>");
-                        $("#" + counter + "mood2").append("<option>Alienated / Brooding</option>");
-                        $("#" + counter + "mood2").append("<option>Evocative / Intriguing</option>");
-                        $("#" + counter + "mood2").append("<option>Dreamy Brooding</option>");
-                        break;
-                    case "Fiery":
-                        $("#" + counter + "mood2").append("<option></option>");
-                        $("#" + counter + "mood2").append("<option>Dark Sparkling Lyrical</option>");
-                        $("#" + counter + "mood2").append("<option>Fiery Groove</option>");
-                        $("#" + counter + "mood2").append("<option>Passionate Rhythm</option>");
-                        $("#" + counter + "mood2").append("<option>Energetic Abstract Groove</option>");
-                        break;
-                    case "Urgent":
-                        $("#" + counter + "mood2").append("<option></option>");
-                        $("#" + counter + "mood2").append("<option>Dark Urgent</option>");
-                        $("#" + counter + "mood2").append("<option>Dark Pop</option>");
-                        $("#" + counter + "mood2").append("<option>Dark Pop Intensity</option>");
-                        $("#" + counter + "mood2").append("<option>Energetic Anxious</option>");
-                        break;
-                    case "Defiant":
-                        $("#" + counter + "mood2").append("<option></option>");
-                        $("#" + counter + "mood2").append("<option>Heavy Brooding</option>");
-                        $("#" + counter + "mood2").append("<option>Hard Dark Excitement</option>");
-                        $("#" + counter + "mood2").append("<option>Hard Positive Excitement</option>");
-                        $("#" + counter + "mood2").append("<option>Attitude / Defiant</option>");
-                        break;
-                    case "Aggressive":
-                        $("#" + counter + "mood2").append("<option></option>");
-                        $("#" + counter + "mood2").append("<option>Dark Hard Beat</option>");
-                        $("#" + counter + "mood2").append("<option>Heavy Triumphant</option>");
-                        $("#" + counter + "mood2").append("<option>Chaotic / Intense</option>");
-                        $("#" + counter + "mood2").append("<option>Aggressive Power</option>");
-                        break;
-                    case "Rowdy":
-                        $("#" + counter + "mood2").append("<option></option>");
-                        $("#" + counter + "mood2").append("<option>Driving Dark Groove</option>");
-                        $("#" + counter + "mood2").append("<option>Wild / Rowdy</option>");
-                        $("#" + counter + "mood2").append("<option>Ramshackle / Rollicking</option>");
-                        $("#" + counter + "mood2").append("<option>Confident / Tough</option>");
-                        break;
-                    case "Excited":
-                        $("#" + counter + "mood2").append("<option></option>");
-                        $("#" + counter + "mood2").append("<option>Loud Celebratory</option>");
-                        $("#" + counter + "mood2").append("<option>Happy Excitement</option>");
-                        $("#" + counter + "mood2").append("<option>Upbeat Pop Groove</option>");
-                        $("#" + counter + "mood2").append("<option>Euphoric Energy</option>");
-                        break;
-                    case "Energizing":
-                        $("#" + counter + "mood2").append("<option></option>");
-                        $("#" + counter + "mood2").append("<option>Arousing Groove</option>");
-                        $("#" + counter + "mood2").append("<option>Heavy Beat</option>");
-                        $("#" + counter + "mood2").append("<option>Abstract Beat</option>");
-                        $("#" + counter + "mood2").append("<option>Edgy / Sexy</option>");
-                        break;
-                    case "Empowering":
-                        $("#" + counter + "mood2").append("<option></option>");
-                        $("#" + counter + "mood2").append("<option>Dramatic Emotion</option>");
-                        $("#" + counter + "mood2").append("<option>Powerful / Heroic</option>");
-                        $("#" + counter + "mood2").append("<option>Idealistic / Stirring</option>");
-                        $("#" + counter + "mood2").append("<option>Strong / Stable</option>");
-                        break;
-                    case "Stirring":
-                        $("#" + counter + "mood2").append("<option></option>");
-                        $("#" + counter + "mood2").append("<option>Jubilant / Soulful</option>");
-                        $("#" + counter + "mood2").append("<option>Triumphant / Rousing</option>");
-                        $("#" + counter + "mood2").append("<option>Focused Sparkling</option>");
-                        $("#" + counter + "mood2").append("<option>Invigorating / Joyous</option>");
-                        break;
-                    case "Lively":
-                        $("#" + counter + "mood2").append("<option></option>");
-                        $("#" + counter + "mood2").append("<option>Showy / Rousing</option>");
-                        $("#" + counter + "mood2").append("<option>Playful / Swingin'</option>");
-                        $("#" + counter + "mood2").append("<option>Exuberant / Festive</option>");
-                        $("#" + counter + "mood2").append("<option>Lusty / Jaunty</option>");
-                        break;
-                    case "Upbeat":
-                        $("#" + counter + "mood2").append("<option></option>");
-                        $("#" + counter + "mood2").append("<option>Happy / Soulful</option>");
-                        $("#" + counter + "mood2").append("<option>Carefree Pop</option>");
-                        $("#" + counter + "mood2").append("<option>Party / Fun</option>");
-                        $("#" + counter + "mood2").append("<option>Soulful / Easygoing</option>");
-                        break;
-                    case "Other":
-                        $("#" + counter + "mood2").append("<option></option>");
-                        $("#" + counter + "mood2").append("<option>Other</option>");
-                        break;
-                }
-
-                // Mood 2
-                if (mood1 == "Other") {
-                    var mood2 = "Other";
-                    moodCount += 1;
-                }
-                else {
-                    var mood2 = $(response).find('TRACK MOOD[ORD="2"]').eq(number - moodCount).text();
-                }
-                $("#" + counter + "mood2").val(mood2);
-
-                counter += 1;
+            // Check filename format if downloaded from Amazon in format "01 - SongName" and remove the dash after the track number
+            var format = tName.substring(2, 5);
+            if (format == " - ") {
+                // Slice tName around the " - " in order to remove the dash
+                tName = tName.slice(0, 2) + tName.slice(4, tName.length);
             }
+
+            // Get the track number from start of track name
+            var tNumber = files[i].substr(0, files[i].indexOf(' '));
+            // Remove leading zero
+            tNumber = tNumber.replace(/^0+/, '');
+            // number = for accessing the xml data which is zero indexed
+            var number = parseInt(tNumber);
+
+            number -= 1;
+            // Trackname
+            $("#" + counter + "trackName").val(tName);
+            // Filename
+            $("#" + counter + "fileName").val(files[i]);
+            // Get XML data for each track
+            // Mood 1;
+            var mood1 = $(response).find('TRACK MOOD[ORD="1"]').eq(number).text();
+            $("#" + counter + "mood1").val(mood1);
+            // Tempo 1
+            var tempo1 = $(response).find('TRACK TEMPO[ORD="1"]').eq(number).text();
+            $("#" + counter + "tempo1").val(tempo1);
+            // Tempo 2
+            var tempo2 = $(response).find('TRACK TEMPO[ORD="2"]').eq(number).text();
+            $("#" + counter + "tempo2").val(tempo2);
+            // Genre  2
+            $("#" + counter + "genre2").val(genre2);
+            // Genre 3
+            $("#" + counter + "genre3").val(genre3);
+            // Mood 2
+            switch (mood1) {
+                case "Peaceful":
+                    $("#" + counter + "mood2").append("<option></option>");
+                    $("#" + counter + "mood2").append("<option>Reverent / Healing</option>");
+                    $("#" + counter + "mood2").append("<option>Quiet / Introspective</option>");
+                    $("#" + counter + "mood2").append("<option>Delicate / Tranquil</option>");
+                    $("#" + counter + "mood2").append("<option>Pastoral / Serene</option>");
+                    break;
+                case "Romantic":
+                    $("#" + counter + "mood2").append("<option></option>");
+                    $("#" + counter + "mood2").append("<option>Lush / Romantic</option>");
+                    $("#" + counter + "mood2").append("<option>Sweet / Sincere</option>");
+                    $("#" + counter + "mood2").append("<option>Heartfelt Passion</option>");
+                    $("#" + counter + "mood2").append("<option>Dramatic / Romantic</option>");
+                    break;
+                case "Sentimental":
+                    $("#" + counter + "mood2").append("<option></option>");
+                    $("#" + counter + "mood2").append("<option>Lyrical Sentimental</option>");
+                    $("#" + counter + "mood2").append("<option>Gentle Bittersweet</option>");
+                    $("#" + counter + "mood2").append("<option>Tender / Sincere</option>");
+                    $("#" + counter + "mood2").append("<option>Cool Melancholy</option>");
+                    break;
+                case "Tender":
+                    $("#" + counter + "mood2").append("<option></option>");
+                    $("#" + counter + "mood2").append("<option>Romantic / Lyrical</option>");
+                    $("#" + counter + "mood2").append("<option>Refined / Mannered</option>");
+                    $("#" + counter + "mood2").append("<option>Awakening / Stately</option>");
+                    $("#" + counter + "mood2").append("<option>Light Groovy</option>");
+                    break;
+                case "Easygoing":
+                    $("#" + counter + "mood2").append("<option></option>");
+                    $("#" + counter + "mood2").append("<option>Friendly</option>");
+                    $("#" + counter + "mood2").append("<option>Hopeful / Breezy</option>");
+                    $("#" + counter + "mood2").append("<option>Cheerful / Playful</option>");
+                    $("#" + counter + "mood2").append("<option>Charming / Easygoing</option>");
+                    break;
+                case "Yearning":
+                    $("#" + counter + "mood2").append("<option></option>");
+                    $("#" + counter + "mood2").append("<option>Sensitive / Exploring</option>");
+                    $("#" + counter + "mood2").append("<option>Energetic Yearning</option>");
+                    $("#" + counter + "mood2").append("<option>Energetic Dreamy</option>");
+                    $("#" + counter + "mood2").append("<option>Bittersweet Pop</option>");
+                    break;
+                case "Sophisticated":
+                    $("#" + counter + "mood2").append("<option></option>");
+                    $("#" + counter + "mood2").append("<option>Smoky / Romantic</option>");
+                    $("#" + counter + "mood2").append("<option>Intimate Bittersweet</option>");
+                    $("#" + counter + "mood2").append("<option>Suave / Sultry</option>");
+                    $("#" + counter + "mood2").append("<option>Dark Playful</option>");
+                    break;
+                case "Sensual":
+                    $("#" + counter + "mood2").append("<option></option>");
+                    $("#" + counter + "mood2").append("<option>Soft Soulful</option>");
+                    $("#" + counter + "mood2").append("<option>Sensual Groove</option>");
+                    $("#" + counter + "mood2").append("<option>Intimate</option>");
+                    $("#" + counter + "mood2").append("<option>Dreamy Pulse</option>");
+                    break;
+                case "Cool":
+                    $("#" + counter + "mood2").append("<option></option>");
+                    $("#" + counter + "mood2").append("<option>Cool Confidence</option>");
+                    $("#" + counter + "mood2").append("<option>Casual Groove</option>");
+                    $("#" + counter + "mood2").append("<option>Dark Groovy</option>");
+                    $("#" + counter + "mood2").append("<option>Wary / Defiant</option>");
+                    break;
+                case "Gritty":
+                    $("#" + counter + "mood2").append("<option></option>");
+                    $("#" + counter + "mood2").append("<option>Depressed / Lonely</option>");
+                    $("#" + counter + "mood2").append("<option>Sober / Determined</option>");
+                    $("#" + counter + "mood2").append("<option>Gritty / Soulful</option>");
+                    $("#" + counter + "mood2").append("<option>Strumming Yearning</option>");
+                    break;
+                case "Somber":
+                    $("#" + counter + "mood2").append("<option></option>");
+                    $("#" + counter + "mood2").append("<option>Dark Cosmic</option>");
+                    $("#" + counter + "mood2").append("<option>Enigmatic / Mysterious</option>");
+                    $("#" + counter + "mood2").append("<option>Creepy / Ominous</option>");
+                    $("#" + counter + "mood2").append("<option>Solemn / Spiritual</option>");
+                    break;
+                case "Melancholy":
+                    $("#" + counter + "mood2").append("<option></option>");
+                    $("#" + counter + "mood2").append("<option>Mysterious / Dreamy</option>");
+                    $("#" + counter + "mood2").append("<option>Wistful / Forlorn</option>");
+                    $("#" + counter + "mood2").append("<option>Light Melancholy</option>");
+                    $("#" + counter + "mood2").append("<option>Sad / Soulful</option>");
+                    break;
+                case "Serious":
+                    $("#" + counter + "mood2").append("<option></option>");
+                    $("#" + counter + "mood2").append("<option>Thrilling</option>");
+                    $("#" + counter + "mood2").append("<option>Melodramatic</option>");
+                    $("#" + counter + "mood2").append("<option>Serious / Cerebral</option>");
+                    $("#" + counter + "mood2").append("<option>Hypnotic Rhythm</option>");
+                    break;
+                case "Brooding":
+                    $("#" + counter + "mood2").append("<option></option>");
+                    $("#" + counter + "mood2").append("<option>Energetic Melancholy</option>");
+                    $("#" + counter + "mood2").append("<option>Alienated / Brooding</option>");
+                    $("#" + counter + "mood2").append("<option>Evocative / Intriguing</option>");
+                    $("#" + counter + "mood2").append("<option>Dreamy Brooding</option>");
+                    break;
+                case "Fiery":
+                    $("#" + counter + "mood2").append("<option></option>");
+                    $("#" + counter + "mood2").append("<option>Dark Sparkling Lyrical</option>");
+                    $("#" + counter + "mood2").append("<option>Fiery Groove</option>");
+                    $("#" + counter + "mood2").append("<option>Passionate Rhythm</option>");
+                    $("#" + counter + "mood2").append("<option>Energetic Abstract Groove</option>");
+                    break;
+                case "Urgent":
+                    $("#" + counter + "mood2").append("<option></option>");
+                    $("#" + counter + "mood2").append("<option>Dark Urgent</option>");
+                    $("#" + counter + "mood2").append("<option>Dark Pop</option>");
+                    $("#" + counter + "mood2").append("<option>Dark Pop Intensity</option>");
+                    $("#" + counter + "mood2").append("<option>Energetic Anxious</option>");
+                    break;
+                case "Defiant":
+                    $("#" + counter + "mood2").append("<option></option>");
+                    $("#" + counter + "mood2").append("<option>Heavy Brooding</option>");
+                    $("#" + counter + "mood2").append("<option>Hard Dark Excitement</option>");
+                    $("#" + counter + "mood2").append("<option>Hard Positive Excitement</option>");
+                    $("#" + counter + "mood2").append("<option>Attitude / Defiant</option>");
+                    break;
+                case "Aggressive":
+                    $("#" + counter + "mood2").append("<option></option>");
+                    $("#" + counter + "mood2").append("<option>Dark Hard Beat</option>");
+                    $("#" + counter + "mood2").append("<option>Heavy Triumphant</option>");
+                    $("#" + counter + "mood2").append("<option>Chaotic / Intense</option>");
+                    $("#" + counter + "mood2").append("<option>Aggressive Power</option>");
+                    break;
+                case "Rowdy":
+                    $("#" + counter + "mood2").append("<option></option>");
+                    $("#" + counter + "mood2").append("<option>Driving Dark Groove</option>");
+                    $("#" + counter + "mood2").append("<option>Wild / Rowdy</option>");
+                    $("#" + counter + "mood2").append("<option>Ramshackle / Rollicking</option>");
+                    $("#" + counter + "mood2").append("<option>Confident / Tough</option>");
+                    break;
+                case "Excited":
+                    $("#" + counter + "mood2").append("<option></option>");
+                    $("#" + counter + "mood2").append("<option>Loud Celebratory</option>");
+                    $("#" + counter + "mood2").append("<option>Happy Excitement</option>");
+                    $("#" + counter + "mood2").append("<option>Upbeat Pop Groove</option>");
+                    $("#" + counter + "mood2").append("<option>Euphoric Energy</option>");
+                    break;
+                case "Energizing":
+                    $("#" + counter + "mood2").append("<option></option>");
+                    $("#" + counter + "mood2").append("<option>Arousing Groove</option>");
+                    $("#" + counter + "mood2").append("<option>Heavy Beat</option>");
+                    $("#" + counter + "mood2").append("<option>Abstract Beat</option>");
+                    $("#" + counter + "mood2").append("<option>Edgy / Sexy</option>");
+                    break;
+                case "Empowering":
+                    $("#" + counter + "mood2").append("<option></option>");
+                    $("#" + counter + "mood2").append("<option>Dramatic Emotion</option>");
+                    $("#" + counter + "mood2").append("<option>Powerful / Heroic</option>");
+                    $("#" + counter + "mood2").append("<option>Idealistic / Stirring</option>");
+                    $("#" + counter + "mood2").append("<option>Strong / Stable</option>");
+                    break;
+                case "Stirring":
+                    $("#" + counter + "mood2").append("<option></option>");
+                    $("#" + counter + "mood2").append("<option>Jubilant / Soulful</option>");
+                    $("#" + counter + "mood2").append("<option>Triumphant / Rousing</option>");
+                    $("#" + counter + "mood2").append("<option>Focused Sparkling</option>");
+                    $("#" + counter + "mood2").append("<option>Invigorating / Joyous</option>");
+                    break;
+                case "Lively":
+                    $("#" + counter + "mood2").append("<option></option>");
+                    $("#" + counter + "mood2").append("<option>Showy / Rousing</option>");
+                    $("#" + counter + "mood2").append("<option>Playful / Swingin'</option>");
+                    $("#" + counter + "mood2").append("<option>Exuberant / Festive</option>");
+                    $("#" + counter + "mood2").append("<option>Lusty / Jaunty</option>");
+                    break;
+                case "Upbeat":
+                    $("#" + counter + "mood2").append("<option></option>");
+                    $("#" + counter + "mood2").append("<option>Happy / Soulful</option>");
+                    $("#" + counter + "mood2").append("<option>Carefree Pop</option>");
+                    $("#" + counter + "mood2").append("<option>Party / Fun</option>");
+                    $("#" + counter + "mood2").append("<option>Soulful / Easygoing</option>");
+                    break;
+                case "Other":
+                    $("#" + counter + "mood2").append("<option></option>");
+                    $("#" + counter + "mood2").append("<option>Other</option>");
+                    break;
+            }
+
+            // Mood 2
+            if (mood1 == "Other") {
+                var mood2 = "Other";
+                moodCount += 1;
+            }
+            else {
+                var mood2 = $(response).find('TRACK MOOD[ORD="2"]').eq(number - moodCount).text();
+            }
+            $("#" + counter + "mood2").val(mood2);
+            counter += 1;
         }
+
         // Populate hidden field with number of tracks
         counter -= 1
         $("#inpCount").val(counter)
@@ -803,43 +873,13 @@ $(document).on('click', '#btnImportAlbum', function (event) {
         var todayDate = new Date();
         var dateAdd = convertDate(todayDate);
 
+        // Rename directories if changed on input
+        ipcRenderer.send("rename_directory", [MUSIC_PATH, originalArtistName, originalAlbumName, artist, album, "add"]);
+
         populateTables();
 
         async function populateTables() {
             try {
-                // RENAME DIRECTORIES IF CHANGED ON INPUT
-                // First check if album name has been changed and if so update directory name
-                var dirAlbumName = path.basename(MUSIC_PATH + originalArtistName + "/" + originalAlbumName);
-                var dirPath = path.dirname(MUSIC_PATH + originalArtistName + "/" + originalAlbumName);
-                // Rename album directory name if it doesn't match original
-                if (album != dirAlbumName) {
-                    fs.rename(dirPath + "/" + dirAlbumName, dirPath + "/" + album, (error) => {
-                        if (error) throw error;
-                    });
-                }
-
-                // Check if artist name has been changed and if so update directory name
-                var dirArtistName = path.basename(MUSIC_PATH + originalArtistName);
-                var dirPath = path.dirname(MUSIC_PATH + originalArtistName);
-                // Rename artist directory name if it doesn't match original
-                if (artist != dirArtistName) {
-                    // If the new artist name directory doesn't create it
-                    if (!fs.existsSync(dirPath + "/" + artist)) {
-                        // Create new directory for artist
-                        fs.mkdirSync(dirPath + "/" + artist);
-                        // Rename old artist directory to new artist directory
-                        fs.rename(dirPath + "/" + dirArtistName + "/" + album, dirPath + "/" + artist + "/" + album, (error) => {
-                            if (error) throw error;
-                        });
-                    }
-                    else {
-                        // The new artist directory exists so rename old artist directory to new artist directory
-                        fs.rename(dirPath + "/" + dirArtistName + "/" + album, dirPath + "/" + artist + "/" + album, (error) => {
-                            if (error) throw error;
-                        });
-                    }
-                }
-
                 // ARTIST TABLE
                 // Check if artist is already in database, if not add to artist table
                 var sql = "SELECT artistID FROM artist WHERE artistName=?";
@@ -917,31 +957,8 @@ $(document).on('click', '#btnImportAlbum', function (event) {
                 var artFilePath = MUSIC_PATH + artist + "/" + album + "/AlbumArtXLarge.jpg";
                 var resizedFilePath = MUSIC_PATH + artist + "/" + album + "/folder.jpg";
 
-                // Delete folder.jpg if it exists because Windows Media Player rips files as hidden system files, which don't overwrite.
-                if (fs.existsSync(resizedFilePath)) {
-                    fs.unlinkSync(resizedFilePath);
-                }
-
-                // Function to save art image
-                var saveImage = function (url, fileName, callback) {
-                    request(url).pipe(fs.createWriteStream(fileName)).on('close', callback);
-                }
-                // Call function to save art image
-                // If there is cover art found on Gracenote server
-                if (coverArtUrl != "") {
-                    saveImage(coverArtUrl, artFilePath, function () {
-                        // resize image
-                        Jimp.read(artFilePath).then(tpl => (tpl.clone().resize(250, 250).write(resizedFilePath)))
-                    });
-                }
-                // If no cover art found use default genre art
-                else {
-                    var genreArtFilePath = "./graphics/genres/" + genre + ".gif";
-                    // Create AlbumArtXLarge.jpg 
-                    Jimp.read(genreArtFilePath).then(tpl => (tpl.clone().write(artFilePath)))
-                    // Create and resize folder.jpg
-                    Jimp.read(genreArtFilePath).then(tpl => (tpl.clone().resize(250, 250).write(resizedFilePath)))
-                }
+                // Send message to main.js to save and resize art image
+                ipcRenderer.send("save_artwork", [artFilePath, resizedFilePath, coverArtUrl, genre]);
 
                 // Show OK modal box to confirm album added to database
                 $('#okModal').css('display', 'block');
@@ -951,6 +968,7 @@ $(document).on('click', '#btnImportAlbum', function (event) {
                 var buttons = $("<button class='btnContent' id='btnOkImport'>OK</button>");
                 $('.modalFooter').append(buttons);
                 $("#btnOkImport").focus();
+                $('.background').css('filter', 'blur(5px)');
                 // Enable btnSync
                 $("#btnSync").prop("disabled", false);
 
@@ -965,6 +983,7 @@ $(document).on('click', '#btnImportAlbum', function (event) {
                 var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
                 $('.modalFooter').append(buttons);
                 $("#btnOkModal").focus();
+                $('.background').css('filter', 'blur(5px)');
             }
         }
     }

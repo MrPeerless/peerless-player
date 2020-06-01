@@ -562,10 +562,7 @@ async function displayTrack(position) {
         // Display album artwork
 
         // Get folder.jpg file path
-        var sourceFile = MUSIC_PATH + row.artistName + "/" + row.albumName + "/folder.jpg";
-        // Find folder.jpg last modified date
-        var modifiedDate = fs.statSync(sourceFile).mtime;
-        var artworkSource = MUSIC_PATH + row.artistName + "/" + row.albumName + "/folder.jpg?modified=" + modifiedDate;
+        var artworkSource = MUSIC_PATH + row.artistName + "/" + row.albumName + "/folder.jpg";
         $("#imgNowPlaying").attr('src', artworkSource);
 
         // Set link from album artwork to display album

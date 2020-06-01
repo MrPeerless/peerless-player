@@ -41,16 +41,7 @@ $(document).ready(function () {
         $("#editAlbumInfo").html("Select the closest match from the Gracenote server in the below table and CLICK,<br><b>GET</b> to auto update the track and album metadata.<br><b>ARTWORK</b> to update album cover art.<br>Or click on album artwork to select an image file manually.<br><b>DELETE</b> to delete the album from the database.");
 
         // Path to album artwork
-        var sourceFile = MUSIC_PATH + artist + "/" + album + "/folder.jpg";
-        // Find folder.jpg last modified date
-        try {
-            var modifiedDate = fs.statSync(sourceFile).mtime;
-            var artworkSource = MUSIC_PATH + artist + "/" + album + "/folder.jpg?modified=" + modifiedDate;
-        }
-        catch{
-            var artworkSource = "./graphics/notFound.gif"
-        }
-
+        var artworkSource = MUSIC_PATH + artist + "/" + album + "/folder.jpg";
         $("#imgCoverArt").attr('src', artworkSource);
 
         // Get genre nane from genre table

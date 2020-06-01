@@ -82,15 +82,7 @@ $(document).ready(function () {
             }
 
             // Get folder.jpg file path
-            var sourceFile = MUSIC_PATH + artistName + "/" + albumName + "/folder.jpg";
-            // Find folder.jpg last modified date
-            try {
-                var modifiedDate = fs.statSync(sourceFile).mtime;
-                var artworkSource = MUSIC_PATH + artistName + "/" + albumName + "/folder.jpg?modified=" + modifiedDate;
-            }
-            catch{
-                var artworkSource = "./graphics/notFound.gif"
-            }
+            var artworkSource = MUSIC_PATH + artistName + "/" + albumName + "/folder.jpg";
 
             var albumLink = "./html/displayalbum.html?artist=" + artistID + "&album=" + albumID;
             // Small art icons

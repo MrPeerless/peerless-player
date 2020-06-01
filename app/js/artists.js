@@ -89,17 +89,10 @@ $(document).ready(function () {
                 artistName = artistName.slice(0, -6);
                 artistName = "The " + artistName;
             }
-
             // Get folder.jpg file path
-            var sourceFile = MUSIC_PATH + artistName + "/" + albums[artistID] + "/folder.jpg";
-            // Find folder.jpg last modified date
-            try {
-                var modifiedDate = fs.statSync(sourceFile).mtime;
-                var artworkSource = MUSIC_PATH + artistName + "/" + albums[artistID] + "/folder.jpg?modified=" + modifiedDate;
-            }
-            catch{
-                var artworkSource = "./graphics/notFound.gif"
-            }
+            //var artworkSource = MUSIC_PATH + artistName + "/" + albums[artistID] + "/folder.jpg"
+            var modifiedDate = Date().toLocaleString();
+            var artworkSource = MUSIC_PATH + artistName + "/" + albums[artistID] + "/folder.jpg?modified=" + modifiedDate;
 
             var artistLink = "./html/artistalbums.html?artist=" + artistID;
                 

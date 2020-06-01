@@ -128,6 +128,7 @@ async function playlistAdd() {
         var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
         $('.modalFooter').append(buttons);
         $("#btnOkModal").focus();
+        $('.background').css('filter', 'blur(5px)');
         return
     }
 
@@ -146,6 +147,7 @@ async function playlistAdd() {
         var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
         $('.modalFooter').append(buttons);
         $("#btnOkModal").focus();
+        $('.background').css('filter', 'blur(5px)');
         return
     }
 
@@ -165,6 +167,7 @@ async function playlistAdd() {
         $('.modalFooter').append(buttons);
         $("#btnOkModal").focus();
         $("#divPlaylist").hide("slow");
+        $('.background').css('filter', 'blur(5px)');
     }
     else {
         // Show modal to display
@@ -175,6 +178,7 @@ async function playlistAdd() {
         var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
         $('.modalFooter').append(buttons);
         $("#btnOkModal").focus();
+        $('.background').css('filter', 'blur(5px)');
     }
 }
 
@@ -208,6 +212,7 @@ async function playlistUpdate() {
         var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
         $('.modalFooter').append(buttons);
         $("#btnOkModal").focus();
+        $('.background').css('filter', 'blur(5px)');
         $("#divPlaylist").hide("slow");
     }
     else {
@@ -219,6 +224,7 @@ async function playlistUpdate() {
         var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
         $('.modalFooter').append(buttons);
         $("#btnOkModal").focus();
+        $('.background').css('filter', 'blur(5px)');
     }
 }
 
@@ -229,11 +235,6 @@ $(document).on('click', '#btnExport', async function () {
 });
 
 async function exportPlaylist() {
-    // Check if Playlists directory exists, if not create directory
-    var dir = MUSIC_PATH + "Playlists/";
-    if (!fs.existsSync(dir)) {
-        fs.mkdirSync(dir);
-    }
     // Get playlist/favourite name to use as file name
     var playlistName = $('#displayPlaylistName').text();
     fileName = playlistName + ".m3u";
@@ -242,9 +243,7 @@ async function exportPlaylist() {
         return $(this).text()
     }).get()
     // Open/Create file in Playlists folder for writing
-    fs.open(MUSIC_PATH + "Playlists/" + fileName, 'w', function (err, file) {
-        if (err) throw err;
-    });
+    ipcRenderer.send("open_playlists", [MUSIC_PATH, fileName])
 
     // Set counter
     var i;
@@ -253,13 +252,9 @@ async function exportPlaylist() {
         var sql = "SELECT artist.artistName, album.albumName, track.fileName FROM track INNER JOIN album ON album.albumID=track.albumID INNER JOIN artist ON artist.artistID= track.artistID WHERE trackID=?";
         var details = await dBase.get(sql, tracks[i]);
         // Date line to append to playlist file
-        var data = "/Music/" + details.artistName + "/" + details.albumName + "/" + details.fileName + "\n";
-        // Append data to file
-        fs.appendFile(MUSIC_PATH + "Playlists/" + fileName, data, function (err) {
-            if (err) {
-                console.log("ERROR = " + err)
-            }
-        })
+        var dataPath = "/Music/" + details.artistName + "/" + details.albumName + "/" + details.fileName + "\n";
+        // Send dataPath to append to file
+        ipcRenderer.send("append_playlists", [MUSIC_PATH, fileName, dataPath])
     }
     // Show modal box to confirm playlist file saved 
     $('#okModal').css('display', 'block');
@@ -269,6 +264,7 @@ async function exportPlaylist() {
     var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
     $('.modalFooter').append(buttons);
     $("#btnOkModal").focus();
+    $('.background').css('filter', 'blur(5px)');
 }
 
 // View Exported Playlists
@@ -281,9 +277,11 @@ $(document).on('click', '#btnExportedPlaylists', function (event) {
 // Cancel button on view exported playlists
 $(document).on('click', '#btnExportedClose', function (event) {
     event.preventDefault();
+    $("#tblExportedPlaylists").empty();
     $("#divTrackListing").css("display", "none");
     $('#spnAtoZmenu').css('display', 'inline');
     $("#divContent").css("width", "auto");
+    
     window.history.back();
 });
 
@@ -337,13 +335,11 @@ $(document).on('click', '#btnExportedDelete', function () {
         $("#tblExportedPlaylists input[type=checkbox]:checked").each(function () {
             var row = $(this).closest("tr")[0];
             var playlist = row.cells[1].innerText;
-
-            console.log("playlist = " + playlist)
             // Check if table header row is checked and ignore
             if (playlist != "Playlist Name") {
                 // Add file extension to playlist name
                 playlist = playlist + ".m3u";
-                fs.unlinkSync(path.join(dir, playlist));
+                ipcRenderer.send("delete_playlists", [dir, playlist])
             }
         });
 
@@ -411,6 +407,7 @@ function btnQueueClicked() {
         var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
         $('.modalFooter').append(buttons);
         $("#btnOkModal").focus();
+        $('.background').css('filter', 'blur(5px)');
     }
     else {
         global_Tracks.push(global_TrackSelected);
@@ -423,6 +420,7 @@ function btnQueueClicked() {
         var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
         $('.modalFooter').append(buttons);
         $("#btnOkModal").focus();
+        $('.background').css('filter', 'blur(5px)');
     }
 }
 
@@ -449,6 +447,7 @@ function btnQueueAlbumClicked() {
     var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
     $('.modalFooter').append(buttons);
     $("#btnOkModal").focus();
+    $('.background').css('filter', 'blur(5px)');
 }
 
 // Function to clear queued music
@@ -464,6 +463,7 @@ function btnClearQueuedClicked() {
     var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
     $('.modalFooter').append(buttons);
     $("#btnOkModal").focus();
+    $('.background').css('filter', 'blur(5px)');
 }
 
 // Queue playlist function
@@ -497,3 +497,40 @@ async function queuePlaylist() {
         var insert = await dBase.run(sql)
     }
 }
+
+// Receive files to display exported playlists
+ipcRenderer.on("from_get_playlists", (event, data) => {
+    var directoryPlaylists = data;
+    if (directoryPlaylists == "") {
+        // Display modal box no playlist files
+        $('#okModal').css('display', 'block');
+        $(".modalFooter").empty();
+        $('.modalHeader').html('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
+        $('#okModalText').html("<div class='modalIcon'><img src='./graphics/information.png'></div><p>&nbsp<br>No exported playlist files.<br>&nbsp<br>&nbsp</p >");
+        var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
+        $('.modalFooter').append(buttons);
+        $("#btnOkModal").focus();
+        $('.background').css('filter', 'blur(5px)');
+        $("#divTrackListing").css("display", "none");
+        $("#divContent").css("width", "auto");
+        return;
+    }
+    // Populate page text
+    $('#exportedPlaylistsDetails').html(directoryPlaylists.length + " exported playlists found in your music directory.")
+    var table = $("#tblExportedPlaylists")
+    // Populate table header
+    var tableHeader = $("<tr><th class='rowExportCheck'><input type='checkbox' id='cbxExportedPLaylistsAll'/></th><th class='rowExportName'>Playlist Name</th></tr>");
+    tableHeader.appendTo(table);
+
+    // Populate table rows with playlist names
+    directoryPlaylists.forEach((playlist) => {
+        //Remove file extension from playlist filename
+        playlist = playlist.substring(0, playlist.length - 4)
+        // Create table row for each Playlist
+        var tableRow = $("<tr class='tracks'><td><input type='checkbox' class='cbxExportedPLaylists'/></td><td>" + playlist + "</td><td></td></tr>");
+        // Append row to table
+        tableRow.appendTo(table);
+    });
+
+    backgroundChange()
+});

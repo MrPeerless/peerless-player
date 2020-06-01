@@ -1,5 +1,4 @@
 $(document).ready(function () {
-    const fs = require('fs');
     // Set variable for overlay class on album image
     var overlay = "overlay";
     if (global_ArtIconShape == "round") {
@@ -108,17 +107,9 @@ $(document).ready(function () {
             }
 
             // Get folder.jpg file path
-            var sourceFile = MUSIC_PATH + artistName + "/" + albumName + "/folder.jpg";
-            // Find folder.jpg last modified date
-
-            try {
-                var modifiedDate = fs.statSync(sourceFile).mtime;
-                var artworkSource = MUSIC_PATH + artistName + "/" + albumName + "/folder.jpg?modified=" + modifiedDate;
-            }
-            catch{
-                var artworkSource = "./graphics/notFound.gif"
-            }
-            
+            //var artworkSource = MUSIC_PATH + artistName + "/" + albumName + "/folder.jpg";
+            var modifiedDate = Date().toLocaleString();
+            var artworkSource = MUSIC_PATH + artistName + "/" + albumName + "/folder.jpg?modified=" + modifiedDate;
             var albumLink = "./html/displayalbum.html?album=" + albumID + "&artist=" + artistID;
 
             // Small art icons

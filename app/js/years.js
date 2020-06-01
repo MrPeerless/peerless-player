@@ -26,16 +26,7 @@ $(document).ready(function () {
             var yearText;
 
             // Get folder.jpg file path
-            var sourceFile = MUSIC_PATH + row.artistName + "/" + row.albumName + "/folder.jpg";
-            // Find folder.jpg last modified date
-
-            try {
-                var modifiedDate = fs.statSync(sourceFile).mtime;
-                var artworkSource = MUSIC_PATH + row.artistName + "/" + row.albumName + "/folder.jpg?modified=" + modifiedDate;
-            }
-            catch{
-                var artworkSource = "./graphics/notFound.gif"
-            }
+            var artworkSource = MUSIC_PATH + row.artistName + "/" + row.albumName + "/folder.jpg";
 
             // Set text plural or singular
             if (row.count == 1) {

@@ -1,6 +1,6 @@
 {
   "name": "peerless-player",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Peerless Player - listen, discover, explore music",
   "main": "main.js",
   "scripts": {
@@ -14,13 +14,12 @@
     "name": "Geoff Peerless"
   },
   "dependencies": {
-    "csv-writer": "^1.6.0",
     "electron-updater": "^4.3.1",
-    "jimp": "^0.6.1",
+    "jimp": "^0.12.1",
     "jquery": "^3.4.1",
-    "jquery-csv": "^1.0.11",
     "jquery-validation": "^1.19.0",
     "request": "^2.88.2",
+    "sanitize-html": "^1.25.0",
     "sqlite3": "^4.0.6"
   },
   "devDependencies": {

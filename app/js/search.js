@@ -21,10 +21,7 @@ $(document).ready(function () {
 
         rows.forEach((row) => {
             // Get folder.jpg file path
-            var sourceFile = MUSIC_PATH + row.artistName + "/" + row.albumName + "/folder.jpg";
-            // Find folder.jpg last modified date
-            var modifiedDate = fs.statSync(sourceFile).mtime;
-            var artworkSource = MUSIC_PATH + row.artistName + "/" + row.albumName + "/folder.jpg?modified=" + modifiedDate;
+            var artworkSource = MUSIC_PATH + row.artistName + "/" + row.albumName + "/folder.jpg"
 
             var albumLink = "./html/displayalbum.html?album=" + row.albumID + "&artist=" + row.artistID;
 
@@ -64,10 +61,7 @@ $(document).ready(function () {
 
         rows.forEach((row) => {
             // Get folder.jpg file path
-            var sourceFile = MUSIC_PATH + row.artistName + "/" + row.albumName + "/folder.jpg";
-            // Find folder.jpg last modified date
-            var modifiedDate = fs.statSync(sourceFile).mtime;
-            var artworkSource = MUSIC_PATH + row.artistName + "/" + row.albumName + "/folder.jpg?modified=" + modifiedDate;
+            var artworkSource = MUSIC_PATH + row.artistName + "/" + row.albumName + "/folder.jpg"
 
             var albumLink = "./html/displayalbum.html?album=" + row.albumID + "&artist=" + row.artistID;
 

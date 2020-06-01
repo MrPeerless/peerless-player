@@ -8,10 +8,8 @@ $(document).ready(function () {
         var rows = await dBase.all(sql, global_AlbumID);
 
         // Get folder.jpg file path
-        var sourceFile = MUSIC_PATH + rows[0].artistName + "/" + rows[0].albumName + "/folder.jpg";
-        // Find folder.jpg last modified date
         try {
-            var modifiedDate = fs.statSync(sourceFile).mtime;
+            var modifiedDate = Date().toLocaleString();
             var artworkSource = MUSIC_PATH + rows[0].artistName + "/" + rows[0].albumName + "/folder.jpg?modified=" + modifiedDate;
         }
         catch{

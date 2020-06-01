@@ -30,17 +30,7 @@ $(document).ready(function () {
         rows.length = totalList;
         rows.forEach((row) => {
 
-            // Get folder.jpg file path
-            var sourceFile = MUSIC_PATH + row.artistName + "/" + row.albumName + "/folder.jpg";
-            // Find folder.jpg last modified date
-            try {
-                var modifiedDate = fs.statSync(sourceFile).mtime;
-                var artworkSource = MUSIC_PATH + row.artistName + "/" + row.albumName + "/folder.jpg?modified=" + modifiedDate;
-            }
-            catch{
-                var artworkSource = "./graphics/genres/Other.gif"
-            }
-
+            var artworkSource = MUSIC_PATH + row.artistName + "/" + row.albumName + "/folder.jpg"
             var albumLink = "./html/displayalbum.html?album=" + row.albumID + "&artist=" + row.artistID;
             // Format dateAdd string
             var albumDate = formatDate(row.dateAdd);
@@ -107,16 +97,7 @@ $(document).ready(function () {
         // Adjust size of rows to number of columns
         rows.length = totalList;
         rows.forEach((row) => {
-            // Get folder.jpg file path
-            var sourceFile = MUSIC_PATH + row.artistName + "/" + row.albumName + "/folder.jpg";
-            // Find folder.jpg last modified date
-            try {
-                var modifiedDate = fs.statSync(sourceFile).mtime;
-                var artworkSource = MUSIC_PATH + row.artistName + "/" + row.albumName + "/folder.jpg?modified=" + modifiedDate;
-            }
-            catch{
-                var artworkSource = "./graphics/genres/Other.gif"
-            }
+            var artworkSource = MUSIC_PATH + row.artistName + "/" + row.albumName + "/folder.jpg";
 
             var albumLink = "./html/displayalbum.html?album=" + row.albumID + "&artist=" + row.artistID;
 
@@ -185,16 +166,7 @@ $(document).ready(function () {
         // Adjust size of rows to number of columns
         rows.length = totalList;
         rows.forEach((row) => {
-            // Get folder.jpg file path
-            var sourceFile = MUSIC_PATH + row.artistName + "/" + row.albumName + "/folder.jpg";
-            // Find folder.jpg last modified date
-            try {
-                var modifiedDate = fs.statSync(sourceFile).mtime;
-                var artworkSource = MUSIC_PATH + row.artistName + "/" + row.albumName + "/folder.jpg?modified=" + modifiedDate;
-            }
-            catch{
-                var artworkSource = "./graphics/genres/Other.gif"
-            }
+            var artworkSource = MUSIC_PATH + row.artistName + "/" + row.albumName + "/folder.jpg"
 
             var albumLink = "./html/displayalbum.html?album=" + row.albumID + "&artist=" + row.artistID;
             // Create <li> item for each album and append to <ul>
