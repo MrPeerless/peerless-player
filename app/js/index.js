@@ -257,6 +257,7 @@ ipcRenderer.on('update_downloaded', () => {
     var buttons = $("<button class='btnContent' id='btnRestartApp'>Yes</button> <button class='btnContent' id='btnCancelModal'>No</button>");
     $('.modalFooter').append(buttons);
     $("#btnRestartApp").focus();
+    $('.background').css('filter', 'blur(5px)');
 });
 
 // Button click to restart app
