@@ -65,7 +65,8 @@ $(document).ready(function () {
 
             }
         }
-        $('#spnAtoZmenu').html(menu);
+        $('#spnAtoZmenu').empty();
+        $('#spnAtoZmenu').append(menu);
         artists.forEach((artist) => {
             var ul = $('#ulArtists');
             var splitArtist = artist.split("|");
@@ -102,7 +103,7 @@ $(document).ready(function () {
                 var li = $('<li><span class="anchor" id="' + anchor + '"></span><a><img class="' + global_ArtIconShape + '"><span></span></a></li>');
                 li.find('img').attr('src', artworkSource);
                 li.find('a').attr('href', artistLink);
-                li.find('span').html('<br><b>' + artistName + '</b><br>' + albumText);
+                li.find('span').append('<br><b>' + artistName + '</b><br>' + albumText);
                 li.appendTo(ul);
             }
             // Large art icons
@@ -111,7 +112,7 @@ $(document).ready(function () {
                 var li = $('<li><span class="anchor" id="' + anchor + '"></span><a><img class="' + global_ArtIconShape + '"><div class="' + overlay + '"><div class="textAlbum"><span></span></div></div></a></li>');
                 li.find('img').attr('src', artworkSource);
                 li.find('a').attr('href', artistLink);
-                li.find('span').html('<br><b>' + artistName + '</b><br>' + albumText);
+                li.find('span').append('<br><b>' + artistName + '</b><br>' + albumText);
                 li.appendTo(ul);
             }
         });

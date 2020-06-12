@@ -5,7 +5,7 @@ const { electron, app, BrowserWindow, ipcMain, dialog } = require('electron');//
 const { autoUpdater } = require('electron-updater');// Require electron-updater for auto updates
 const shell = require('electron').shell;// Require shell to open external websites in default browser
 const path = require('path');// Require Path module
-const fs = require("fs");// require FS module
+const fs = require("fs");// Require FS module
 var request = require('request'); // Used for saving images
 var Jimp = require('jimp');// Require Jimp for resizing images
 
@@ -24,7 +24,7 @@ function createWindow() {
         webPreferences: {
             nodeIntegration: true,
             contextIsolation: false,
-            enableRemoteModule: true,
+            enableRemoteModule: false,
             //nodeIntegration: false,
             //contextIsolation: true,
             //enableRemoteModule: false,
@@ -185,7 +185,6 @@ ipcMain.on('read_album_directory', (event, message) => {
             fnames[i] = path.basename(dirPath + artist + "/" + album + "/" + files[i]);
         }
     }
-    //var from = "files_album_directory" + album;
     win.webContents.send("files_album_directory", [sender, fnames, artist, album]);
 });
 
@@ -219,15 +218,30 @@ ipcMain.on('rename_directory', (event, data) => {
             // Rename old artist directory to new artist directory
             fs.rename(dirPath + "/" + dirArtistName + "/" + album, dirPath + "/" + artist + "/" + album, (error) => {
                 if (error) throw error;
+                // Check if directory is now empty
+                fs.readdir(dirPath + "/" + dirArtistName, (error, files) => {
+                    // Delete directory
+                    if (files.length == 0) {
+                        fs.rmdirSync(dirPath + "/" + dirArtistName);
+                    }
+                });
             });
         }
         else {
             // The new artist directory exists so rename old artist directory to new artist directory
             fs.rename(dirPath + "/" + dirArtistName + "/" + album, dirPath + "/" + artist + "/" + album, (error) => {
                 if (error) throw error;
-            })
+                // Check if directory is empty
+                fs.readdir(dirPath + "/" + dirArtistName, (error, files) => {
+                    // Delete directory
+                    if (files.length == 0) {
+                        fs.rmdirSync(dirPath + "/" + dirArtistName);
+                    }
+                });
+            });
         }
     }
+
     // Send message back to renderer to complete database operations
     if (edit == "edit") {
         win.webContents.send("renamed_artist_directory", [originalArtistName]);
@@ -271,7 +285,6 @@ ipcMain.on('delete_playlists', (event, data) => {
     var dir = data[0];
     var playlist = data[1];
     var file = path.join(dir, playlist);
-    //fs.unlinkSync(path.join(dir, playlist));
     fs.unlinkSync(file);
 });    
 
@@ -282,7 +295,6 @@ ipcMain.on('get_playlists', (event, data) => {
     directoryPlaylists = fs.readdirSync(musicPath + "Playlists")
     win.webContents.send("from_get_playlists", directoryPlaylists);
 }); 
-
 
 // IPC IMAGE FUNCTIONS
 // Save album artwork from add to database
@@ -383,7 +395,6 @@ ipcMain.on('dir_artists', (event, data) => {
             // If is directory add to directoryAlbums array
             albums.forEach((album) => {
                 if (fs.lstatSync(musicPath + artist + "/" + album).isDirectory()) {
-                    //directoryAlbums.push(artist + "|" + album)
                     /*
                     // Count tracks
                     var tracks = fs.readdirSync(musicPath + artist + "/" + album + "/");

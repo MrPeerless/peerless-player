@@ -56,6 +56,7 @@ $(document).ready(function () {
 
         // If sort is set to A - Z
         // Sort a-z and group by first letter.
+        $('#spnAtoZmenu').empty();
         if (global_AlbumSort == "a2z") {
             // Sort albums array alphabetically using function in index.js
             albums = sorted(albums);
@@ -76,12 +77,12 @@ $(document).ready(function () {
                 }
             }
             // Display A = Z index and sort select
-            $('#spnAtoZmenu').html(menu + sort);
+            $('#spnAtoZmenu').append(menu + sort);
         }
         // If sort is not set to A - Z
         else {
             // Only display sort select
-            $('#spnAtoZmenu').html(sort);
+            $('#spnAtoZmenu').append(sort);
         }
 
         // Highlight sort selected in dropdown box
@@ -118,7 +119,7 @@ $(document).ready(function () {
                 var li = $('<li><span class="anchor" id="' + anchor + '"></span><a><img class="' + global_ArtIconShape + '"><span></span></a></li>');
                 li.find('img').attr('src', artworkSource);
                 li.find('a').attr('href', albumLink);
-                li.find('span').html('<br><b>' + albumName + '</b><br>' + artistName);
+                li.find('span').append('<br><b>' + albumName + '</b><br>' + artistName);
                 li.appendTo(ul);
             }
             // Large art icons
@@ -127,7 +128,7 @@ $(document).ready(function () {
                 var li = $('<li><span class="anchor" id="' + anchor + '"></span><a><img class="' + global_ArtIconShape + '"><div class="' + overlay + '"><div class="textAlbum"><span></span></div></div></a></li>');
                 li.find('img').attr('src', artworkSource);
                 li.find('a').attr('href', albumLink);
-                li.find('span').html('<br><b>' + albumName + '</b><br>' + artistName);
+                li.find('span').append('<br><b>' + albumName + '</b><br>' + artistName);
                 li.appendTo(ul);
             }
         });

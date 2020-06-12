@@ -20,9 +20,11 @@ function editAlbumMatches(artist, album) {
     if (!connection) {
         // If not connected display modal nox warning
         $('#okModal').css('display', 'block');
+        $('.modalHeader').empty();
+        $('#okModalText').empty();
         $(".modalFooter").empty();
-        $('.modalHeader').html('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
-        $('#okModalText').html("<div class='modalIcon'><img src='./graphics/warning.png'></div><p>&nbsp<br><b>WARNING. No internet connection.</b><br>Cannot access data from Gracenote server.<br>&nbsp</p >");
+        $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
+        $('#okModalText').append("<div class='modalIcon'><img src='./graphics/warning.png'></div><p>&nbsp<br><b>WARNING. No internet connection.</b><br>Cannot access data from Gracenote server.<br>&nbsp</p >");
         var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
         $('.modalFooter').append(buttons);
         $("#btnOkModal").focus();
@@ -100,15 +102,18 @@ $(document).on('click', '#btnArtworkAlbum', function (event) {
 function getArtwork() {
     // Display modal box checking Gracenote
     $('#okModal').css('display', 'block');
+    $('.modalHeader').empty();
+    $('#okModalText').empty();
     $(".modalFooter").empty();
-    $('.modalHeader').html('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
-    $('#okModalText').html("<div class='modalIcon'><img src='./graphics/record.gif'></div><p>&nbsp<br>Searching the Gracenote database. Please wait.<br>&nbsp<br>&nbsp</p >");
+    $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
+    $('#okModalText').append("<div class='modalIcon'><img src='./graphics/record.gif'></div><p>&nbsp<br>Searching the Gracenote database. Please wait.<br>&nbsp<br>&nbsp</p >");
     var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
     $('.modalFooter').append(buttons);
     $("#btnOkModal").focus();
     $('.background').css('filter', 'blur(5px)');
 
-    var gnID = $("#tblGracenote tr.highlight").find('td:last').html();
+    var gnID = $("#tblGracenote tr.highlight").find('td:last').text();
+
     // Create XMl string query to query album tracks
     var queryTracks = "<?xml version='1.0' encoding='UTF-8'?><QUERIES><AUTH><CLIENT>12398848-977A13ABAD0F2E143D38E61AF28B78DB</CLIENT><USER>" + global_UserID + "</USER></AUTH><LANG>eng</LANG><COUNTRY>uk</COUNTRY><QUERY CMD='ALBUM_FETCH'><GN_ID>" + gnID + "</GN_ID><OPTION><PARAMETER>SELECT_EXTENDED</PARAMETER><VALUE>ARTIST_OET,MOOD,TEMPO</VALUE></OPTION><OPTION><PARAMETER>SELECT_DETAIL</PARAMETER>  <VALUE>GENRE:3LEVEL,MOOD:2LEVEL,TEMPO:3LEVEL,ARTIST_ORIGIN:4LEVEL,ARTIST_ERA:2LEVEL,ARTIST_TYPE:2LEVEL</VALUE></OPTION><OPTION><PARAMETER>SELECT_EXTENDED</PARAMETER><VALUE>COVER</VALUE></OPTION></QUERY></QUERIES>"
     artQuery(queryTracks).done(showArtwork);
@@ -141,9 +146,11 @@ function getArtwork() {
             $('#okModal').css('display', 'none');
             // Show ERROR modal to display
             $('#okModal').css('display', 'block');
+            $('.modalHeader').empty();
+            $('#okModalText').empty();
             $(".modalFooter").empty();
-            $('.modalHeader').html('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
-            $('#okModalText').html("<div class='modalIcon'><img src='./graphics/warning.png'></div><p>&nbsp<br><b>NO ARTWORK FOUND</b> for the selection in the Gracenote table.<br>&nbsp<br>&nbsp</p >");
+            $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
+            $('#okModalText').append("<div class='modalIcon'><img src='./graphics/warning.png'></div><p>&nbsp<br><b>NO ARTWORK FOUND</b> for the selection in the Gracenote table.<br>&nbsp<br>&nbsp</p >");
             var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
             $('.modalFooter').append(buttons);
             $("#btnOkModal").focus();
@@ -157,9 +164,11 @@ $(document).on('click', '#btnGetGracenote', function (event) {
     event.preventDefault();
     // Display modal box checking Gracenote
     $('#okModal').css('display', 'block');
+    $('.modalHeader').empty();
+    $('#okModalText').empty();
     $(".modalFooter").empty();
-    $('.modalHeader').html('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
-    $('#okModalText').html("<div class='modalIcon'><img src='./graphics/record.gif'></div><p>&nbsp<br>Searching the Gracenote database. Please wait.<br>&nbsp<br>&nbsp</p >");
+    $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
+    $('#okModalText').append("<div class='modalIcon'><img src='./graphics/record.gif'></div><p>&nbsp<br>Searching the Gracenote database. Please wait.<br>&nbsp<br>&nbsp</p >");
     var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
     $('.modalFooter').append(buttons);
     $("#btnOkModal").focus();
@@ -169,7 +178,7 @@ $(document).on('click', '#btnGetGracenote', function (event) {
 
 // Function to update metatdata from edit album
 function getMetadata() {
-    var gnID = $("#tblGracenote tr.highlight").find('td:last').html();
+    var gnID = $("#tblGracenote tr.highlight").find('td:last').text();
     // Create XMl string query to query album tracks
     var queryTracks = "<?xml version='1.0' encoding='UTF-8'?><QUERIES><AUTH><CLIENT>12398848-977A13ABAD0F2E143D38E61AF28B78DB</CLIENT><USER>" + global_UserID + "</USER></AUTH><LANG>eng</LANG><COUNTRY>uk</COUNTRY><QUERY CMD='ALBUM_FETCH'><GN_ID>" + gnID + "</GN_ID><OPTION><PARAMETER>SELECT_EXTENDED</PARAMETER><VALUE>ARTIST_OET,MOOD,TEMPO</VALUE></OPTION><OPTION><PARAMETER>SELECT_DETAIL</PARAMETER>  <VALUE>GENRE:3LEVEL,MOOD:2LEVEL,TEMPO:3LEVEL,ARTIST_ORIGIN:4LEVEL,ARTIST_ERA:2LEVEL,ARTIST_TYPE:2LEVEL</VALUE></OPTION><OPTION><PARAMETER>SELECT_EXTENDED</PARAMETER><VALUE>COVER</VALUE></OPTION></QUERY></QUERIES>"
     metaQuery(queryTracks).done(updateMetadata);
@@ -448,9 +457,11 @@ $(document).on('click', '#btnSaveAlbum', function (event) {
 
                 // Show OK modal box to confirm album updated in database
                 $('#okModal').css('display', 'block');
+                $('.modalHeader').empty();
+                $('#okModalText').empty();
                 $(".modalFooter").empty();
-                $('.modalHeader').html('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
-                $('#okModalText').html("<div class='modalIcon'><img src='./graphics/information.png'></div><p>&nbsp<br>Album has been successfully updated in " + global_AppName + ".<br>&nbsp<br>&nbsp</p >");
+                $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
+                $('#okModalText').append("<div class='modalIcon'><img src='./graphics/information.png'></div><p>&nbsp<br>Album has been successfully updated in " + global_AppName + ".<br>&nbsp<br>&nbsp</p >");
                 var buttons = $("<button class='btnContent' id='btnOkEdit'>OK</button>");
                 $('.modalFooter').append(buttons);
                 $("#btnOkEdit").focus();
@@ -462,9 +473,11 @@ $(document).on('click', '#btnSaveAlbum', function (event) {
                 console.log(err)
                 // Show ERROR modal to display
                 $('#okModal').css('display', 'block');
+                $('.modalHeader').empty();
+                $('#okModalText').empty();
                 $(".modalFooter").empty();
-                $('.modalHeader').html('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
-                $('#okModalText').html("<div class='modalIcon'><img src='./graphics/warning.png'></div><p>&nbsp<br><b>DATABASE ERROR</b> - album could not be updated in " + global_AppName + ".<br>&nbsp<br>&nbsp</p >");
+                $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
+                $('#okModalText').append("<div class='modalIcon'><img src='./graphics/warning.png'></div><p>&nbsp<br><b>DATABASE ERROR</b> - album could not be updated in " + global_AppName + ".<br>&nbsp<br>&nbsp</p >");
                 var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
                 $('.modalFooter').append(buttons);
                 $("#btnOkModal").focus();
@@ -501,11 +514,11 @@ ipcRenderer.on("renamed_artist_directory", (event, data) => {
 $(document).on('click', '#editAlbum', function (event) {
     event.preventDefault();
     // Send message to main.js to open dialog box
-    ipcRenderer.send("open_file_dialog", ["manual_artwork", "Select Album Artwork Image File", "C:\\", "Select File", [{ name: 'Images', extensions: ['jpg'] }], "openFile"]);
+    ipcRenderer.send("open_file_dialog", ["edit_artwork", "Select Album Artwork Image File", "C:\\", "Select File", [{ name: 'Images', extensions: ['jpg'] }], "openFile"]);
 });
 
 // Response from selecting manual artwork browse dialog box
-ipcRenderer.on("manual_artwork", (event, data) => {
+ipcRenderer.on("edit_artwork", (event, data) => {
     var coverArt = data[0];
     $("#imgCoverArt").attr('src', coverArt);
     $("#inpEditCoverArtURL").val(coverArt);
@@ -520,9 +533,11 @@ $(document).on('click', '#btnDeleteAlbum', function (event) {
     event.preventDefault();
     // Show question modal box to confirm deletion
     $('#okModal').css('display', 'block');
+    $('.modalHeader').empty();
+    $('#okModalText').empty();
     $(".modalFooter").empty();
-    $('.modalHeader').html('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
-    $('#okModalText').html("<div class='modalIcon'><img src='./graphics/question.png'></div><p>&nbsp<br>Are you sure you want to delete this album from " + global_AppName + "?<br>&nbsp</p >");
+    $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
+    $('#okModalText').append("<div class='modalIcon'><img src='./graphics/question.png'></div><p>&nbsp<br>Are you sure you want to delete this album from " + global_AppName + "?<br>&nbsp</p >");
     var buttons = $("<button class='btnContent' id='btnDeleteOkAlbum'>Yes</button> <button class='btnContent' id='btnCancelModal'>No</button>");
     $('.modalFooter').append(buttons);
 });
@@ -551,9 +566,11 @@ $(document).on('click', '#btnDeleteOkAlbum', async function (event) {
         }
         // Show OK modal box to confirm album deleted from database
         $('#okModal').css('display', 'block');
+        $('.modalHeader').empty();
+        $('#okModalText').empty();
         $(".modalFooter").empty();
-        $('.modalHeader').html('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
-        $('#okModalText').html("<div class='modalIcon'><img src='./graphics/information.png'></div><p>&nbsp<br>Album has been successfully deleted from " + global_AppName + ".<br>&nbsp<br>&nbsp</p >");
+        $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
+        $('#okModalText').append("<div class='modalIcon'><img src='./graphics/information.png'></div><p>&nbsp<br>Album has been successfully deleted from " + global_AppName + ".<br>&nbsp<br>&nbsp</p >");
         var buttons = $("<button class='btnContent' id='btnOkImport'>OK</button>");
         $('.modalFooter').append(buttons);
         $("#btnOkImport").focus();
@@ -567,9 +584,11 @@ $(document).on('click', '#btnDeleteOkAlbum', async function (event) {
         console.log(err)
         // Show ERROR modal to display
         $('#okModal').css('display', 'block');
+        $('.modalHeader').empty();
+        $('#okModalText').empty();
         $(".modalFooter").empty();
-        $('.modalHeader').html('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
-        $('#okModalText').html("<div class='modalIcon'><img src='./graphics/warning.png'></div><p>&nbsp<br><b>DATABASE ERROR</b> - album could not be deleted from " + global_AppName + ".<br>&nbsp<br>&nbsp</p >");
+        $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
+        $('#okModalText').append("<div class='modalIcon'><img src='./graphics/warning.png'></div><p>&nbsp<br><b>DATABASE ERROR</b> - album could not be deleted from " + global_AppName + ".<br>&nbsp<br>&nbsp</p >");
         var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
         $('.modalFooter').append(buttons);
         $("#btnOkModal").focus();

@@ -8,12 +8,12 @@ $(document).ready(function () {
     album = album.replace(/&amp;/g, '&');
 
     // Update headings
-    $("#addToDatabaseDetails").html("Syncing " + album + " by " + artist);
+    $("#addToDatabaseDetails").text("Syncing " + album + " by " + artist);
     if (global_ImportMode == "auto") {
-        $("#addToDatabaseInfo").html("The below metadata has been found in the Gracenote database.<br>Please check and make any manual adjustments if necessary and click on the IMPORT button to add the album to " + global_AppName + " database.<br>&nbsp;<br />")
+        $("#addToDatabaseInfo").append("The below metadata has been found in the Gracenote database.<br>Please check and make any manual adjustments if necessary and click on the IMPORT button to add the album to " + global_AppName + " database.<br>&nbsp;<br />")
     }
     else {
-        $("#addToDatabaseInfo").html("You have selected to manually input the album metadata.<br>The only required fields are Release Date and Genre. Once completed, click on the IMPORT button to add the album to " + global_AppName + " database.<br>&nbsp;<br />")
+        $("#addToDatabaseInfo").append("You have selected to manually input the album metadata.<br>The only required fields are Release Date and Genre. Once completed, click on the IMPORT button to add the album to " + global_AppName + " database.<br>&nbsp;<br />")
     }
 
     // Add artist and album to form input

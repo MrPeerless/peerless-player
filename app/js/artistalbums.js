@@ -83,7 +83,7 @@ $(document).ready(function () {
                 var li = $('<li><a><img class="' + global_ArtIconShape + '"><span></span></a></li>');
                 li.find('img').attr('src', artworkSource);
                 li.find('a').attr('href', albumLink);
-                li.find('span').html('<br><b>' + row.albumName + '</b><br>' + row.releaseDate);
+                li.find('span').append('<br><b>' + row.albumName + '</b><br>' + row.releaseDate);
                 li.appendTo(ul);
             }
 
@@ -93,7 +93,7 @@ $(document).ready(function () {
                 var li = $('<li><a><img class="' + global_ArtIconShape + '"><div class="' + overlay + '"><div class="textAlbum"><span></span></div></div></a></li>');
                 li.find('img').attr('src', artworkSource);
                 li.find('a').attr('href', albumLink);
-                li.find('span').html('<br><b>' + row.albumName + '</b><br>' + row.releaseDate);
+                li.find('span').append('<br><b>' + row.albumName + '</b><br>' + row.releaseDate);
                 li.appendTo(ul);
             }
         });

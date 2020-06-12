@@ -46,8 +46,8 @@ $(document).ready(function () {
 
         // Create text for album details
         var albumDetails = " Released " + rows[0].releaseDate + "<br>Play time " + rows[0].albumTime + "<br>Last Played " + lastPlayed + "<br>";
-        $("#displayAlbumName").html(rows[0].albumName + " <br>by " + rows[0].artistName);
-        $("#displayAlbumDetails").html(albumDetails + genreText);
+        $("#displayAlbumName").append(rows[0].albumName + " <br>by " + rows[0].artistName);
+        $("#displayAlbumDetails").append(albumDetails + genreText);
         
         // Add tracks to each row of table
         var table = $("#tblTracks")

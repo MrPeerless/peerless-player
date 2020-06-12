@@ -2,9 +2,11 @@ $(document).ready(function () {
 
     // Display modal box checking Gracenote
     $('#okModal').css('display', 'block');
+    $('.modalHeader').empty();
+    $('#okModalText').empty();
     $(".modalFooter").empty();
-    $('.modalHeader').html('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
-    $('#okModalText').html("<div class='modalIcon'><img src='./graphics/record.gif'></div><p>&nbsp<br>Searching the Gracenote database. Please wait.<br>&nbsp<br>&nbsp</p >");
+    $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
+    $('#okModalText').append("<div class='modalIcon'><img src='./graphics/record.gif'></div><p>&nbsp<br>Searching the Gracenote database. Please wait.<br>&nbsp<br>&nbsp</p >");
     var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
     $('.modalFooter').append(buttons);
 
@@ -37,8 +39,9 @@ $(document).ready(function () {
         $("#inpEditAlbumTime").val(albumTime);
 
         // Header details
-        $("#editAlbumDetails").html("Editing " + album + " by " + artist);
-        $("#editAlbumInfo").html("Select the closest match from the Gracenote server in the below table and CLICK,<br><b>GET</b> to auto update the track and album metadata.<br><b>ARTWORK</b> to update album cover art.<br>Or click on album artwork to select an image file manually.<br><b>DELETE</b> to delete the album from the database.");
+        $("#editAlbumDetails").text("Editing " + album + " by " + artist);
+        $("#editAlbumInfo").empty();
+        $("#editAlbumInfo").append("Select the closest match from the Gracenote server in the below table and CLICK,<br><b>GET</b> to auto update the track and album metadata.<br><b>ARTWORK</b> to update album cover art.<br>Or click on album artwork to select an image file manually.<br><b>DELETE</b> to delete the album from the database.");
 
         // Path to album artwork
         var artworkSource = MUSIC_PATH + artist + "/" + album + "/folder.jpg";

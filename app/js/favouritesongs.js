@@ -11,7 +11,7 @@ $(document).ready(function () {
             var rows = await dBase.all(sql, global_GenreID);
             // Get genre name
             var genre = rows[0].genreName;
-            $("#displayPlaylistName").html(genre + "<br> Favourites");
+            $("#displayPlaylistName").append(genre + "<br> Favourites");
             // Set artworkSource link
             var artworkSource = "./graphics/genres/" + genre + ".gif";
         }
@@ -19,7 +19,7 @@ $(document).ready(function () {
             // Select the favourite details from the database if year release selected
             var sql = "SELECT track.trackID, track.artistID, track.albumID, track.trackName, track.fileName, track.playTime, track.count, track.lastPlay, track.favourite, artist.artistName, album.albumName, genre.genreName FROM track INNER JOIN artist ON track.artistID=artist.artistID INNER JOIN album ON track.albumID=album.albumID INNER JOIN genre ON track.genreID=genre.genreID WHERE album.releaseDate=? AND track.favourite=true ORDER by track.trackName ASC";
             var rows = await dBase.all(sql, global_YearID);
-            $("#displayPlaylistName").html(global_YearID + "<br> Favourites");
+            $("#displayPlaylistName").append(global_YearID + "<br> Favourites");
             var artworkSource = MUSIC_PATH + rows[0].artistName + "/" + rows[0].albumName + "/folder.jpg";
         }
         else {
@@ -28,7 +28,7 @@ $(document).ready(function () {
             var rows = await dBase.all(sql, global_SubGenre);
             // Get genre name
             var genre = rows[0].genreName;
-            $("#displayPlaylistName").html(global_SubGenre + "<br> Favourites");
+            $("#displayPlaylistName").append(global_SubGenre + "<br> Favourites");
             // Set artworkSource link
             var artworkSource = "./graphics/genres/" + genre + ".gif";
         }
@@ -40,7 +40,7 @@ $(document).ready(function () {
         var numberTracks = rows.length;
 
         // Create text for favourite details      
-        $("#displayFavouriteDetails").html("Number of songs: " + numberTracks + "<br>&nbsp<br>&nbsp<br>&nbsp<br>");
+        $("#displayFavouriteDetails").append("Number of songs: " + numberTracks + "<br>&nbsp<br>&nbsp<br>&nbsp<br>");
         $("#imgArtwork").attr('src', artworkSource);
         // Add tracks to each row of table
         var table = $("#tblTracks")

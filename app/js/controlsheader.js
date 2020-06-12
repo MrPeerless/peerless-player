@@ -573,7 +573,8 @@ async function displayTrack(position) {
 
         // Display track details
         var trackDetails = "Now Playing:<br><h1>" + row.artistName + "</h1><h2>" + row.albumName + "</h2><br><p>" + row.trackName + "</p>";
-        $('#trackDetails').html(trackDetails);
+        $('#trackDetails').empty();
+        $('#trackDetails').append(trackDetails);
 
         // Display notification of next track to play
         if (global_notifications != 0) {
@@ -589,7 +590,7 @@ async function displayTrack(position) {
         $('#nowPlayingTrackIndex').text(position);
 
         // Populate playtime
-        $('#playTime').html(row.playTime);
+        $('#playTime').text(row.playTime);
 
         // Change play button to stop button
         $("button#btnPlay").css("background", "url(./graphics/stop1.png) no-repeat");
@@ -622,9 +623,11 @@ async function displayTrack(position) {
 
         // Display modal box error message
         $('#okModal').css('display', 'block');
+        $('.modalHeader').empty();
+        $('#okModalText').empty();
         $(".modalFooter").empty();
-        $('.modalHeader').html('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
-        $('#okModalText').html("<div class='modalIcon'><img src='./graphics/warning.png'></div><p><b>ERROR - Audio file: </b>" + row.fileName + "<b> not found!</b><br>Please check your music directory.<br>&nbsp</p >");
+        $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
+        $('#okModalText').append("<div class='modalIcon'><img src='./graphics/warning.png'></div><p><b>ERROR - Audio file: </b>" + row.fileName + "<b> not found!</b><br>Please check your music directory.<br>&nbsp</p >");
         var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
         $('.modalFooter').append(buttons);
         $("#btnOkModal").focus();

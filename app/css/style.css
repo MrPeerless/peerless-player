@@ -84,17 +84,27 @@ select {
     outline: none;
 }
 
-#sltPlaylist{
+#sltPlaylist {
     width: 200px;
     height: 180px;
+    border: 1px solid #000000;
+    margin-bottom: 5px;
+}
+
+#inpPlaylistName{
+    outline: none;
+    width: 145px;
+    margin-right: 3px;
 }
 
 #sltZoom {
-    width: 100px;    
+    width: 100px;
+    border: 1px solid #000000;
 }
 
-.sltSort{
-    width: 95px;
+.sltSort {
+    width: 115px;
+    border: 1px solid #000000;
 }
 
 .sltGenre {
@@ -1428,9 +1438,10 @@ button#btnMoodExpand {
 
 /* The close X button in header*/
 #btnXModal {
+    margin-top: -6px;
     color: white;
     float: right;
-    font-size: 20px;
+    font-size: 30px;
     font-weight: bold;
 }
 

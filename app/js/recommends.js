@@ -140,7 +140,6 @@ $(document).ready(function () {
 
                                 // Napster search link for album
                                 var albumLink = napsterUrl + artist + "+" + titleLink;
-
                                 var encodedUrl = encodeURI(albumLink);
 
                                 if (coverArt != "") {
@@ -154,7 +153,6 @@ $(document).ready(function () {
                                         li.find('span').append('<br><b>' + artist + '</b><br>' + title);
                                         li.appendTo(ul);
                                     }
-
                                     // Large art icons
                                     else {
                                         $(ul).attr('class', 'albumDisplayLarge');
@@ -172,19 +170,20 @@ $(document).ready(function () {
                             }
                         }
                         count += 1;
-
                     }
-
                 }
                 else {
                     // Display modal box if no recommendations found in Gracenote database
                     $('#okModal').css('display', 'block');
+                    $('.modalHeader').empty();
+                    $('#okModalText').empty();
                     $(".modalFooter").empty();
                     $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
                     $('#okModalText').append("<div class='modalIcon'><img src='./graphics/information.png'></div><p>&nbsp<br>No recommendations found for <b>" + seedArtist + "</b> in Gracenote database.<br>&nbsp</p>");
                     var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
                     $('.modalFooter').append(buttons);
                     $("#btnOkModal").focus();
+                    $('.background').css('filter', 'blur(5px)');
                     // Hide recommendations page and go back
                     $("#divTrackListing").css("display", "none");
                     $("#divContent").css("width", "auto");

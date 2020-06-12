@@ -1,0 +1,381 @@
+/*MAIN SITE STYLE
+#################*/
+body {
+    background: #DFDFFE;
+}
+
+h1 {
+    color: darkblue;
+}
+
+h2 {
+    color: darkblue;
+}
+
+h3 {
+    color: darkblue;
+}
+
+a:link {
+    color: darkblue;
+}
+
+a:visited {
+    color: darkblue;
+}
+
+a:hover {
+    color: #F27A04;
+}
+
+select {
+    border: 1px solid #AAA;
+    color: darkblue;
+}
+
+/* PAGE BUTTON STYLES
+###########################*/
+
+.btnMenu {
+    background-image: linear-gradient(to top, #888888 50%, #aaaaaa 75%);
+    color: white;
+}
+
+    .btnMenu:hover {
+        background-image: linear-gradient(to top, #F27A04 25%, #F26404 50%);
+        color: #F0F0F0;
+    }
+
+.btnMenu2 {
+    background-image: linear-gradient(to top, #888888 50%, #aaaaaa 75%);
+    color: white;
+}
+
+    .btnMenu2:hover {
+        background-image: linear-gradient(to top, #F27A04 25%, #F26404 50%);
+        color: #F0F0F0;
+    }
+
+.btnMenu3 {
+    background-image: linear-gradient(to top, #888888 50%, #aaaaaa 75%);
+    color: white;
+}
+
+    .btnMenu3:hover {
+        background-image: linear-gradient(to top, #F27A04 25%, #F26404 50%);
+        color: #F0F0F0;
+    }
+
+.btnContent {
+    background-image: linear-gradient(to top, #888888 50%, #aaaaaa 75%);
+    color: white;
+}
+
+    .btnContent:hover {
+        background-image: linear-gradient(to top, #F27A04 25%, #F26404 50%);
+        color: #F0F0F0;
+    }
+
+.btnDatabase {
+    background-color: #666666;
+    color: #F0F0F0;
+}
+
+    .btnDatabase:hover {
+        background-color: #F26404;
+        color: #F0F0F0;
+    }
+
+.btnTrackListing {
+    background-image: linear-gradient(to top, #888888 50%, #aaaaaa 75%);
+    color: white;
+}
+
+    .btnTrackListing:hover {
+        background-image: linear-gradient(to top, #F27A04 25%, #F26404 50%);
+        color: #F0F0F0;
+    }
+
+button:disabled,
+button[disabled] {
+    color: darkgray;
+}
+
+    button:disabled,
+    button[disabled]:hover {
+        background-image: linear-gradient(to top, #d5d5d5 50%, #F9F9F9 75%);
+        color: darkgray;
+    }
+
+
+/*PAGE DIVS CODE #7576F9
+#######################*/
+
+#divControlsHeader {
+    background: #07079f;
+    color: white;
+}
+
+#divPlaying {
+    background: #C9C9FD;
+    color: darkblue;
+}
+
+#divPlaylist {
+    background: #C9C9FD;
+    color: darkblue;
+}
+
+#divContent {
+    background: #DFDFFE;
+    color: darkblue;
+}
+
+#divTrackListing {
+    background: #F4F4FF;
+    color: darkblue;
+}
+
+.divLayout {
+    background: #DFDFFE;
+    color: darkblue;
+}
+
+.flex-container {
+    background: #DFDFFE;
+}
+
+/*ADD TO DATABASE FORM
+##########################*/
+
+#imgCoverArt {
+    border: 2px solid #00008B;
+}
+
+.frmDatabase {
+    background: #C9C9FD;
+}
+
+    .frmDatabase fieldset {
+        border: 2px solid #666666;
+    }
+
+/*PLAYER BUTTON CONTROLS
+###########################*/
+
+button#btnRewind {
+    background: url(../graphics/rewind_black.png) no-repeat;
+}
+
+button#btnFastForward {
+    background: url(../graphics/fast_forward_black.png) no-repeat;
+}
+
+/*MENU CODE
+############################*/
+
+#ulMenu a {
+    color: #F0F0F0;
+}
+
+    #ulMenu a:hover {
+        color: #F27A04;
+    }
+
+/*ALBUM ART DISPLAY STYLE SMALL
+##############################*/
+
+.divAlbums ul {
+    color: white;
+}
+
+.albumDisplay li img {
+    border: 2px solid #00008B;
+}
+
+    .albumDisplay li img.round {
+        border: 2px solid #00008B;
+    }
+
+/*ALBUM ART DISPLAY STYLE LARGE
+##############################*/
+
+.albumDisplayLarge ul {
+    color: white;
+}
+
+.albumDisplayLarge li img {
+    border: 2px solid #00008B;
+}
+
+    .albumDisplayLarge li img.round {
+        border: 2px solid #00008B;
+    }
+
+.overlay {
+    background-color: #07079f;
+}
+
+.overlayRound {
+    background-color: #07079f;
+}
+
+.textAlbum {
+    color: white;
+}
+
+#imgNowPlaying {
+    border: 2px solid #00008B;
+}
+
+    #imgNowPlaying:hover {
+        border: 2px solid #7576F9;
+    }
+
+/*OTHER STYLE
+#####################*/
+
+.divAlbumHeader img {
+    border: 2px solid #00008B;
+}
+
+.divBioHeader img {
+    border: 2px solid #00008B;
+}
+
+/*TABLE STYLES
+#######################*/
+
+/*Track table*/
+#tblTracks {
+    background: #F4F4FF;
+}
+
+    #tblTracks th {
+        background: #7576F9;
+        color: white;
+    }
+
+    #tblTracks tr:nth-child(even) {
+        background: white;
+    }
+
+/*Classes for Track table*/
+.highlight {
+    background-color: #f9b46f !important;
+    color: white;
+}
+
+/*Song Table*/
+#tblSongs {
+    background: #DFDFFE;
+}
+
+    #tblSongs th {
+        background: #7576F9;
+        color: white;
+    }
+
+    #tblSongs tr:nth-child(odd) {
+        background: #F4F4FF;
+    }
+
+/*Discog Table*/
+#tblDiscog {
+    background: #F4F4FF;
+}
+
+    #tblDiscog th {
+        background: #7576F9;
+        color: white;
+    }
+
+    #tblDiscog tr:nth-child(odd) {
+        background: white;
+    }
+
+/*Gracenote search table*/
+#tblGracenote th {
+    background: #7576F9;
+    color: white;
+}
+
+#tblGracenote tr:nth-child(even) {
+    background: white;
+}
+
+/*Sync Directory search table*/
+#tblSyncDirectory th {
+    background: #7576F9;
+    color: white;
+}
+
+#tblSyncDirectory tr:nth-child(even) {
+    background: white;
+}
+
+/*View Exported Playlists table*/
+#tblExportedPlaylists th {
+    background: #7576F9;
+    color: white;
+}
+
+#tblExportedPlaylists tr:nth-child(even) {
+    background: white;
+}
+
+/*Shortcuts Table*/
+#tblShortcuts {
+    background: #F4F4FF;
+}
+
+    #tblShortcuts th {
+        background: #7576F9;
+        color: white;
+    }
+
+    #tblShortcuts tr:nth-child(odd) {
+        background: white;
+    }
+
+/*Seekbar*/
+#seekbar {
+    background: white;
+}
+
+    #seekbar::-moz-progress-bar {
+        background: #9E0000;
+    }
+
+    #seekbar::-webkit-progress-bar {
+        background: white;
+    }
+
+    #seekbar::-webkit-progress-value {
+        background: #F27A04;
+    }
+
+/*MODAL POP UP BOXES
+#################################*/
+
+.modalContent {
+    background-color: #F4F4FF;
+}
+
+.modalHeader {
+    background-color: #07079f;
+    color: white;
+}
+
+    .modalHeader h2 {
+        color: white;
+    }
+
+.modalBody {
+    color: darkblue;
+}
+
+.modalFooter {
+    background-color: #07079f;
+    color: #666666;
+}

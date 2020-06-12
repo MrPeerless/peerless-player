@@ -44,7 +44,7 @@ $(document).ready(function () {
                     var li = $('<li><a><img class="' + global_ArtIconShape + '"><span></span></a></li>');
                     li.find('img').attr('src', artworkSource);
                     li.find('a').attr('href', albumLink);
-                    li.find('span').html('<br><b>' + row.albumName + '</b><br>' + row.artistName + '<br>' + albumDate);
+                    li.find('span').append('<br><b>' + row.albumName + '</b><br>' + row.artistName + '<br>' + albumDate);
                     li.appendTo(ul);
                 }
                 // Large art icons
@@ -53,7 +53,7 @@ $(document).ready(function () {
                     var li = $('<li><a><img class="' + global_ArtIconShape + '"><br><div class="' + overlay + '"><div class="textAlbum"><span></span></div></div></a></li>');
                     li.find('img').attr('src', artworkSource);
                     li.find('a').attr('href', albumLink);
-                    li.find('span').html('<br><b>' + row.albumName + '</b><br>' + row.artistName + '<br>' + albumDate);
+                    li.find('span').append('<br><b>' + row.albumName + '</b><br>' + row.artistName + '<br>' + albumDate);
                     li.appendTo(ul);
                 }
             }
@@ -65,7 +65,7 @@ $(document).ready(function () {
                     var li = $('<li class="addedHidden"><a><img class="' + global_ArtIconShape + '"><span></span></a></li>');
                     li.find('img').attr('src', artworkSource);
                     li.find('a').attr('href', albumLink);
-                    li.find('span').html('<br><b>' + row.albumName + '</b><br>' + row.artistName + '<br>' + albumDate);
+                    li.find('span').append('<br><b>' + row.albumName + '</b><br>' + row.artistName + '<br>' + albumDate);
                     li.appendTo(ul);
                 }
                 // Large art icons
@@ -74,7 +74,7 @@ $(document).ready(function () {
                     var li = $('<li class="addedHidden"><a><img class="' + global_ArtIconShape + '"><br><div class="' + overlay + '"><div class="textAlbum"><span></span></div></div></a></li>');
                     li.find('img').attr('src', artworkSource);
                     li.find('a').attr('href', albumLink);
-                    li.find('span').html('<br><b>' + row.albumName + '</b><br>' + row.artistName + '<br>' + albumDate);
+                    li.find('span').append('<br><b>' + row.albumName + '</b><br>' + row.artistName + '<br>' + albumDate);
                     li.appendTo(ul);
                 }              
             }
@@ -113,7 +113,7 @@ $(document).ready(function () {
                     var li = $('<li><a><img class="' + global_ArtIconShape + '"><span></span></a></li>');
                     li.find('img').attr('src', artworkSource);
                     li.find('a').attr('href', albumLink);
-                    li.find('span').html('<br><b>' + row.albumName + '</b><br>' + row.artistName + '<br>' + albumDate);
+                    li.find('span').append('<br><b>' + row.albumName + '</b><br>' + row.artistName + '<br>' + albumDate);
                     li.appendTo(ul);
                 }
                 // Large art icons
@@ -122,7 +122,7 @@ $(document).ready(function () {
                     var li = $('<li><a><img class="' + global_ArtIconShape + '"><br><div class="' + overlay + '"><div class="textAlbum"><span></span></div></div></a></li>');
                     li.find('img').attr('src', artworkSource);
                     li.find('a').attr('href', albumLink);
-                    li.find('span').html('<br><b>' + row.albumName + '</b><br>' + row.artistName + '<br>' + albumDate);
+                    li.find('span').append('<br><b>' + row.albumName + '</b><br>' + row.artistName + '<br>' + albumDate);
                     li.appendTo(ul);
                 }
             }
@@ -134,7 +134,7 @@ $(document).ready(function () {
                     var li = $('<li class="playedHidden"><a><img class="' + global_ArtIconShape + '"><span></span></a></li>');
                     li.find('img').attr('src', artworkSource);
                     li.find('a').attr('href', albumLink);
-                    li.find('span').html('<br><b>' + row.albumName + '</b><br>' + row.artistName + '<br>' + albumDate);
+                    li.find('span').append('<br><b>' + row.albumName + '</b><br>' + row.artistName + '<br>' + albumDate);
                     li.appendTo(ul);
                 }
                 // Large art icons
@@ -143,7 +143,7 @@ $(document).ready(function () {
                     var li = $('<li class="playedHidden"><a><img class="' + global_ArtIconShape + '"><br><div class="' + overlay + '"><div class="textAlbum"><span></span></div></div></a></li>');
                     li.find('img').attr('src', artworkSource);
                     li.find('a').attr('href', albumLink);
-                    li.find('span').html('<br><b>' + row.albumName + '</b><br>' + row.artistName + '<br>' + albumDate);
+                    li.find('span').append('<br><b>' + row.albumName + '</b><br>' + row.artistName + '<br>' + albumDate);
                     li.appendTo(ul);
                 }
             }
@@ -178,7 +178,7 @@ $(document).ready(function () {
                     var li = $('<li><a><img class="' + global_ArtIconShape + '"><span></span></a></li>');
                     li.find('img').attr('src', artworkSource);
                     li.find('a').attr('href', albumLink);
-                    li.find('span').html('<br><b>' + row.albumName + '</b><br>' + row.artistName + '<br> No. ' + counter);
+                    li.find('span').append('<br><b>' + row.albumName + '</b><br>' + row.artistName + '<br> No. ' + counter);
                     li.appendTo(ul);
                 }
                 // Large art icons
@@ -187,7 +187,7 @@ $(document).ready(function () {
                     var li = $('<li><a><img class="' + global_ArtIconShape + '"><br><div class="' + overlay + '"><div class="textAlbum"><span></span></div></div></a></li>');
                     li.find('img').attr('src', artworkSource);
                     li.find('a').attr('href', albumLink);
-                    li.find('span').html('<br><b>' + row.albumName + '</b><br>' + row.artistName + '<br> No. ' + counter);
+                    li.find('span').append('<br><b>' + row.albumName + '</b><br>' + row.artistName + '<br> No. ' + counter);
                     li.appendTo(ul);
                 }
             }
@@ -199,7 +199,7 @@ $(document).ready(function () {
                     var li = $('<li class="mostPlayedHidden"><a><img class="' + global_ArtIconShape + '"><span></span></a></li>');
                     li.find('img').attr('src', artworkSource);
                     li.find('a').attr('href', albumLink);
-                    li.find('span').html('<br><b>' + row.albumName + '</b><br>' + row.artistName + '<br> No. ' + counter);
+                    li.find('span').append('<br><b>' + row.albumName + '</b><br>' + row.artistName + '<br> No. ' + counter);
                     li.appendTo(ul);
                 }
                 // Large art icons
@@ -208,7 +208,7 @@ $(document).ready(function () {
                     var li = $('<li class="mostPlayedHidden"><a><img class="' + global_ArtIconShape + '"><br><div class="' + overlay + '"><div class="textAlbum"><span></span></div></div></a></li>');
                     li.find('img').attr('src', artworkSource);
                     li.find('a').attr('href', albumLink);
-                    li.find('span').html('<br><b>' + row.albumName + '</b><br>' + row.artistName + '<br> No. ' + counter);
+                    li.find('span').append('<br><b>' + row.albumName + '</b><br>' + row.artistName + '<br> No. ' + counter);
                     li.appendTo(ul);
                 }
             }

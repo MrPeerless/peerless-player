@@ -34,9 +34,11 @@ async function btnSmartClicked() {
     if (seed.vector == null) {
         // Show ERROR modal to display
         $('#okModal').css('display', 'block');
+        $('.modalHeader').empty();
+        $('#okModalText').empty();
         $(".modalFooter").empty();
-        $('.modalHeader').html('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
-        $('#okModalText').html("<div class='modalIcon'><img src='./graphics/warning.png'></div><p>&nbsp<br><b>ERROR</b> - smart playlist could not be created. Please update smart results and try again.<br>&nbsp<br>&nbsp</p >");
+        $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
+        $('#okModalText').append("<div class='modalIcon'><img src='./graphics/warning.png'></div><p>&nbsp<br><b>ERROR</b> - smart playlist could not be created. Please update smart results and try again.<br>&nbsp<br>&nbsp</p >");
         var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
         $('.modalFooter').append(buttons);
         $("#btnOkModal").focus();
@@ -76,9 +78,11 @@ async function btnSmartClicked() {
     if (results.length < 29) {
         // If not enough matching tracks found show error modal box
         $('#okModal').css('display', 'block');
+        $('.modalHeader').empty();
+        $('#okModalText').empty();
         $(".modalFooter").empty();
-        $('.modalHeader').html('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
-        $('#okModalText').html("<div class='modalIcon'><img src='./graphics/warning.png'></div><p>&nbsp<br><b>NOT ENOUGH MATCHING TRACKS</b> found in the database.<br>&nbsp<br>&nbsp</p >");
+        $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
+        $('#okModalText').append("<div class='modalIcon'><img src='./graphics/warning.png'></div><p>&nbsp<br><b>NOT ENOUGH MATCHING TRACKS</b> found in the database.<br>&nbsp<br>&nbsp</p >");
         var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
         $('.modalFooter').append(buttons);
         $("#btnOkModal").focus();
@@ -143,9 +147,11 @@ async function btnSmartClicked() {
             console.log(err)
             // Show ERROR modal to display
             $('#okModal').css('display', 'block');
+            $('.modalHeader').empty();
+            $('#okModalText').empty();
             $(".modalFooter").empty();
-            $('.modalHeader').html('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
-            $('#okModalText').html("<div class='modalIcon'><img src='./graphics/warning.png'></div><p>&nbsp<br><b>DATABASE ERROR</b> - Smart Playlist not added to " + global_AppName + ".<br>&nbsp<br>&nbsp</p >");
+            $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
+            $('#okModalText').append("<div class='modalIcon'><img src='./graphics/warning.png'></div><p>&nbsp<br><b>DATABASE ERROR</b> - Smart Playlist not added to " + global_AppName + ".<br>&nbsp<br>&nbsp</p >");
             var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
             $('.modalFooter').append(buttons);
             $("#btnOkModal").focus();
@@ -163,9 +169,11 @@ async function btnSmartClicked() {
             console.log(err)
             // Show ERROR modal to display
             $('#okModal').css('display', 'block');
+            $('.modalHeader').empty();
+            $('#okModalText').empty();
             $(".modalFooter").empty();
-            $('.modalHeader').html('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
-            $('#okModalText').html("<div class='modalIcon'><img src='./graphics/warning.png'></div><p>&nbsp<br><b>DATABASE ERROR</b> - Smart Playlist not added to " + global_AppName + ".<br>&nbsp<br>&nbsp</p >");
+            $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
+            $('#okModalText').append("<div class='modalIcon'><img src='./graphics/warning.png'></div><p>&nbsp<br><b>DATABASE ERROR</b> - Smart Playlist not added to " + global_AppName + ".<br>&nbsp<br>&nbsp</p >");
             var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
             $('.modalFooter').append(buttons);
             $("#btnOkModal").focus();

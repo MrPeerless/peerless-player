@@ -24,7 +24,6 @@ var global_Zoom = 1;
 var global_ZoomFactor = 0;
 var global_notifications;
 var global_Background;
-var global_Background2;
 var global_Version;
 
 // Player variables
@@ -153,19 +152,18 @@ async function openDatabase(query) {
     switch (row.theme) {
         case "skindark":
             global_Background = "#111111";
-            global_Background2 = "#333333";
             break;
         case "skinlight":
             global_Background = "#eeeeee";
-            global_Background2 = "#ffffff";
             break;
         case "skinblue":
             global_Background = "#0c4586";
-            global_Background2 = "#427290";
     }
 
     // Set CSS file for theme
     $('#skin').replaceWith('<link id="skin" rel="stylesheet" type="text/css" href="./css/' + row.theme + '.css"/>')
+
+    //$('#skin').replaceWith('<link id="skin" rel="stylesheet" type="text/css" href="./css/skincool.css"/>')
 
     // If app is starting load content into divs
     if (option == "start") {
@@ -177,6 +175,11 @@ async function openDatabase(query) {
 
     // Send message to main to check for playlists directory in music folder
     ipcRenderer.send("check_playlists", [MUSIC_PATH, "Playlists/"])
+}
+
+// This function prevents eval() running in app for security purposes.
+window.eval = global.eval = function () {
+    throw new Error(`window.eval not supported`)
 }
 
 // FUNCTION TO GET NEW GRAVENOTE USER ID
@@ -228,12 +231,13 @@ ipcRenderer.on('app_version', (event, arg) => {
 // Display message box that update is available and downloading
 ipcRenderer.on('update_available', () => {
     ipcRenderer.removeAllListeners('update_available');
-    console.log("Update available")
     // Display modal box update available
     $('#okModal').css('display', 'block');
+    $('.modalHeader').empty();
+    $('#okModalText').empty();
     $(".modalFooter").empty();
-    $('.modalHeader').html('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
-    $('#okModalText').html("<div class='modalIcon'><img src='./graphics/update.png'></div><p>&nbsp<br>A new update is available. Downloading now....<br>&nbsp<br>&nbsp</p >");
+    $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>Peerless Player</h2>');
+    $('#okModalText').append("<div class='modalIcon'><img src='./graphics/update.png'></div><p>&nbsp<br>A new update is available. Downloading now....<br>&nbsp<br>&nbsp</p >");
     var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
     $('.modalFooter').append(buttons);
     $("#btnOkModal").focus();
@@ -243,12 +247,13 @@ ipcRenderer.on('update_available', () => {
 // Display message box that download complete; restart now?
 ipcRenderer.on('update_downloaded', () => {
     ipcRenderer.removeAllListeners('update_downloaded');
-    console.log("Restart to install update?")
     // Display modal box; restart yes, no?
     $('#okModal').css('display', 'block');
+    $('.modalHeader').empty();
+    $('#okModalText').empty();
     $(".modalFooter").empty();
-    $('.modalHeader').html('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
-    $('#okModalText').html("<div class='modalIcon'><img src='./graphics/question.png'></div><p>&nbsp<br>Update Downloaded. It will be installed on restart. Do you want to restart now?<br>&nbsp</p >");
+    $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
+    $('#okModalText').append("<div class='modalIcon'><img src='./graphics/question.png'></div><p>&nbsp<br>Update Downloaded. It will be installed on restart. Do you want to restart now?<br>&nbsp</p >");
     var buttons = $("<button class='btnContent' id='btnRestartApp'>Yes</button> <button class='btnContent' id='btnCancelModal'>No</button>");
     $('.modalFooter').append(buttons);
     $("#btnRestartApp").focus();
@@ -294,9 +299,13 @@ ipcRenderer.on('Help About', (event) => {
     $('#okModal').css('display', 'none');
     // Display modal box updating directory
     $('#okModal').css('display', 'block');
+    $('.modalHeader').empty();
+    $('#okModalText').empty();
     $(".modalFooter").empty();
-    $('.modalHeader').html('<span id="btnXModal">&times;</span><h2>About Peerless Player</h2>');
-    $('#okModalText').html("<div class='modalIcon'><img src='./graphics/peerless_player_thumb.png'></div><p><b>Author:</b> Geoff Peerless &copy 2020<br><b>Version:</b> " + global_Version + "<br><b>Website:</b> github.com/MrPeerless/peerless-player<br><b>Email:</b> geoffpeerless@hotmail.com<br><b>License:</b> ISC&nbsp<br>&nbsp</p >");
+    var currentDate = new Date();
+    var currentYear = currentDate.getFullYear();
+    $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>About Peerless Player</h2>');
+    $('#okModalText').append("<div class='modalIcon'><img src='./graphics/peerless_player_thumb.png'></div><p><b>Author:</b> Geoff Peerless &copy " + currentYear + "<br><b>Version:</b> " + global_Version + "<br><b>URL:</b> github.com/MrPeerless/peerless-player<br><b>Email:</b> geoffpeerless@hotmail.com<br><b>License:</b> ISC&nbsp<br>&nbsp</p >");
     var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
     $('.modalFooter').append(buttons);
     $("#btnOkModal").focus();
@@ -307,9 +316,11 @@ ipcRenderer.on('Help Release', (event) => {
     $('#okModal').css('display', 'none');
     // Display modal box updating directory
     $('#okModal').css('display', 'block');
+    $('.modalHeader').empty();
+    $('#okModalText').empty();
     $(".modalFooter").empty();
-    $('.modalHeader').html('<span id="btnXModal">&times;</span><h2>Release Notes Version: ' + global_Version + '</h2>');
-    $('#okModalText').html("<div class='modalIcon'><img src='./graphics/peerless_player_thumb.png'></div><p>1. Update Icon replaced.<br>2. User guide updated.<br>3. Name change.<br>4. Bug fix in saving settings data.<br>5. Updated to Electron ^8.2.3<br>6. File operations moved to main and ipc implemented.<br>7. Sanitize-html added to codebase.<br> &nbsp</p >");
+    $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>Release Notes Version: ' + global_Version + '</h2>');
+    $('#okModalText').append("<div class='modalIcon'><img src='./graphics/peerless_player_thumb.png'></div><p>1. Removed import /export.js db files.<br>2. Moved shell operations to main.js<br>3. Moved image operations to main.js<br>4. Moved fs operations to main.js<br>5. Added blur effect to modal background.<br>6. Updated to Electron ^ 8.2.3.<br>7. Disabled remote module.<br>8. Installed sanitize-html 1.25.0.<br>9. Screened user input.<br>10. Enabled Content Security Policy.<br> &nbsp</p >");
     var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
     $('.modalFooter').append(buttons);
     $("#btnOkModal").focus();
@@ -430,9 +441,6 @@ function backgroundChange() {
     var height = (winHeight - 60);
     var margin = 0;
 
-    //console.log("divContent height = " + contentHeight)
-    //console.log("divTrackListing height = " + trackHeight)
-
     $("#divContent").css("min-height", height);
     $("#divTrackListing").css("min-height", height);
     // Calculate the difference in height between divs
@@ -440,6 +448,9 @@ function backgroundChange() {
         margin = contentHeight - trackHeight
     }
 
+    //console.log("height = " + height)
+    //console.log("contentHeight = " + contentHeight)
+    //console.log("trackHeight = " + trackHeight)
     //console.log("margin = " + margin)
 
     // Add a margin to the bottom of divTrackListing to give appearance of equal heights
@@ -449,6 +460,7 @@ function backgroundChange() {
     else {
         $("#divTrackListing").css("padding-bottom", 0);
     }
+
 }
 
 // Close button on display album tracks
@@ -481,11 +493,10 @@ function nowPlaying() {
         else {
             var img = "<img id='speaker' style='vertical-align:middle' src='./graphics/speaker_white.png' />";
         }
-
-        var ID = $(this).find("td:last").html();
+        var ID = $(this).find("td:last").text();
         var trackName = $(this).find("td").eq(0).text();
         $(this).find("td").eq(0).removeClass("playing");
-        $(this).find("td").eq(0).html(trackName);
+        $(this).find("td").eq(0).text(trackName);
         if (ID == trackID) {
             $(this).find("td").eq(0).addClass("playing");
             $(this).find("td").eq(0).html(trackName + " " + img);
@@ -499,7 +510,7 @@ function stopPlaying() {
     $("#tblTracks tr").each(function () {
         var trackName = $(this).find("td").eq(0).text();
         $(this).find("td").eq(0).removeClass("playing");
-        $(this).find("td").eq(0).html(trackName);
+        $(this).find("td").eq(0).text(trackName);
     });
 }
 
@@ -581,7 +592,8 @@ async function libraryStats() {
     var hours = parseInt(hrs % 24);
     // Calculate days
     var days = parseInt(hrs / 24);
-    $("#playingTime").html("Total playing time:<br />" + days + " days " + hours + " hrs " + minutes + " mins " + seconds + " secs");
+    $("#playingTime").empty();
+    $("#playingTime").append("Total playing time:<br />" + days + " days " + hours + " hrs " + minutes + " mins " + seconds + " secs");
 
     // Update album count
     var sql = "SELECT album.albumID, SUM(track.count) AS trackCount FROM track LEFT JOIN album ON track.albumID = album.albumID GROUP BY album.albumID"
@@ -651,7 +663,7 @@ $(document).on('click', '#btnSettingsSave', function (event) {
     var global_ZoomFactor = $('#sltZoom').val();
     var notifications = $("input[name='notifications']:checked").val();
 
-    // Regex to only allow alphanumeric characters and apostrophe
+    // Regex to only allow alphanumeric characters and apostrophe in appName input
     appName = appName.replace(/[^a-z0-9']+/gi, "");
 
     updateSettings()
@@ -687,8 +699,10 @@ $(document).on('click', '#btnSettingsSave', function (event) {
             // Show modal box confirmation
             $('#okModal').css('display', 'block');
             $(".modalFooter").empty();
-            $('.modalHeader').html('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
-            $('#okModalText').html("<div class='modalIcon'><img src='./graphics/information.png'></div><p>&nbsp<br>Settings have been updated in the database.<br>&nbsp<br>&nbsp</p >");
+            $('.modalHeader').empty();
+            $('#okModalText').empty();
+            $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
+            $('#okModalText').append("<div class='modalIcon'><img src='./graphics/information.png'></div><p>&nbsp<br>Settings have been updated in the database.<br>&nbsp<br>&nbsp</p >");
             var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
             $('.modalFooter').append(buttons);
             $("#btnOkModal").focus();
@@ -763,9 +777,11 @@ $(document).on('click', '#btnSyncChecked', function () {
 
     // Display modal box updating directory
     $('#okModal').css('display', 'block');
+    $('.modalHeader').empty();
+    $('#okModalText').empty();
     $(".modalFooter").empty();
-    $('.modalHeader').html('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
-    $('#okModalText').html("<div class='modalIcon'><img src='./graphics/record.gif'></div><p>&nbsp<br>Updating external directory with selected albums.<br>&nbsp<br>&nbsp</p >");
+    $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
+    $('#okModalText').append("<div class='modalIcon'><img src='./graphics/record.gif'></div><p>&nbsp<br>Updating external directory with selected albums.<br>&nbsp<br>&nbsp</p >");
     var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
     $('.modalFooter').append(buttons);
     $("#btnOkModal").focus();
@@ -792,9 +808,11 @@ function syncDirectory() {
     // Load home page
     // Display modal box update complete
     $('#okModal').css('display', 'block');
+    $('.modalHeader').empty();
+    $('#okModalText').empty();
     $(".modalFooter").empty();
-    $('.modalHeader').html('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
-    $('#okModalText').html("<div class='modalIcon'><img src='./graphics/information.png'></div><p>&nbsp<br>Syncing directory.<br>&nbsp<br>&nbsp</p >");
+    $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
+    $('#okModalText').append("<div class='modalIcon'><img src='./graphics/information.png'></div><p>&nbsp<br>Syncing directory.<br>&nbsp<br>&nbsp</p >");
     var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
     $('.modalFooter').append(buttons);
     $("#btnOkModal").focus();
@@ -843,10 +861,10 @@ $(document).ready(function () {
         // Get window width
         var winWidth = $(window).width();
         // Get window height
-        var winHeight = $(window).height();
-        var height = (winHeight - 60);
-        var body = document.body;
-        var html = document.documentElement;
+        //var winHeight = $(window).height();
+        //var height = (winHeight - 60);
+        //var body = document.body;
+        //var html = document.documentElement;
 
         // If screen is less than 1215px wide reset divTracklisting margin-left effectively hiding content div
         if (winWidth < 1215) {
@@ -927,11 +945,11 @@ $(document).ready(function () {
             $(this).addClass("highlight");
         }
         // Get track name clicked on
-        global_TrackSelected = $(this).find("td:last").html();
-        global_TrackName = $(this).find("td:first").html();
+        global_TrackSelected = $(this).find("td:last").text();
+        global_TrackName = $(this).find("td:first").text();
         // Update album artowrk
-        var artist = $(this).find("td").eq(5).html();
-        var album = $(this).find("td").eq(6).html();
+        var artist = $(this).find("td").eq(5).text();
+        var album = $(this).find("td").eq(6).text();
         var artworkSource = MUSIC_PATH + artist + "/" + album + "/folder.jpg";
         $("#artwork").attr('src', artworkSource);
 
@@ -972,9 +990,11 @@ $(document).ready(function () {
         else {
             // If not connected display modal box warning
             $('#okModal').css('display', 'block');
+            $('.modalHeader').empty();
+            $('#okModalText').empty();
             $(".modalFooter").empty();
-            $('.modalHeader').html('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
-            $('#okModalText').html("<div class='modalIcon'><img src='./graphics/warning.png'></div><p>&nbsp<br><b>WARNING. No internet connection.</b><br>Please connect to the internet and try again.<br>&nbsp</p >");
+            $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
+            $('#okModalText').append("<div class='modalIcon'><img src='./graphics/warning.png'></div><p>&nbsp<br><b>WARNING. No internet connection.</b><br>Please connect to the internet and try again.<br>&nbsp</p >");
             var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
             $('.modalFooter').append(buttons);
             $("#btnOkModal").focus();
@@ -1012,9 +1032,11 @@ $(document).ready(function () {
         else {
             // If not connected display modal box warning
             $('#okModal').css('display', 'block');
+            $('.modalHeader').empty();
+            $('#okModalText').empty();
             $(".modalFooter").empty();
-            $('.modalHeader').html('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
-            $('#okModalText').html("<div class='modalIcon'><img src='./graphics/warning.png'></div><p>&nbsp<br><b>WARNING. No internet connection.</b><br>Please connect to the internet and try again.<br>&nbsp</p >");
+            $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
+            $('#okModalText').append("<div class='modalIcon'><img src='./graphics/warning.png'></div><p>&nbsp<br><b>WARNING. No internet connection.</b><br>Please connect to the internet and try again.<br>&nbsp</p >");
             var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
             $('.modalFooter').append(buttons);
             $("#btnOkModal").focus();
@@ -1051,9 +1073,11 @@ $(document).ready(function () {
         else {
             // If not connected display modal box warning
             $('#okModal').css('display', 'block');
+            $('.modalHeader').empty();
+            $('#okModalText').empty();
             $(".modalFooter").empty();
-            $('.modalHeader').html('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
-            $('#okModalText').html("<div class='modalIcon'><img src='./graphics/warning.png'></div><p>&nbsp<br><b>WARNING. No internet connection.</b><br>Please connect to the internet and try again.<br>&nbsp</p >");
+            $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
+            $('#okModalText').append("<div class='modalIcon'><img src='./graphics/warning.png'></div><p>&nbsp<br><b>WARNING. No internet connection.</b><br>Please connect to the internet and try again.<br>&nbsp</p >");
             var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
             $('.modalFooter').append(buttons);
             $("#btnOkModal").focus();
@@ -1100,11 +1124,11 @@ $(document).ready(function () {
             }
         }
         // Get track name clicked on
-        global_TrackSelected = $(this).find("td:last").html();
-        global_TrackName = $(this).find("td:first").html();
+        global_TrackSelected = $(this).find("td:last").text();
+        global_TrackName = $(this).find("td:first").text();
         // Update album artowrk
-        var artist = $(this).find("td").eq(5).html();
-        var album = $(this).find("td").eq(6).html();
+        var artist = $(this).find("td").eq(5).text();
+        var album = $(this).find("td").eq(6).text();
         var artworkSource = MUSIC_PATH + artist + "/" + album + "/folder.jpg";
         $("#artwork").attr('src', artworkSource);
     });
@@ -1118,8 +1142,8 @@ $(document).ready(function () {
             $(this).addClass("highlight");
         }
         // Get track name clicked on
-        global_TrackSelected = $(this).find("td:last").html();
-        global_TrackName = $(this).find("td:first").html();
+        global_TrackSelected = $(this).find("td:last").text();
+        global_TrackName = $(this).find("td:first").text();
     });
 
     // Highlight album in Gracenote table when clicked on
@@ -1157,13 +1181,6 @@ $(document).ready(function () {
         //try {
         var modifiedDate = Date().toLocaleString();
         var artworkSource = MUSIC_PATH + artist + "/" + album + "/AlbumArtXLarge.jpg?modified=" + modifiedDate;
-        //}
-        // If AlbumArtXLarge file doesn't exist use folder file
-        //catch{
-        if (!artworkSource) {
-            artworkSource = MUSIC_PATH + artist + "/" + album + "/folder.jpg";
-        }
-        //var artworkSource = MUSIC_PATH + artist + "/" + album + "/folder.jpg";
         //}
 
         colour()

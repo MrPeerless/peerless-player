@@ -72,6 +72,7 @@
     <Content Include="app\css\skinblue.css" />
     <Content Include="app\css\skindark.css" />
     <Content Include="app\css\skinlight.css" />
+    <Content Include="App\css\skincool.css" />
     <Content Include="app\css\style.css" />
     <Content Include="App\Graphics\collapse.png" />
     <Content Include="App\Graphics\collapse_large.png" />

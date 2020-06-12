@@ -1,6 +1,10 @@
 $(document).ready(function () {
     // Get search term from input box
     var searchTerm = $('#ipnSearch').val();
+
+    // Regex to only allow alphanumeric characters and punctuation in searchTerm input
+    searchTerm = searchTerm.replace(/[^a-z0-9'!()=+&]+/gi, "");
+
     // And clear search term
     $('#ipnSearch').val("");
 
@@ -17,7 +21,7 @@ $(document).ready(function () {
         // Unordered list to attach list items to
         var ul = $('#ulArtistsSearch');
 
-        $("#artistsSearchText").html(" " + rows.length + " results found.")
+        $("#artistsSearchText").text(" " + rows.length + " results found.")
 
         rows.forEach((row) => {
             // Get folder.jpg file path
@@ -32,7 +36,7 @@ $(document).ready(function () {
                 var li = $('<li><a><img><span></span></a></li>');
                 li.find('img').attr('src', artworkSource);
                 li.find('a').attr('href', albumLink);
-                li.find('span').html('<br><b>' + row.albumName + '</b><br>' + row.artistName + '<br>');
+                li.find('span').append('<br><b>' + row.albumName + '</b><br>' + row.artistName + '<br>');
                 li.appendTo(ul);
             }
             // Large art icons
@@ -41,7 +45,7 @@ $(document).ready(function () {
                 var li = $('<li><a><img><br><div class="overlay"><div class="textAlbum"><span></span></div></div></a></li>');
                 li.find('img').attr('src', artworkSource);
                 li.find('a').attr('href', albumLink);
-                li.find('span').html('<br><b>' + row.albumName + '</b><br>' + row.artistName + '<br>');
+                li.find('span').append('<br><b>' + row.albumName + '</b><br>' + row.artistName + '<br>');
                 li.appendTo(ul);
             }
         });
@@ -57,7 +61,7 @@ $(document).ready(function () {
         // Unordered list to attach list items to
         var ul = $('#ulAlbumsSearch');
 
-        $("#albumsSearchText").html(" " + rows.length + " results found.")
+        $("#albumsSearchText").text(" " + rows.length + " results found.")
 
         rows.forEach((row) => {
             // Get folder.jpg file path
@@ -72,7 +76,7 @@ $(document).ready(function () {
                 var li = $('<li><a><img><span></span></a></li>');
                 li.find('img').attr('src', artworkSource);
                 li.find('a').attr('href', albumLink);
-                li.find('span').html('<br><b>' + row.albumName + '</b><br>' + row.artistName + '<br>');
+                li.find('span').append('<br><b>' + row.albumName + '</b><br>' + row.artistName + '<br>');
                 li.appendTo(ul);
             }
             // Large art icons
@@ -81,7 +85,7 @@ $(document).ready(function () {
                 var li = $('<li><a><img><br><div class="overlay"><div class="textAlbum"><span></span></div></div></a></li>');
                 li.find('img').attr('src', artworkSource);
                 li.find('a').attr('href', albumLink);
-                li.find('span').html('<br><b>' + row.albumName + '</b><br>' + row.artistName + '<br>');
+                li.find('span').append('<br><b>' + row.albumName + '</b><br>' + row.artistName + '<br>');
                 li.appendTo(ul);
             }
         });
@@ -97,7 +101,7 @@ $(document).ready(function () {
         // Table list to attach list items to
         var table = $("#tblSongs")
 
-        $("#songsSearchText").html(" " + rows.length + " results found.")
+        $("#songsSearchText").text(" " + rows.length + " results found.")
 
         rows.forEach((row) => {
             // Link for favourite graphic

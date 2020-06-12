@@ -98,7 +98,6 @@ $(document).ready(function () {
 
             // Function to send ajax xml query to Musicbrainz server
             function artistReleaseQuery(query) {
-                console.log(query)
                 var queryArtistID = query;
                 // Artist serach url
                 var url = musicbrainzUrl + "release-group?artist=" + queryArtistID + "&limit=100&type=album"
@@ -167,7 +166,6 @@ $(document).ready(function () {
 
             // Process response from Musicbrainz of URLs
             function processLinksQuery(xml) {
-                console.log(xml)
                 // Declare variables for URLs
                 var homepageUrl = "";
                 var youtubeUrl = "";
@@ -307,12 +305,15 @@ $(document).ready(function () {
     function noResult() {
         // Display modal box if no artistID found in Musicbrainz database
         $('#okModal').css('display', 'block');
+        $('.modalHeader').empty();
+        $('#okModalText').empty();
         $(".modalFooter").empty();
         $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
-        $('#okModalText').append("<div class='modalIcon'><img src='./graphics/information.png'></div><p>&nbsp<br><b>" + artist + "</b> not found in discography database.<br>&nbsp</p>");
+        $('#okModalText').append("<div class='modalIcon'><img src='./graphics/information.png'></div><p>&nbsp<br><b>" + artist + "</b> not found in discography database.<br>&nbsp<br>&nbsp</p>");
         var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
         $('.modalFooter').append(buttons);
         $("#btnOkModal").focus();
+        $('.background').css('filter', 'blur(5px)');
         // Hide discography page and go back
         $("#divTrackListing").css("display", "none");
         $("#divContent").css("width", "auto");

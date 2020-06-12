@@ -73,9 +73,11 @@ ipcRenderer.on("from_sync_external", (event, data) => {
     if (foundMusic.length == 0 && compareBirthtime.length == 0) {
         // Display modal information box
         $('#okModal').css('display', 'block');
+        $('.modalHeader').empty();
+        $('#okModalText').empty();
         $(".modalFooter").empty();
-        $('.modalHeader').html('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
-        $('#okModalText').html("<div class='modalIcon'><img src='./graphics/information.png'></div><p>&nbsp<br>The directory is up to date.<br>&nbsp</p >");
+        $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
+        $('#okModalText').append("<div class='modalIcon'><img src='./graphics/information.png'></div><p>&nbsp<br>The directory is up to date.<br>&nbsp</p >");
         var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
         $('.modalFooter').append(buttons);
         $("#btnOkModal").focus();
@@ -83,13 +85,14 @@ ipcRenderer.on("from_sync_external", (event, data) => {
         $("#divTrackListing").css("display", "none");
         $("#divContent").css("width", "auto");
         $("#divContent").load("./html/home.html");
+        $('.background').css('filter', 'blur(5px)');
         return
     }
 
     // If new music and new playlists found
     else if (foundMusic.length != 0 && compareBirthtime.length != 0) {
-        $('#syncDirectoryDetails').html(foundMusic.length + " new albums found in Database and new exported playlists to Sync with selected Directory: " + musicDir)
-        $('#syncDirectoryInfo').html("Click on the checkboxes to select the albums you want to sync to the directory and then click on the Sync button.")
+        $('#syncDirectoryDetails').text(foundMusic.length + " new albums found in Database and new exported playlists to Sync with selected Directory: " + musicDir)
+        $('#syncDirectoryInfo').text("Click on the checkboxes to select the albums you want to sync to the directory and then click on the Sync button.")
         var table = $("#tblSyncDirectory")
         var tableHeader = $("<tr><th><input type='checkbox' id='cbxSyncDirAll'/></th><th>Artist</th><th>Album</th></tr>");
         tableHeader.appendTo(table);
@@ -114,8 +117,8 @@ ipcRenderer.on("from_sync_external", (event, data) => {
 
     // If no new music and new playlists found
     else if (foundMusic.length == 0 && compareBirthtime.length != 0) {
-        $('#syncDirectoryDetails').html(compareBirthtime.length + " new exported playlists found in Music Directory to Sync with selected Directory: " + musicDir)
-        $('#syncDirectoryInfo').html("Click on the checkbox to select the exported playlists to sync to the directory and then click on the Sync button.")
+        $('#syncDirectoryDetails').text(compareBirthtime.length + " new exported playlists found in Music Directory to Sync with selected Directory: " + musicDir)
+        $('#syncDirectoryInfo').text("Click on the checkbox to select the exported playlists to sync to the directory and then click on the Sync button.")
         var table = $("#tblSyncDirectory")
         var tableHeader = $("<tr><th><input type='checkbox' id='cbxSyncDirAll'/></th><th>Artist</th><th>Album</th></tr>");
         tableHeader.appendTo(table);
@@ -128,8 +131,8 @@ ipcRenderer.on("from_sync_external", (event, data) => {
 
     // If new music and no playlists found
     else if (foundMusic.length != 0 && compareBirthtime.length == 0) {
-        $('#syncDirectoryDetails').html(foundMusic.length + " new albums found in Database to Sync with selected Directory: " + musicDir)
-        $('#syncDirectoryInfo').html("Click on the checkboxes to select the albums you want to sync to the directory and then click on the Sync button.")
+        $('#syncDirectoryDetails').text(foundMusic.length + " new albums found in Database to Sync with selected Directory: " + musicDir)
+        $('#syncDirectoryInfo').text("Click on the checkboxes to select the albums you want to sync to the directory and then click on the Sync button.")
         var table = $("#tblSyncDirectory")
         var tableHeader = $("<tr><th><input type='checkbox' id='cbxSyncDirAll'/></th><th>Artist</th><th>Album</th></tr>");
         tableHeader.appendTo(table);
@@ -179,21 +182,23 @@ ipcRenderer.on("from_dir_artists", (event, data) => {
 
         // Display modal information box
         $('#okModal').css('display', 'block');
+        $('.modalHeader').empty();
+        $('#okModalText').empty();
         $(".modalFooter").empty();
-        $('.modalHeader').html('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
-        $('#okModalText').html("<div class='modalIcon'><img src='./graphics/information.png'></div><p>&nbsp<br>No new music found in directory.<br>The database is up to date.<br>&nbsp</p >");
+        $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
+        $('#okModalText').append("<div class='modalIcon'><img src='./graphics/information.png'></div><p>&nbsp<br>No new music found in directory.<br>The database is up to date.<br>&nbsp</p >");
         var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
         $('.modalFooter').append(buttons);
         $("#btnOkModal").focus();
         $("#btnSync").prop("disabled", false);
+        $('.background').css('filter', 'blur(5px)');
         return
     }
     else {
-        $('#displayNewMusicDetails').html(foundMusic.length + " new albums found in Directory<br>The below list of new albums have been found.")
-        $('#displayNewMusicInfo').html("Select an album and click on the GET button to search for album metadata.<br>If no album metadata is found, select an album and click on the MANUAL button")
+        $('#displayNewMusicDetails').append(foundMusic.length + " new albums found in Directory<br>The below list of new albums have been found.")
+        $('#displayNewMusicInfo').append("Select an album and click on the GET button to search for album metadata.<br>If no album metadata is found, select an album and click on the MANUAL button")
 
         var table = $("#tblGracenote")
-        //var tableHeader = $("<tr><th class='rowGraceArtist'>Artist</th><th class='rowGraceAlbum'>Album</th><th class='rowGraceTracks'>No. Tracks</th></tr>");
         var tableHeader = $("<tr><th class='rowGraceArtist'>Artist</th><th class='rowGraceAlbum'>Album</th></tr>");
         tableHeader.appendTo(table);
 
@@ -201,16 +206,11 @@ ipcRenderer.on("from_dir_artists", (event, data) => {
             var splitAlbum = found.split("|");
             var artist = splitAlbum[0];
             var album = splitAlbum[1];
-            //var trackCount = splitAlbum[2];
 
             // Create table row
-            //var tableRow = $("<tr class='tracks'><td>" + artist + "</td><td>" + album + "</td><td>" + trackCount + "</td></tr>");
             var tableRow = $("<tr class='tracks'><td>" + artist + "</td><td>" + album + "</td></tr>");
             // Append row to table
             tableRow.appendTo(table);
-
-            // Message to main to get number of music files in album directory
-            //ipcRenderer.send("music_files", [MUSIC_PATH, artist, album])
         });
     }
 

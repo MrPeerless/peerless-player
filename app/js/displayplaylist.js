@@ -52,6 +52,10 @@ $(document).ready(function () {
         var totalMins = 0;
         var totalSecs = 0;
 
+        // Create text for playlist details
+        $("#displayPlaylistName").append("Playlist <br>" + name);
+        $("#imgArtwork").attr('src', artworkSource);
+
         // Loop through tracks array to populate tracks table
         for (i = 0; i < tracks.length; i++) {
             // Select GET query to database
@@ -91,22 +95,20 @@ $(document).ready(function () {
             // Append row to table  
             tableRow.appendTo(table);
         }
+
         // Calculate total playlist time
         // Calculate seconds
         var seconds = totalSecs % 60;
         seconds = (seconds >= 10) ? seconds : "0" + seconds;
         var secMins = totalSecs / 60;
-        // Calculate minuntes
+        // Calculate minutes
         var mins = secMins + totalMins;
         var minutes = parseInt(mins % 60);
         minutes = (minutes >= 10) ? minutes : "0" + minutes;
-        // Calcualte hours
-        //var hrs = mins / 60;
-        //var hours = parseInt(hrs % 24);
+        // Calculate hours
         var hours = parseInt(mins / 60);
 
         var playlistTime;
-        //console.log("Total playing time: " + hours + " hrs " + minutes + " mins " + seconds + " secs")
 
         if (hours == 0) {
             playlistTime = minutes + ":" + seconds;
@@ -115,10 +117,7 @@ $(document).ready(function () {
             playlistTime = hours + ":" + minutes + ":" + seconds;
         }
 
-        // Create text for playlist details
-        $("#displayPlaylistName").html("Playlist <BR>" + name);
-        $("#displayPlaylistDetails").html("Created on " + created + "<br>Number of songs: " + numberTracks + "<br>Total play time: " + playlistTime + "<br>&nbsp<br>");
-        $("#imgArtwork").attr('src', artworkSource);
+        $("#displayPlaylistDetails").append("Created on " + created + "<br>Number of songs: " + numberTracks + "<br>Total play time: " + playlistTime + "<br>&nbsp<br>");
 
         //Get trackID of first track in album so that you can click PLAY button without selecting the first track
         if (!global_Playing) {

@@ -49,6 +49,7 @@ $(document).ready(function () {
         var sort = " <b>Sort </b><select class='sltSort' id='sltTrackSort'><option value='a2z'>A - Z</option><option value='artist'>Artist</option><option value='added'>Date Added</option><option value='played'>Last Played</option><option value='most'>Most Played</option></select>"
 
         // If sort is set to A - Z
+        $('#spnAtoZmenu').empty();
         if (global_TrackSort == "a2z") {
             // Sort albums array alphabetically using function in index.js
             tracks = sorted(tracks);
@@ -69,12 +70,12 @@ $(document).ready(function () {
                     menu = menu + '<span style="margin-right: 1em;">' + alphabet.charAt(i) + '</b></span>';
                 }
             }
-            $('#spnAtoZmenu').html(menu + '<input type="text" id="songSearch" name="songSearch" placeholder="FIlter the song table.." title="Type in a term to filter">' + sort);
+            $('#spnAtoZmenu').append(menu + '<input type="text" id="songSearch" name="songSearch" placeholder="FIlter the song table.." title="Type in a term to filter">' + sort);
         }
         // If sort is not set to A - Z
         else {
             // Only display filter box and sort select
-            $('#spnAtoZmenu').html('<input type="text" id="songSearch" name="songSearch" placeholder="FIlter the song table.." title="Type in a term to filter">' + sort);
+            $('#spnAtoZmenu').append('<input type="text" id="songSearch" name="songSearch" placeholder="FIlter the song table.." title="Type in a term to filter">' + sort);
         }
 
         // Highlight sort selected in dropdown box

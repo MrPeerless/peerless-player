@@ -178,7 +178,7 @@ $(document).ready(function () {
                 var li = $('<li><a><img class="' + global_ArtIconShape + '"><span></span></a></li>');
                 li.find('img').attr('src', artworkSource);
                 li.find('a').attr('href', playlistLink);
-                li.find('span').html('<br><b>' + row.playlistName + '</b><br>' + numberTracks + ' Tracks<br>Created<br> ' + created);
+                li.find('span').append('<br><b>' + row.playlistName + '</b><br>' + numberTracks + ' Tracks<br>Created<br> ' + created);
                 li.appendTo(ul);
             }
 
@@ -188,8 +188,8 @@ $(document).ready(function () {
                 var li = $('<li><a><img class="' + global_ArtIconShape + '"><span class="textAlbum" id="title"></span><div class="' + overlay + '"><div class="textAlbum" id="details"></div></div></a></li>');
                 li.find('img').attr('src', artworkSource);
                 li.find('a').attr('href', playlistLink);
-                li.find('#title').html('<br><b>' + row.playlistName + '</b>');
-                li.find('#details').html('<br>' + numberTracks + ' Tracks<br>Created<br> ' + created);
+                li.find('#title').append('<br><b>' + row.playlistName + '</b>');
+                li.find('#details').append('<br>' + numberTracks + ' Tracks<br>Created<br> ' + created);
                 li.appendTo(ul);
             }
         });

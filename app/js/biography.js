@@ -365,12 +365,15 @@ $(document).ready(function () {
     function noResult(query) {
         // Display modal box if no artistID found in Musicbrainz database
         $('#okModal').css('display', 'block');
+        $('.modalHeader').empty();
+        $('#okModalText').empty();
         $(".modalFooter").empty();
         $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
         $('#okModalText').append("<div class='modalIcon'><img src='./graphics/information.png'></div><p>&nbsp<br><b>" + artist + "</b> not found in biography database.<br>&nbsp</p>");
         var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
         $('.modalFooter').append(buttons);
         $("#btnOkModal").focus();
+        $('.background').css('filter', 'blur(5px)');
         // Hide discography page and go back
         $("#divTrackListing").css("display", "none");
         $("#divContent").css("width", "auto");

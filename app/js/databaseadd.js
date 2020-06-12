@@ -11,9 +11,11 @@ function btnSyncClick() {
     if (!MUSIC_PATH) {
         // If no MUSIC_PATH display warning
         $('#okModal').css('display', 'block');
+        $('.modalHeader').empty();
+        $('#okModalText').empty();
         $(".modalFooter").empty();
-        $('.modalHeader').html('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
-        $('#okModalText').html("<div class='modalIcon'><img src='./graphics/warning.png'></div><p>&nbsp<br><b>WARNING. No Music Path has been set.</b><br>Please go to Settings and set your Music Path.&nbsp</p >");
+        $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
+        $('#okModalText').append("<div class='modalIcon'><img src='./graphics/warning.png'></div><p>&nbsp<br><b>WARNING. No Music Path has been set.</b><br>Please go to Settings and set your Music Path.&nbsp</p >");
         var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
         $('.modalFooter').append(buttons);
         $("#btnOkModal").focus();
@@ -51,9 +53,11 @@ function btnSyncClick() {
     else {
         // If not connected display modal box warning
         $('#okModal').css('display', 'block');
+        $('.modalHeader').empty();
+        $('#okModalText').empty();
         $(".modalFooter").empty();
-        $('.modalHeader').html('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
-        $('#okModalText').html("<div class='modalIcon'><img src='./graphics/warning.png'></div><p>&nbsp<br><b>WARNING. No internet connection.</b><br>Please connect to the internet and try again.<br>&nbsp</p >");
+        $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
+        $('#okModalText').append("<div class='modalIcon'><img src='./graphics/warning.png'></div><p>&nbsp<br><b>WARNING. No internet connection.</b><br>Please connect to the internet and try again.<br>&nbsp</p >");
         var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
         $('.modalFooter').append(buttons);
         $("#btnOkModal").focus();
@@ -67,7 +71,7 @@ function btnSyncClick() {
 //#########################################
 $(document).on('click', '#btnSearchGracenote', function (event) {
     event.preventDefault();
-    var newArtist = $("#tblGracenote tr.highlight").find('td:first').html();
+    var newArtist = $("#tblGracenote tr.highlight").find('td:first').text();
     // Call function to display input form
     if (!newArtist) {
         return false;
@@ -75,9 +79,11 @@ $(document).on('click', '#btnSearchGracenote', function (event) {
     else {
         // Display modal box checking Gracenote
         $('#okModal').css('display', 'block');
+        $('.modalHeader').empty();
+        $('#okModalText').empty();
         $(".modalFooter").empty();
-        $('.modalHeader').html('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
-        $('#okModalText').html("<div class='modalIcon'><img src='./graphics/record.gif'></div><p>&nbsp<br>Searching the Gracenote database. Please wait.<br>&nbsp<br>&nbsp</p >");
+        $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
+        $('#okModalText').append("<div class='modalIcon'><img src='./graphics/record.gif'></div><p>&nbsp<br>Searching the Gracenote database. Please wait.<br>&nbsp<br>&nbsp</p >");
         var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
         $('.modalFooter').append(buttons);
         $("#btnOkModal").focus();
@@ -93,8 +99,8 @@ $(document).on('click', '#btnManual', function (event) {
     event.preventDefault();
     global_ImportMode = "manual";
 
-    var newArtist = $("#tblGracenote tr.highlight").find('td:first').html();
-    var newAlbum = $("#tblGracenote tr.highlight").find('td:nth-child(2)').html();
+    var newArtist = $("#tblGracenote tr.highlight").find('td:first').text();
+    var newAlbum = $("#tblGracenote tr.highlight").find('td:nth-child(2)').text();
     if (!newArtist) {
         newArtist = $("#selectedArtist").text();
         newAlbum = $("#selectedAlbum").text();
@@ -125,8 +131,8 @@ $(document).on('click', '#btnManual', function (event) {
 //#################################################
 function albumMatches() {
     // Send xml query to Gracenote to find number of matches
-    var newArtist = $("#tblGracenote tr.highlight").find('td:first').html();
-    var newAlbum = $("#tblGracenote tr.highlight").find('td:nth-child(2)').html();
+    var newArtist = $("#tblGracenote tr.highlight").find('td:first').text();
+    var newAlbum = $("#tblGracenote tr.highlight").find('td:nth-child(2)').text();
 
     var queryData = "<?xml version='1.0' encoding='UTF-8'?><QUERIES><AUTH><CLIENT>12398848-977A13ABAD0F2E143D38E61AF28B78DB</CLIENT>" +
         "<USER>" + global_UserID + "</USER></AUTH><LANG>eng</LANG><COUNTRY>uk</COUNTRY>" +
@@ -139,7 +145,7 @@ function albumMatches() {
     // Populate hidden elements with selected album details
     $("#selectedArtist").text(newArtist);
     $("#selectedAlbum").text(newAlbum);
-    $("#selectedNoTracks").html($("#tblGracenote tr.highlight").find('td:nth-child(3)').html());
+    $("#selectedNoTracks").text($("#tblGracenote tr.highlight").find('td:nth-child(3)').text());
 
     // Call ajax function albumQuery
     albumQuery(queryData).done(checkData);
@@ -167,14 +173,14 @@ function albumMatches() {
         // Display details of album selected with numbr of tracks
         ipcRenderer.on("from_count_tracks", (event, data) => {
             var numberTracks = data[0];
-            $('#displayNewMusicDetails').html(albumsFound + " Album matches have been found in the Gracenote database.<br>" + "Searched for: " + $("#selectedArtist").text() + ", " + $("#selectedAlbum").text() + ", No. Tracks " + numberTracks);
+            $('#displayNewMusicDetails').text(albumsFound + " Album matches have been found in the Gracenote database.<br>" + "Searched for: " + $("#selectedArtist").text() + ", " + $("#selectedAlbum").text() + ", No. Tracks " + numberTracks);
         });
 
         // Clear existing elments from New Music search
         $('#tblGracenote').empty();
         $('#displayNewMusicDetails').empty();
         $('#displayNewMusicInfo').empty();
-        $('#displayNewMusicInfo').html("Select the closest match and click on GET button to get album metadata.<br>If no suitable matches found click on MANUAL button to manually import album metadata.")
+        $('#displayNewMusicInfo').append("Select the closest match and click on GET button to get album metadata.<br>If no suitable matches found click on MANUAL button to manually import album metadata.")
 
         $('.background').css('filter', 'blur(0px)');
         $('#btnSearchGracenote').css('display', 'none');
@@ -206,7 +212,7 @@ function albumMatches() {
 //#########################################
 $(document).on('click', '#btnDownloadGracenote', function (event) {
     event.preventDefault();
-    var gnID = $("#tblGracenote tr.highlight").find('td:last').html();
+    var gnID = $("#tblGracenote tr.highlight").find('td:last').text();
     // Call function to display input form
     if (!gnID) {
         return false;
@@ -214,9 +220,11 @@ $(document).on('click', '#btnDownloadGracenote', function (event) {
     else {
         // Display modal box checking Gracenote
         $('#okModal').css('display', 'block');
+        $('.modalHeader').empty();
+        $('#okModalText').empty();
         $(".modalFooter").empty();
-        $('.modalHeader').html('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
-        $('#okModalText').html("<div class='modalIcon'><img src='./graphics/record.gif'></div><p>&nbsp<br>Searching the Gracenote database. Please wait.<br>&nbsp<br>&nbsp</p >");
+        $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
+        $('#okModalText').append("<div class='modalIcon'><img src='./graphics/record.gif'></div><p>&nbsp<br>Searching the Gracenote database. Please wait.<br>&nbsp<br>&nbsp</p >");
         var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
         $('.modalFooter').append(buttons);
         $("#btnOkModal").focus();
@@ -310,7 +318,7 @@ ipcRenderer.on("files_album_directory", (event, data) => {
 // Function to display Add to Database page
 //######################################### 
 function albumMetadata() {
-    var gnID = $("#tblGracenote tr.highlight").find('td:last').html();
+    var gnID = $("#tblGracenote tr.highlight").find('td:last').text();
     // Create XMl string query to query album tracks
     var queryTracks = "<?xml version='1.0' encoding='UTF-8'?><QUERIES><AUTH><CLIENT>12398848-977A13ABAD0F2E143D38E61AF28B78DB</CLIENT><USER>" + global_UserID + "</USER></AUTH><LANG>eng</LANG><COUNTRY>uk</COUNTRY><QUERY CMD='ALBUM_FETCH'><GN_ID>" + gnID + "</GN_ID><OPTION><PARAMETER>SELECT_EXTENDED</PARAMETER><VALUE>ARTIST_OET,MOOD,TEMPO</VALUE></OPTION><OPTION><PARAMETER>SELECT_DETAIL</PARAMETER>  <VALUE>GENRE:3LEVEL,MOOD:2LEVEL,TEMPO:3LEVEL,ARTIST_ORIGIN:4LEVEL,ARTIST_ERA:2LEVEL,ARTIST_TYPE:2LEVEL</VALUE></OPTION><OPTION><PARAMETER>SELECT_EXTENDED</PARAMETER><VALUE>COVER</VALUE></OPTION></QUERY></QUERIES>"
     trackQuery(queryTracks).done(trackData);
@@ -953,18 +961,35 @@ $(document).on('click', '#btnImportAlbum', function (event) {
                 }
 
                 // COVER ART
-                // Save cover art to album folder in music directory
-                var artFilePath = MUSIC_PATH + artist + "/" + album + "/AlbumArtXLarge.jpg";
-                var resizedFilePath = MUSIC_PATH + artist + "/" + album + "/folder.jpg";
+                // Check first 4 chars of coverArtUrl to see if it is a URL or filepath
+                var check = coverArtUrl.substring(0, 4);
 
-                // Send message to main.js to save and resize art image
-                ipcRenderer.send("save_artwork", [artFilePath, resizedFilePath, coverArtUrl, genre]);
+                // coverArtUrl is a URL
+                if (coverArtUrl != "" && check == "http") {
+                    // Save cover art to album folder in music directory
+                    var artFilePath = MUSIC_PATH + artist + "/" + album + "/AlbumArtXLarge.jpg";
+                    var resizedFilePath = MUSIC_PATH + artist + "/" + album + "/folder.jpg";
+                    // Send message to main.js to save and resize art image
+                    ipcRenderer.send("save_artwork", [artFilePath, resizedFilePath, coverArtUrl, genre]);
+                }
+
+                // coverArtUrl is a filepath
+                if (coverArtUrl != "" && check != "http") {
+                    var artFilePath = MUSIC_PATH + artist + "/" + album + "/AlbumArtXLarge.jpg";
+                    var resizedFilePath = MUSIC_PATH + artist + "/" + album + "/folder.jpg";
+                    // Send message to main.js to save AlbumArtXLarge image
+                    ipcRenderer.send("save_artXlarge_file", [coverArtUrl, artFilePath]);
+                    // Send message to main.js to resize folder image
+                    ipcRenderer.send("save_folder_file", [coverArtUrl, resizedFilePath]);
+                }
 
                 // Show OK modal box to confirm album added to database
                 $('#okModal').css('display', 'block');
+                $('.modalHeader').empty();
+                $('#okModalText').empty();
                 $(".modalFooter").empty();
-                $('.modalHeader').html('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
-                $('#okModalText').html("<div class='modalIcon'><img src='./graphics/information.png'></div><p>&nbsp<br>Album has been successfully added to " + global_AppName + ".<br>&nbsp<br>&nbsp</p >");
+                $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
+                $('#okModalText').append("<div class='modalIcon'><img src='./graphics/information.png'></div><p>&nbsp<br>Album has been successfully added to " + global_AppName + ".<br>&nbsp<br>&nbsp</p >");
                 var buttons = $("<button class='btnContent' id='btnOkImport'>OK</button>");
                 $('.modalFooter').append(buttons);
                 $("#btnOkImport").focus();
@@ -977,9 +1002,11 @@ $(document).on('click', '#btnImportAlbum', function (event) {
                 console.log(err)
                 // Show ERROR modal to display
                 $('#okModal').css('display', 'block');
+                $('.modalHeader').empty();
+                $('#okModalText').empty();
                 $(".modalFooter").empty();
-                $('.modalHeader').html('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
-                $('#okModalText').html("<div class='modalIcon'><img src='./graphics/warning.png'></div><p>&nbsp<br><b>DATABASE ERROR</b> - album not added to " + global_AppName + ".<br>&nbsp<br>&nbsp</p >");
+                $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
+                $('#okModalText').append("<div class='modalIcon'><img src='./graphics/warning.png'></div><p>&nbsp<br><b>DATABASE ERROR</b> - album not added to " + global_AppName + ".<br>&nbsp<br>&nbsp</p >");
                 var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
                 $('.modalFooter').append(buttons);
                 $("#btnOkModal").focus();
@@ -991,4 +1018,19 @@ $(document).on('click', '#btnImportAlbum', function (event) {
         console.log("Form not validated")
     }
     $("#btnImportAlbum").prop("disabled", false);
+});
+
+// Manual add artwork
+// Click event from clicking on artwork in add album
+$(document).on('click', '#addAlbum', function (event) {
+    event.preventDefault();
+    // Send message to main.js to open dialog box
+    ipcRenderer.send("open_file_dialog", ["add_artwork", "Select Album Artwork Image File", "C:\\", "Select File", [{ name: 'Images', extensions: ['jpg'] }], "openFile"]);
+});
+
+// Response from selecting manual artwork browse dialog box
+ipcRenderer.on("add_artwork", (event, data) => {
+    var coverArt = data[0];
+    $("#imgCoverArt").attr('src', coverArt);
+    $("#inpCoverArtURL").val(coverArt);
 });

@@ -7,7 +7,6 @@
 2. User guide updated.
 3. Name change.
 4. Bug fix in saving settings data.
-5. Updated to Electron ^8.2.3
 -------------------------------
 **** VERSION 0.0.4 UPDATES ****
 
@@ -18,8 +17,24 @@
 1. Removed import/export.js db files.
 2. Moved shell operations to main.js
 3. Moved image operations to main.js
-4. Moved directory operations to main.js
+4. Moved fs operations to main.js
 5. Added blur effect to modal background.
+6. Updated to Electron ^8.2.3.
+7. Disabled remote module.
+8. Installed sanitize-html 1.25.0.
+9. Screened user input.
+
+**** VERSION 0.0.6 UPDATES ****
+
+1. Rebuild sqlite3 after electron upgrade.
+
+**** VERSION 0.1.0 UPDATES ****
+
+1. Enabled Content Security Policy
+
+
+
+
 
 
 

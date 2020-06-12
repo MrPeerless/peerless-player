@@ -89,11 +89,11 @@ $(document).ready(function () {
             }
 
             // Display A to Z menu and favourites link
-            $('#spnAtoZmenu').html(menu + favouriteLink + sort);
+            $('#spnAtoZmenu').append(menu + favouriteLink + sort);
         }
         else {
             // Only display sort select
-            $('#spnAtoZmenu').html(favouriteLink + sort);
+            $('#spnAtoZmenu').append(favouriteLink + sort);
         }
 
         // Highlight sort selected in dropdown box
@@ -126,7 +126,7 @@ $(document).ready(function () {
                 var li = $('<li><span class="anchor" id="' + anchor + '"></span><a><img class="' + global_ArtIconShape + '"><span></span></a></li>');
                 li.find('img').attr('src', artworkSource);
                 li.find('a').attr('href', albumLink);
-                li.find('span').html('<br><b>' + albumName + '</b><br>' + artistName);
+                li.find('span').append('<br><b>' + albumName + '</b><br>' + artistName);
                 li.appendTo(ul);
             }
             // Large art icons
@@ -135,7 +135,7 @@ $(document).ready(function () {
                 var li = $('<li><span class="anchor" id="' + anchor + '"></span><a><img class="' + global_ArtIconShape + '"><div class="' + overlay + '"><div class="textAlbum"><span></span></div></div></a></li>');
                 li.find('img').attr('src', artworkSource);
                 li.find('a').attr('href', albumLink);
-                li.find('span').html('<br><b>' + albumName + '</b><br>' + artistName);
+                li.find('span').append('<br><b>' + albumName + '</b><br>' + artistName);
                 li.appendTo(ul);
             }
         });
