@@ -86,7 +86,7 @@ select {
 
 #sltPlaylist {
     width: 200px;
-    height: 180px;
+    height: 200px;
     border: 1px solid #000000;
     margin-bottom: 5px;
 }
@@ -122,6 +122,15 @@ select {
     border: 1px solid #000000;
 }
 
+.sltTempo1 {
+    width: 279px;
+    border: 1px solid #000000;
+}
+
+.sltTempo2 {
+    width: 279px;
+    border: 1px solid #000000;
+}
 /* PAGE BUTTON STYLES
 ###########################*/
 .btnMenu {

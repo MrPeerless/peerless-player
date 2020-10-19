@@ -295,6 +295,11 @@ button#btnFastForward {
         background: #dddddd;
     }
 
+.trDiscog {
+    background: yellow;
+    color: grey;
+}
+
 /*Gracenote search table*/
 tblGracenote {
     color: black;

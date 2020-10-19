@@ -67,13 +67,12 @@ $(document).ready(function () {
             // Split trackName on first spaceto get trackNumber
             var trackNumber = row.trackName.split(/\s(.+)/)[0]
 
-            var fieldset = $("<fieldset><legend>Track " + counter + "</legend><label class='lblTrackName'>Name: </label><input class='hidden' id='" + counter + "trackNumber' name=" + counter + "trackNumber' type='text' size='4' value='' /><input class='hidden' id='" + counter + "trackID' name=" + counter + " trackID' type='text' size='4' value='' /><input required class='inpTrackName' id='" + counter + "trackName' name=" + counter + "trackName' type='text' size='79' value='' /><label class='lblFileName'>File Name:</label><input required class='inpFileName' id='" + counter + "fileName' name='" + counter + "fileName' type='text' size='75' value='' readonly /><label class='lblTrackTime'>Time:</label><input required class='inpEditTrackTime' id='" + counter + "pTime' name='" + counter + "pTime' type='text' size='8 value='' readonly/><br><label class='lblTrackName'>Mood 1:</label><select class='sltMood1' id='" + counter + "mood1' name=" + counter + "mood1'></select><label class='lblFileName'>Mood 2:</label><select class='sltMood2' id='" + counter + "mood2' name=" + counter + "mood2'></select><br><label class='lblTrackName'>Tempo 1:</label><input class='inpTrackName' id='" + counter + "tempo1' name=" + counter + "tempo1' type='text' size='25' value =''/><label class='lblFileName'>Tempo 2:</label><input class='inpTrackName' id='" + counter + "tempo2' name=" + counter + "tempo2' type='text' size='25' value=''/><br><label class='lblTrackName'>Genre 2:</label><input class='inpTrackName' id='" + counter + "genre2' name=" + counter + "genre2' type='text' size='40' value = ''/><label class='lblFileName'>Genre 3:</label><input class='inpTrackName' id='" + counter + "genre3' name=" + counter + "genre3' type='text' size='40' value=''/></fieldset>");
+            var fieldset = $("<fieldset><legend>Track " + counter + "</legend><label class='lblTrackName'>Name: </label><input class='hidden' id='" + counter + "trackNumber' name=" + counter + "trackNumber' type='text' size='4' value='' /><input class='hidden' id='" + counter + "trackID' name=" + counter + " trackID' type='text' size='4' value='' /><input required class='inpTrackName' id='" + counter + "trackName' name=" + counter + "trackName' type='text' size='79' value='' /><label class='lblFileName'>File Name:</label><input required class='inpFileName' id='" + counter + "fileName' name='" + counter + "fileName' type='text' size='75' value='' readonly /><label class='lblTrackTime'>Time:</label><input required class='inpEditTrackTime' id='" + counter + "pTime' name='" + counter + "pTime' type='text' size='8 value='' readonly/><br><label class='lblTrackName'>Mood 1:</label><select class='sltMood1' id='" + counter + "mood1' name=" + counter + "mood1'></select><label class='lblFileName'>Mood 2:</label><select class='sltMood2' id='" + counter + "mood2' name=" + counter + "mood2'></select><br><label class='lblTrackName'>Tempo 1:</label><select class='sltTempo1' id='" + counter + "tempo1' name=" + counter + "tempo1'></select><label class='lblFileName'>Tempo 2:</label><select class='sltTempo2' id='" + counter + "tempo2' name=" + counter + "tempo2'></select><br><label class='lblTrackName'>Genre 2:</label><input class='inpTrackName' id='" + counter + "genre2' name=" + counter + "genre2' type='text' size='40' value = ''/><label class='lblFileName'>Genre 3:</label><input class='inpTrackName' id='" + counter + "genre3' name=" + counter + "genre3' type='text' size='40' value=''/></fieldset>");
 
             // Append fieldset to form
             fieldset.appendTo(form);
 
             // Populate mood1 listbox
-            
             $("#" + counter + "mood1").append("<option></option>");
             $("#" + counter + "mood1").append("<option value='Peaceful'>Peaceful</option>");
             $("#" + counter + "mood1").append("<option value='Romantic'>Romantic</option>");
@@ -101,7 +100,13 @@ $(document).ready(function () {
             $("#" + counter + "mood1").append("<option value='Lively'>Lively</option>");
             $("#" + counter + "mood1").append("<option value='Upbeat'>Upbeat</option>");
             $("#" + counter + "mood1").append("<option value='Other'>Other</option>");
-            
+
+            // Populate tempo1 listbox
+            $("#" + counter + "tempo1").append("<option></option>");
+            $("#" + counter + "tempo1").append("<option>Slow Tempo</option>");
+            $("#" + counter + "tempo1").append("<option>Medium Tempo</option>");
+            $("#" + counter + "tempo1").append("<option>Fast Tempo</option>");
+
             // Apply values to fields from database query
             $("#" + counter + "trackNumber").val(trackNumber);
             $("#" + counter + "trackID").val(row.trackID);
@@ -110,10 +115,35 @@ $(document).ready(function () {
             $("#" + counter + "pTime").val(row.playTime);
             $("#" + counter + "mood1").val(row.mood1);
             $("#" + counter + "tempo1").val(row.tempo1);
-            $("#" + counter + "tempo2").val(row.tempo2);
+            
             $("#" + counter + "genre2").val(row.genre2);
             $("#" + counter + "genre3").val(row.genre3);
-           
+
+
+            // Populate tempo2 listbox depending on tempo1 selected
+            var tempo1Selected = $("#" + counter + "tempo1").val();
+
+            switch (tempo1Selected) {
+                case "Slow Tempo":
+                    $("#" + counter + "tempo2").append("<option></option>");
+                    $("#" + counter + "tempo2").append("<option>Static</option>");
+                    $("#" + counter + "tempo2").append("<option>Very Slow</option>");
+                    $("#" + counter + "tempo2").append("<option>Slow</option>");
+                    break;
+                case "Medium Tempo":
+                    $("#" + counter + "tempo2").append("<option></option>");
+                    $("#" + counter + "tempo2").append("<option>Medium Slow</option>");
+                    $("#" + counter + "tempo2").append("<option>Medium</option>");
+                    $("#" + counter + "tempo2").append("<option>Medium Fast</option>");
+                    break;
+                case "Fast Tempo":
+                    $("#" + counter + "tempo2").append("<option></option>");
+                    $("#" + counter + "tempo2").append("<option>Fast</option>");
+                    $("#" + counter + "tempo2").append("<option>Very Fast</option>");
+                    break;
+            }
+            $("#" + counter + "tempo2").val(row.tempo2);
+
             // Populate mood2 listbox depending on mood1 selected
             var mood1Selected = $("#" + counter + "mood1").val();
 

@@ -41,6 +41,7 @@ async function btnSmartClicked() {
         $('#okModalText').append("<div class='modalIcon'><img src='./graphics/warning.png'></div><p>&nbsp<br><b>ERROR</b> - smart playlist could not be created. Please update smart results and try again.<br>&nbsp<br>&nbsp</p >");
         var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
         $('.modalFooter').append(buttons);
+        $('.background').css('filter', 'blur(5px)');
         $("#btnOkModal").focus();
         return
     }
@@ -85,6 +86,7 @@ async function btnSmartClicked() {
         $('#okModalText').append("<div class='modalIcon'><img src='./graphics/warning.png'></div><p>&nbsp<br><b>NOT ENOUGH MATCHING TRACKS</b> found in the database.<br>&nbsp<br>&nbsp</p >");
         var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
         $('.modalFooter').append(buttons);
+        $('.background').css('filter', 'blur(5px)');
         $("#btnOkModal").focus();
         return
     }
@@ -154,6 +156,7 @@ async function btnSmartClicked() {
             $('#okModalText').append("<div class='modalIcon'><img src='./graphics/warning.png'></div><p>&nbsp<br><b>DATABASE ERROR</b> - Smart Playlist not added to " + global_AppName + ".<br>&nbsp<br>&nbsp</p >");
             var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
             $('.modalFooter').append(buttons);
+            $('.background').css('filter', 'blur(5px)');
             $("#btnOkModal").focus();
             return
         }
@@ -176,6 +179,7 @@ async function btnSmartClicked() {
             $('#okModalText').append("<div class='modalIcon'><img src='./graphics/warning.png'></div><p>&nbsp<br><b>DATABASE ERROR</b> - Smart Playlist not added to " + global_AppName + ".<br>&nbsp<br>&nbsp</p >");
             var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
             $('.modalFooter').append(buttons);
+            $('.background').css('filter', 'blur(5px)');
             $("#btnOkModal").focus();
             return
         }
@@ -202,15 +206,16 @@ async function btnSmartClicked() {
 // Manual button click to update smart data results
 $(document).on('click', '#btnUpdateMeta', function (event) {
     event.preventDefault();
-    updateSmartData()
+    updateSmartData("update")
 });
 // Menu click
 ipcRenderer.on('Update Smart Results', (event) => {
-    updateSmartData()
+    updateSmartData("update")
 });
 
 // Update vector and magnitude in track table for smart playlist
-async function updateSmartData() {
+async function updateSmartData(query) {
+    var process = query;
     try {
         // CREATE LIST OF ALL TERMS IN METADATA
         // Array to store all meta data terms from track table
@@ -301,11 +306,21 @@ async function updateSmartData() {
                 var update = await dBase.run(sql);
             }
         });
-        // Hide modal box
-        $('#okModal').css('display', 'none');
+        // Display modal box if update button clicked
+        if (process == "update") {
+            $('#okModal').css('display', 'block');
+            $('.modalHeader').empty();
+            $('#okModalText').empty();
+            $(".modalFooter").empty();
+            $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
+            $('#okModalText').append("<div class='modalIcon'><img src='./graphics/information.png'></div><p>&nbsp<br>Smart Playlist data succesfully updated.<br>&nbsp<br>&nbsp</p >");
+            var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
+            $('.modalFooter').append(buttons);
+            $('.background').css('filter', 'blur(5px)');
+            $("#btnOkModal").focus();
+        }
     }
     catch{
-        $('#okModal').css('display', 'none');
         return;
     }
 }

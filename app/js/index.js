@@ -321,7 +321,7 @@ ipcRenderer.on('Help Release', (event) => {
     $('#okModalText').empty();
     $(".modalFooter").empty();
     $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>Release Notes Version: ' + global_Version + '</h2>');
-    $('#okModalText').append("<div class='modalIcon'><img src='./graphics/peerless_player_thumb.png'></div><p>1. Removed import /export.js db files.<br>2. Moved shell operations to main.js<br>3. Moved image operations to main.js<br>4. Moved fs operations to main.js<br>5. Added blur effect to modal background.<br>6. Updated to Electron ^ 8.2.3.<br>7. Disabled remote module.<br>8. Installed sanitize-html 1.25.0.<br>9. Screened user input.<br>10. Enabled Content Security Policy.<br> &nbsp</p >");
+    $('#okModalText').append("<div class='modalIcon'><img src='./graphics/peerless_player_thumb.png'></div><p>1. Removed import /export.js db files.<br>2. Moved shell operations to main.js<br>3. Moved image operations to main.js<br>4. Moved fs operations to main.js<br>5. Added blur effect to modal background.<br>6. Updated to Electron ^ 8.2.3.<br>7. Disabled remote module.<br>8. Installed sanitize-html 1.25.0.<br>9. Screened user input.<br>10. Enabled Content Security Policy.<br>11. Minor bug fixes.<br> &nbsp</p >");
     var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
     $('.modalFooter').append(buttons);
     $("#btnOkModal").focus();
@@ -343,23 +343,6 @@ ipcRenderer.on('Help Guide', (event) => {
     // Enable btnSync
     $("#btnSync").prop("disabled", false);
 });
-
-ipcRenderer.on('Import Table', (event) => {
-    $("#divTrackListing").css("display", "none");
-    $("#divContent").css("width", "auto");
-    $('#divContent').load('./html/importtable.html');
-    // Enable btnSync
-    $("#btnSync").prop("disabled", false);
-});
-
-ipcRenderer.on('Export Table', (event) => {
-    $("#divTrackListing").css("display", "none");
-    $("#divContent").css("width", "auto");
-    $('#divContent').load('./html/exporttable.html');
-    // Enable btnSync
-    $("#btnSync").prop("disabled", false);
-});
-
 
 //#########################
 // FUNCTIONS
@@ -830,7 +813,7 @@ function syncDirectory() {
 //##################
 $(document).ready(function () {
     // Update smart data results
-    updateSmartData()
+    updateSmartData("startup")
 
     //##################
     // In page navigation click events

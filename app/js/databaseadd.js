@@ -173,7 +173,8 @@ function albumMatches() {
         // Display details of album selected with numbr of tracks
         ipcRenderer.on("from_count_tracks", (event, data) => {
             var numberTracks = data[0];
-            $('#displayNewMusicDetails').text(albumsFound + " Album matches have been found in the Gracenote database.<br>" + "Searched for: " + $("#selectedArtist").text() + ", " + $("#selectedAlbum").text() + ", No. Tracks " + numberTracks);
+            $('#displayNewMusicDetails').empty();
+            $('#displayNewMusicDetails').append(albumsFound + " Album matches have been found in the Gracenote database.<br>" + "Searched for: " + $("#selectedArtist").text() + ", " + $("#selectedAlbum").text() + ", No. Tracks " + numberTracks);
         });
 
         // Clear existing elments from New Music search
@@ -270,7 +271,7 @@ ipcRenderer.on("files_album_directory", (event, data) => {
             var audio = $('<audio class="player" id="' + i + '" src="' + audioSource + '"></audio>');
 
             $("#divAudioElements").append(audio);
-            var fieldset = $("<fieldset><legend>Track " + counter + "</legend><label class='lblTrackName'>Name: </label><input required class='inpTrackName' id='" + counter + "trackName' name=" + counter + "trackName' type='text' size='79' value='' /><label class='lblFileName'>File Name:</label><input required class='inpFileName' id='" + counter + "fileName' name='" + counter + "fileName' type='text' size='75' value='' readonly /><label class='lblTrackTime'>Time:</label><input required class='inpTrackTime' id='" + counter + "pTime' name='" + counter + "pTime' type='text' size='8 value='' /><br><label class='lblTrackName'>Mood 1:</label><select class='sltMood1' id='" + counter + "mood1' name=" + counter + "mood1'><option value=''></option><option value='Peaceful'>Peaceful</option><option value='Romantic'>Romantic</option><option value='Sentimental'>Sentimental</option><option value='Tender'>Tender</option><option value='Easygoing'>Easygoing</option><option value='Yearning'>Yearning</option><option value='Sophisticated'>Sophisticated</option><option value='Sensual'>Sensual</option><option value='Cool'>Cool</option><option value='Gritty'>Gritty</option><option value='Somber'>Somber</option><option value='Melancholy'>Melancholy</option><option value='Serious'>Serious</option><option value='Brooding'>Brooding</option><option value='Fiery'>Fiery</option><option value='Urgent'>Urgent</option><option value='Defiant'>Defiant</option><option value='Aggressive'>Aggressive</option><option value='Rowdy'>Rowdy</option><option value='Excited'>Excited</option><option value='Energizing'>Energizing</option><option value='Empowering'>Empowering</option><option value='Stirring'>Stirring</option><option value='Lively'>Lively</option><option value='Upbeat'>Upbeat</option><option value='Other'>Other</option></select><label class='lblFileName'>Mood 2:</label><select class='sltMood2' id='" + counter + "mood2' name=" + counter + "mood2'></select><br><label class='lblTrackName'>Tempo 1:</label><input class='inpTrackName' id='" + counter + "tempo1' name=" + counter + "tempo1' type='text' size='25' value='' /><label class='lblFileName'>Tempo 2:</label><input class='inpTrackName' id='" + counter + "tempo2' name=" + counter + "tempo2' type='text' size='25' value='' /><br><label class='lblTrackName'>Genre 2:</label><input class='inpTrackName' id='" + counter + "genre2' name=" + counter + "genre2' type='text' size='40' value='' /><label class='lblFileName'>Genre 3:</label><input class='inpTrackName' id='" + counter + "genre3' name=" + counter + "genre3' type='text' size='40' value='' /></fieldset>");
+            var fieldset = $("<fieldset><legend>Track " + counter + "</legend><label class='lblTrackName'>Name: </label><input required class='inpTrackName' id='" + counter + "trackName' name=" + counter + "trackName' type='text' size='79' value='' /><label class='lblFileName'>File Name:</label><input required class='inpFileName' id='" + counter + "fileName' name='" + counter + "fileName' type='text' size='75' value='' readonly /><label class='lblTrackTime'>Time:</label><input required class='inpTrackTime' id='" + counter + "pTime' name='" + counter + "pTime' type='text' size='8 value='' /><br><label class='lblTrackName'>Mood 1:</label><select class='sltMood1' id='" + counter + "mood1' name=" + counter + "mood1'><option value=''></option><option value='Peaceful'>Peaceful</option><option value='Romantic'>Romantic</option><option value='Sentimental'>Sentimental</option><option value='Tender'>Tender</option><option value='Easygoing'>Easygoing</option><option value='Yearning'>Yearning</option><option value='Sophisticated'>Sophisticated</option><option value='Sensual'>Sensual</option><option value='Cool'>Cool</option><option value='Gritty'>Gritty</option><option value='Somber'>Somber</option><option value='Melancholy'>Melancholy</option><option value='Serious'>Serious</option><option value='Brooding'>Brooding</option><option value='Fiery'>Fiery</option><option value='Urgent'>Urgent</option><option value='Defiant'>Defiant</option><option value='Aggressive'>Aggressive</option><option value='Rowdy'>Rowdy</option><option value='Excited'>Excited</option><option value='Energizing'>Energizing</option><option value='Empowering'>Empowering</option><option value='Stirring'>Stirring</option><option value='Lively'>Lively</option><option value='Upbeat'>Upbeat</option><option value='Other'>Other</option></select><label class='lblFileName'>Mood 2:</label><select class='sltMood2' id='" + counter + "mood2' name=" + counter + "mood2'></select><br><label class='lblTrackName'>Tempo 1:</label><select class='sltTempo1' id='" + counter + "tempo1' name=" + counter + "tempo1'><option value=''></option><option value='Slow Tempo'>Slow Tempo</option><option value='Medium Tempo'>Medium Tempo</option><option value='Fast Tempo'>Fast Tempo</option></select><label class='lblFileName'>Tempo 2:</label><select class='sltTempo2' id='" + counter + "tempo2' name=" + counter + "tempo2'></select><br><label class='lblTrackName'>Genre 2:</label><input class='inpTrackName' id='" + counter + "genre2' name=" + counter + "genre2' type='text' size='40' value='' /><label class='lblFileName'>Genre 3:</label><input class='inpTrackName' id='" + counter + "genre3' name=" + counter + "genre3' type='text' size='40' value='' /></fieldset>");
 
             // Append fieldset to form
             fieldset.appendTo(form);
@@ -399,6 +400,25 @@ function albumMetadata() {
             $("#" + counter + "tempo1").val(tempo1);
             // Tempo 2
             var tempo2 = $(response).find('TRACK TEMPO[ORD="2"]').eq(number).text();
+            switch (tempo1) {
+                case "Slow Tempo":
+                    $("#" + counter + "tempo2").append("<option></option>");
+                    $("#" + counter + "tempo2").append("<option>Static</option>");
+                    $("#" + counter + "tempo2").append("<option>Very Slow</option>");
+                    $("#" + counter + "tempo2").append("<option>Slow</option>");
+                    break;
+                case "Medium Tempo":
+                    $("#" + counter + "tempo2").append("<option></option>");
+                    $("#" + counter + "tempo2").append("<option>Medium Slow</option>");
+                    $("#" + counter + "tempo2").append("<option>Medium</option>");
+                    $("#" + counter + "tempo2").append("<option>Medium Fast</option>");
+                    break;
+                case "Fast Tempo":
+                    $("#" + counter + "tempo2").append("<option></option>");
+                    $("#" + counter + "tempo2").append("<option>Fast</option>");
+                    $("#" + counter + "tempo2").append("<option>Very Fast</option>");
+                    break;
+            }
             $("#" + counter + "tempo2").val(tempo2);
             // Genre  2
             $("#" + counter + "genre2").val(genre2);
@@ -831,6 +851,40 @@ $(document).on('change', '.sltMood1', function () {
         case "Other":
             $('#' + mood2ID).append("<option></option>");
             $('#' + mood2ID).append("<option>Other</option>");
+            break;
+    }
+});
+
+// Change Tempo2 selection box when Tempo1 changed
+$(document).on('change', '.sltTempo1', function () {
+    // Get ID of selection element
+    var tempo1ID = $(this).attr('id');
+    // Get value selected
+    var tempo1Value = $(this).val();
+    // Get first digit of ID which represents track no.
+    var trackNo = tempo1ID.substring(0, 1);
+    // Tempo2 ID
+    var tempo2ID = trackNo + "tempo2";
+    // Empty contents of mood2 selection element
+    $('#' + tempo2ID).empty();
+    // populate mood2 selection element based on value in mood1 selection element
+    switch (tempo1Value) {
+        case "Slow Tempo":
+            $("#" + tempo2ID).append("<option></option>");
+            $("#" + tempo2ID).append("<option>Static</option>");
+            $("#" + tempo2ID).append("<option>Very Slow</option>");
+            $("#" + tempo2ID).append("<option>Slow</option>");
+            break;
+        case "Medium Tempo":
+            $("#" + tempo2ID).append("<option></option>");
+            $("#" + tempo2ID).append("<option>Medium Slow</option>");
+            $("#" + tempo2ID).append("<option>Medium</option>");
+            $("#" + tempo2ID).append("<option>Medium Fast</option>");
+            break;
+        case "Fast Tempo":
+            $("#" + tempo2ID).append("<option></option>");
+            $("#" + tempo2ID).append("<option>Fast</option>");
+            $("#" + tempo2ID).append("<option>Very Fast</option>");
             break;
     }
 });

@@ -630,6 +630,7 @@ async function displayTrack(position) {
         $('#okModalText').append("<div class='modalIcon'><img src='./graphics/warning.png'></div><p><b>ERROR - Audio file: </b>" + row.fileName + "<b> not found!</b><br>Please check your music directory.<br>&nbsp</p >");
         var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
         $('.modalFooter').append(buttons);
+        $('.background').css('filter', 'blur(5px)');
         $("#btnOkModal").focus();
     })
 }

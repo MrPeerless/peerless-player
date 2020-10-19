@@ -32,6 +32,10 @@
 
 1. Enabled Content Security Policy
 
+**** VERSION 0.2.0 UPDATES ****
+
+1. Added dropdown boxes to select tempo in metadata.
+
 
 
 

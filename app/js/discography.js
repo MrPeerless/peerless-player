@@ -31,7 +31,6 @@ $(document).ready(function () {
     function processDataArtistID(xml) {
         var discographyDetails = "";
         var $artist = $(this);
-        var matchScore = $artist.attr('ns2:score')
 
         // Get the first artist in xml and check it is match score = 100
         var $artist = $(xml).find('artist').eq(0);
@@ -99,7 +98,7 @@ $(document).ready(function () {
             // Function to send ajax xml query to Musicbrainz server
             function artistReleaseQuery(query) {
                 var queryArtistID = query;
-                // Artist serach url
+                // Artist search url
                 var url = musicbrainzUrl + "release-group?artist=" + queryArtistID + "&limit=100&type=album"
                 return $.ajax({
                     url: url
@@ -127,6 +126,7 @@ $(document).ready(function () {
                         var type = $release.attr('type')
                         var title = $release.find('title').text();
                         var date = $release.find('first-release-date').text();
+
                         // If type is Album link to Napster for samples
                         if (type == "Album") {
                             var albumLink = napsterUrl + artist + "+" + title;
@@ -137,8 +137,18 @@ $(document).ready(function () {
                         }
                         var encodedUrl = encodeURI(albumLink);
 
-                        // Create table row
-                        var tableRow = $("<tr><td><a href='" + encodedUrl + "' target='_blank'>" + title + "</a></td><td>" + date + "</td><td>" + type + "</td>");
+                        // Check if future release date for album and highlight table row
+                        var CurrentDate = new Date();
+                        var releasedate = new Date(date);
+                        if (releasedate > CurrentDate) {
+                            // Create table row highlighted
+                            var tableRow = $("<tr class='trDiscog'><td>" + title + "</td><td>" + date + "</td><td>" + type + "</td>");
+                        }
+                        else {
+                            // Create table row no highlight
+                            var tableRow = $("<tr><td><a href='" + encodedUrl + "' target='_blank'>" + title + "</a></td><td>" + date + "</td><td>" + type + "</td>");
+                        }
+
                         // Append row to table
                         tableRow.appendTo(table);
                     });
