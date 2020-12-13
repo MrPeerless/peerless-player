@@ -32,9 +32,15 @@
 
 1. Enabled Content Security Policy
 
-**** VERSION 0.2.0 UPDATES ****
+**** VERSION 0.1.3 UPDATES ****
 
 1. Added dropdown boxes to select tempo in metadata.
+
+**** VERSION 0.1.4 UPDATES ****
+
+1. Bug fix in queueing album.
+2. License details added to Help menu.
+3. Close X button added to large image display.
 
 
 

@@ -479,6 +479,8 @@ function btnQueueAlbumClicked() {
 // Function to clear queued music
 function btnClearQueuedClicked() {
     global_Tracks = [];
+    // Reset index
+    $('#nowPlayingTrackIndex').text("-1");
     // Update Queued Playlist
     queuePlaylist();
     // Display modal box confirmation

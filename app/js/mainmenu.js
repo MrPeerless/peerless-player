@@ -285,6 +285,12 @@ const template = [
                 }
             },
             {
+                label: 'License',
+                click: function (menuItem, currentWindow) {
+                    currentWindow.webContents.send('License');
+                }
+            },
+            {
                 label: 'Release Notes',
                 click: function (menuItem, currentWindow) {
                     currentWindow.webContents.send('Help Release');
