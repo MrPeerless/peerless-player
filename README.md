@@ -41,7 +41,7 @@ Once downloaded, for help with using Peerless Player, on the menu bar click on <
 - Under the <b>Select Music Directory</b> option, click on the <b>Browse</b> button and select the directory where your music is stored.
 - When you have finished adjusting the settings, click on the <b>Save</b> button at the top of the screen.
 - Please note that the app can only read music files from one directory. It is therefore recommended to keep all your downloaded music in one directory. This will aid syncing your music directory to external storage for your phone, car or yacht.
-- Once you have set your music directory, you can start adding music to your database by following pont 5 in the User Guide.
+- Once you have set your music directory, you can start adding music to your database by following point 5 in the User Guide.
 
 
 
