@@ -1,9 +1,23 @@
 $(document).ready(function () {
     // Declare artist variable
     var artistID = "";
+    // Set expanded text to false
+    global_BioTextExpand = false;
 
     // Get artist name from hidden field
-    artist = $("#hiddenArtistName").text();
+    var artist = $("#hiddenArtistName").text();
+
+    // Display modal box checking wikipedia database
+    $('#okModal').css('display', 'block');
+    $('.modalHeader').empty();
+    $('#okModalText').empty();
+    $(".modalFooter").empty();
+    $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
+    $('#okModalText').append("<div class='modalIcon'><img src='./graphics/record.gif'></div><p>&nbsp<br>Retrieving information from database. Please wait.<br>&nbsp<br>&nbsp</p >");
+    var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
+    $('.modalFooter').append(buttons);
+    $("#btnOkModal").focus();
+    $('.background').css('filter', 'blur(5px)');
 
     // Call ajax function artistIDQuery
     artistIDQuery(artist).done(processDataArtistID);
@@ -46,7 +60,7 @@ $(document).ready(function () {
                         // Calculate age
                         var age = new Date(new Date() - new Date(begin)).getFullYear() - 1970;
                     }
-                    // Else if person is dead
+                    // Else if person is dead (RIP we miss you)
                     else {
                         // Calculate age
                         var age = new Date(new Date(end) - new Date(begin)).getFullYear() - 1970;
@@ -89,13 +103,11 @@ $(document).ready(function () {
             }
 
             function processWiki(xml) {
-                var wikiUrl = $(xml).find('page').attr('fullurl');
                 var wikiTitle = $(xml).find('page').attr('title');
                 var wikiPageid = $(xml).find('page').attr('pageid');
 
                 // Populate title and add href to wiki link
                 $("#bioArtistName").append("Biography for " + wikiTitle);
-                $("#bioWikiLink").attr('href', wikiUrl);
 
                 // If nothing found for artist in wikipedia exit
                 if (wikiTitle == undefined) {
@@ -127,7 +139,7 @@ $(document).ready(function () {
                                 format: 'xml',
                                 action: 'query',
                                 prop: 'extracts',
-                                exintro: '',
+                                //exintro: '', use this option to just get opening summary paragraph
                                 redirects: '1',
                                 titles: queryTitle
                             }
@@ -136,9 +148,23 @@ $(document).ready(function () {
 
                     function processWikiText(xml) {
                         // Get summary extract from xml
-                        var wikiSummaryRaw = $(xml).find('extract').text();
-                        var wikiSummary = sanitizeHtml(wikiSummaryRaw);
-                        $("#bioText").append(wikiSummary);
+                        var wikiSummary = $(xml).find('extract').text();
+                        // Split the text at end of summmary
+                        var splitExtract1 = wikiSummary.substr(0, wikiSummary.indexOf('<h2>'));
+                        var splitExtract2 = wikiSummary.substr(wikiSummary.indexOf('<h2>'));
+                        // Split off from Discography
+                        var splitExtractHidden = splitExtract2.split('<h2><span id="Discography');
+                        // If the second half of the split is empty try looking for the H3 tag instead
+                        if (splitExtractHidden[1] == "") {
+                            splitExtractHidden = splitExtract2.split('<h3><span id="Discography');
+                        }
+
+                        $("#bioText").append(splitExtract1);
+                        // If no hidden text hide the Read More button
+                        if (splitExtractHidden[0] == "") {
+                            $("#bioReadMore").css("display", "none");
+                        }
+                        $("#bioTextHidden").append(splitExtractHidden[0]);
 
                         // Search wikipedia for main image of artist
                         wikiImage(wikiPageid).done(processWikiImage);
@@ -153,18 +179,29 @@ $(document).ready(function () {
                                 data: {
                                     action: 'query',
                                     pageids: queryPageid,
-                                    prop: 'pageprops',
+                                    prop: 'pageprops|pageterms',
                                     format: 'xml'
                                 }
                             });
                         }
 
-                        function processWikiImage(xml) {
-                            // Get file name of main image
+                        function processWikiImage(xml) {   
+                            // Get file name of main image  
                             var wikiImageFile = $(xml).find('pageprops').attr('page_image_free')
+                            // Get artist description
+                            var wikiDescription = $(xml).find('description').text();
+                            // Capitalise first letter of wikiDescription string
+                            if (wikiDescription) {
+                                var description = wikiDescription[0].toUpperCase() + wikiDescription.slice(1);
+                                $("#bioDescription").text(description)
+                            }
+
                             if (wikiImageFile == undefined) {
-                                $("#imgBioArtwork").css("display", "none");
-                                return;
+                                wikiImageFile = $(xml).find('pageprops').attr('page_image')
+                                if (wikiImageFile == undefined) {
+                                    $("#imgBioArtwork").css("display", "none");
+                                    return;
+                                }
                             }
 
                             // Search wikipedia for full image url
@@ -197,13 +234,30 @@ $(document).ready(function () {
                                 wikiThumbImage = [wikiImage.slice(0, 47), "thumb/", wikiImage.slice(47)].join('');
                                 // Add thumbnail size and filename at end of URL
                                 wikiThumbImage = wikiThumbImage + "/600px-" + imageFilename
-                                // Display image in page
-                                $("#imgBioArtwork").attr('src', wikiThumbImage);
-                                // Populate hidden element with URL to use to enlarge image
-                                $("#bioArtworkUrl").text(wikiThumbImage);
+
+                                // Check if url for thumb image exists by calling function
+                                urlExists(wikiThumbImage, function (exists) {
+                                    if (exists == true) {
+                                        // Use the thumbnailed image as it exists
+                                        // Display image in page
+                                        $("#imgBioArtwork").attr('src', wikiThumbImage);
+                                        // Populate hidden element with URL to use to enlarge image
+                                        $("#bioArtworkUrl").text(wikiThumbImage);
+                                    }
+                                    else {
+                                        // No thumbnailed image so use original size image
+                                        $("#imgBioArtwork").attr('src', wikiImage);
+                                        // Populate hidden element with URL to use to enlarge image
+                                        $("#bioArtworkUrl").text(wikiImage);
+                                    }
+                                });
                             }
                         }
                     }
+
+                    // Hide modal box
+                    $('#okModal').css('display', 'none');
+                    $('.background').css('filter', 'blur(0px)');
 
                     // Artist Links
                     $("#bioArtistLink").append(artist + " Links")
@@ -363,25 +417,41 @@ $(document).ready(function () {
     }
 
     function noResult(query) {
+        // Hide modal box
+        $('#okModal').css('display', 'none');
+        $('.background').css('filter', 'blur(0px)');
         // Display modal box if no artistID found in Musicbrainz database
         $('#okModal').css('display', 'block');
         $('.modalHeader').empty();
         $('#okModalText').empty();
         $(".modalFooter").empty();
         $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
-        $('#okModalText').append("<div class='modalIcon'><img src='./graphics/information.png'></div><p>&nbsp<br><b>" + artist + "</b> not found in biography database.<br>&nbsp</p>");
+        $('#okModalText').append("<div class='modalIcon'><img src='./graphics/information.png'></div><p>&nbsp<br><b>" + artist + "</b> not found in biography database.<br>&nbsp<br>&nbsp</p>");
         var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
         $('.modalFooter').append(buttons);
         $("#btnOkModal").focus();
         $('.background').css('filter', 'blur(5px)');
         // Hide discography page and go back
         $("#divTrackListing").css("display", "none");
-        $("#divContent").css("width", "auto");
-        console.log("wikiTitle = " + query)        
+        $("#divContent").css("width", "auto");      
         return;
     }
 
     backgroundChange();
+
+    // Function to check if URL for wiki image exists, returns boolean value
+    function urlExists(url, callback) {
+        $.ajax({
+            type: 'HEAD',
+            url: url,
+            success: function () {
+                callback(true);
+            },
+            error: function () {
+                callback(false);
+            }
+        });
+    }
 });
 
 

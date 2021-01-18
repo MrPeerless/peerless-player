@@ -239,14 +239,11 @@ $(document).on('click', '#btnDownloadGracenote', function (event) {
         $("#divTrackListing").css("display", "none");
         $("#divContent").css("width", width);
 
-        //$("#divTrackListing").css("width", width);
-        //$("#divContent").css("display", "none");
         // Set url
         var url = ("./html/importtodatabase.html");
         // Load Add to Database page
         $("#divContent").load(url);
         $('.background').css('filter', 'blur(0px)');
-        //$("#divTrackListing").load(url);
     }
 });
 

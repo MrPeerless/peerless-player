@@ -1,6 +1,6 @@
 {
   "name": "peerless-player",
-  "version": "0.1.3",
+  "version": "0.2.0",
   "description": "Peerless Player - listen, discover, explore music",
   "main": "main.js",
   "scripts": {
@@ -17,13 +17,13 @@
     "electron-updater": "^4.3.1",
     "jimp": "^0.12.1",
     "jquery": "^3.4.1",
-    "jquery-validation": "^1.19.0",
+    "jquery-validation": "^1.19.3",
     "request": "^2.88.2",
     "sanitize-html": "^1.25.0",
     "sqlite3": "^4.0.6"
   },
   "devDependencies": {
-    "electron": "^8.2.3",
+    "electron": "^8.5.2",
     "electron-builder": "^22.6.0",
     "electron-rebuild": "^1.8.4"
   },

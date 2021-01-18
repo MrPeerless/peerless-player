@@ -16,6 +16,7 @@ var global_MostPlayedExpand = false;
 var global_MoodExpand = false;
 var global_PlayedExpand = false;
 var global_PlayerExpand = false;
+var global_BioTextExpand = false;
 
 // Settings variables
 var global_ArtIconSize;
@@ -307,7 +308,7 @@ ipcRenderer.on('Help About', (event) => {
     var currentDate = new Date();
     var currentYear = currentDate.getFullYear();
     $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>About Peerless Player</h2>');
-    $('#okModalText').append("<div class='modalIcon'><img src='./graphics/peerless_player_thumb.png'></div><p><b>Author:</b> Geoff Peerless &copy " + currentYear + "<br><b>Version:</b> " + global_Version + "<br><b>URL:</b> github.com/MrPeerless/peerless-player<br><b>Email:</b> geoffpeerless@hotmail.com<br><b>License:</b> ISC&nbsp<br>&nbsp</p >");
+    $('#okModalText').append("<div class='modalIcon'><img src='./graphics/peerless_player_thumb.png'></div><p><b>Author:</b> Geoff Peerless &copy " + currentYear + "<br><b>Version:</b> " + global_Version + "<br><b>URL:</b><a id='githubLink' href='https://github.com/MrPeerless/peerless-player' target='_blank'> github.com/MrPeerless/peerless-player</a><br><b>Email:</b> geoffpeerless@hotmail.com<br><b>License:</b> ISC&nbsp<br>&nbsp</p >");
     var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
     $('.modalFooter').append(buttons);
     $("#btnOkModal").focus();
@@ -341,7 +342,7 @@ ipcRenderer.on('Help Release', (event) => {
     $('#okModalText').empty();
     $(".modalFooter").empty();
     $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>Release Notes Version: ' + global_Version + '</h2>');
-    $('#okModalText').append("<div class='modalIcon'><img src='./graphics/peerless_player_thumb.png'></div><p>1. Removed import /export.js db files.<br>2. Moved shell operations to main.js<br>3. Moved image operations to main.js<br>4. Moved fs operations to main.js<br>5. Added blur effect to modal background.<br>6. Updated to Electron ^ 8.2.3.<br>7. Disabled remote module.<br>8. Installed sanitize-html 1.25.0.<br>9. Screened user input.<br>10. Enabled Content Security Policy.<br>11. Minor bug fixes.<br> &nbsp</p >");
+    $('#okModalText').append("<div class='modalIcon'><img src='./graphics/peerless_player_thumb.png'></div><p>1. Bug fix in queueing album.<br>2. License details added to Help menu.<br>3. Close X button added to large image display.<br>4. Notifications updated with artist and app name.<br>5. Vertically centred large artwork to window size.<br>6. Github link added to Help-About.<br>7. Animation on hover added to social media icons.<br>8. Bug fix to stop screen scrolling to top when new track loads.<br>9. Info button added to album display.<br>10. Biography page updated with drop down read more button.<br>11. Bumped electron to 8.5.2 - ini to 1.3.8 - jquery-validation to 1.19.3.<br><br> &nbsp</p >");
     var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
     $('.modalFooter').append(buttons);
     $("#btnOkModal").focus();
@@ -486,6 +487,14 @@ $(document).on('click', '#btnClose', function (event) {
     $("#tblSongs th:nth-child(3)").css("display", "table-cell");
     // Enable btnSync
     $("#btnSync").prop("disabled", false);
+});
+
+// Close button on display album info
+$(document).on('click', '#btnInfoAlbumBack', function (event) {
+    event.preventDefault();
+    // Display album track listing
+    $("body").css("background", global_Background);
+    $('#divTrackListing').load("./html/displayalbum.html");
 });
 
 // Function to highlight track playing in track list
@@ -1092,6 +1101,49 @@ $(document).ready(function () {
         }
     });
 
+
+    // Click event for album info
+    $(document).on('click', '#btnInfoAlbum', function () {
+        event.preventDefault();
+        // Check if online
+        var connection = navigator.onLine;
+        // If connected to internet
+        if (connection) {
+            // Get window width
+            var winWidth = $(window).width();
+            // Get window height
+            var winHeight = $(window).height();
+            var height = (winHeight - 60);
+
+            // If screen is less than 1215px wide reset divTracklisting margin-left effectively hiding content div
+            if (winWidth < 1215) {
+                $("#divTrackListing").css("margin-left", "240px");
+            }
+            else {
+                $("#divTrackListing").css("margin-left", "715px");
+            }
+            // Load link 
+            $("#divContent").css("width", "475px");
+            $("#divTrackListing").css("display", "block");
+            //$("#divTrackListing").css("min-height", height);
+            $("#divTrackListing").load("./html/albuminfo.html");
+        }
+        else {
+            // If not connected display modal box warning
+            $('#okModal').css('display', 'block');
+            $('.modalHeader').empty();
+            $('#okModalText').empty();
+            $(".modalFooter").empty();
+            $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
+            $('#okModalText').append("<div class='modalIcon'><img src='./graphics/warning.png'></div><p>&nbsp<br><b>WARNING. No internet connection.</b><br>Please connect to the internet and try again.<br>&nbsp</p >");
+            var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
+            $('.modalFooter').append(buttons);
+            $("#btnOkModal").focus();
+            $('.background').css('filter', 'blur(5px)');
+            return
+        }
+    });
+
     // Open external web link from recommendations page
     $(document).on('click', '.divRecommends a', function (event) {
         ipcRenderer.send('open_external', this.href)
@@ -1102,8 +1154,8 @@ $(document).ready(function () {
         ipcRenderer.send('open_external', this.href)
     });
 
-    // Open external wikipedia link from biography page
-    $(document).on('click', '#bioWikiLink', function () {
+    // Open external github link from about modal
+    $(document).on('click', '#githubLink', function () {
         ipcRenderer.send('open_external', this.href)
     });
 
@@ -1199,9 +1251,14 @@ $(document).ready(function () {
             domColour = domColour.slice(0, -1)
             domColour = domColour + ",0.75)";
 
-            // Display large artwork modal box
+            // Display large artwork modal box            
+            // Find artModalTop = screen height - 600 (artModal height) - 14 (menu bar height) / 2
+            var screenHeight = $(window).height();
+            var artModalTop = (screenHeight - 614) / 2;
+            $('.artModal').css('padding-top', artModalTop + 'px');
             $('.background').css('filter', 'blur(5px)');
             $('.artModal').css('display', 'block');
+
             $("#artModalImage").attr('src', artworkSource);
             $('.artModal').css('background-color', domColour);
         };
@@ -1215,13 +1272,46 @@ $(document).ready(function () {
         colour()
 
         async function colour() {
+            // Function to find dominant colour of image
             const { canvas, context } = await drawImage(artworkSource);
             const result = await calculateResult(canvas, context);
             var domColour = result
-
             domColour = domColour.slice(0, -1)
             domColour = domColour + ",0.75)";
 
+            // Get width and height of screen and image
+            var screenHeight = $(window).height();
+            var imageHeight = canvas.height;
+            var imageWidth = canvas.width;
+
+            if (imageWidth < 600) {
+                // Vertcally position image in centre of screen if image is less than 600px width
+                var bioArtModalTop = (screenHeight - (imageHeight - 14)) / 2;
+                if (bioArtModalTop < 12) {
+                    bioArtModalTop = 12;
+                }
+                // Set css styling for modal image
+                $('.bioArtModal').css('padding-top', bioArtModalTop + 'px');
+                $('#bioArtModalImage').css('width', imageWidth);
+                $('.bioArtModalContent').css('width', imageWidth + 8);
+                $('.bioArtModalClose').css('left', imageWidth - 15);
+            }
+            else {
+                // Calcualte ratio to resize image to 600px width to resize image height
+                var imageRatio = 600 / imageWidth
+                imageHeight = imageHeight * imageRatio
+                // Vertcally position image in centre of screen if image is more than 600px width
+                var bioArtModalTop = (screenHeight - (imageHeight - 14)) / 2;
+                if (bioArtModalTop < 12) {
+                    bioArtModalTop = 12;
+                }
+                // Set css styling for modal image
+                $('.bioArtModal').css('padding-top', bioArtModalTop + 'px');
+                $('#bioArtModalImage').css('width', '600px');
+                $('.bioArtModalContent').css('width', '608px');
+                $('.bioArtModalClose').css('left', '585px');
+            }
+            
             // Display large artwork modal box
             $('.background').css('filter', 'blur(5px)');
             $('.bioArtModal').css('display', 'block');
@@ -1378,6 +1468,22 @@ $(document).ready(function () {
         }
     });
 
+    // Biography page button show more/less
+    $(document).on('click', '#btnBioTextShow', function () {
+        if (global_BioTextExpand == false) {
+            $("#bioTextHidden").slideToggle("slow");
+            $("button#btnBioTextShow").css("background", "url(./graphics/collapse_large.png) no-repeat");
+            $("#bioButtonHeading").text(" Read Less");
+            global_BioTextExpand = true;
+        }
+        else {
+            $("#bioTextHidden").slideToggle("slow");
+            $("button#btnBioTextShow").css("background", "url(./graphics/expand_large.png) no-repeat");
+            $("#bioButtonHeading").text(" Read More");
+            global_BioTextExpand = false;
+        }
+    });
+
     // Click event for queued music
     $(document).on('click', '#btnQueue', function () {
         btnQueueClicked();
@@ -1424,8 +1530,7 @@ $(document).ready(function () {
     // Close OK modal box on X in header
     $(document).on('click', '#btnXModal', function () {
         $('#okModal').css('display', 'none');
-        $('.background').css('filter', 'blur(0px)');
-        
+        $('.background').css('filter', 'blur(0px)');       
     })
 
     $(document).on('click', '#artModalImage', function () {

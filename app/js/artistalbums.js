@@ -63,7 +63,7 @@ $(document).ready(function () {
 
         $("#artistAlbumsName").text(albumText + " by " + artistName);
         $("#artistAlbumsOrigin  ").text(originText);
-        // HIdden artist name to use for query to musicbrainz
+        // Hidden artist name to use for query to musicbrainz
         $("#hiddenArtistName").text(artistName);
 
         var ul = $('#ulArtistAlbums');
@@ -74,7 +74,6 @@ $(document).ready(function () {
             // Force browser to update cache for album images if they have been changed with the database edit function
             var modifiedDate = Date().toLocaleString();
             var artworkSource = MUSIC_PATH + artistName + "/" + albumName + "/folder.jpg?modified=" + modifiedDate;
-
             var albumLink = "./html/displayalbum.html?artist=" + global_ArtistID + "&album=" + row.albumID;
 
             // Small art icons

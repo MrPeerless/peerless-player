@@ -54,7 +54,7 @@ $(document).ready(function () {
 
         // Create text for playlist details
         $("#displayPlaylistName").append("Playlist <br>" + name);
-        $("#imgArtwork").attr('src', artworkSource);
+        $("#imgPlaylistArtwork").attr('src', artworkSource);
 
         // Loop through tracks array to populate tracks table
         for (i = 0; i < tracks.length; i++) {

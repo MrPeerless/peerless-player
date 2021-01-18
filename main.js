@@ -31,6 +31,7 @@ function createWindow() {
             //preload: path.join(__dirname, './app/js/preload.js'),
         },
     });
+
     // Maximise window once created
     win.maximize()
     // Get app path
@@ -41,7 +42,7 @@ function createWindow() {
     win.loadURL(`file://${__dirname}/app/index.html?path=${data_path}=data=${data_base}`);
     // Show window once all contents loaded
     win.once('ready-to-show', () => {
-        win.show()
+        win.show();
     })
 
     // Open the DevTools.
@@ -66,6 +67,8 @@ app.on('ready', () => {
     createWindow();
     // Add check for updates
     autoUpdater.checkForUpdatesAndNotify();
+    // Set App Name for notifications
+    app.setAppUserModelId("Peerless Player");
 });
 
 // Quit when all windows are closed.

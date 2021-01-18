@@ -48,7 +48,10 @@ $(document).ready(function () {
         var albumDetails = " Released " + rows[0].releaseDate + "<br>Play time " + rows[0].albumTime + "<br>Last Played " + lastPlayed + "<br>";
         $("#displayAlbumName").append(rows[0].albumName + " <br>by " + rows[0].artistName);
         $("#displayAlbumDetails").append(albumDetails + genreText);
-        
+
+        // Hidden album name in artistalbums.html to use for query to musicbrainz for album info
+        $("#hiddenAlbumName").text(rows[0].albumName);
+
         // Add tracks to each row of table
         var table = $("#tblTracks")
         rows.forEach((row) => {

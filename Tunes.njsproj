@@ -30,6 +30,7 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="App\js\albuminfo.js" />
     <Compile Include="App\js\biography.js" />
     <Compile Include="app\js\colour.js" />
     <Compile Include="app\js\databaseadd.js" />
@@ -154,6 +155,7 @@
     <Content Include="App\Graphics\top_30.png" />
     <Content Include="App\Graphics\update.png" />
     <Content Include="App\Graphics\warning.png" />
+    <Content Include="App\html\albuminfo.html" />
     <Content Include="App\html\biography.html" />
     <Content Include="App\html\discography.html" />
     <Content Include="App\html\importtodatabase.html" />

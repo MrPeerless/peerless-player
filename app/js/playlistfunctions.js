@@ -498,7 +498,6 @@ function btnClearQueuedClicked() {
 
 // Queue playlist function
 async function queuePlaylist() {
-    var name = "Queued";
     // Get todays date
     var todayDate = new Date()
     todayDate = convertDate(todayDate)

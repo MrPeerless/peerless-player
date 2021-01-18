@@ -62,13 +62,10 @@ $(document).ready(function () {
     // Clickable progress bar for seek function
     var player = document.getElementById('audio1')
     var progressBar = document.getElementById('seekbar')
-    progressBar.addEventListener("click", seek);
-
-    // Seek function
-    function seek(e) {
-        var percent = e.offsetX / this.offsetWidth;
+    progressBar.addEventListener("click", function (event) {
+        event.preventDefault();
+        var percent = event.offsetX / this.offsetWidth;
         player.currentTime = percent * player.duration;
         progressBar.value = percent / 100;
-    }
-
+    });
 });
