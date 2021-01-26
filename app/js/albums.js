@@ -24,7 +24,7 @@ $(document).ready(function () {
                 var sql = "SELECT album.albumID, artist.artistID, album.albumName, artist.artistName, album.releaseDate, album.albumLastPlay FROM album INNER JOIN artist ON album.artistID=artist.artistID ORDER BY album.albumLastPlay DESC";
                 break;
             case "most":
-                var sql = "SELECT album.albumID, artist.artistID, album.albumName, artist.artistName, album.albumCount FROM album INNER JOIN artist ON album.artistID=artist.artistID ORDER BY album.albumCount DESC";
+                var sql = "SELECT ROUND(album.albumCount/(SELECT COUNT (track.albumID)+0.0), 5)*((CAST(SUBSTR(album.albumTime, 0, INSTR(album.albumTime, ':'))*60 + SUBSTR(album.albumTime, INSTR(album.albumTime,':')+1, length(album.albumTime))AS FLOAT)/2700)+1) AS ranking, track.artistID, track.albumID, album.albumName, album.albumCount, album.albumTime, artist.artistName FROM track INNER JOIN artist ON track.artistID=artist.artistID INNER JOIN album ON track.albumID=album.albumID GROUP BY track.albumID ORDER BY ranking DESC";
         }
 
         // Select all albums from the database
@@ -46,7 +46,17 @@ $(document).ready(function () {
                 albumName += " (The)";
             }
             // Add artistID to end of string with divider |
-            albumName = albumName + "|" + row.albumID + "|" + row.artistName + "|" + row.artistID;
+
+            if (global_AlbumSort == "added") {
+                albumName = albumName + "|" + row.albumID + "|" + row.artistName + "|" + row.artistID + "|" + row.dateAdd;
+            }
+            else if (global_AlbumSort == "played") {
+                albumName = albumName + "|" + row.albumID + "|" + row.artistName + "|" + row.artistID + "|" + row.albumLastPlay;
+            }
+            else {
+                albumName = albumName + "|" + row.albumID + "|" + row.artistName + "|" + row.artistID;
+            }
+            
             // Add string to albums array
             albums.push(albumName);
         });
@@ -88,6 +98,9 @@ $(document).ready(function () {
         // Highlight sort selected in dropdown box
         $('#sltAlbumSort').val(global_AlbumSort);
 
+        // Counter for most played album
+        var i = 1;
+
         albums.forEach((album) => {
             // Set variables by splitting albums array
             var ul = $('#ulAllAlbums');
@@ -96,7 +109,12 @@ $(document).ready(function () {
             var albumID = splitAlbum[1];
             var artistName = splitAlbum[2];
             var artistID = splitAlbum[3];
-
+            if (global_AlbumSort == "added") {
+                var dateAdd = formatDate(splitAlbum[4]);
+            }
+            if (global_AlbumSort == "played") {
+                var lastPlayed = formatDate(splitAlbum[4]);
+            }
             // Set anchor for A to Z menu
             var anchor = albumName.charAt(0);
             anchor = anchor.toUpperCase()
@@ -108,7 +126,6 @@ $(document).ready(function () {
             }
 
             // Get folder.jpg file path
-            //var artworkSource = MUSIC_PATH + artistName + "/" + albumName + "/folder.jpg";
             var modifiedDate = Date().toLocaleString();
             var artworkSource = MUSIC_PATH + artistName + "/" + albumName + "/folder.jpg?modified=" + modifiedDate;
             var albumLink = "./html/displayalbum.html?album=" + albumID + "&artist=" + artistID;
@@ -128,9 +145,21 @@ $(document).ready(function () {
                 var li = $('<li><span class="anchor" id="' + anchor + '"></span><a><img class="' + global_ArtIconShape + '"><div class="' + overlay + '"><div class="textAlbum"><span></span></div></div></a></li>');
                 li.find('img').attr('src', artworkSource);
                 li.find('a').attr('href', albumLink);
-                li.find('span').append('<br><b>' + albumName + '</b><br>' + artistName);
+                if (global_AlbumSort == "most") {
+                    li.find('span').append('<br><b>' + albumName + '</b><br>' + artistName + '<br>No. ' + i);
+                }
+                else if (global_AlbumSort == "added") {
+                    li.find('span').append('<br><b>' + albumName + '</b><br>' + artistName + '<br>' + dateAdd);
+                }
+                else if (global_AlbumSort == "played") {
+                    li.find('span').append('<br><b>' + albumName + '</b><br>' + artistName + '<br>' + lastPlayed);
+                }
+                else {
+                    li.find('span').append('<br><b>' + albumName + '</b><br>' + artistName);
+                }
                 li.appendTo(ul);
             }
+            i++;
         });
         // Shuffle tracks
         // Select all trackIDs from track table

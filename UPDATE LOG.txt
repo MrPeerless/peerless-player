@@ -51,7 +51,9 @@
 11. Bumped electron to 8.5.2 - ini to 1.3.8 - jquery-validation to 1.19.3
 
 **** VERSION 0.2.1 UPDATES ****
-
+1. New most played algorithm added.
+2. Minor updates to data displayed in albums page.
+3. Bug fix on Home page for replaced album artwork.
 
 
 

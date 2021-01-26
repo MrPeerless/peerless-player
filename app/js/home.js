@@ -30,7 +30,9 @@ $(document).ready(function () {
         rows.length = totalList;
         rows.forEach((row) => {
 
-            var artworkSource = MUSIC_PATH + row.artistName + "/" + row.albumName + "/folder.jpg"
+            //var artworkSource = MUSIC_PATH + row.artistName + "/" + row.albumName + "/folder.jpg"
+            var modifiedDate = Date().toLocaleString();
+            var artworkSource = MUSIC_PATH + row.artistName + "/" + row.albumName + "/folder.jpg?modified=" + modifiedDate;
             var albumLink = "./html/displayalbum.html?album=" + row.albumID + "&artist=" + row.artistID;
             // Format dateAdd string
             var albumDate = formatDate(row.dateAdd);
@@ -86,7 +88,7 @@ $(document).ready(function () {
     displayRecentlyPlayed()
 
     async function displayRecentlyPlayed() {
-        // Select all albums from the database by added date
+        // Select all albums from the database by recently played
         var sql = "SELECT album.albumID, artist.artistID, album.albumName, artist.artistName, album.releaseDate, album.albumLastPlay FROM album INNER JOIN artist ON album.artistID=artist.artistID ORDER BY album.albumLastPlay DESC";
         var rows = await dBase.all(sql);
 
@@ -155,8 +157,9 @@ $(document).ready(function () {
     displayMostPlayed()
 
     async function displayMostPlayed() {
-        // Select all albums from the database by added date
-        var sql = "SELECT album.albumID, artist.artistID, album.albumName, artist.artistName, album.albumCount FROM album INNER JOIN artist ON album.artistID=artist.artistID ORDER BY album.albumCount DESC";
+        // Select all albums from the database by most played
+        //var sql = "SELECT album.albumID, artist.artistID, album.albumName, artist.artistName, album.albumCount FROM album INNER JOIN artist ON album.artistID=artist.artistID ORDER BY album.albumCount DESC";
+        var sql = "SELECT ROUND(album.albumCount/(SELECT COUNT (track.albumID)+0.0), 5)*((CAST(SUBSTR(album.albumTime, 0, INSTR(album.albumTime, ':'))*60 + SUBSTR(album.albumTime, INSTR(album.albumTime,':')+1, length(album.albumTime))AS FLOAT)/2700)+1) AS ranking, track.artistID, track.albumID, album.albumName, album.albumCount, album.albumTime, artist.artistName FROM track INNER JOIN artist ON track.artistID=artist.artistID INNER JOIN album ON track.albumID=album.albumID GROUP BY track.albumID ORDER BY ranking DESC";
         var rows = await dBase.all(sql);
 
         // Unordered list to attach list items to
