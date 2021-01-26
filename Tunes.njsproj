@@ -173,6 +173,7 @@
     <Content Include="App\html\userguide.html" />
     <Content Include="app\icons\icon.ico" />
     <Content Include="build\icon.ico" />
+    <Content Include="docs\index.html" />
     <Content Include="electron-builder.yml" />
     <Content Include="App\html\displayplaylist.html" />
     <Content Include="App\html\displayalbum.html" />
@@ -204,6 +205,7 @@
     <Folder Include="app\icons\" />
     <Folder Include="App\js\" />
     <Folder Include="build\" />
+    <Folder Include="docs\" />
   </ItemGroup>
   <!-- Do not delete the following Import Project.  While this appears to do nothing it is a marker for setting TypeScript properties before our import that depends on them. -->
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="False" />
