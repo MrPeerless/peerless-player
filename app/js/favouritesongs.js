@@ -21,6 +21,7 @@ $(document).ready(function () {
             var rows = await dBase.all(sql, global_YearID);
             $("#displayPlaylistName").append(global_YearID + "<br> Favourites");
             var artworkSource = MUSIC_PATH + rows[0].artistName + "/" + rows[0].albumName + "/folder.jpg";
+            //var artworkSource = "./graphics/calendar.png";
         }
         else {
             // Select the favourite details from the database if sub genre2 selected
@@ -41,7 +42,7 @@ $(document).ready(function () {
 
         // Create text for favourite details      
         $("#displayFavouriteDetails").append("Number of songs: " + numberTracks + "<br>&nbsp<br>&nbsp<br>&nbsp<br>");
-        $("#imgArtwork").attr('src', artworkSource);
+        $("#imgFavArtwork").attr('src', artworkSource);
         // Add tracks to each row of table
         var table = $("#tblTracks")
 

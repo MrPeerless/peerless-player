@@ -43,7 +43,6 @@ var global_PlaylistID;
 var global_ShuffleTracks = [];
 var global_AlbumSort = "a2z";
 var global_TrackSort = "a2z";
-var global_GenreSort = "a2z";
 var global_SubGenre = "";
 var global_TrackID;
 var global_TrackName;
@@ -467,7 +466,6 @@ function backgroundChange() {
     else {
         $("#divTrackListing").css("padding-bottom", 0);
     }
-
 }
 
 // Close button on display album tracks

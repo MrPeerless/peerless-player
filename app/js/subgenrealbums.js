@@ -5,6 +5,8 @@ $(document).ready(function () {
         overlay = "overlayRound";
     }
 
+    var sort = "";
+
     displaySubGenreAlbums()
 
     async function displaySubGenreAlbums() {
@@ -12,8 +14,31 @@ $(document).ready(function () {
         var sql = "SELECT COUNT (favourite) AS count FROM track WHERE favourite=1 AND genre2=?";
         var count = await dBase.get(sql, global_SubGenre);
 
-        // Select all genre's albums from the database
-        var sql = "SELECT album.albumID, album.artistID, album.genreID, track.genre2, album.albumName, artist.artistName FROM album INNER JOIN track ON album.albumID=track.albumID INNER JOIN artist ON album.artistID=artist.artistID WHERE track.genre2=? GROUP BY album.albumID ORDER BY album.albumName COLLATE NOCASE ASC";
+        // Select all albums from the database based on global_AlbumSort
+        switch (global_AlbumSort) {
+            case "a2z":
+                var sql = "SELECT album.albumID, album.artistID, album.genreID, album.albumName, genre.genreName, artist.artistName, track.genre2 FROM album INNER JOIN genre ON album.genreID=genre.genreID INNER JOIN artist ON album.artistID=artist.artistID INNER JOIN track ON album.albumID=track.albumID WHERE track.genre2=? GROUP BY track.albumID ORDER BY album.albumName COLLATE NOCASE ASC";
+                break;
+            case "artist":
+                var sql = "SELECT album.albumID, album.artistID, album.genreID, album.albumName, genre.genreName, artist.artistName, track.genre2 FROM album INNER JOIN genre ON album.genreID=genre.genreID INNER JOIN artist ON album.artistID=artist.artistID INNER JOIN track ON album.albumID=track.albumID WHERE track.genre2=? GROUP BY track.albumID ORDER BY artist.artistName COLLATE NOCASE ASC";
+                sort = "Artist";
+                break;
+            case "added":
+                var sql = "SELECT album.albumID, album.artistID, album.genreID, album.albumName, album.dateAdd, genre.genreName, artist.artistName, track.genre2 FROM album INNER JOIN genre ON album.genreID=genre.genreID INNER JOIN artist ON album.artistID=artist.artistID INNER JOIN track ON album.albumID=track.albumID WHERE track.genre2=? GROUP BY track.albumID ORDER BY album.dateAdd DESC";
+                sort = "Date Added";
+                break;
+            case "played":
+                var sql = "SELECT album.albumID, album.artistID, album.genreID, album.albumName, album.albumLastPlay, genre.genreName, artist.artistName, track.genre2 FROM album INNER JOIN genre ON album.genreID=genre.genreID INNER JOIN artist ON album.artistID=artist.artistID INNER JOIN track ON album.albumID=track.albumID WHERE track.genre2=? GROUP BY track.albumID ORDER BY album.albumLastPlay DESC";
+                sort = "Last Played";
+                break;
+            case "most":
+                var sql = "SELECT ROUND(album.albumCount/(SELECT COUNT (track.albumID)+0.0), 5)*((CAST(SUBSTR(album.albumTime, 0, INSTR(album.albumTime, ':'))*60 + SUBSTR(album.albumTime, INSTR(album.albumTime,':')+1, length(album.albumTime))AS FLOAT)/2700)+1) AS ranking, track.artistID, track.albumID, track.genre2, album.albumName, album.albumCount, album.albumTime, album.genreID, artist.artistName, genre.genreName FROM track INNER JOIN genre ON album.genreID=genre.genreID INNER JOIN artist ON track.artistID=artist.artistID INNER JOIN album ON track.albumID=album.albumID WHERE track.genre2=? GROUP BY track.albumID ORDER BY ranking DESC";
+                sort = "Most Played";
+                break;
+            case "release":
+                var sql = "SELECT album.albumID, album.artistID, album.genreID, album.albumName, album.releaseDate, genre.genreName, artist.artistName, track.genre2 FROM album INNER JOIN genre ON album.genreID = genre.genreID INNER JOIN artist ON album.artistID = artist.artistID INNER JOIN track ON album.albumID = track.albumID WHERE track.genre2=? GROUP BY track.albumID ORDER BY album.releaseDate DESC, album.albumName ASC";
+                sort = "Release Date";
+        }
         var rows = await dBase.all(sql, global_SubGenre);
         // Populate array with album details and sort a-z and group by first letter.
         var albums = [];
@@ -32,28 +57,22 @@ $(document).ready(function () {
                 albumName += " (The)";
             }
             // Add artistID to end of string with divider |
-            albumName = albumName + "|" + row.albumID + "|" + row.artistName + "|" + row.artistID;
+            if (global_AlbumSort == "added") {
+                albumName = albumName + "|" + row.albumID + "|" + row.artistName + "|" + row.artistID + "|" + row.dateAdd;
+            }
+            else if (global_AlbumSort == "played") {
+                albumName = albumName + "|" + row.albumID + "|" + row.artistName + "|" + row.artistID + "|" + row.albumLastPlay;
+            }
+            else if (global_AlbumSort == "release") {
+                albumName = albumName + "|" + row.albumID + "|" + row.artistName + "|" + row.artistID + "|" + row.releaseDate;
+            }
+            else {
+                albumName = albumName + "|" + row.albumID + "|" + row.artistName + "|" + row.artistID;
+            }
             // Add string to albums array
             albums.push(albumName);
         });
-        // Sort albums array alphabetically using function in index.js
-        albums = sorted(albums);
 
-        // Call groupBy function to group albums by first letter
-        var albumsGroups = albums.groupBy(albums)
-
-        // Create A to Z menu
-        var alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        var menu = "";
-        // Create A to Z menu
-        for (var i = 0; i < alphabet.length; i++) {
-            if ((alphabet.charAt(i)) in albumsGroups) {
-                menu = menu + '<span style="margin-right: 1em;"><b><a href="#' + alphabet.charAt(i) + '"> ' + alphabet.charAt(i) + ' </a></b></span>';
-            }
-            else {
-                menu = menu + '<span style="margin-right: 1em;">' + alphabet.charAt(i) + '</b></span>';
-            }
-        }
         // Create favourites link
         if (count.count > 0) {
             var favouriteLink = '<a id="favouriteSongs" href="./html/favouritesongs.html"><img style="vertical-align: text-bottom;" src="./graphics/favourite_red.png" alt="Y">&nbsp<b>Favourites</b></a>'
@@ -61,9 +80,38 @@ $(document).ready(function () {
         else {
             var favouriteLink = '<img style="vertical-align: text-bottom;" src="./graphics/favourite_white.png" alt="N">&nbsp Favourites'
         }
-        // Display A to Z menu and favourites link
-        $('#spnAtoZmenu').empty();
-        $('#spnAtoZmenu').append(menu + favouriteLink);
+
+        // If sort is set to A - Z
+        // Sort a-z and group by first letter.
+        if (global_AlbumSort == "a2z") {
+            // Sort albums array alphabetically using function in index.js
+            albums = sorted(albums);
+
+            // Call groupBy function to group albums by first letter
+            var albumsGroups = albums.groupBy(albums)
+
+            // Create A to Z menu
+            var alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            var menu = "";
+            // Create A to Z menu
+            for (var i = 0; i < alphabet.length; i++) {
+                if ((alphabet.charAt(i)) in albumsGroups) {
+                    menu = menu + '<span style="margin-right: 1em;"><b><a href="#' + alphabet.charAt(i) + '"> ' + alphabet.charAt(i) + ' </a></b></span>';
+                }
+                else {
+                    menu = menu + '<span style="margin-right: 1em;">' + alphabet.charAt(i) + '</b></span>';
+                }
+            }
+            // Display A to Z menu and favourites link
+            $('#spnAtoZmenu').append(menu + favouriteLink);
+        }
+        else {
+            // Only display sort select
+            $('#spnAtoZmenu').append('<b>Sort: </b>' + sort + '<span style="margin-left: 1.5em;">' + favouriteLink);
+        }
+
+        // Counter for most played album
+        var i = 1;
 
         // Create list of albums
         var ul = $('#ulGenreAlbums');
@@ -73,6 +121,20 @@ $(document).ready(function () {
             var albumID = splitAlbum[1];
             var artistName = splitAlbum[2];
             var artistID = splitAlbum[3];
+            if (global_AlbumSort == "added") {
+                var dateAdd = formatDate(splitAlbum[4]);
+            }
+            if (global_AlbumSort == "release") {
+                var releaseDate = splitAlbum[4];
+            }
+            if (global_AlbumSort == "played") {
+                if (splitAlbum[4] != "") {
+                    var lastPlayed = formatDate(splitAlbum[4]);
+                }
+                else {
+                    var lastPlayed = "";
+                }
+            }
             var anchor = albumName.charAt(0);
             anchor = anchor.toUpperCase()
 
@@ -92,7 +154,21 @@ $(document).ready(function () {
                 var li = $('<li><span class="anchor" id="' + anchor + '"></span><a><img class="' + global_ArtIconShape + '"><span></span></a></li>');
                 li.find('img').attr('src', artworkSource);
                 li.find('a').attr('href', albumLink);
-                li.find('span').append('<br><b>' + albumName + '</b><br>' + artistName);
+                if (global_AlbumSort == "most") {
+                    li.find('span').append('<br><b>' + albumName + '</b><br>' + artistName + '<br>No. ' + i);
+                }
+                else if (global_AlbumSort == "added") {
+                    li.find('span').append('<br><b>' + albumName + '</b><br>' + artistName + '<br>' + dateAdd);
+                }
+                else if (global_AlbumSort == "release") {
+                    li.find('span').append('<br><b>' + albumName + '</b><br>' + artistName + '<br>' + releaseDate);
+                }
+                else if (global_AlbumSort == "played") {
+                    li.find('span').append('<br><b>' + albumName + '</b><br>' + artistName + '<br>' + lastPlayed);
+                }
+                else {
+                    li.find('span').append('<br><b>' + albumName + '</b><br>' + artistName);
+                }
                 li.appendTo(ul);
             }
             // Large art icons
@@ -101,9 +177,24 @@ $(document).ready(function () {
                 var li = $('<li><span class="anchor" id="' + anchor + '"></span><a><img class="' + global_ArtIconShape + '"><div class="' + overlay + '"><div class="textAlbum"><span></span></div></div></a></li>');
                 li.find('img').attr('src', artworkSource);
                 li.find('a').attr('href', albumLink);
-                li.find('span').append('<br><b>' + albumName + '</b><br>' + artistName);
+                if (global_AlbumSort == "most") {
+                    li.find('span').append('<br><b>' + albumName + '</b><br>' + artistName + '<br>No. ' + i);
+                }
+                else if (global_AlbumSort == "added") {
+                    li.find('span').append('<br><b>' + albumName + '</b><br>' + artistName + '<br>' + dateAdd);
+                }
+                else if (global_AlbumSort == "release") {
+                    li.find('span').append('<br><b>' + albumName + '</b><br>' + artistName + '<br>' + releaseDate);
+                }
+                else if (global_AlbumSort == "played") {
+                    li.find('span').append('<br><b>' + albumName + '</b><br>' + artistName + '<br>' + lastPlayed);
+                }
+                else {
+                    li.find('span').append('<br><b>' + albumName + '</b><br>' + artistName);
+                }
                 li.appendTo(ul);
             }
+            i++;
         });
         // Shuffle tracks
         // Select all trackIDs from track table for genre2

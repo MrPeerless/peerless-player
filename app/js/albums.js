@@ -5,6 +5,8 @@ $(document).ready(function () {
         overlay = "overlayRound";
     }
 
+    var sort = "";
+
     displayAlbums()
 
     // Select all albums from the database
@@ -16,15 +18,24 @@ $(document).ready(function () {
                 break;
             case "artist":
                 var sql = "SELECT album.albumID, album.artistID, album.releaseDate, album.albumName, artist.artistName FROM album INNER JOIN artist ON album.artistID=artist.artistID ORDER BY artist.artistName COLLATE NOCASE ASC";
+                sort = "Artist";
                 break;
             case "added":
                 var sql = "SELECT album.albumID, artist.artistID, album.albumName, artist.artistName, album.releaseDate, album.dateAdd FROM album INNER JOIN artist ON album.artistID=artist.artistID ORDER BY album.dateAdd DESC";
+                sort = "Date Added";
                 break;
             case "played":
                 var sql = "SELECT album.albumID, artist.artistID, album.albumName, artist.artistName, album.releaseDate, album.albumLastPlay FROM album INNER JOIN artist ON album.artistID=artist.artistID ORDER BY album.albumLastPlay DESC";
+                sort = "Last Played";
                 break;
             case "most":
+                // Calculate playthroughs by dividing/ total album count by number of tracks. Times* by total length of album in seconds +1 divided/ by weighting 2700 (which is average length of album in seconds) [playthroughs/number of tracks * album length + 1 / 2700]
                 var sql = "SELECT ROUND(album.albumCount/(SELECT COUNT (track.albumID)+0.0), 5)*((CAST(SUBSTR(album.albumTime, 0, INSTR(album.albumTime, ':'))*60 + SUBSTR(album.albumTime, INSTR(album.albumTime,':')+1, length(album.albumTime))AS FLOAT)/2700)+1) AS ranking, track.artistID, track.albumID, album.albumName, album.albumCount, album.albumTime, artist.artistName FROM track INNER JOIN artist ON track.artistID=artist.artistID INNER JOIN album ON track.albumID=album.albumID GROUP BY track.albumID ORDER BY ranking DESC";
+                sort = "Most Played";
+                break;
+            case "release":
+                var sql = "SELECT album.albumID, artist.artistID, album.albumName, artist.artistName, album.releaseDate, album.albumLastPlay FROM album INNER JOIN artist ON album.artistID=artist.artistID ORDER BY album.releaseDate DESC, album.albumName ASC";
+                sort = "Release Date";
         }
 
         // Select all albums from the database
@@ -53,6 +64,9 @@ $(document).ready(function () {
             else if (global_AlbumSort == "played") {
                 albumName = albumName + "|" + row.albumID + "|" + row.artistName + "|" + row.artistID + "|" + row.albumLastPlay;
             }
+            else if (global_AlbumSort == "release") {
+                albumName = albumName + "|" + row.albumID + "|" + row.artistName + "|" + row.artistID + "|" + row.releaseDate;
+            }
             else {
                 albumName = albumName + "|" + row.albumID + "|" + row.artistName + "|" + row.artistID;
             }
@@ -60,9 +74,6 @@ $(document).ready(function () {
             // Add string to albums array
             albums.push(albumName);
         });
-
-        // Create select dropdown box for album sort
-        var sort = " <b>Sort </b><select class='sltSort' id='sltAlbumSort'><option value='a2z'>A - Z</option><option value='artist'>Artist</option><option value='added'>Date Added</option><option value='played'>Last Played</option><option value='most'>Most Played</option></select>"
 
         // If sort is set to A - Z
         // Sort a-z and group by first letter.
@@ -87,16 +98,11 @@ $(document).ready(function () {
                 }
             }
             // Display A = Z index and sort select
-            $('#spnAtoZmenu').append(menu + sort);
+            $('#spnAtoZmenu').append(menu);
         }
-        // If sort is not set to A - Z
         else {
-            // Only display sort select
-            $('#spnAtoZmenu').append(sort);
+            $('#spnAtoZmenu').append("<b>Sort: </b>" + sort);
         }
-
-        // Highlight sort selected in dropdown box
-        $('#sltAlbumSort').val(global_AlbumSort);
 
         // Counter for most played album
         var i = 1;
@@ -112,8 +118,16 @@ $(document).ready(function () {
             if (global_AlbumSort == "added") {
                 var dateAdd = formatDate(splitAlbum[4]);
             }
+            if (global_AlbumSort == "release") {
+                var releaseDate = splitAlbum[4];
+            }
             if (global_AlbumSort == "played") {
-                var lastPlayed = formatDate(splitAlbum[4]);
+                if (splitAlbum[4] != "") {
+                    var lastPlayed = formatDate(splitAlbum[4]);
+                }
+                else {
+                    var lastPlayed = "";
+                }
             }
             // Set anchor for A to Z menu
             var anchor = albumName.charAt(0);
@@ -136,7 +150,21 @@ $(document).ready(function () {
                 var li = $('<li><span class="anchor" id="' + anchor + '"></span><a><img class="' + global_ArtIconShape + '"><span></span></a></li>');
                 li.find('img').attr('src', artworkSource);
                 li.find('a').attr('href', albumLink);
-                li.find('span').append('<br><b>' + albumName + '</b><br>' + artistName);
+                if (global_AlbumSort == "most") {
+                    li.find('span').append('<br><b>' + albumName + '</b><br>' + artistName + '<br>No. ' + i);
+                }
+                else if (global_AlbumSort == "added") {
+                    li.find('span').append('<br><b>' + albumName + '</b><br>' + artistName + '<br>' + dateAdd);
+                }
+                else if (global_AlbumSort == "release") {
+                    li.find('span').append('<br><b>' + albumName + '</b><br>' + artistName + '<br>' + releaseDate);
+                }
+                else if (global_AlbumSort == "played") {
+                    li.find('span').append('<br><b>' + albumName + '</b><br>' + artistName + '<br>' + lastPlayed);
+                }
+                else {
+                    li.find('span').append('<br><b>' + albumName + '</b><br>' + artistName);
+                }
                 li.appendTo(ul);
             }
             // Large art icons
@@ -150,6 +178,9 @@ $(document).ready(function () {
                 }
                 else if (global_AlbumSort == "added") {
                     li.find('span').append('<br><b>' + albumName + '</b><br>' + artistName + '<br>' + dateAdd);
+                }
+                else if (global_AlbumSort == "release") {
+                    li.find('span').append('<br><b>' + albumName + '</b><br>' + artistName + '<br>' + releaseDate);
                 }
                 else if (global_AlbumSort == "played") {
                     li.find('span').append('<br><b>' + albumName + '</b><br>' + artistName + '<br>' + lastPlayed);

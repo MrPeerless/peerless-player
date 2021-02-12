@@ -68,6 +68,7 @@
     <Compile Include="App\js\playlists.js" />
     <Compile Include="App\js\songs.js" />
     <Compile Include="App\js\years.js" />
+    <Compile Include="docs\js\pages_screenshots.js" />
     <Compile Include="main.js" />
     <Content Include=".gitignore" />
     <Content Include="app\css\skinblue.css" />
@@ -171,10 +172,17 @@
     <Content Include="App\html\settings.html" />
     <Content Include="App\html\syncdirectory.html" />
     <Content Include="App\html\userguide.html" />
-    <Content Include="app\icons\icon.ico" />
     <Content Include="build\icon.ico" />
-    <Content Include="docs\css\style.css" />
+    <Content Include="docs\css\pages_style.css" />
+    <Content Include="docs\graphics\logo.jpg" />
+    <Content Include="docs\graphics\icon.ico" />
     <Content Include="docs\index.html" />
+    <Content Include="docs\pages_news.html" />
+    <Content Include="docs\pages_history.html" />
+    <Content Include="docs\pages_screenshots.html" />
+    <Content Include="docs\pages_userguide.html" />
+    <Content Include="docs\pages_video.html" />
+    <Content Include="docs\video\video_tour.mp4" />
     <Content Include="electron-builder.yml" />
     <Content Include="App\html\displayplaylist.html" />
     <Content Include="App\html\displayalbum.html" />
@@ -192,6 +200,7 @@
     <Content Include="App\html\yearalbums.html" />
     <Content Include="App\html\years.html" />
     <Content Include="App\index.html" />
+    <Content Include="hideFile.vbs" />
     <Content Include="LICENSE.txt" />
     <Content Include="package.json" />
     <Content Include="README.md" />
@@ -203,11 +212,14 @@
     <Folder Include="App\graphics\genres\" />
     <Folder Include="App\graphics\socialmedia\" />
     <Folder Include="App\html\" />
-    <Folder Include="app\icons\" />
     <Folder Include="App\js\" />
     <Folder Include="build\" />
     <Folder Include="docs\" />
     <Folder Include="docs\css\" />
+    <Folder Include="docs\graphics\" />
+    <Folder Include="docs\images\" />
+    <Folder Include="docs\js\" />
+    <Folder Include="docs\video\" />
   </ItemGroup>
   <!-- Do not delete the following Import Project.  While this appears to do nothing it is a marker for setting TypeScript properties before our import that depends on them. -->
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="False" />

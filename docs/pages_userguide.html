@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Peerless Player</title>
+    <link rel="shortcut icon" type="image/x-icon" href="./graphics/icon.ico" />
+    <link href="./css/pages_style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+    <!-- ###### BANNER ####### -->
+    <div id="banner">
+        <img class="centre" src="./graphics/logo.jpg" />
+    </div>
+
+    <!-- ###### MENU ######### -->
+    <div id="menu">
+        <ul id="ulMenu">
+            <li><a id="menuHome" href="index.html">Home</a></li>
+            <li><a id="menuNews" href="pages_news.html">News</a></li>
+            <li><a id="menuScreenshots" href="pages_screenshots.html">Screenshots</a></li>
+            <li><a id="menuVideo" href="pages_video.html">Video</a></li>
+            <li><a id="menuUserguide" href="pages_userguide.html"><u>User Guide</u></a></li>
+            <li><a id="menuHistory" href="pages_history.html">History</a></li>
+        </ul>
+    </div>
+
+    <!-- ###### MAIN CONTENT ####### -->
+    <div class="centre" id="mainText">
+        <h1>Peerless Player User Guide</h1>
+        <br /><br />
+
+        <div class="divSingle">
+            <h2>Quick Menu</h2>
+            <ol type="1">
+                <li><a href="#started">Getting Started</a></li>
+                <li><a href="#basic">Basic Functions</a></li>
+                <li><a href="#advanced">Advanced Functions</a></li>
+                <li><a href="#playlists">Playlists</a></li>
+                <li><a href="#adding">Adding Music to Peerless Player</a></li>
+                <li><a href="#editing">Editing Music in the Database</a></li>
+                <li><a href="#deleting">Deleting Music from the Database</a></li>
+                <li><a href="#settings">App Settings</a></li>
+                <li><a href="#sync">Syncing External Music Directory</a></li>
+                <li><a href="#explore">Exploring Music</a></li>
+            </ol>
+        </div>
+        <br />
+        <br />
+
+        <span class="anchor" id="started"></span>
+        <h2>1. Getting Started</h2>
+        <div class="help">
+            <ol type="1">
+                <li>
+                    On the menu bar click on <b>File</b> and then <b>Settings.</b> This will take you to the Settings page where you can customise the app.
+                </li>
+                <li>
+                    Under the <b>Select Music Directory</b> option, click on the <b>Browse</b> button and select the directory where your music is stored.
+                </li>
+                <li>
+                    When you have finished adjusting the settings, see point 8 below for more details, click on the <b>Save</b> button at the top of the screen.
+                </li>
+                <li>
+                    Please note that the app can only read music files from one directory. It is therefore recommended to keep all your downloaded music in one directory. This will aid syncing your music directory to external storage for your phone, car or yacht.
+                </li>
+                <li>
+                    Once you have set your music directory, follow point 5 below to start adding your music to the database.
+                </li>
+            </ol>
+        </div>
+
+        <span class="anchor" id="basic"></span>
+        <h2>2. Basic Functions</h2>
+        <div class="help">
+            <h3>2.1 Finding Music</h3>
+            <ol type="1">
+                <li>
+                    The main navigation menu for Peerless Player is along the top of the screen.
+                </li>
+                <li>
+                    From the <b>Home</b> page you will see your recently added, recently played and most played albums. These selections can be expanded by clicking the<button id="btnDummyShow"></button> button.
+                </li>
+                <li>
+                    From the <b>Artists</b> page, click on an artist to display all albums by that artist. There is an <b>A - Z</b> menu at the top of the page to scroll quickly to your desired artist.
+                </li>
+                <li>
+                    From the <b>Albums</b> page, click on an album to display the album and all the artists other albums. There is an <b>A - Z</b> menu at the top of the page to scroll quickly to your desired album.
+                </li>
+                <li>
+                    From the <b>Genre</b> page, click on your desired Genre and all albums in that genre will be displayed. There is an <b>A - Z</b> menu at the top of the page to scroll quickly to your desired album.
+                </li>
+                <li>
+                    From the <b>Years</b> page, click on your desired year and all albums released in that year will be displayed.
+                </li>
+                <li>
+                    From the <b>Songs</b> page click on your desired song to highlight it an click on the <b>Play</b> button to play. There is an <b>A - Z</b> menu at the top of the page to scroll quickly to your desired song or an input box to filter the table to a desired filter term.
+                </li>
+                <li>
+                    In the <b>Search</b> box type in your search query and click on the search button. Peerless Player will search through the database for all Artists, Albums and Songs matching your search criteria.
+                </li>
+            </ol>
+            <h3>2.2 Playing Music</h3>
+            <ol type="1">
+                <li>
+                    The main controls for playing music are at the top left corner of the screen.
+                </li>
+                <li>
+                    To play a track either double click on the track or click on the track to highlight it and click on the play button. Alternatively, select an album and click the play button. The album will start playing from track 1.
+                </li>
+                <li>
+                    <button style="width:32px;height:32px;background:url(./graphics/skip_previous1.png) no-repeat;border:none;"></button> Skip to previous track <button style="width:32px;height:32px;background:url(./graphics/play1.png) no-repeat;border:none;"></button> Play/Stop track <button style="width:32px;height:32px;background:url(./graphics/pause1.png) no-repeat;border:none;"></button> Pause track <button style="width:32px;height:32px;background:url(./graphics/skip_next1.png) no-repeat;border:none;"></button> Skip to next track <button style="width:32px;height:32px;background:url(./graphics/shuffle1.png) no-repeat;border:none;"></button> Shuffle tracks <button style="width:32px;height:32px;background:url(./graphics/mute_off.png) no-repeat;border:none;"></button> Mute player
+                </li>
+                <li>
+                    While playing music you can use the rewind <button style="width:20px;height:11px;background:url(./graphics/rewind_black.png) no-repeat;border:none;vertical-align: middle;"></button> and fast forward <button style="width:20px;height:11px;background:url(./graphics/fast_forward_black.png) no-repeat;border:none;vertical-align: middle;"></button> buttons under the progress bar to skip through a track.
+                </li>
+                <li>
+                    To seek to a certain point in a track, click on the progress bar displayed under the Now Playing album artwork.
+                </li>
+                <li>
+                    All main controls and their associated keyboard shortcuts can be found in the main menu under <b>Player.</b>
+                </li>
+            </ol>
+        </div>
+        <br />
+        <span class="anchor" id="advanced"></span>
+        <h2>3. Advanced Functions</h2>
+        <div class="help">
+            <h3>3.1 Shuffle Music</h3>
+            <ol type="1">
+                <li>
+                    To shuffle songs from the entire music library, from the <b>Artists, Albums, Genres or Years</b> page, click on the shuffle button.
+                </li>
+                <li>
+                    To shuffle songs for either an artist, genre or year, select your desired artist, genre or year from the main menu and click on the shuffle button.
+                </li>
+                <li>
+                    To shuffle a particular album, select the desired album and click on the shuffle button.
+                </li>
+                <li>
+                    To shuffle a particular playlist, select the desired playlist from the <b>Playlists</b> page and click on the shuffle button.
+                </li>
+            </ol>
+
+            <h3>3.2 Create Mood Music</h3>
+            <ol type="1">
+                <li>
+                    From the <b>Function</b> menu on the left of the screen, click on the <button style="width:20px;height:10px;background:url(./graphics/expand.png) no-repeat;border:none;vertical-align: middle;"></button> button next to <b>Creat Mood Music</b> to display the mood music drop down box. Select your desired mood and click on the <b>Play</b> button.
+                </li>
+                <li>
+                    Peerless Player will create a random mix of all music by that mood in the music library.
+                </li>
+            </ol>
+
+            <h3>3.3 Explore Sub Genres</h3>
+            <ol type="1">
+                <li>
+                    From the <b>Function</b> menu on the left of the screen, click on the <button style="width:20px;height:10px;background:url(./graphics/expand.png) no-repeat;border:none;vertical-align: middle;"></button> button next to <b>Explore Sub Genres</b> to display the genre music drop down box. Select your desired genre and click on the <b>Show</b> button.
+                </li>
+                <li>
+                    Peerless Player will display all albums in the music library for that genre.
+                </li>
+            </ol>
+
+            <h3>3.4 Queue Track</h3>
+            <ol type="1">
+                <li>
+                    While playing music you can create an on the go playlist by using the <b>Queue</b> button in the <b>Player Functions</b> on the left of the screen.
+                </li>
+                <li>
+                    Highlight the track you wish to queue to play after the current track and click on the <b>Queue</b> button.
+                </li>
+                <li>
+                    The first track you queue will delete any current tracks queued to play.
+                </li>
+                <li>
+                    You can keep adding tracks to the queue to create an on the go playlist.
+                </li>
+                <li>
+                    To clear music queued up to play click on the <b>Clear</b> button in the <b>Player Functions</b>.
+                </li>
+                <li>
+                    The player will stop playing muisic when the current track finishes playing.
+                </li>
+            </ol>
+
+            <h3>3.5 Queue Album</h3>
+            <ol type="1">
+                <li>
+                    To queue an album to play when the current queued music has finished playing, from the <b>Display Album</b> page click on the <b>Queue</b> button.
+                </li>
+                <li>
+                    This function can also be used to quickly create a playlist of a number of selected albums.
+                </li>
+                <li>
+                    Clear any queued music first by clicking on the <b>Clear</b> button in the <b>Player Functions</b>.
+                </li>
+                <li>
+                    View the <b>Queued</b> playlist by clicking on <b>Playlists</b> on the main menu and click on the Q playlist.
+                </li>
+            </ol>
+
+            <h3>3.6 Favourites</h3>
+            <ol type="1">
+                <li>
+                    To tag a song as a favourite, from the track display click on the black heart image<img class="favourite" src="./graphics/favourite_black.png" alt="N"> which will change the heart image to <img class="favourite" src="./graphics/favourite_red.png" alt="Y">
+                </li>
+                <li>
+                    Click again to deselect the track as a favourite.
+                </li>
+            </ol>
+
+            <h3>3.7 View Album Artwork</h3>
+            <ol type="1">
+                <li>
+                    To view a large image of the album artwork, click on the artwork image while displaying the album details.
+                </li>
+                <li>
+                    Click the large image to close.
+                </li>
+            </ol>
+        </div>
+
+        <br />
+        <span class="anchor" id="playlists"></span>
+        <h2>4. Playlists</h2>
+        <div class="help">
+            <h3>4.1 View Playlists</h3>
+            <ol type="1">
+                <li>
+                    To view your playlists, on the main navigation menu at the top of the screen, click on <b>Playlists</b>. This will display all your playlists in alphabetical order.
+                </li>
+                <li>
+                    Peerless Player will automatically create playlists for all your favourites, your 50 new tracks and your Top 30 played songs.
+                </li>
+                <li>
+                    Click on the desired playlist to display it.
+                </li>
+            </ol>
+
+            <h3>4.2 Create a Playlist</h3>
+            <ol type="1">
+                <li>
+                    From the <b>Function</b> menu on the left of the screen, click on the <button style="width:20px;height:10px;background:url(./graphics/expand.png) no-repeat;border:none;vertical-align: middle;"></button> button next to <b>Player Functions</b>. Click on the <b>New</b> button to open the Create a New Playlist function.<br />
+                </li>
+                <li>
+                    In the <b>Playlist Name</b> input box, type in a name for your playlist.
+                </li>
+                <li>
+                    To add a song to the playlist, click on a track to highlight it and click on the
+                    <b>Add</b> button to add the track to the playlist. The song will appear at the end of the list in the playlist scroll box.
+                </li>
+                <li>
+                    To remove a song from the playlist, highlight the song in the playlist scroll box and click on the
+                    <b>Delete</b> button to remove the song from the playlist.
+                </li>
+                <li>
+                    To move a song up in the play order of the playlist, highlight the song in the playlist scroll box and click on the <b>Up</b> button to move the song one position up in the playlist order.
+                </li>
+                <li>
+                    To move a song down in the play order of the playlist, highlight the song in the playlist scroll box and click on the <b>Down</b> button to move the song one position down in the playlist order.
+                </li>
+                <li>
+                    To save the playlist to the database, click on the
+                    <b>Save</b> button, or to close without saving click on the
+                    <b>Close</b> button.
+                </li>
+            </ol>
+
+            <h3>4.3 Edit a Playlist</h3>
+            <ol type="1">
+                <li>
+                    To edit a playlist, click on the desired playlist to display it and click on the <b>Edit</b> button next to the playlist. This will display the Edit playlist function.
+                </li>
+                <li>
+                    To add a song to the playlist, click on a track to highlight it and click on the
+                    <b>Add</b> button to add the track to the playlist. The song will appear at the end of the list in the playlist scroll box.
+                </li>
+                <li>
+                    To remove a song from the playlist, highlight the song in the playlist scroll box and click on the
+                    <b>Delete</b> button to remove the song from the playlist.
+                </li>
+                <li>
+                    To move a song up in the play order of the playlist, highlight the song in the playlist scroll box and click on the <b>Up</b> button to move the song one position up in the playlist order.
+                </li>
+                <li>
+                    To move a song down in the play order of the playlist, highlight the song in the playlist scroll box and click on the <b>Down</b> button to move the song one position down in the playlist order.
+                </li>
+                <li>
+                    To save the updated playlist to the database, click on the
+                    <b>Save</b> button, or to close without saving changes, click on the
+                    <b>Close</b> button.
+                </li>
+            </ol>
+
+            <h3>4.4 Export a Playlist</h3>
+            <ol type="1">
+                <li>
+                    A playlist can be exported as an .m3u file in the directory format /music/artist/album/track.
+                </li>
+                <li>
+                    Display the desired playlist and click on the <b>Export</b> button.
+                </li>
+                <li>
+                    THe playlist file will be saved in a playlists folder in your selected root music directory.
+                </li>
+                <li>
+                    When syncing an external directory you will see an option to sync your exported playlists.
+                </li>
+            </ol>
+
+            <h3>4.5 View Exported Playlists</h3>
+            <ol type="1">
+                <li>
+                    From the <b>Playlists</b> menu click on View Exported Playlists or under <b>Player Functions</b> click on the <b>View</b> Exported Playlists button.
+                </li>
+                <li>
+                    The <b>View Exported Playlists</b> page is displayed, showing your exported playlists in your music directory.
+                </li>
+                <li>
+                    To delete an exported playlist you can either select the checkbox on the title bar next to Playlist Name to select all playlists or click each individual checkbox for each playlist you want to delete.
+                </li>
+                <li>
+                    Click on the <b>Delete</b> button to delete the selected exported playlists from your music directory.
+                </li>
+                <li>
+                    Please note this function will not delete the playlist from the database, only the exported .m3u file in your music directory.
+                </li>
+            </ol>
+
+            <h3>4.6 Delete a Playlist</h3>
+            <ol type="1">
+                <li>
+                    To delete a playlist, first select the desired playlist to be deleted and click on the <b>Delete</b> button.
+                </li>
+                <li>
+                    You will be then prompted to confirm if you want to permanently delete this playlist.
+                </li>
+                <li>
+                    Please note this will not delete the exported playlist file from your music directory if you previously exported it.
+                </li>
+            </ol>
+
+            <h3>4.7 Smart Playlist</h3>
+            <ol type="1">
+                <li>
+                    Peerless Player can create a Smart Playlist of 20 songs based on a seed track.
+                </li>
+                <li>
+                    Select a song you wish to base a playlist on and in the Player Functions on the left of the screen, click on the <b>Smart</b> button.
+                </li>
+                <li>
+                    Peerless Player will display the Smart Playlist. Either select a track and click on the play button or the shuffle button to play the playlist.
+                </li>
+            </ol>
+
+        </div>
+        <br />
+        <span class="anchor" id="adding"></span>
+        <h2>5. Adding Music to Peerless Player</h2>
+        <div class="help">
+            <ol type="1">
+                <li>
+                    Add a ripped CD or music download to your Music directory with music files in .mp3 or .m4a format. If the artist is new to your music collection, add the artist folder containing the album folder or if the artist already exists, add the album folder to the existing artist folder in your music directory.
+                </li>
+                <li>
+                    To get the metadata from the Gracenote server the app sends a query using the directory name for the artist and album folder. If these names are incorrect it is likely that no metadata will be found on the Gracenote server.
+                </li>
+                <li>
+                    The track names for the album are taken from the individual audio file names. If these file names are incorrect you will have incorrect track names in your database.
+                </li>
+                <li>
+                    Under the <b>Database Functions</b> click on the <b>Sync</b> Music Database button or on the menu bar click on <b>File - Sync Database</b>.
+                </li>
+                <li>
+                    The <b>Sync Music Database</b> page displays a list of all the music found in your Music directory, which has not yet been added to the database.
+                </li>
+                <li>
+                    From the list of albums found, select the album which you want to add to the database and click on the <b>Get</b> button.
+                </li>
+                <li>
+                    A list of album matches found on the Gracenote Server is displayed with the closest matches at the top of the list. Select the title which is the best match to the album you selected and click on the <b>Get</b> button.
+                </li>
+                <li>
+                    The album details, artwork and meta data for each track is displayed. Check that all the data looks correct and make any amendments if required.
+                </li>
+                <li>
+                    If the metadata clearly looks incorrect or no metadata has been found click om the <b>Cancel</b> button. Start the above process again and try selecting a different title match from the Gracenote Server.
+                </li>
+                <li>
+                    If all the metadata looks correct click on the <b>Import</b> button.
+                </li>
+                <li>
+                    The selected album will now be added to the database and you will see it in the <b>Home</b> page under your Recently Added Albums.
+                </li>
+            </ol>
+        </div>
+        <br />
+
+        <span class="anchor" id="editing"></span>
+        <h2>6. Editing Music in the Database</h2>
+        <div class="help">
+            <ol type="1">
+                <li>
+                    To edit an album in the database, display the album and click on the <b>Edit</b> button next to the album artwork.
+                </li>
+                <li>
+                    This will display the <b>Edit Music Database</b> page, displaying a form with all the metadata stored in the database for the selected album.
+                </li>
+                <li>
+                    Any of the fields in the form can be amended manually, except the filename and track time, highlighted in grey.
+                </li>
+                <li>
+                    If you are connected to the internet, matches for the album from the Gracenote database will be displayed below the album artwork.
+                </li>
+                <li>
+                    From the list of album matches found on the Gracenote server, click on the one which is the closet match to the album you are editing and click on the <b>Get</b> button to update all the album metadata, or click on the <b>Artwork</b> button to update the album artwork.
+                </li>
+                <li>
+                    Any changes in metadata will be highlighted in yellow to make review quicker.
+                </li>
+                <li>
+                    You can also manually add album artwork, by clicking on the album image and browsing to an image file and then clicking the Select File button. It is recommended that images are a minimum of 450 pixels square.
+                </li>
+                <li>
+                    To save any changes to the database click on the <b>Save</b> button or click on the <b>Cancel</b> button to cancel any changes made and return to the Home page.
+                </li>
+            </ol>
+        </div>
+        <br />
+
+        <span class="anchor" id="deleting"></span>
+        <h2>7. Deleting Music from the Database</h2>
+        <div class="help">
+            <ol type="1">
+                <li>
+                    To delete an album from the database, display the album and click on the <b>Edit</b> button next to the album artwork.
+                </li>
+                <li>
+                    This will display the <b>Edit Music Database</b> page, displaying a form with all the metadata stored in the database for the selected album.
+                </li>
+                <li>
+                    Next to the album artwork click on the <b>Delete</b> button to delete the album.
+                </li>
+                <li>
+                    A confirmation pop up box will display asking you to confirm if you want to delete the album.
+                </li>
+                <li>
+                    Click on the <b>OK</b> button to confirm the deletion.
+                </li>
+                <li>
+                    The album will be removed from the database and if the artist has no other albums in the database, the artist will be deleted too.
+                </li>
+            </ol>
+        </div>
+
+        <span class="anchor" id="settings"></span>
+        <h2>8. App Settings</h2>
+        <div class="help">
+            <ol type="1">
+                <li>
+                    From the <b>File</b> menu, click on <b>Settings</b>, to display the App Settings page. From here you can change the below settings.
+                </li>
+                <li>App Name</li>
+                <li>Music Directory</li>
+                <li>Album art size</li>
+                <li>Album art shape</li>
+                <li>App colour scheme</li>
+                <li>Zoom level of Peerless Player</li>
+                <li>Turn on/off track notifications</li>
+            </ol>
+        </div>
+
+        <span class="anchor" id="sync"></span>
+        <h2>9. Syncing External Music Directory</h2>
+        <div class="help">
+            <ol type="1">
+                <li>
+                    Insert your SD card/USB drive and from the <b>File</b> menu or <b>Database Functions</b> click on <b>Sync External Directory</b>.
+                </li>
+                <li>
+                    From the browse window select the folder on the SD card which has your external music directory you wish to sync and click on Select Folder button.
+                </li>
+                <li>
+                    The <b>Sync Directory</b> page is displayed showing a list of albums which are in your database and not on the SD card.
+                </li>
+                <li>
+                    You can either select the checkbox on the title bar next to Artist to select all albums or click each individual checkbox for each album you want to sync to the SD card.
+                </li>
+                <li>
+                    Click on the <b>Sync</b> button to sync all selected albums to the SD card.
+                </li>
+                <li>
+                    <b>WARNING:</b> It may take some time to write all the files to the SD card if you have selected a lot of albums.
+                </li>
+                <li>
+                    Once you have clicked on the Sync button, the App will return to the Home page. The sync process will complete once the cover art appears on the home page.
+                </li>
+            </ol>
+        </div>
+
+        <span class="anchor" id="explore"></span>
+        <h2>10. Exploring Music</h2>
+        <div class="help">
+            <h3>10.1 Artist Biography</h3>
+            <ol type="1">
+                <li>
+                    An artists biography can be displayed from the artist's album page.
+                </li>
+                <li>
+                    To display an artist's biography click on the <b>Biography</b> button.
+                </li>
+                <li>
+                    A summary of the artists biography is displayed together with an image of the artist, if found, which can be clicked on to enlarge. To read more, click on the down arrow at the end of the text to display the complete biography text.
+                </li>
+                <li>
+                    A list of links to the artist's social media pages and other music sites is displayed at the bottom of the page.
+                </li>
+            </ol>
+            <h3>10.2 Artist Discography</h3>
+            <ol type="1">
+                <li>
+                    An artists discography can be displayed from the artists album page.
+                </li>
+                <li>
+                    To display an artist's discography click on the <b>Discography</b> button.
+                </li>
+                <li>
+                    The list is limited to 100 albums, with studio released albums at the top of the list but does not include EP and Single releases.
+                </li>
+                <li>
+                    A new album which has not yet been released will be highlighted in the table.
+                </li>
+                <li>
+                    Click on an album name to open samples from Napster for studio albums or a Google search for the album in your default browser.
+                </li>
+
+            </ol>
+            <h3>10.3 Artist Recommendations</h3>
+            <ol type="1">
+                <li>
+                    Recommendations based on an artist can be displayed from the artists album page.
+                </li>
+                <li>
+                    To display artist recommendations, click on the <b>Recommends</b> button.
+                </li>
+                <li>
+                    A list of up to 8 recommended albums is displayed.
+                </li>
+                <li>
+                    Click on an album to open samples from Napster in your default browser.
+                </li>
+            </ol>
+            <h3>10.4 Artist Links</h3>
+            <ol type="1">
+                <li>
+                    At the bottom of both the artist's biography and discography page are links to the artist's social media accounts and other music sites.
+                </li>
+                <li>
+                    Click on a link and it will open the webpage in your default browser.
+                </li>
+            </ol>
+            <h3>10.5 Album Information</h3>
+            <ol type="1">
+                <li>
+                    To find out more information about an album, from the display album page, click on the <b>Info</b> button.
+                </li>
+                <li>
+                    A summary with background and critical reviews of the album is displayed.
+                </li>
+            </ol>
+        </div>
+        <br />
+        <br />
+        <br />
+
+        <!-- ###### FOOTER ####### -->
+        <div class="footer">
+            <p id="footer">
+                <hr />
+                <img src="./graphics/pp_icon.png" width="35" height="35" /><br />
+                www.peerless-player.rocks<br />
+                Contact: info@peerless-player.rocks<br />
+                &#169 Geoff Peerless <script>document.write(new Date().getFullYear())</script>
+            </p>
+        </div>
+    </div>
+
+</body>
+
+</html>

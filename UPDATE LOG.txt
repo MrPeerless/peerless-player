@@ -53,7 +53,11 @@
 **** VERSION 0.2.1 UPDATES ****
 1. New most played algorithm added.
 2. Minor updates to data displayed in albums page.
-3. Bug fix on Home page for replaced album artwork.
+3. Bug fix on Home page to clear cache to display new album artwork.
+4. Album sort function moved to Player Functions.
+5. Sort by album Release Date added to album sort.
+6. Album sort now works globally on any page which displays a list of albums.
+
 
 
 

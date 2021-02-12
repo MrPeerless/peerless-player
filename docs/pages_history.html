@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Peerless Player</title>
+    <link rel="shortcut icon" type="image/x-icon" href="./graphics/icon.ico" />
+    <link href="./css/pages_style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+    <!-- ###### BANNER ####### -->
+    <div id="banner">
+        <img class="centre" src="./graphics/logo.jpg" />
+    </div>
+
+    <!-- ###### MENU ######### -->
+    <div id="menu">
+        <ul id="ulMenu">
+            <li><a id="menuHome" href="index.html">Home</a></li>
+            <li><a id="menuNews" href="pages_news.html">News</a></li>
+            <li><a id="menuScreenshots" href="pages_screenshots.html">Screenshots</a></li>
+            <li><a id="menuVideo" href="pages_video.html">Video</a></li>
+            <li><a id="menuUserguide" href="pages_userguide.html">User Guide</a></li>
+            <li><a id="menuHistory" href="pages_history.html"><u>History</u></a></li>
+        </ul>
+    </div>
+
+    <!-- ###### MAIN CONTENT ####### -->
+    <div class="centre" id="mainText">
+        <h1>Peerless Player History</h1>
+        <br />
+        <h2>Development Background</h2>
+        <br />
+        <p>I started this project back in 2013 because I was not happy using either Windows Media Player or iTunes to play my music collection. I wanted an app that I could organise my music library the way I wanted and so I started to code my own app.</p>
+        <br />
+        <p>
+            This project has been written in 3 languages during the course of it's evolution. I started using Python 3, but became frustrated after a few years with the limited GUI elements I had available to use. I thought if only I had the power of HTML5 and CSS3 I could design a responsive and good looking GUI. So I started the second evolution redesigning the app as a web app using a Chronium browser, which used the power of HTML5 and CSS3 and switching languages from Python 3 to C# and Javascript.
+        </p>
+        <br />
+        <p>
+            Again the web app had it's limitations. To run on a PC it had to run off a local server and was difficult to deploy as a downloadable app. Working in a browser sandboxed the app from accessing the local directory, which restricted operations on the locally stored music directory. I needed to find a better option to create a native desktop app.
+        </p>
+        <br />
+        <p>
+            In 2018 I discovered Electron and started this, the third evolution of this app. Electron is a framework using a Chronium browser and Node.js to create native desktop applications using web technologies. Once more I began redesigning the app switching languages from C# to Javascript. It is now a downloadable Windows app, with automatic updates using the power of Javascript, HTML5 and CSS3 on the front end and Node.js on the back end.
+        </p>
+        <br />
+        <br />
+        <br />
+
+        <!-- ###### FOOTER ####### -->
+        <div class="footer">
+            <p id="footer">
+                <hr />
+                <img src="./graphics/pp_icon.png" width="35" height="35" /><br />
+                www.peerless-player.rocks<br />
+                Contact: info@peerless-player.rocks<br />
+                &#169 Geoff Peerless
+                <script>document.write(new Date().getFullYear())</script>
+            </p>
+        </div>
+    </div>
+</body>
+
+</html>

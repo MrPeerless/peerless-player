@@ -5,11 +5,37 @@ $(document).ready(function () {
         overlay = "overlayRound";
     }
 
+    var sort = "";
+
     displayArtistAlbums()
 
     async function displayArtistAlbums() {
-        // Select all artist's albums from the database
-        var sql = "SELECT album.albumID, album.albumName, album.releaseDate, album.albumTime, COALESCE(t.trackCount, 0) AS trackCount, n.artistName, n.origin FROM artist n INNER JOIN album ON album.artistID=n.artistID LEFT JOIN(SELECT artistID, COUNT(*) AS trackCount FROM track GROUP BY artistID) t ON n.artistID = t.artistID WHERE album.artistID=? ORDER BY album.releaseDate DESC";
+        // Select all albums from the database based on global_AlbumSort
+        switch (global_AlbumSort) {
+            case "a2z":
+                var sql = "SELECT album.albumID, album.albumName, album.releaseDate, album.albumTime, COALESCE(t.trackCount, 0) AS trackCount, n.artistName, n.origin FROM artist n INNER JOIN album ON album.artistID = n.artistID LEFT JOIN(SELECT artistID, COUNT(*) AS trackCount FROM track GROUP BY artistID) t ON n.artistID = t.artistID WHERE album.artistID=? ORDER BY album.albumName ASC";
+                break;
+            case "artist":
+                var sql = "SELECT album.albumID, album.albumName, album.releaseDate, album.albumTime, COALESCE(t.trackCount, 0) AS trackCount, n.artistName, n.origin FROM artist n INNER JOIN album ON album.artistID = n.artistID LEFT JOIN(SELECT artistID, COUNT(*) AS trackCount FROM track GROUP BY artistID) t ON n.artistID = t.artistID WHERE album.artistID=? ORDER BY album.releaseDate DESC";
+                sort = "Artist";
+                break;
+            case "added":
+                var sql = "SELECT album.albumID, album.albumName, album.releaseDate, album.albumTime, album.dateAdd, COALESCE(t.trackCount, 0) AS trackCount, n.artistName, n.origin FROM artist n INNER JOIN album ON album.artistID = n.artistID LEFT JOIN(SELECT artistID, COUNT(*) AS trackCount FROM track GROUP BY artistID) t ON n.artistID = t.artistID WHERE album.artistID=? ORDER BY album.dateAdd DESC";
+                sort = "Date Added";
+                break;
+            case "played":
+                var sql = "SELECT album.albumID, album.albumName, album.releaseDate, album.albumTime, album.albumLastPlay, COALESCE(t.trackCount, 0) AS trackCount, n.artistName, n.origin FROM artist n INNER JOIN album ON album.artistID = n.artistID LEFT JOIN(SELECT artistID, COUNT(*) AS trackCount FROM track GROUP BY artistID) t ON n.artistID = t.artistID WHERE album.artistID=? ORDER BY album.albumLastPlay DESC";
+                sort = "Last Played";
+                break;
+            case "most":
+                var sql = "SELECT ROUND(album.albumCount/(SELECT COUNT (track.albumID)+0.0), 5)*((CAST(SUBSTR(album.albumTime, 0, INSTR(album.albumTime, ':'))*60 + SUBSTR(album.albumTime, INSTR(album.albumTime, ':') + 1, length(album.albumTime))AS FLOAT) / 2700) +1) AS ranking, track.artistID, track.albumID, album.albumName, album.albumCount, album.albumTime, album.releaseDate, artist.artistName, artist.origin, COALESCE(t.trackCount, 0) AS trackCount FROM artist n INNER JOIN album ON album.artistID=n.artistID INNER JOIN(SELECT artistID, COUNT(*) AS trackCount FROM track GROUP BY artistID) t ON n.artistID=t.artistID INNER JOIN artist ON track.artistID = artist.artistID INNER JOIN track ON track.albumID=album.albumID WHERE album.artistID=? GROUP BY track.albumID ORDER BY ranking DESC";
+                sort = "Most Played";
+                break;
+            case "release":
+                var sql = "SELECT album.albumID, album.albumName, album.releaseDate, album.albumTime, COALESCE(t.trackCount, 0) AS trackCount, n.artistName, n.origin FROM artist n INNER JOIN album ON album.artistID = n.artistID LEFT JOIN(SELECT artistID, COUNT(*) AS trackCount FROM track GROUP BY artistID) t ON n.artistID = t.artistID WHERE album.artistID=? ORDER BY album.releaseDate DESC";
+                sort = "Release Date";
+        }
+
         var rows = await dBase.all(sql, global_ArtistID);
 
         var albumText;
@@ -66,11 +92,23 @@ $(document).ready(function () {
         // Hidden artist name to use for query to musicbrainz
         $("#hiddenArtistName").text(artistName);
 
-        var ul = $('#ulArtistAlbums');
+        // Counter for most played album
+        var i = 1;
 
+        var ul = $('#ulArtistAlbums');
         rows.forEach((row) => {
             var albumName = row.albumName;
-
+            if (global_AlbumSort == "added") {
+                var dateAdd = formatDate(row.dateAdd);
+            }
+            if (global_AlbumSort == "played") {
+                if (row.albumLastPlay != "") {
+                    var lastPlayed = formatDate(row.albumLastPlay);
+                }
+                else {
+                    var lastPlayed = "";
+                }
+            }
             // Force browser to update cache for album images if they have been changed with the database edit function
             var modifiedDate = Date().toLocaleString();
             var artworkSource = MUSIC_PATH + artistName + "/" + albumName + "/folder.jpg?modified=" + modifiedDate;
@@ -82,7 +120,21 @@ $(document).ready(function () {
                 var li = $('<li><a><img class="' + global_ArtIconShape + '"><span></span></a></li>');
                 li.find('img').attr('src', artworkSource);
                 li.find('a').attr('href', albumLink);
-                li.find('span').append('<br><b>' + row.albumName + '</b><br>' + row.releaseDate);
+                if (global_AlbumSort == "most") {
+                    li.find('span').append('<br><b>' + albumName + '<br>No. ' + i);
+                }
+                else if (global_AlbumSort == "added") {
+                    li.find('span').append('<br><b>' + albumName + '<br>' + dateAdd);
+                }
+                else if (global_AlbumSort == "release") {
+                    li.find('span').append('<br><b>' + albumName + '<br>' + row.releaseDate);
+                }
+                else if (global_AlbumSort == "played") {
+                    li.find('span').append('<br><b>' + albumName + '<br>' + lastPlayed);
+                }
+                else {
+                    li.find('span').append('<br><b>' + albumName + '</b><br>' + row.releaseDate);
+                }
                 li.appendTo(ul);
             }
 
@@ -92,9 +144,24 @@ $(document).ready(function () {
                 var li = $('<li><a><img class="' + global_ArtIconShape + '"><div class="' + overlay + '"><div class="textAlbum"><span></span></div></div></a></li>');
                 li.find('img').attr('src', artworkSource);
                 li.find('a').attr('href', albumLink);
-                li.find('span').append('<br><b>' + row.albumName + '</b><br>' + row.releaseDate);
+                if (global_AlbumSort == "most") {
+                    li.find('span').append('<br><b>' + albumName + '<br>No. ' + i);
+                }
+                else if (global_AlbumSort == "added") {
+                    li.find('span').append('<br><b>' + albumName + '<br>' + dateAdd);
+                }
+                else if (global_AlbumSort == "release") {
+                    li.find('span').append('<br><b>' + albumName + '<br>' + row.releaseDate);
+                }
+                else if (global_AlbumSort == "played") {
+                    li.find('span').append('<br><b>' + albumName + '<br>' + lastPlayed);
+                }
+                else {
+                    li.find('span').append('<br><b>' + albumName + '</b><br>' + row.releaseDate);
+                }
                 li.appendTo(ul);
             }
+            i++;
         });
         // Shuffle tracks
         // Select all trackIDs from track table

@@ -1,0 +1,327 @@
+/*MAIN SITE STYLE
+#################*/
+
+body {
+    height: auto;
+    font-family: 'Calibri', 'Arial', 'sans-serif';
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    background: #dddddd;
+}
+
+h1 {
+    text-align: center;
+    font-size: 1.75em;
+    color: black;
+    margin: 0;
+    padding: 0;
+}
+
+h2 {
+    font-size: 1.5em;
+    margin: 0;
+    padding: 0;
+    color: #777777;
+}
+
+h3 {
+    font-size: 1.3em;
+    padding: 0;
+    color: #777777;
+}
+
+p {
+    font-size: 1.1em;
+    margin: 0;
+    padding: 0;
+    color: black;
+}
+
+a:link {
+    text-decoration: none;
+    color: black;
+}
+
+a:visited {
+    text-decoration: none;
+    color: black;
+}
+
+a:hover {
+    text-decoration: none;
+    color: #005b96;
+}
+
+a.anchortop {
+    display: block;
+    position: relative;
+    top: -60px;
+}
+
+.note {
+    list-style-image: url('../graphics/note.png');
+}
+
+ul li {
+    font-size: 1.1em;
+}
+
+ol li {
+    font-size: 1.1em;
+}
+
+#footer{
+    color: grey;
+}
+
+.justify{
+    text-align: justify;
+}
+
+hr {
+    border-top: 1px solid #214FDD;
+}
+
+.anchor {
+    display: block;
+    height: 160px;
+    margin-top: -160px;
+    visibility: hidden;
+}
+
+/*#################
+    DIVS STYLE
+#################*/
+#banner {
+    top: 0px;
+    width: 100%;
+    min-width: 820px;
+    float: left;
+    height: 100px;
+    position: fixed;
+    z-index: 999;
+    margin: 0 auto;
+    background: #214FDD;
+    color: white;
+}
+
+#menu {
+    top: 100px;
+    width: 100%;
+    float: left;
+    height: 60px;
+    position: fixed;
+    z-index: 999;
+    margin: 0 auto;
+    background: #777777;
+    color: white;
+}
+
+#mainText {
+    top: 160px;
+    width: 60%;
+    min-width: 780px;
+    height: 100%;
+    position: relative;
+    background: #eeeeee;
+    padding: 20px;
+}
+
+.divContainer {
+    display: table;
+    width: 100%;
+}
+
+.divLeft {
+    background: #fff;
+    padding: 25px;
+    display: table-cell;
+    width: 250px;
+}
+
+.divMiddle {
+    background: #fff;
+    padding: 25px;
+    display: table-cell;
+    width: 250px;
+}
+
+.divRight {
+    background: #fff;
+    padding: 25px;
+    display: table-cell;
+    width: 250px;
+}
+
+.divSingle {
+    background: #fff;
+    padding: 20px;
+    display: inline-block;
+    height: auto;
+    width: calc(100% - 40px);
+}
+
+.divTopLeft {
+    display: inline-block;
+    height: auto;
+    width: 74%;
+    padding-right: 1%;
+}
+
+.divTopRight {
+    display: inline-block;
+    height: 100%;
+    width: 24%;
+    text-align: center;
+    vertical-align: top;
+}
+
+/*###################     display: table-cell;        padding: 20px;    width: calc(100% / 3);
+    Centre content
+#####################*/
+.centre {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.footer {
+    display: block;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    color: #214FDD;
+}
+
+/*###################
+    Menu style
+#####################*/
+#ulMenu {
+    color: white;
+    list-style: none;
+    margin: auto;
+    padding: 19px 0 0 0;
+    text-align: center;
+    font-size: 1.1em;
+    width: 50%;
+    min-width: 820px;
+}
+
+    #ulMenu li {
+        display: inline;
+        text-align: center;
+        padding-right: 20px;
+        padding-left: 20px;
+        cursor: pointer;
+    }
+
+    #ulMenu a {
+        display: inline-block;
+        padding: 0;
+        text-decoration: none;
+        font-weight: bolder;
+        color: white;
+    }
+
+        #ulMenu a:hover {
+            font-weight: bolder;
+            color: #005b96;
+        }
+
+    #ulMenu li a.current {
+        color: black;
+        font-weight: bold;
+    }
+
+/*####################
+    SCREENSHOTS
+######################*/
+
+.ulScreenshot {
+    list-style-type: none;
+    padding: 0;
+}
+    .ulScreenshot li {
+        background: #fff;
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+.imgScreenshot {
+    width: 90%;
+    cursor: pointer;
+    margin-bottom: 5px;
+    border: 1px solid #000000;
+    border-radius: 0%;
+}
+
+/*######################
+    VIDEO PLAYER
+########################*/
+
+#video1{
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+}
+
+/*######################
+    MODAL BOX
+########################*/
+/*Display large artwork modal pop up*/
+/* The Modal (background) */
+#screenshotModal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 80px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.6); /* Black w/ opacity */
+    z-index: 9999;
+}
+
+/* Modal Content */
+.screenshotModalContent {
+    background: #000000;
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0;
+    border: 4px solid #fff;
+    max-width: 1308px;
+    height: auto;
+    border-radius: 5px;
+    margin-bottom: 140px;
+}
+
+.screenshotModalBody {
+    position: relative;
+    top: 0;
+    left: 0;
+    cursor: pointer;
+    width: 100%;
+    max-width: 1308px;
+}
+
+#screenshotModalImage {
+    position: relative;
+    top: 4px;
+    left: 4px;
+    padding-bottom: 4px;
+    max-width: calc(100% - 8px);
+    max-height: 100%;
+}
+
+.screenshotModalClose {
+    position: absolute;
+    top: -20px;
+    left: calc(100% - 15px);
+    width: 40px;
+    height: 40px;
+}

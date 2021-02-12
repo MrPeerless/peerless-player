@@ -266,12 +266,16 @@ const template = [
         label: 'Shop',
         submenu: [
             {
-                label: 'Bandcamp',
-                click() { require('electron').shell.openExternal('https://bandcamp.com/') }
+                label: '7Digital',
+                click() { require('electron').shell.openExternal('https://uk.7digital.com/') }
             },
             {
                 label: 'Amazon',
                 click() { require('electron').shell.openExternal('https://www.amazon.co.uk/b?_encoding=UTF8&tag=geoffstravels-21&linkCode=ur2&linkId=7e917ba0501769c46c751ae19bc1e5c5&camp=1634&creative=6738&node=77925031') }
+            },
+            {
+                label: 'Bandcamp',
+                click() { require('electron').shell.openExternal('https://bandcamp.com/') }
             }
         ]
     },

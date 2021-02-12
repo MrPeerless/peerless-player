@@ -389,30 +389,6 @@ function btnSearchClick() {
 $(document).on('change', "#sltAlbumSort", function (event) {
     event.preventDefault();
     global_AlbumSort = $("#sltAlbumSort option:selected").val();       
-    $("#divTrackListing").css("display", "none");
-    $("#divContent").css("width", "auto");
-    $('#spnAtoZmenu').css('display', 'inline')
-    var link = "./html/albums.html";
-    $('#divContent').load(link);
-    // Enable btnSync
-    $("#btnSync").prop("disabled", false);
-    $(document).ajaxComplete(function () {
-        $(document).scrollTop(0);
-        global_TrackListing = false;
-    });
-});
-
-//#######################
-// Change Genre Sort 
-//#######################
-$(document).on('change', "#sltGenreSort", function (event) {
-    event.preventDefault();
-    global_GenreSort = $("#sltGenreSort option:selected").val();   
-    $("#divTrackListing").css("display", "none");
-    $("#divContent").css("width", "auto");
-    $('#spnAtoZmenu').css('display', 'inline')
-    var link = "./html/genrealbums.html";
-    $('#divContent').load(link);
     // Enable btnSync
     $("#btnSync").prop("disabled", false);
     $(document).ajaxComplete(function () {

@@ -139,11 +139,28 @@ select {
     border: 1px solid #000000;
 }
 
-.sltSort {
-    width: 115px;
+#sltMood {
+    width: 150px;
     border: 1px solid #000000;
 }
 
+#sltGenre {
+    width: 150px;
+    border: 1px solid #000000;
+}
+
+#sltAlbumSort {
+    width: 115px;
+    border: 1px solid #000000;
+    margin-bottom: 3px;
+}
+/*
+.sltSort {
+    width: 115px;
+    border: 1px solid #000000;
+    margin-bottom: 3px;
+}
+*/
 .sltGenre {
     width: 190px;
     border: 1px solid #000000;
@@ -333,7 +350,7 @@ textarea {
     display: none;
 }
 
-.flex-container {
+.container {
     display: flex;
 }
 
@@ -350,6 +367,7 @@ textarea {
     position: absolute;
     display: none;
 }
+
 
 .divLayout {
     position: relative;
@@ -529,8 +547,6 @@ textarea {
     background: #d2d2d2;
 }
 #ipnSearch {
-    font-size: 0.85em;
-    font-family: 'Calibri', 'Arial', 'sans-serif';
     width: 125px;
     height: 20px;
     margin-top: 20px;
