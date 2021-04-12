@@ -202,4 +202,6 @@ $(document).ready(function () {
         var tracks = await dBase.all(sql, global_SubGenre);
         shuffleArray(tracks)
     }
+
+    backgroundChange();
 });

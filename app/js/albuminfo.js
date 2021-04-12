@@ -1,8 +1,11 @@
 $(document).ready(function () {
     // Get artist name from hidden field in artistalbums.html
     var artist = $("#hiddenArtistName").text();
+    // Remove any apostrophes and replace with a space
+    artist = artist.replace(/'/g, ' ');
     // Remove all but alpha-numeric characters and spaces
     artist = artist.replace(/[^\w\s]/gi, '');
+    console.log(artist)
 
     // Get album name from hidden field in artistalbums.html
     var album = $("#hiddenAlbumName").text();
@@ -41,7 +44,7 @@ $(document).ready(function () {
                     gsrlimit: '1',
                     prop: 'info',
                     inprop: 'url',
-                    gsrsearch: '"' + artist + '" intitle:' + album + ' album'
+                    gsrsearch: '"' + artist + '" intitle:"' + album + '" album'
                 }
             });
         }
@@ -59,7 +62,7 @@ $(document).ready(function () {
                     gsrlimit: '1',
                     prop: 'info',
                     inprop: 'url',
-                    gsrsearch: artist + ' intitle:' + album + ' album'
+                    gsrsearch: artist + ' intitle:"' + album + '" album'
                 }
             });
         }

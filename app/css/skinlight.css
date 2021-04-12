@@ -281,6 +281,20 @@ button#btnFastForward {
         background: #dddddd;
     }
 
+/*Search Table*/
+#tblSearch {
+    background: #eeeeee;
+}
+
+    #tblSearch th {
+        background: #03396c;
+        color: white;
+    }
+
+    #tblSearch tr:nth-child(odd) {
+        background: #dddddd;
+    }
+
 /*Discog Table*/
 #tblDiscog {
     background: white;

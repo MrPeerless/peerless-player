@@ -204,7 +204,6 @@ function newUser() {
 
     // Function to process response of ajax xml query for new user
     async function registerUser(response) {
-        console.log(response)
         // Get userID from XML response
         var userID = $(response).find("USER").text();
         var settingsID = 1;
@@ -466,6 +465,7 @@ function backgroundChange() {
     else {
         $("#divTrackListing").css("padding-bottom", 0);
     }
+    return;
 }
 
 // Close button on display album tracks
@@ -473,6 +473,7 @@ $(document).on('click', '#btnClose', function (event) {
     event.preventDefault();
     $("body").css("background", global_Background);
     $("#divTrackListing").css("display", "none");
+    global_TrackListing = false;
     var srnWidth = $(window).width();
     var width = (srnWidth - 240);
     $("#divContent").css("width", width);
@@ -515,6 +516,7 @@ function nowPlaying() {
             $(this).find("td").eq(0).html(trackName + " " + img);
         }
     });
+    return;
 }
 
 // Function to remove track playing highlight in track list when player is stopped
@@ -533,6 +535,7 @@ function shuffleArray(rows) {
     rows.forEach((row) => {
         global_ShuffleTracks.push(row.trackID)
     });
+    return;
 }
 
 //######################
@@ -974,6 +977,30 @@ $(document).ready(function () {
         playTrack()
     });
 
+    // Double click event on search table to play track
+    $(document).on('dblclick', '#tblSearch tr.tracks', function () {
+        // Highlight track clicked on
+        var selected = $(this).hasClass("highlight");
+        $("#tblSearch tr").removeClass("highlight");
+        if (!selected) {
+            $(this).addClass("highlight");
+        }
+        // Get track name clicked on
+        global_TrackSelected = $(this).find("td:last").text();
+        global_TrackName = $(this).find("td").eq(3).text();
+        // Update album artowrk
+        var artist = $(this).find("td").eq(1).text();
+        var album = $(this).find("td").eq(2).text();
+        var artworkSource = MUSIC_PATH + artist + "/" + album + "/folder.jpg";
+        $("#artwork").attr('src', artworkSource);
+
+        // Get all tracksIDs for album from track listing table hidden last column
+        global_Tracks = $('#tblSearch tr').find('td:last').map(function () {
+            return $(this).text()
+        }).get()
+        playTrack()
+    });
+
     // Click event on Biography button
     $(document).on('click', '#btnBiography', function () {
         event.preventDefault();
@@ -997,7 +1024,6 @@ $(document).ready(function () {
             // Load link 
             $("#divContent").css("width", "475px");
             $("#divTrackListing").css("display", "block");
-            //$("#divTrackListing").css("min-height", height);
             $("#divTrackListing").load("./html/biography.html");
         }
         else {
@@ -1194,6 +1220,19 @@ $(document).ready(function () {
         // Highlight track clicked on
         var selected = $(this).hasClass("highlight");
         $("#tblSongs tr").removeClass("highlight");
+        if (!selected) {
+            $(this).addClass("highlight");
+        }
+        // Get track name clicked on
+        global_TrackSelected = $(this).find("td:last").text();
+        global_TrackName = $(this).find("td:first").text();
+    });
+
+    // Highlight track in Search table when clicked on
+    $(document).on('click', '#tblSearch tr.tracks', function () {
+        // Highlight track clicked on
+        var selected = $(this).hasClass("highlight");
+        $("#tblSearch tr").removeClass("highlight");
         if (!selected) {
             $(this).addClass("highlight");
         }

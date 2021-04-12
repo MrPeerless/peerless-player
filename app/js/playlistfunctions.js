@@ -405,6 +405,7 @@ $(document).on('click', '#btnDeleteOkPlaylist', function (event) {
         $("#divContent").css("width", "auto");
         $("#divContent").load("./html/playlists.html")
         $("#divPlaylist").css('display', 'none');
+        $('.background').css('filter', 'blur(0px)');
     }
 });
 

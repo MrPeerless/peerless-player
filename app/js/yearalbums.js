@@ -198,6 +198,11 @@ $(document).ready(function () {
                 }
                 li.appendTo(ul);
             }
+            // Artwork 404 handling
+            $("." + global_ArtIconShape).bind("error", function () {
+                // Replace with default image
+                $(this).attr("src", "./graphics/notFound.gif");
+            });
             i++;
         });
         // Shuffle tracks

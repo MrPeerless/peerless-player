@@ -249,6 +249,7 @@ button#btnFastForward {
 /*Track table*/
 #tblTracks {
     background: #F4F4FF;
+
 }
 
     #tblTracks th {
@@ -277,6 +278,20 @@ button#btnFastForward {
     }
 
     #tblSongs tr:nth-child(odd) {
+        background: #F4F4FF;
+    }
+
+/*Search Table*/
+#tblSearch {
+    background: #DFDFFE;
+}
+
+    #tblSearch th {
+        background: #7576F9;
+        color: white;
+    }
+
+    #tblSearch tr:nth-child(odd) {
         background: #F4F4FF;
     }
 

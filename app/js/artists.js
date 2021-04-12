@@ -115,6 +115,11 @@ $(document).ready(function () {
                 li.find('span').append('<br><b>' + artistName + '</b><br>' + albumText);
                 li.appendTo(ul);
             }
+            // Artwork 404 handling
+            $("." + global_ArtIconShape).bind("error", function () {
+                // Replace with default image
+                $(this).attr("src", "./graphics/notFound.gif");
+            });
         });
         // Shuffle tracks
         // Select all trackIDs from track table

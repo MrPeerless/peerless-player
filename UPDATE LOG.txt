@@ -57,6 +57,10 @@
 4. Album sort function moved to Player Functions.
 5. Sort by album Release Date added to album sort.
 6. Album sort now works globally on any page which displays a list of albums.
+7. Bug fix in shuffling sub genre albums.
+8. New search algorithm and results page using SQL FTS5 table.
+9. Error message handling added to Gracenote server callbacks.
+10. Support for FLAC files added.
 
 
 

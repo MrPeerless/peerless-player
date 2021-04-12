@@ -163,6 +163,29 @@ function albumMatches() {
 
     // Function to process response of ajax xml query for album matches
     function checkData(response) {
+        // Check for returned error
+        var error = $(response).find("ERROR").text();
+        // If error returned display error message and exit function
+        if (error) {
+            var message = $(response).find("MESSAGE").text();
+            // Display modal box if error message returned by Gracenote database
+            $('#okModal').css('display', 'block');
+            $('.modalHeader').empty();
+            $('#okModalText').empty();
+            $(".modalFooter").empty();
+            $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
+            $('#okModalText').append("<div class='modalIcon'><img src='./graphics/warning.png'></div><p>&nbsp<br><b>Gracenote database error message.</b><br>" + message + "<br>&nbsp</p>");
+            var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
+            $('.modalFooter').append(buttons);
+            $("#btnOkModal").focus();
+            $('.background').css('filter', 'blur(5px)');
+            // Hide recommendations page and go back
+            $("#divTrackListing").css("display", "none");
+            $("#divContent").css("width", "auto");
+            return false;
+            window.history.back();
+        }
+
         var albumsFound = $(response).find("END").text();
         // Convert albumsFound to an integer
         var c = parseInt(albumsFound);
@@ -343,6 +366,29 @@ function albumMetadata() {
 
     // Callback function referenced from trackQuery.
     function trackData(response) {
+        // Check for returned error
+        var error = $(response).find("ERROR").text();
+        // If error returned display error message and exit function
+        if (error) {
+            var message = $(response).find("MESSAGE").text();
+            // Display modal box if error message returned by Gracenote database
+            $('#okModal').css('display', 'block');
+            $('.modalHeader').empty();
+            $('#okModalText').empty();
+            $(".modalFooter").empty();
+            $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
+            $('#okModalText').append("<div class='modalIcon'><img src='./graphics/warning.png'></div><p>&nbsp<br><b>Gracenote database error message.</b><br>" + message + "<br>&nbsp</p>");
+            var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
+            $('.modalFooter').append(buttons);
+            $("#btnOkModal").focus();
+            $('.background').css('filter', 'blur(5px)');
+            // Hide recommendations page and go back
+            $("#divTrackListing").css("display", "none");
+            $("#divContent").css("width", "auto");
+            return false;
+            window.history.back();
+        }
+
         // Set variables
         var artist = $("#selectedArtist").text();
         var album = $("#selectedAlbum").text();
@@ -367,8 +413,15 @@ function albumMetadata() {
 
         // Loop through each music file and populate XML data
         for (var i = 0; i < files.length; i++) {
-            var tName = files[i].slice(0, -4);
-
+            // Check if file ext is flac or mp3/m4a/wav
+            var check = files[i].substr(-4);
+            if (check == "flac") {
+                var tName = files[i].slice(0, -5);
+            }
+            else {
+                var tName = files[i].slice(0, -4);
+            }
+            
             // Check filename format if downloaded from Amazon in format "01 - SongName" and remove the dash after the track number
             var format = tName.substring(2, 5);
             if (format == " - ") {

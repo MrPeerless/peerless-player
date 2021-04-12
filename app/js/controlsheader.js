@@ -94,8 +94,6 @@ $(document).on('click', '#btnNext', function () {
 
 function btnNextClick() {
     if (global_Playing == true) {
-        var currentTrack = $("#nowPlayingTrackID").text();
-        //var position = global_Tracks.findIndex(i => i == currentTrack);
         var position = $('#nowPlayingTrackIndex').text();
         position = parseInt(position);
         nextTrack(position);
@@ -129,7 +127,6 @@ function btnShuffleClick() {
         }
         global_TrackSelected = global_Tracks[0];
         playTrack();
-
     }
 }
 
@@ -199,7 +196,7 @@ $(document).on('click', '#btnGenre', function () {
     $("#btnSync").prop("disabled", false);
 });
 
-// Button click code to display fabvourite songs    
+// Button click code to display favourite songs    
 $(document).on('click', '#favouriteSongs', function () {
     event.preventDefault();
     // Load link

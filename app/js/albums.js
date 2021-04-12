@@ -142,6 +142,7 @@ $(document).ready(function () {
             // Get folder.jpg file path
             var modifiedDate = Date().toLocaleString();
             var artworkSource = MUSIC_PATH + artistName + "/" + albumName + "/folder.jpg?modified=" + modifiedDate;
+
             var albumLink = "./html/displayalbum.html?album=" + albumID + "&artist=" + artistID;
 
             // Small art icons
@@ -190,6 +191,11 @@ $(document).ready(function () {
                 }
                 li.appendTo(ul);
             }
+            // Artwork 404 handling
+            $("." + global_ArtIconShape).bind("error", function () {
+                // Replace with default image
+                $(this).attr("src", "./graphics/notFound.gif");
+            });
             i++;
         });
         // Shuffle tracks

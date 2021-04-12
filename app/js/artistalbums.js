@@ -112,6 +112,7 @@ $(document).ready(function () {
             // Force browser to update cache for album images if they have been changed with the database edit function
             var modifiedDate = Date().toLocaleString();
             var artworkSource = MUSIC_PATH + artistName + "/" + albumName + "/folder.jpg?modified=" + modifiedDate;
+
             var albumLink = "./html/displayalbum.html?artist=" + global_ArtistID + "&album=" + row.albumID;
 
             // Small art icons
@@ -161,6 +162,13 @@ $(document).ready(function () {
                 }
                 li.appendTo(ul);
             }
+
+            // Artwork 404 handling
+            $("." + global_ArtIconShape).bind("error", function () {
+                // Replace with default image
+                $(this).attr("src", "./graphics/notFound.gif");
+            });
+
             i++;
         });
         // Shuffle tracks

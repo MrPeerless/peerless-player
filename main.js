@@ -184,7 +184,7 @@ ipcMain.on('read_album_directory', (event, message) => {
 
     for (var i = 0; i < files.length; i++) {
         var ext = (path.extname(dirPath + artist + "/" + album + "/" + files[i]));
-        if ((ext == '.mp3') || (ext == '.m4a') || (ext == '.wav')) {
+        if ((ext == '.mp3') || (ext == '.m4a') || (ext == '.flac') || (ext == '.wav')) {
             fnames[i] = path.basename(dirPath + artist + "/" + album + "/" + files[i]);
         }
     }
@@ -434,7 +434,7 @@ ipcMain.on('count_tracks', (event, data) => {
     for (i = 0; i < tracks.length; i++) {
         var ext = (path.extname(musicPath + artist + "/" + album + "/" + tracks[i]));
         // If file is a music file add to trackCount
-        if ((ext == '.mp3') || (ext == '.m4a') || (ext == '.wav')) {
+        if ((ext == '.mp3') || (ext == '.m4a') || (ext == '.flac') || (ext == '.wav')) {
             trackCount += 1;
         }
     }

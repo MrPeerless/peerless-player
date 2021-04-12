@@ -1,4 +1,9 @@
 $(document).ready(function () {
+    // Artwork 404 handling
+    $("#imgArtwork").bind("error", function () {
+        // Replace with default image
+        $(this).attr("src", "./graphics/notFound.gif");
+    });
 
     displayAlbum()
 
@@ -15,15 +20,11 @@ $(document).ready(function () {
         catch{
             var artworkSource = "./graphics/notFound.gif"
         }
-
         $("#imgArtwork").attr('src', artworkSource);
 
         // Populate hidden artistID and albumID text used for edit function
         $("#artistID").text(rows[0].artistID);
         $("#albumID").text(rows[0].albumID);
-
-        // Clear shuffle tracks array
-        global_ShuffleTracks = [];
 
         // Create text for full genre list for album
         var genreText = rows[0].genreName;

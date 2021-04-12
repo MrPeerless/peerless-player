@@ -64,6 +64,29 @@ $(document).ready(function () {
 
             // Function to process data from received xml file searching for artistID
             function processDataRecommends(xml) {
+                // Check for returned error
+                var error = $(xml).find("ERROR").text();
+                // If error returned display error message and exit function
+                if (error) {
+                    var message = $(xml).find("MESSAGE").text();
+                    // Display modal box if error message returned by Gracenote database
+                    $('#okModal').css('display', 'block');
+                    $('.modalHeader').empty();
+                    $('#okModalText').empty();
+                    $(".modalFooter").empty();
+                    $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
+                    $('#okModalText').append("<div class='modalIcon'><img src='./graphics/warning.png'></div><p>&nbsp<br><b>Gracenote database error message.</b><br>" + message + "<br>&nbsp</p>");
+                    var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
+                    $('.modalFooter').append(buttons);
+                    $("#btnOkModal").focus();
+                    $('.background').css('filter', 'blur(5px)');
+                    // Hide recommendations page and go back
+                    $("#divTrackListing").css("display", "none");
+                    $("#divContent").css("width", "auto");
+                    return false;
+                    window.history.back();
+                }
+
                 var albumsFound = $(xml).find("END").text();
                 // Check if any results are found
                 if (albumsFound != "") {
@@ -132,6 +155,29 @@ $(document).ready(function () {
 
                             // Function to process data from received xml file searching for album
                             function albumData(xml) {
+                                // Check for returned error
+                                var error = $(xml).find("ERROR").text();
+                                // If error returned display error message and exit function
+                                if (error) {
+                                    var message = $(xml).find("MESSAGE").text();
+                                    // Display modal box if error message returned by Gracenote database
+                                    $('#okModal').css('display', 'block');
+                                    $('.modalHeader').empty();
+                                    $('#okModalText').empty();
+                                    $(".modalFooter").empty();
+                                    $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
+                                    $('#okModalText').append("<div class='modalIcon'><img src='./graphics/warning.png'></div><p>&nbsp<br><b>Gracenote database error message.</b><br>" + message + "<br>&nbsp</p>");
+                                    var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
+                                    $('.modalFooter').append(buttons);
+                                    $("#btnOkModal").focus();
+                                    $('.background').css('filter', 'blur(5px)');
+                                    // Hide recommendations page and go back
+                                    $("#divTrackListing").css("display", "none");
+                                    $("#divContent").css("width", "auto");
+                                    return false;
+                                    window.history.back();
+                                }
+
                                 var artist = $(xml).find('ARTIST').eq(0).text();
                                 var title = $(xml).find('TITLE').eq(0).text();
                                 var coverArt = $(xml).find('URL').eq(0).text();

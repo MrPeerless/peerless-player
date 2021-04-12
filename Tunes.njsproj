@@ -49,6 +49,7 @@
     <Compile Include="App\js\preload.js" />
     <Compile Include="App\js\recommends.js" />
     <Compile Include="App\js\search.js" />
+    <Compile Include="Redundant Files\search_old.js" />
     <Compile Include="App\js\settings.js" />
     <Compile Include="app\js\smartplaylist.js" />
     <Compile Include="app\js\sqlite_async.js" />
@@ -169,6 +170,7 @@
     <Content Include="App\html\playlistsexported.html" />
     <Content Include="App\html\recommends.html" />
     <Content Include="App\html\search.html" />
+    <Content Include="Redundant Files\search_old.html" />
     <Content Include="App\html\settings.html" />
     <Content Include="App\html\syncdirectory.html" />
     <Content Include="App\html\userguide.html" />
@@ -182,7 +184,7 @@
     <Content Include="docs\pages_screenshots.html" />
     <Content Include="docs\pages_userguide.html" />
     <Content Include="docs\pages_video.html" />
-    <Content Include="docs\video\video_tour.mp4" />
+    <Content Include="docs\video\video_tour1.mp4" />
     <Content Include="electron-builder.yml" />
     <Content Include="App\html\displayplaylist.html" />
     <Content Include="App\html\displayalbum.html" />
@@ -220,6 +222,7 @@
     <Folder Include="docs\images\" />
     <Folder Include="docs\js\" />
     <Folder Include="docs\video\" />
+    <Folder Include="Redundant Files\" />
   </ItemGroup>
   <!-- Do not delete the following Import Project.  While this appears to do nothing it is a marker for setting TypeScript properties before our import that depends on them. -->
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="False" />

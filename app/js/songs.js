@@ -19,6 +19,8 @@ $(document).ready(function () {
                 break;
             case "most":
                 var sql = "SELECT track.trackID, track.artistID, track.albumID, track.count, track.lastPlay, track.favourite, artist.artistName, album.albumName, track.trackName FROM track INNER JOIN artist ON artist.artistID=track.artistID INNER JOIN album ON album.albumID=track.albumID ORDER BY track.count DESC";
+            case "release":
+                var sql = "SELECT track.trackID, track.artistID, track.albumID, track.count, track.lastPlay, track.favourite, artist.artistName, album.albumName, album.releaseDate, track.trackName FROM track INNER JOIN artist ON artist.artistID=track.artistID INNER JOIN album ON album.albumID=track.albumID ORDER BY album.releaseDate DESC";
         }
 
         // Select all tracks from the database
@@ -46,7 +48,7 @@ $(document).ready(function () {
         });
 
         // Create select dropdown box for track sort
-        var sort = " <b>Sort </b><select class='sltSort' id='sltTrackSort'><option value='a2z'>A - Z</option><option value='artist'>Artist</option><option value='added'>Date Added</option><option value='played'>Last Played</option><option value='most'>Most Played</option></select>"
+        var sort = " <b>Sort </b><select class='sltSort' id='sltTrackSort'><option value='a2z'>A - Z</option><option value='artist'>Artist</option><option value='added'>Date Added</option><option value='played'>Last Played</option><option value='most'>Most Played</option><option value='release'>Release Date</option></select>"
 
         // If sort is set to A - Z
         $('#spnAtoZmenu').empty();

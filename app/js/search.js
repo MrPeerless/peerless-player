@@ -3,7 +3,7 @@ $(document).ready(function () {
     var searchTerm = $('#ipnSearch').val();
 
     // Regex to only allow alphanumeric characters and punctuation in searchTerm input
-    searchTerm = searchTerm.replace(/[^a-z0-9'!()=+&]+/gi, "");
+    searchTerm = searchTerm.replace(/[^a-z0-9'!()=+&]+/gi, " ");
 
     // And clear search term
     $('#ipnSearch').val("");
@@ -11,122 +11,65 @@ $(document).ready(function () {
     // Set page title
     $("#searchTitle").text("Search Results for: " + searchTerm);
 
-    displayArtistResults();
+    search()
 
-    async function displayArtistResults() {
-        // Search artist table for search term
-        var sql = "SELECT album.albumID, artist.artistID, album.albumName, artist.artistName FROM artist INNER JOIN album ON artist.artistID=album.artistID WHERE artist.artistName LIKE '%" + searchTerm + "%' GROUP BY artist.artistID";
-        var rows = await dBase.all(sql);
+    async function search() {
+        // Using FTS5 create a virtual table:
+        var virtualTable = "CREATE VIRTUAL TABLE IF NOT EXISTS search USING fts5(trackID, artistName, albumName, trackName, releaseDate, origin, mood1, mood2, tempo1, tempo2, genre2, genre3, genreName, favourite)";
+        var create = await dBase.run(virtualTable);
 
-        // Unordered list to attach list items to
-        var ul = $('#ulArtistsSearch');
+        // Insert data into virtual table from track, genre, artist, album table:
+        var insertSql = "INSERT INTO search SELECT trackID, artist.artistName, album.albumName, trackName, album.releaseDate, artist.origin, mood1, mood2, tempo1, tempo2, genre2, genre3, genre.genreName, favourite FROM track INNER JOIN genre ON genre.genreID = track.genreID INNER JOIN artist ON artist.artistID = track.artistID INNER JOIN album ON album.albumID = track.albumID";
+        var insert = await dBase.run(insertSql);
 
-        $("#artistsSearchText").text(" " + rows.length + " results found.")
+        // Preform search:
+        var selectSql = "SELECT highlight(search, 1, '<b>', '</b>') artistName, highlight(search, 2, '<b>', '</b>') albumName, highlight(search, 3, '<b>', '</b>') trackName, highlight(search, 4, '<b>', '</b>') releaseDate, highlight(search, 5, '<b>', '</b>') origin, favourite, trackID FROM search WHERE search MATCH '" + searchTerm + "' ORDER BY rank";
+        var rows = await dBase.all(selectSql);
 
-        rows.forEach((row) => {
-            // Get folder.jpg file path
-            var artworkSource = MUSIC_PATH + row.artistName + "/" + row.albumName + "/folder.jpg"
-
-            var albumLink = "./html/displayalbum.html?album=" + row.albumID + "&artist=" + row.artistID;
-
-            // Create <li> item for each album and append to <ul>
-            // Small art icons
-            if (global_ArtIconSize == "small") {
-                $(ul).attr('class', 'albumDisplay');
-                var li = $('<li><a><img><span></span></a></li>');
-                li.find('img').attr('src', artworkSource);
-                li.find('a').attr('href', albumLink);
-                li.find('span').append('<br><b>' + row.albumName + '</b><br>' + row.artistName + '<br>');
-                li.appendTo(ul);
-            }
-            // Large art icons
-            else {
-                $(ul).attr('class', 'albumDisplayLarge');
-                var li = $('<li><a><img><br><div class="overlay"><div class="textAlbum"><span></span></div></div></a></li>');
-                li.find('img').attr('src', artworkSource);
-                li.find('a').attr('href', albumLink);
-                li.find('span').append('<br><b>' + row.albumName + '</b><br>' + row.artistName + '<br>');
-                li.appendTo(ul);
-            }
-        });
-    }
-
-    displayAlbumResults();
-
-    async function displayAlbumResults() {
-        // Search album table for search term
-        var sql = "SELECT album.albumID, artist.artistID, album.albumName, artist.artistName FROM album INNER JOIN artist ON album.artistID=artist.artistID WHERE album.albumName LIKE '%" + searchTerm + "%'";
-        var rows = await dBase.all(sql);
-
-        // Unordered list to attach list items to
-        var ul = $('#ulAlbumsSearch');
-
-        $("#albumsSearchText").text(" " + rows.length + " results found.")
-
-        rows.forEach((row) => {
-            // Get folder.jpg file path
-            var artworkSource = MUSIC_PATH + row.artistName + "/" + row.albumName + "/folder.jpg"
-
-            var albumLink = "./html/displayalbum.html?album=" + row.albumID + "&artist=" + row.artistID;
-
-            // Create <li> item for each album and append to <ul>
-            // Small art icons
-            if (global_ArtIconSize == "small") {
-                $(ul).attr('class', 'albumDisplay');
-                var li = $('<li><a><img><span></span></a></li>');
-                li.find('img').attr('src', artworkSource);
-                li.find('a').attr('href', albumLink);
-                li.find('span').append('<br><b>' + row.albumName + '</b><br>' + row.artistName + '<br>');
-                li.appendTo(ul);
-            }
-            // Large art icons
-            else {
-                $(ul).attr('class', 'albumDisplayLarge');
-                var li = $('<li><a><img><br><div class="overlay"><div class="textAlbum"><span></span></div></div></a></li>');
-                li.find('img').attr('src', artworkSource);
-                li.find('a').attr('href', albumLink);
-                li.find('span').append('<br><b>' + row.albumName + '</b><br>' + row.artistName + '<br>');
-                li.appendTo(ul);
-            }
-        });
-    }
-
-    displayTrackResults();
-
-    async function displayTrackResults() {
-        // Search album table for search term
-        var sql = "SELECT track.trackID, track.artistID, track.albumID, track.count, track.lastPlay, track.favourite, artist.artistName, album.albumName, track.trackName FROM track INNER JOIN artist ON artist.artistID=track.artistID INNER JOIN album ON album.albumID=track.albumID WHERE track.trackName LIKE '%" + searchTerm + "%'";
-        var rows = await dBase.all(sql);
+        // Drop virtual table:
+        var dropSql = "DROP TABLE IF EXISTS search"
+        var drop = await dBase.run(dropSql);
 
         // Table list to attach list items to
-        var table = $("#tblSongs")
+        var table = $("#tblSearch")
 
-        $("#songsSearchText").text(" " + rows.length + " results found.")
+        // Get number of search results found
+        var numberResults = rows.length;
 
-        rows.forEach((row) => {
-            // Link for favourite graphic
-            var favouriteImage;
-            var alt;
-            if (row.favourite == true) {
-                favouriteImage = "./graphics/favourite_red.png"
-                alt = "Y"
-            }
-            else {
-                favouriteImage = "./graphics/favourite_black.png"
-                alt = "N"
-            }
-            // Format lastPlay date
-            if (row.lastPlay == null) {
-                row.lastPlay = "";
-            }
-            else {
-                row.lastPlay = formatDate(row.lastPlay);
-            }
-            // Create table row
-            var tableRow = $("<tr class='tracks'><td>" + row.trackName + "</td><td>" + row.artistName + "</td><td>" + row.albumName + "</td><td class='count'>" + row.count + "</td><td class='lastPlay'>" + row.lastPlay + "</td><td class='favourite'><img class='favourite' src='" + favouriteImage + "' alt='" + alt + "' id='" + row.trackID + "'></td><td>" + row.trackID + "</td></tr>");
+        // If nothing found
+        if (numberResults == 0) {
+            $("#searchNumber").text("No search results were found for the above search term.")
+        }
+        else {
+            // Display search results in table
+            var tableHead = $("<thead><tr><th>Song</th><th>Artist</th><th>Album</th><th>Date</th><th>Origin</th><th><img src='./graphics/favourite_white.png' alt='Favourite'/></th></tr></thead>")
+            tableHead.appendTo(table);
 
-            // Append row to table
-            tableRow.appendTo(table);
-        });
+            if (numberResults == 1) {
+                $("#searchNumber").text(numberResults + " Search result found.")
+            }
+            else if (numberResults > 1) {
+                $("#searchNumber").text(numberResults + " Search results found ranked by best match.")
+            }
+            // Create table results
+            rows.forEach((row) => {
+                // Link for favourite graphic
+                var favouriteImage;
+                var alt;
+                if (row.favourite == true) {
+                    favouriteImage = "./graphics/favourite_red.png"
+                    alt = "Y"
+                }
+                else {
+                    favouriteImage = "./graphics/favourite_black.png"
+                    alt = "N"
+                }
+                // Create table row
+                var tableRow = $("<tr class='tracks'><td>" + row.trackName + "</td><td>" + row.artistName + "</td><td>" + row.albumName + "</td><td class='release'>" + row.releaseDate + "</td><td class='origin'>" + row.origin + "</td><td class='favourite'><img class='favourite' src='" + favouriteImage + "' alt='" + alt + "' id='" + row.trackID + "'></td><td>" + row.trackID + "</td></tr>");
+
+                // Append row to table
+                tableRow.appendTo(table);
+            });
+        }
     }
 });

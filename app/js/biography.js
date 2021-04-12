@@ -43,6 +43,7 @@ $(document).ready(function () {
 
         // Find the 100% artist match
         if (matchScore == "100") {
+            global_TrackListing = false;
             artistID = $artist.attr("id");
             var type = $artist.attr('type')
             var begin = $artist.find('begin').text();
@@ -431,9 +432,17 @@ $(document).ready(function () {
         $('.modalFooter').append(buttons);
         $("#btnOkModal").focus();
         $('.background').css('filter', 'blur(5px)');
-        // Hide discography page and go back
-        $("#divTrackListing").css("display", "none");
-        $("#divContent").css("width", "auto");      
+
+        // If tracklisting is true display current album tracklisting page
+        if (global_TrackListing == true) {
+            console.log("load display album")
+            $("#divTrackListing").load("./html/displayalbum.html?artist=" + global_ArtistID + "&album=" + global_AlbumID);
+        }
+        else {
+            // Hide biography page and go back
+            $("#divTrackListing").css("display", "none");
+            $("#divContent").css("width", "auto"); 
+        }    
         return;
     }
 

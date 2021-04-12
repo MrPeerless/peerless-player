@@ -80,6 +80,11 @@ $(document).ready(function () {
                     li.appendTo(ul);
                 }              
             }
+            // Artwork 404 handling
+            $("." + global_ArtIconShape).bind("error", function () {
+                // Replace with default image
+                $(this).attr("src", "./graphics/notFound.gif");
+            });
             // Increment counter for list items
             counter += 1;
         });
@@ -105,7 +110,7 @@ $(document).ready(function () {
 
             // Format dateAdd string
             var albumDate = formatDate(row.albumLastPlay);
-   
+
             // Create <li> item for each album and append to <ul>
             // First row of list
             if (counter <= totalFirstRow) {
@@ -149,6 +154,11 @@ $(document).ready(function () {
                     li.appendTo(ul);
                 }
             }
+            // Artwork 404 handling
+            $("." + global_ArtIconShape).bind("error", function () {
+                // Replace with default image
+                $(this).attr("src", "./graphics/notFound.gif");
+            });
             // Increment counter for list items
             counter += 1;
         });
@@ -172,6 +182,7 @@ $(document).ready(function () {
             var artworkSource = MUSIC_PATH + row.artistName + "/" + row.albumName + "/folder.jpg"
 
             var albumLink = "./html/displayalbum.html?album=" + row.albumID + "&artist=" + row.artistID;
+
             // Create <li> item for each album and append to <ul>
             // First row of list
             if (counter <= totalFirstRow) {
@@ -215,6 +226,11 @@ $(document).ready(function () {
                     li.appendTo(ul);
                 }
             }
+            // Artwork 404 handling
+            $("." + global_ArtIconShape).bind("error", function () {
+                // Replace with default image
+                $(this).attr("src", "./graphics/notFound.gif");
+            });
             // Increment counter for list items
             counter += 1;
         });

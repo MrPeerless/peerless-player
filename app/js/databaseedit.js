@@ -66,12 +66,35 @@ function editAlbumMatches(artist, album) {
 
     // Function to process response of ajax xml query for album matches
     function editCheckData(response) {
+        // Check for returned error
+        var error = $(response).find("ERROR").text();
+        // If error returned display error message and exit function
+        if (error) {
+            var message = $(response).find("MESSAGE").text();
+            // Display modal box if error message returned by Gracenote database
+            $('#okModal').css('display', 'block');
+            $('.modalHeader').empty();
+            $('#okModalText').empty();
+            $(".modalFooter").empty();
+            $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
+            $('#okModalText').append("<div class='modalIcon'><img src='./graphics/warning.png'></div><p>&nbsp<br><b>Gracenote database error message.</b><br>" + message + "<br>&nbsp</p>");
+            var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
+            $('.modalFooter').append(buttons);
+            $("#btnOkModal").focus();
+            $('.background').css('filter', 'blur(5px)');
+            // Hide recommendations page and go back
+            $("#divTrackListing").css("display", "none");
+            $("#divContent").css("width", "auto");
+            return false;
+            window.history.back();
+        }
+
         var albumsFound = $(response).find("END").text();
         // Convert albumsFound to an integer
         var c = parseInt(albumsFound);
 
         var table = $("#tblGracenote")
-        var tableCaption = $("<caption>Matches found in Gracenote database</caption>");
+        var tableCaption = $("<caption><b>Matches found in Gracenote database</b></caption>");
         tableCaption.appendTo(table);
         var tableHeader = $("<tr><th>Title</th><th>Date</th><th>No. Tracks</th></tr>");
         tableHeader.appendTo(table);
@@ -131,6 +154,29 @@ function getArtwork() {
 
     // Callback function referenced from artQuery.
     function showArtwork(response) {
+        // Check for returned error
+        var error = $(response).find("ERROR").text();
+        // If error returned display error message and exit function
+        if (error) {
+            var message = $(response).find("MESSAGE").text();
+            // Display modal box if error message returned by Gracenote database
+            $('#okModal').css('display', 'block');
+            $('.modalHeader').empty();
+            $('#okModalText').empty();
+            $(".modalFooter").empty();
+            $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
+            $('#okModalText').append("<div class='modalIcon'><img src='./graphics/warning.png'></div><p>&nbsp<br><b>Gracenote database error message.</b><br>" + message + "<br>&nbsp</p>");
+            var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
+            $('.modalFooter').append(buttons);
+            $("#btnOkModal").focus();
+            $('.background').css('filter', 'blur(5px)');
+            // Hide recommendations page and go back
+            $("#divTrackListing").css("display", "none");
+            $("#divContent").css("width", "auto");
+            return false;
+            window.history.back();
+        }
+
         // Get URL of cover art and display image and URl in text input box
         var coverArt = $(response).find('URL').eq(0).text();
         if (coverArt) {
@@ -196,6 +242,28 @@ function getMetadata() {
 
     // Callback function referenced from artQuery.
     function updateMetadata(response) {
+        // Check for returned error
+        var error = $(response).find("ERROR").text();
+        // If error returned display error message and exit function
+        if (error) {
+            var message = $(response).find("MESSAGE").text();
+            // Display modal box if error message returned by Gracenote database
+            $('#okModal').css('display', 'block');
+            $('.modalHeader').empty();
+            $('#okModalText').empty();
+            $(".modalFooter").empty();
+            $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
+            $('#okModalText').append("<div class='modalIcon'><img src='./graphics/warning.png'></div><p>&nbsp<br><b>Gracenote database error message.</b><br>" + message + "<br>&nbsp</p>");
+            var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
+            $('.modalFooter').append(buttons);
+            $("#btnOkModal").focus();
+            $('.background').css('filter', 'blur(5px)');
+            // Hide recommendations page and go back
+            $("#divTrackListing").css("display", "none");
+            $("#divContent").css("width", "auto");
+            return false;
+            window.history.back();
+        }
         // Variable to check if meta data is updated in page
         var chkMeta = "";
 
@@ -418,6 +486,7 @@ $(document).on('click', '#btnSaveAlbum', function (event) {
                 for (var i = 0; i < (noTracks); i++) {
                     var trackID = $("#" + counter1 + "trackID").val();
                     var trackName = $("#" + counter1 + "trackName").val();
+                    var fileName = $("#" + counter1 + "fileName").val();
                     var mood1 = $("#" + counter1 + "mood1").val();
                     var mood2 = $("#" + counter1 + "mood2").val();
                     var tempo1 = $("#" + counter1 + "tempo1").val();
@@ -425,7 +494,7 @@ $(document).on('click', '#btnSaveAlbum', function (event) {
                     var genre2 = $("#" + counter1 + "genre2").val();
                     var genre3 = $("#" + counter1 + "genre3").val();
 
-                    var sql = 'UPDATE track SET artistID=' + artistID + ', genreID=' + genreID + ', trackName="' + trackName + '", mood1="' + mood1 + '", mood2="' + mood2 + '", tempo1="' + tempo1 + '", tempo2="' + tempo2 + '", genre2="' + genre2 + '", genre3="' + genre3 + '" WHERE trackID=' + trackID;
+                    var sql = 'UPDATE track SET artistID=' + artistID + ', genreID=' + genreID + ', trackName="' + trackName + '", fileName="' + fileName + '", mood1="' + mood1 + '", mood2="' + mood2 + '", tempo1="' + tempo1 + '", tempo2="' + tempo2 + '", genre2="' + genre2 + '", genre3="' + genre3 + '" WHERE trackID=' + trackID;
 
                     var update = await dBase.run(sql);
 
