@@ -19,13 +19,13 @@ $(document).ready(function () {
                 break;
             case "most":
                 var sql = "SELECT track.trackID, track.artistID, track.albumID, track.count, track.lastPlay, track.favourite, artist.artistName, album.albumName, track.trackName FROM track INNER JOIN artist ON artist.artistID=track.artistID INNER JOIN album ON album.albumID=track.albumID ORDER BY track.count DESC";
+                break;
             case "release":
                 var sql = "SELECT track.trackID, track.artistID, track.albumID, track.count, track.lastPlay, track.favourite, artist.artistName, album.albumName, album.releaseDate, track.trackName FROM track INNER JOIN artist ON artist.artistID=track.artistID INNER JOIN album ON album.albumID=track.albumID ORDER BY album.releaseDate DESC";
         }
 
         // Select all tracks from the database
         var rows = await dBase.all(sql);
-
         var tracks = [];
         // Get number of tracks in database
         var numberTracks = numberWithCommas(rows.length);

@@ -505,7 +505,7 @@ function playTrack() {
             global_Paused = false;
             $("#imgNowPlaying").css({ opacity: 1, filter: "grayscale(0)", '-moz-filter': "grayscale(0)" });
         }
-        // Function to remove highlighten track playing
+        // Function to remove highlighted track playing
         stopPlaying();
         // Function to update stats
         libraryStats();
@@ -594,8 +594,7 @@ async function displayTrack(position) {
         // Restore scroll position of page
         $(window).scrollTop(tempScrollTop);
 
-    }).fail(function (event) {
-        event.preventDefault();
+    }).fail(function () {
         // Audio file DOES NOT exist
         global_Playing = false;
         // Hide and show defaultPlaying and nowPlaying DIV classes in player.html
@@ -608,10 +607,14 @@ async function displayTrack(position) {
         $('#okModalText').empty();
         $(".modalFooter").empty();
         $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
-        $('#okModalText').append("<div class='modalIcon'><img src='./graphics/warning.png'></div><p><b>ERROR - Audio file: </b>" + row.fileName + "<b> not found!</b><br>Please check your music directory.<br>&nbsp</p >");
+        $('#okModalText').append("<div class='modalIcon'><img src='./graphics/warning.png'></div><p><b>ERROR - Audio file not found: </b><br>" + row.fileName + "<br>Please check your music directory.<br>&nbsp</p >");
         var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
         $('.modalFooter').append(buttons);
         $('.background').css('filter', 'blur(5px)');
-        $("#btnOkModal").focus();   
+        $("#btnOkModal").focus();
+
+        // Function to remove highlighted track playing
+        stopPlaying();
+        $(window).scrollTop(tempScrollTop);
     });   
 }
