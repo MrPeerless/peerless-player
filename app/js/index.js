@@ -306,7 +306,7 @@ ipcRenderer.on('Help About', (event) => {
     var currentDate = new Date();
     var currentYear = currentDate.getFullYear();
     $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>About Peerless Player</h2>');
-    $('#okModalText').append("<div class='modalIcon'><img src='./graphics/peerless_player_thumb.png'></div><p><b>Author:</b> Geoff Peerless &copy " + currentYear + "<br><b>Version:</b> " + global_Version + "<br><b>URL:</b><a id='githubLink' href='https://github.com/MrPeerless/peerless-player' target='_blank'> github.com/MrPeerless/peerless-player</a><br><b>Email:</b> geoffpeerless@hotmail.com<br><b>License:</b> ISC&nbsp<br>&nbsp</p >");
+    $('#okModalText').append("<div class='modalIcon'><img src='./graphics/peerless_player_thumb.png'></div><p><b>Author:</b> Geoff Peerless &copy " + currentYear + "<br><b>Version:</b> " + global_Version + "<br><b>URL:</b><a id='githubLink' href='https://peerlessplayer.rocks' target='_blank'> peerlessplayer.rocks</a><br><b>Email:</b> contact@peerlessplayer.rocks<br><b>License:</b> ISC&nbsp<br>&nbsp</p >");
     var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
     $('.modalFooter').append(buttons);
     $("#btnOkModal").focus();
