@@ -312,6 +312,10 @@ const template = [
                     currentWindow.webContents.send('Help Guide');
                 }
             },
+            {
+                label: 'Donate',
+                click() { require('electron').shell.openExternal('https://www.buymeacoffee.com/peerlessplayer') }   
+            },
         ]
     }
 ]
