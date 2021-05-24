@@ -39,7 +39,7 @@ p {
 }
 
 a:link {
-    text-decoration: none;
+    text-decoration: underline;
     color: black;
 }
 
@@ -88,6 +88,46 @@ hr {
     height: 160px;
     margin-top: -160px;
     visibility: hidden;
+}
+
+.inpMetadata {
+    width: 40px;
+    border: 1px solid #000000;
+    display: inline-block;
+    border-radius: 4px;
+}
+
+.btnMetadata {
+    font-family: 'Calibri', 'Arial', 'sans-serif';
+    border: 0;
+    border-radius: 4px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 1em;
+    cursor: pointer;
+    margin-top: 2px;
+    margin-bottom: 2px;
+    width: 60px;
+    outline: none;
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Chrome/Opera */
+}
+
+.btnMetadata {
+    background-image: linear-gradient(to top, #444444 50%, #888888 75%);
+    color: white;
+}
+
+    .btnMetadata:hover {
+        background-image: linear-gradient(to top, #03396c 25%, #005b96 50%);
+        color: #F0F0F0;
+    }
+
+#btnSubmit {
+    margin-left: 20px;
+    margin-top: 2px;
+    margin-bottom: 2px;
 }
 
 /*#################

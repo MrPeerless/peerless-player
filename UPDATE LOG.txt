@@ -50,7 +50,7 @@
 10. Biography page updated with drop down read more button.
 11. Bumped electron to 8.5.2 - ini to 1.3.8 - jquery-validation to 1.19.3
 
-**** VERSION 0.2.1 UPDATES ****
+**** VERSION 0.3.0 UPDATES ****
 1. New most played algorithm added.
 2. Minor updates to data displayed in albums page.
 3. Bug fix on Home page to clear cache to display new album artwork.
@@ -61,6 +61,7 @@
 8. New search algorithm and results page using SQL FTS5 table.
 9. Error message handling added to Gracenote server callbacks.
 10. Support for FLAC files added.
+11. Gracenote web api removed and replaced with Musicbrainz and Spotify api.
 
 
 

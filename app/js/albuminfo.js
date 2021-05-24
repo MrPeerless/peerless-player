@@ -5,7 +5,6 @@ $(document).ready(function () {
     artist = artist.replace(/'/g, ' ');
     // Remove all but alpha-numeric characters and spaces
     artist = artist.replace(/[^\w\s]/gi, '');
-    console.log(artist)
 
     // Get album name from hidden field in artistalbums.html
     var album = $("#hiddenAlbumName").text();

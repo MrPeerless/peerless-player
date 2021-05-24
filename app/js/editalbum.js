@@ -1,14 +1,6 @@
 $(document).ready(function () {
-
-    // Display modal box checking Gracenote
-    $('#okModal').css('display', 'block');
-    $('.modalHeader').empty();
-    $('#okModalText').empty();
-    $(".modalFooter").empty();
-    $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
-    $('#okModalText').append("<div class='modalIcon'><img src='./graphics/record.gif'></div><p>&nbsp<br>Searching the Gracenote database. Please wait.<br>&nbsp<br>&nbsp</p >");
-    var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
-    $('.modalFooter').append(buttons);
+    // Album/Single radio button default value
+    $("#radioAlbum").prop("checked", true);
 
     editAlbum();
 
@@ -41,10 +33,11 @@ $(document).ready(function () {
         // Header details
         $("#editAlbumDetails").text("Editing " + album + " by " + artist);
         $("#editAlbumInfo").empty();
-        $("#editAlbumInfo").append("Select the closest match from the Gracenote server in the below table and CLICK,<br><b>GET</b> to auto update the track and album metadata.<br><b>ARTWORK</b> to update album cover art.<br>Or click on album artwork to select an image file manually.<br><b>DELETE</b> to delete the album from the database.");
+        $("#editAlbumInfo").append("Click on <b>GET</b> to update track and album metadata.<br>Click on <b>ARTWORK</b> to update album cover art.<br>Click on <b>Album Artwork</b> to select an image file manually.<br>Click on <b>DELETE</b> to delete the album from the database.");
 
         // Path to album artwork
-        var artworkSource = MUSIC_PATH + artist + "/" + album + "/folder.jpg";
+        var modifiedDate = Date().toLocaleString();
+        var artworkSource = MUSIC_PATH + artist + "/" + album + "/folder.jpg?modified=" + modifiedDate;
         $("#imgCoverArt").attr('src', artworkSource);
 
         // Get genre name from genre table
@@ -54,7 +47,7 @@ $(document).ready(function () {
 
         // Genre details
         // Populate Genre1 listbox with genre
-        $('[name=sltGenre]').val(genre);
+        $('[name=sltGenre1]').val(genre);
 
         // Track details
         var sql = "SELECT trackID, trackName, fileName, playTime, count, mood1, mood2, tempo1, tempo2, genre2, genre3 FROM track WHERE albumID=?";
@@ -62,12 +55,15 @@ $(document).ready(function () {
         var form = $("#frmEdit")
         var counter = 1;
 
+        $('#inpGenre2Edit').val(rows[0].genre2)
+        $('#inpGenre3Edit').val(rows[0].genre3)
+
         // Loop through each track and create fieldset and append to form
         rows.forEach((row) => {
             // Split trackName on first spaceto get trackNumber
             var trackNumber = row.trackName.split(/\s(.+)/)[0]
 
-            var fieldset = $("<fieldset><legend>Track " + counter + "</legend><label class='lblTrackName'>Name: </label><input class='hidden' id='" + counter + "trackNumber' name=" + counter + "trackNumber' type='text' size='4' value='' /><input class='hidden' id='" + counter + "trackID' name=" + counter + " trackID' type='text' size='4' value='' /><input required class='inpTrackName' id='" + counter + "trackName' name=" + counter + "trackName' type='text' size='79' value='' /><label class='lblFileName'>File Name:</label><input required class='inpFileName' id='" + counter + "fileName' name='" + counter + "fileName' type='text' size='75' value='' /><label class='lblTrackTime'>Time:</label><input required class='inpEditTrackTime' id='" + counter + "pTime' name='" + counter + "pTime' type='text' size='8 value='' readonly/><br><label class='lblTrackName'>Mood 1:</label><select class='sltMood1' id='" + counter + "mood1' name=" + counter + "mood1'></select><label class='lblFileName'>Mood 2:</label><select class='sltMood2' id='" + counter + "mood2' name=" + counter + "mood2'></select><br><label class='lblTrackName'>Tempo 1:</label><select class='sltTempo1' id='" + counter + "tempo1' name=" + counter + "tempo1'></select><label class='lblFileName'>Tempo 2:</label><select class='sltTempo2' id='" + counter + "tempo2' name=" + counter + "tempo2'></select><br><label class='lblTrackName'>Genre 2:</label><input class='inpTrackName' id='" + counter + "genre2' name=" + counter + "genre2' type='text' size='40' value = ''/><label class='lblFileName'>Genre 3:</label><input class='inpTrackName' id='" + counter + "genre3' name=" + counter + "genre3' type='text' size='40' value=''/></fieldset>");
+            var fieldset = $("<fieldset><legend>Track " + counter + "</legend><label class='lblTrackName'>Name: </label><input class='hidden' id='" + counter + "trackNumber' name=" + counter + "trackNumber' type='text' size='4' value='' /><input class='hidden' id='" + counter + "trackID' name=" + counter + " trackID' type='text' size='4' value='' /><input required class='inpTrackName' id='" + counter + "trackName' name=" + counter + "trackName' type='text' size='79' value='' /><label class='lblFileName'>File Name:</label><input required class='inpFileName' id='" + counter + "fileName' name='" + counter + "fileName' type='text' size='75' value='' /><label class='lblTrackTime'>Time:</label><input required class='inpEditTrackTime' id='" + counter + "pTime' name='" + counter + "pTime' type='text' size='8 value='' readonly/><br><label class='lblTrackName'>Mood 1:</label><select class='sltMood1' id='" + counter + "mood1' name=" + counter + "mood1'></select><label class='lblFileName'>Mood 2:</label><select class='sltMood2' id='" + counter + "mood2' name=" + counter + "mood2'></select><br><label class='lblTrackName'>Tempo 1:</label><select class='sltTempo1' id='" + counter + "tempo1' name=" + counter + "tempo1'></select><label class='lblFileName'>Tempo 2:</label><select class='sltTempo2' id='" + counter + "tempo2' name=" + counter + "tempo2'></select><br><label class='lblTrackName'>Genre 2:</label><input class='inpTrackGenre' id='" + counter + "genre2' name=" + counter + "genre2' type='text' size='40' value = '' readonly/><label class='lblFileName'>Genre 3:</label><input class='inpTrackGenre' id='" + counter + "genre3' name=" + counter + "genre3' type='text' size='40' value='' readonly/></fieldset>");
 
             // Append fieldset to form
             fieldset.appendTo(form);
@@ -339,8 +335,151 @@ $(document).ready(function () {
         counter -= 1
         $("#inpCount").val(counter)
 
-        // Call editAlbumMatches() function in index.js to get metadata from Gracenote
-        editAlbumMatches(artist, album)
+        // Send file path of track 1 to read ID3 tags
+        var track1 = $("#1fileName").val();
+        var audioSource = MUSIC_PATH + artist + "/" + album + "/" + track1;
+        ipcRenderer.send("read_ID3tags", [audioSource])
+
+        // Replace encoded &amp with &
+        artist = artist.replace(/&amp;/g, '&');
+        album = album.replace(/&amp;/g, '&');
+
+        // Call ajax function artistIDQuery
+        queryArtistID(artist).done(artistIDProcessData);
+
+        // Function to send ajax xml query to Musicbrainz server
+        function queryArtistID(query) {
+            var queryArtist = query;
+            // Artist serach url
+            var url = "https://musicbrainz.org/ws/2/artist/?query=artist:" + queryArtist;
+            // Encode url
+            var encodedUrl = encodeURI(url);
+            return $.ajax({
+                url: encodedUrl
+            });
+        }
+
+        // Function to process data from received xml file searching for artistID
+        function artistIDProcessData(xml) {
+            var releaseGroupID = "";
+            $(xml).find('artist').each(function () {
+                var $artist = $(this);
+                var matchScore = $artist.attr('ns2:score')
+                // Find the 100% artist match
+                if (matchScore == "100") {
+                    artistMBID = $artist.attr("id");
+                    // Store Artist MBID in hidden field
+                    $("#inpArtistMBID").val(artistMBID);
+                }
+            });
+
+            // Check if at musicbrainz ID has been found
+            if (artistMBID != "") {
+                // Call ajax function artistIDQuery
+                releaseQueryArtist(artistMBID).done(dataReleaseProcess);
+
+                // Function to send ajax xml query to Musicbrainz server
+                function releaseQueryArtist(query) {
+                    var queryArtistID = query;
+                    // Artist serach url
+                    var url = "https://musicbrainz.org/ws/2/release-group?artist=" + queryArtistID + "&limit=100&type=album|ep"
+                    return $.ajax({
+                        url: url
+                    });
+                }
+
+                // Function to process data from received xml file searching for releaseQueryArtist
+                function dataReleaseProcess(xml) {
+                    // Get number of releases from xml file
+                    var $releaseCount = $(xml).find('release-group-list');
+                    var count = $releaseCount.attr('count')
+                    var checkCount = parseInt(count)
+                    if (checkCount > 100) {
+                        count = "100";
+                    }
+
+                    // Check if any albums found
+                    if (count != "0") {
+                        // Loop through each release-group and get data
+                        $(xml).find('release-group').each(function () {
+                            var $release = $(this);
+                            var title = $release.find('title').text().toLowerCase();
+                            // Remove any commas to aid matching
+                            title = title.replace(',', '');
+                            var date = $release.find('first-release-date').text();
+                            album = album.toLowerCase();
+                            // Remove any commas to aid matching
+                            album = album.replace(',', '');
+                            if (title == album) {
+                                releaseGroupID = $release.attr('id')
+                                var albumDate = date.substring(0, 4);
+                                // Store Release Group MBID in hidden field
+                                $("#inpReleaseGroupMBID").val(releaseGroupID);
+                                // Store Release Year in temp hidden field
+                                $("#inpTempYear").val(albumDate);
+
+                                // Call ajax function releaseQueryGenre
+                                releaseQueryGenre(releaseGroupID).done(dataGenreProcess);
+
+                                // Function to send ajax xml query to Musicbrainz server
+                                function releaseQueryGenre(query) {
+                                    var queryreleaseGroupID = query;
+                                    // Artist serach url
+                                    var url = "https://musicbrainz.org/ws/2/release-group/" + queryreleaseGroupID + "?inc=genres"
+                                    return $.ajax({
+                                        url: url
+                                    });
+                                }
+
+                                // Function to process data from received xml file searching for releaseQueryGenre 
+                                function dataGenreProcess(xml) {
+                                    var tags = "";
+                                    // Get name of each genre in genre-list
+                                    $(xml).find('genre').each(function () {
+                                        var $genreList = $(this);
+                                        var genreName = $genreList.find('name').text();
+                                        tags += ", " + genreName
+                                    });
+                                    // Remove leading comma from string
+                                    var genreTags = tags.substring(1);
+                                    // Display list of genres found
+                                    $("#genreTagsFoundEdit").css('display', 'inline-block');
+                                    $("#genreTagsEdit").text(genreTags)
+                                }
+                            }
+                        });
+                    }
+                }
+
+                // Call ajax function originQueryArtist
+                originQueryArtist(artistMBID).done(dataOriginProcess);
+
+                // Function to send ajax xml query to Musicbrainz server
+                function originQueryArtist(query) {
+                    var queryArtistID = query;
+                    // Artist serach url
+                    var url = "https://musicbrainz.org/ws/2/artist/" + queryArtistID
+                    return $.ajax({
+                        url: url
+                    });
+                }
+
+                // Function to process data from received xml file searching for originQueryArtist
+                function dataOriginProcess(xml) {
+                    var $area = $(xml).find('area');
+                    var origin = $area.find('name').text();
+
+                    // Check if artist is Various Artists and if it is don't add artist origin
+                    if (artist == "Various Artists") {
+                        $("#inpTempOrigin").val("");
+                    }
+                    else {
+                        // Store Release Year in temp hidden field
+                        $("#inpTempOrigin").val(origin);
+                    }
+                }
+            }
+        }
     }
 
     // Change Mood2 selection box when Mood1 changed

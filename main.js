@@ -8,6 +8,7 @@ const path = require('path');// Require Path module
 const fs = require("fs");// Require FS module
 var request = require('request'); // Used for saving images
 var Jimp = require('jimp');// Require Jimp for resizing images
+var jsmediatags = require("jsmediatags"); // To read ID3 tages in audio files
 
 // CREATE RENDERER WINDOW
 //------------------------
@@ -131,7 +132,6 @@ function openFileDialog(message) {
     var data = [];
     // Options to display on dialog box
     var options = { title: message[1], defaultPath: message[2], buttonLabel: message[3], filters: message[4], properties: [message[5]] }
-    console.log(message[4])
     // Open dialog box to browse directory
     dialog.showOpenDialog(win, options).then(result => {
         // Set message data to retun to renderer
@@ -300,83 +300,84 @@ ipcMain.on('get_playlists', (event, data) => {
 }); 
 
 // IPC IMAGE FUNCTIONS
-// Save album artwork from add to database
-ipcMain.on('save_artwork', (event, message) => {
+// Save temp album artwork from add to database
+ipcMain.on('save_temp_artwork', (event, message) => {
     var artFilePath = message[0];
-    var resizedFilePath = message[1];
-    var coverArtUrl = message[2];
-    var genre = message[3];
-    // Delete folder.jpg if it exists because Windows Media Player rips files as hidden system files, which don't overwrite.
-    if (fs.existsSync(resizedFilePath)) {
-        fs.unlinkSync(resizedFilePath);
+    var coverArtUrl = message[1];
+
+    // Delete tempArt.jpg if it exists from cancelled imports
+    if (fs.existsSync(artFilePath)) {
+        fs.unlinkSync(artFilePath);
     }
 
     // Function to save art image
     var saveImage = function (url, fileName, callback) {
         request(url).pipe(fs.createWriteStream(fileName)).on('close', callback);
     }
+
     // Call function to save art image
-    // If there is cover art found on Gracenote server
+    // If there is cover art found on server
+
     if (coverArtUrl != "") {
         saveImage(coverArtUrl, artFilePath, function () {
-            // resize image
-            Jimp.read(artFilePath).then(tpl => (tpl.clone().resize(250, 250).write(resizedFilePath)))
+            // save image
+            Jimp.read(artFilePath).then(tpl => (tpl.clone().write(artFilePath)))
+            // For future reference
+            // Use Jimp to copy and resize art file from URL
+            //Jimp.read(urlPath).then(tpl => (tpl.clone().resize(250, 250).write(resizedFilePath)))
         });
-    }
-    // If no cover art found use default genre art
-    else {
-        var genreArtFilePath = "./app/graphics/genres/" + genre + ".gif";
-        // Create AlbumArtXLarge.jpg 
-        Jimp.read(genreArtFilePath).then(tpl => (tpl.clone().write(artFilePath)))
-        // Create and resize folder.jpg
-        Jimp.read(genreArtFilePath).then(tpl => (tpl.clone().resize(250, 250).write(resizedFilePath)))
     }
 });
 
-// Save AlbumArtXLarge from URL from edit database
-ipcMain.on('save_artXlarge_URL', (event, message) => {
-    var coverArtUrl = message[0];
+// Save AlbumArtXLarge from file
+ipcMain.on('save_artXlarge_file', (event, message) => {
+    var tempArtPath = message[0];
     var artFilePath = message[1];
-    var resizedFilePath = message[2];
+    if (fs.existsSync(tempArtPath)) {
+        Jimp.read(tempArtPath, function (err, image) {
+            if (err) throw err;
+            image.write(artFilePath);
+        });
+    }
+});
+
+// Save back Cover Art from URL
+ipcMain.on('save_backCover_art', (event, message) => {
+    var artFilePath = message[0];
+    var coverArtUrl = message[1];
+    // Delete backCover.jpg if it exists from cancelled imports
+    if (fs.existsSync(artFilePath)) {
+        fs.unlinkSync(artFilePath);
+    }
     // Function to save art image
     var saveImage = function (url, fileName, callback) {
         request(url).pipe(fs.createWriteStream(fileName)).on('close', callback);
     }
     // Call function to save art image
-    saveImage(coverArtUrl, artFilePath, function () {
-        // Delete folder.jpg if it exists because Windows Media Player rips files as hidden system files, which don't overwrite.
-        if (fs.existsSync(resizedFilePath)) {
-            fs.unlinkSync(resizedFilePath);
-        }
-        // resize image
-        // Use Jimp to copy and resize art file
-        Jimp.read(artFilePath).then(tpl => (tpl.clone().resize(250, 250).write(resizedFilePath)))
-    });
-});
-
-// Save AlbumArtXLarge from file from edit database
-ipcMain.on('save_artXlarge_file', (event, message) => {
-    var coverArtUrl = message[0];
-    var artFilePath = message[1];
-    Jimp.read(coverArtUrl, function (err, image) {
-        if (err) throw err;
-        image.write(artFilePath);
-    });
+    // If there is cover art found on server
+    if (coverArtUrl != "") {
+        saveImage(coverArtUrl, artFilePath, function () {
+            // save image
+            Jimp.read(artFilePath).then(tpl => (tpl.clone().write(artFilePath)))
+        });
+    }
 });
 
 // Resize and save folder.jpg from file from edit database
 ipcMain.on('save_folder_file', (event, message) => {
-    var coverArtUrl = message[0];
+    var tempArtPath = message[0];
     var resizedFilePath = message[1];
     // Resize and save folder.jpg
-    Jimp.read(coverArtUrl, function (err, image) {
-        if (err) throw err;
-        // Delete folder.jpg if it exists because Windows Media Player rips files as hidden system files, which don't overwrite.
-        if (fs.existsSync(resizedFilePath)) {
-            fs.unlinkSync(resizedFilePath);
-        }
-        image.resize(250, 250).write(resizedFilePath);
-    });
+    if (fs.existsSync(tempArtPath)) {
+        Jimp.read(tempArtPath, function (err, image) {
+            if (err) throw err;
+            // Delete folder.jpg if it exists because Windows Media Player rips files as hidden system files, which don't overwrite.
+            if (fs.existsSync(resizedFilePath)) {
+                fs.unlinkSync(resizedFilePath);
+            }
+            image.resize(250, 250).write(resizedFilePath);
+        });
+    }
 });
 
 // IPC NEW MUSIC IN DATABASE
@@ -607,4 +608,112 @@ autoUpdater.on('update-downloaded', () => {
     win.webContents.send('update_downloaded');
 });
 
+// SPOTIFY CODE
+// Spotify variables
+var client_id = '57b3d0e905ec424ab732a4e739a9c28e';
+var client_secret = '0d58a8739b5c44a6a4d78c8938a050a2';
 
+// Authorisation request to get api token
+var authOptions = {
+    url: 'https://accounts.spotify.com/api/token',
+    headers: {
+        'Authorization': 'Basic ' + (new Buffer(client_id + ':' + client_secret).toString('base64'))
+    },
+    form: {
+        grant_type: 'client_credentials'
+    },
+    json: true
+};
+
+// Search Album, Artist query
+ipcMain.on('spotify_search', (event, data) => {
+    var query = data[0];
+    var album = data[1];
+
+    request.post(authOptions, function (error, response, body) {
+        if (!error && response.statusCode === 200) {
+            // Encode URL
+            var url = 'https://api.spotify.com/v1/search?q=' + query;
+            var encodedUrl = encodeURI(url);
+            // Use the access token to access the Spotify Web API
+            var token = body.access_token;
+            var options = {
+                url: encodedUrl,
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                },
+                json: true
+            };
+            request.get(options, function (error, response, body) {
+                win.webContents.send("from_spotify_search", [body, album]);
+            });
+        }
+    });
+});
+
+// Get tracks from album
+ipcMain.on('spotify_getTracks', (event, data) => {
+    var query = data[0];
+
+    request.post(authOptions, function (error, response, body) {
+        if (!error && response.statusCode === 200) {
+            // Encode URL
+            var url = 'https://api.spotify.com/v1/albums/' + query;
+            var encodedUrl = encodeURI(url);
+            // Use the access token to access the Spotify Web API
+            var token = body.access_token;
+            var options = {
+                url: encodedUrl,
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                },
+                json: true
+            };
+            request.get(options, function (error, response, body) {
+                win.webContents.send("from_getTracks", [body]);
+            });
+        }
+    });
+});
+
+// Get Audio Features of tracks from album
+ipcMain.on('spotify_getAudioFeatures', (event, data) => {
+    var query = data[0];
+
+    request.post(authOptions, function (error, response, body) {
+        if (!error && response.statusCode === 200) {
+            // Encode URL
+            var url = 'https://api.spotify.com/v1/audio-features?ids=' + query;
+            var encodedUrl = encodeURI(url);
+
+            // Use the access token to access the Spotify Web API
+            var token = body.access_token;
+            var options = {
+                url: encodedUrl,
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                },
+                json: true
+            };
+            request.get(options, function (error, response, body) {
+                win.webContents.send("from_getAudioFeatures", [body]);
+            });
+        }
+    });
+});
+
+// Get Audio Features of tracks from album
+ipcMain.on('read_ID3tags', (event, data) => {
+    var audioFile = data[0];
+
+    // Read ID3 tags using jsmediatags module
+    jsmediatags.read(audioFile, {
+        onSuccess: function (tag) {
+
+            win.webContents.send("from_read_ID3tags", [tag]);
+        },
+        onError: function (error) {
+            console.log('Error: ', error.type, error.info);
+        }
+    });
+});

@@ -38,9 +38,37 @@
     <div class="centre" id="mainText">
         <h1>Peerless Player User Guide</h1>
         <br /><br />
-
+        <h2>Manual Track Metadata Finder</h2>
+        <h3>Search Here For Missing Metadata</h3>
         <div class="divSingle">
-            <h2>Quick Menu</h2>
+            <p>
+                Go to <a href="https://www.chosic.com/music-genre-finder/" target="_blank">chosic.com</a>  and search for a track by name.<br />
+                From the results found, type in the values in the below input boxes and click on the SUBMIT button.
+            </p><br />
+            <label class="lblMetadata">Tempo:</label>
+            <input required class="inpMetadata" id="inpTempo" name="inpTempo" type="text" value="" />
+            <label class="lblMetadata">Happiness:</label>
+            <input required class="inpMetadata" id="inpHappiness" name="inpHappiness" type="text" value="" />
+            <label class="lblMetadata">Energy:</label>
+            <input required class="inpMetadata" id="inpEnergy" name="inpEnergy" type="text" value="" />
+            <button class="btnMetadata" id="btnSubmit" onclick="displayMetadata()">Submit</button>
+            <button class="btnMetadata" id="btnClear" onclick="clearMetadata()">Clear</button>
+            <br />
+            <h3>Metadata Results</h3>
+            <b>Tempo1 : </b><span id="spanTempo1"></span>
+            <br />
+            <b>Tempo2 : </b><span id="spanTempo2"></span>
+            <br />
+            <b>Mood1 : </b><span id="spanMood1"></span>
+            <br />
+            <b>Mood2 : </b><span id="spanMood2"></span>
+
+        </div>
+        <br />
+        <br />
+        <h2>User Guide </h2>
+        <h3>Quick Menu</h3>
+        <div class="divSingle">
             <ol type="1">
                 <li><a href="#started">Getting Started</a></li>
                 <li><a href="#basic">Basic Functions</a></li>
@@ -370,10 +398,10 @@
         <div class="help">
             <ol type="1">
                 <li>
-                    Add a ripped CD or music download to your Music directory with music files in .mp3 or .m4a format. If the artist is new to your music collection, add the artist folder containing the album folder or if the artist already exists, add the album folder to the existing artist folder in your music directory.
+                    Add a ripped CD or music download to your Music directory with music files in .mp3 .m4a .flac or (.wav not recommended) format. If the artist is new to your music collection, add the artist folder containing the album folder or if the artist already exists, add the album folder to the existing artist folder in your music directory.
                 </li>
                 <li>
-                    To get the metadata from the Gracenote server the app sends a query using the directory name for the artist and album folder. If these names are incorrect it is likely that no metadata will be found on the Gracenote server.
+                    To get the metadata from the Musicbrainz server the app sends a query using the directory name for the artist and album folder. If these names are incorrect it is likely that no metadata will be found on the Musicbrainz server.
                 </li>
                 <li>
                     The track names for the album are taken from the individual audio file names. If these file names are incorrect you will have incorrect track names in your database.
@@ -385,16 +413,16 @@
                     The <b>Sync Music Database</b> page displays a list of all the music found in your Music directory, which has not yet been added to the database.
                 </li>
                 <li>
-                    From the list of albums found, select the album which you want to add to the database and click on the <b>Get</b> button.
+                    Select from the radio buttons whether you are importing an album or a single. This helps in finding the correct metadata on the servers. From the list of albums found, select the album which you want to add to the database and click on the <b>Import</b> button.
                 </li>
                 <li>
-                    A list of album matches found on the Gracenote Server is displayed with the closest matches at the top of the list. Select the title which is the best match to the album you selected and click on the <b>Get</b> button.
+                    The album details, artwork and meta data for each track is displayed. Text boxes greyed out can not be edited. Required fields are Artist Name, Album Name, Release Date and Genre.
                 </li>
                 <li>
-                    The album details, artwork and meta data for each track is displayed. Check that all the data looks correct and make any amendments if required.
+                    Selecting Genre. A list of Genres Found is displayed in the Album Details. Select a Genre from the drop down selection box. Optional: Select a Genre 2 from the dropdown box or type in a genre. Optional: Select a Genre 3 from the dropdown box or type in a genre. These will automaticaaly update for each track.
                 </li>
                 <li>
-                    If the metadata clearly looks incorrect or no metadata has been found click om the <b>Cancel</b> button. Start the above process again and try selecting a different title match from the Gracenote Server.
+                    The more accurate and consistent the metadata is for the album, the better the various algorithms will work.
                 </li>
                 <li>
                     If all the metadata looks correct click on the <b>Import</b> button.
@@ -417,16 +445,10 @@
                     This will display the <b>Edit Music Database</b> page, displaying a form with all the metadata stored in the database for the selected album.
                 </li>
                 <li>
-                    Any of the fields in the form can be amended manually, except the filename and track time, highlighted in grey.
+                    Any of the fields in the form can be amended manually, except the ones highlighted in grey (exception for filenames, see the warning notice on the form).
                 </li>
                 <li>
-                    If you are connected to the internet, matches for the album from the Gracenote database will be displayed below the album artwork.
-                </li>
-                <li>
-                    From the list of album matches found on the Gracenote server, click on the one which is the closet match to the album you are editing and click on the <b>Get</b> button to update all the album metadata, or click on the <b>Artwork</b> button to update the album artwork.
-                </li>
-                <li>
-                    Any changes in metadata will be highlighted in yellow to make review quicker.
+                    Click on the <b>Get</b> button to update the track and album metadata. Click on the <b>Artwork</b> button to update the album artwork and search for back cover artwork.
                 </li>
                 <li>
                     You can also manually add album artwork, by clicking on the album image and browsing to an image file and then clicking the Select File button. It is recommended that images are a minimum of 450 pixels square.
@@ -595,7 +617,8 @@
             </p>
         </div>
     </div>
-
+    <!-- Link to page's Javacript file-->
+    <script src="./js/pages_metadata.js" type="text/javascript"></script>
 </body>
 
 </html>

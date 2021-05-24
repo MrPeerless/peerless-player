@@ -1,7 +1,3 @@
-// Gracenote Client ID: <CLIENT>12398848-977A13ABAD0F2E143D38E61AF28B78DB</CLIENT>
-// Gracenote User ID Geoff: <USER>262426348528170930-5841932202A3C37AF922C859220E4E3F</USER>
-// Spare User ID: 51049424051760460-5041AA75A7C8D23DFDF13F83A2F70A07
-
 // Declare global varibales here
 // App variables
 var global_AppName;
@@ -28,8 +24,6 @@ var global_Background;
 var global_Version;
 
 // Player variables
-var global_ImportMode = "";
-var global_UserID = null;
 var global_Playing = false;
 var global_Paused = false;
 var global_Queued = false;
@@ -51,7 +45,6 @@ var global_TrackSelected;
 var global_YearID;
 
 // URLs
-var gracenoteUrl = "https://c12398848.web.cddbp.net/webapi/xml/1.0/";
 var musicbrainzUrl = "https://musicbrainz.org/ws/2/";
 var wikiQueryUrl = "https://en.wikipedia.org/w/api.php?"
 var napsterUrl = "https://us.napster.com/search?query="
@@ -125,14 +118,10 @@ async function openDatabase(query) {
         }
     }
 
-    // Get Gracenote User ID
+    // Get User Settings
     var settingsID = 1;
     var sql = "SELECT * FROM settings WHERE settingsID=?";
     var row = await dBase.get(sql, settingsID)
-
-    // Get and log Gracenote User ID
-    global_UserID = row.userID;
-    console.log("GN User ID: " + global_UserID)
 
     // Get App settings
     global_AppName = row.appName + " Player";
@@ -180,40 +169,6 @@ async function openDatabase(query) {
 // This function prevents eval() running in app for security purposes.
 window.eval = global.eval = function () {
     throw new Error(`window.eval not supported`)
-}
-
-// FUNCTION TO GET NEW GRAVENOTE USER ID
-function newUser() {
-    console.log("Register new userID")
-    // Send xml query to Gracenote to register new user
-    var queryRegister = "<?xml version='1.0' encoding='UTF-8'?><QUERIES><QUERY CMD='REGISTER'><CLIENT>12398848-977A13ABAD0F2E143D38E61AF28B78DB</CLIENT></QUERY></QUERIES>";
-
-    // Call ajax function albumQuery
-    registerQuery(queryRegister).done(registerUser);
-
-    // Function to send ajax xml query to Gracenote server
-    function registerQuery(query) {
-        var queryRegister = query;
-        return $.ajax({
-            url: gracenoteUrl,
-            data: queryRegister,
-            type: "POST",
-            datatype: "xml"
-        });
-    }
-
-    // Function to process response of ajax xml query for new user
-    async function registerUser(response) {
-        // Get userID from XML response
-        var userID = $(response).find("USER").text();
-        var settingsID = 1;
-        console.log("New User ID = " + userID)
-
-        // Add userID to settings table in database
-        var sql = "UPDATE settings SET userID='" + userID + "' WHERE settingsID=" + settingsID;
-        var update = await dBase.run(sql);
-        global_UserID = userID;
-    }
 }
 
 //#####################
@@ -840,6 +795,20 @@ function syncDirectory() {
     window.history.back();
 }
 
+// Function to check if URL for images exists, returns boolean value
+function urlExists(url, callback) {
+    $.ajax({
+        type: 'HEAD',
+        url: url,
+        success: function () {
+            callback(true);
+        },
+        error: function () {
+            callback(false);
+        }
+    });
+}
+
 //##################
 // EVENT LOOP
 //##################
@@ -1241,25 +1210,17 @@ $(document).ready(function () {
         global_TrackName = $(this).find("td:first").text();
     });
 
-    // Highlight album in Gracenote table when clicked on
-    $(document).on('click', '#tblGracenote tr.tracks', function () {
+    // Highlight album in Import Music table when clicked on
+    $(document).on('click', '#tblImportMusic tr.tracks', function () {
         // Highlight track clicked on
         var selected = $(this).hasClass("highlight");
-        $("#tblGracenote tr").removeClass("highlight");
+        $("#tblImportMusic tr").removeClass("highlight");
         // Disable buttons in edit album
-        $("#btnGetGracenote").prop("disabled", true);
-        //$("#btnManual").prop("disabled", true);
-        $("#btnArtworkAlbum").prop("disabled", true);
-        $("#btnSearchGracenote").prop("disabled", true);
-        $("#btnDownloadGracenote").prop("disabled", true);        
+        $("#btnArtworkAlbum").prop("disabled", true);       
         if (!selected) {
             $(this).addClass("highlight");
             // Enable buttons in edit album  btnManual
-            $("#btnGetGracenote").prop("disabled", false);
-            //$("#btnManual").prop("disabled", false);
             $("#btnArtworkAlbum").prop("disabled", false);
-            $("#btnSearchGracenote").prop("disabled", false);
-            $("#btnDownloadGracenote").prop("disabled", false);
         }
     });
 

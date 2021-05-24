@@ -38,14 +38,22 @@
     <div class="centre" id="mainText">
         <h1>Peerless Player News</h1>
         <br />
-        <h2>Forthcoming Release: Version 0.2.1</h2>
-        <h3>Release Notes</h3>
-        <p>Work continues finding and correcting small bugs. A new algorithm is being developed to determine the most played albums. Currently the algorithm is very simplistic. just counting the number of track plays per album. The new algorithm uses the following formula: <code>(album track plays/no. tracks) * (1 + album length / 2700)</code>.</p>
+
+        <h2>Forthcoming Release: Version 0.3.0</h2>
+        <h3>May 2021 - What's Coming Soon</h3>
+        <div class="divSingle">
+            <p>The main update has been rewriting the code for importing and editing music since the termination of the Gracenote Free Open Developer Program. There will be some small changes in the process of importing or updating metadata in the database now using the Musicbrainz and Spotify APIs.</p><br />
+            <p>Unfortunately, I have had to remove the Recommendations function since the termination of my Gracenote licence. Don't worry, this will return in a future update.</p><br />
+            <p>Support has been added to now play hi-def lossless FLAC (Free Lossless Audio Codec) files.</p><br />
+            <p>A new algorithm has been developed to determine the most played albums. Currently the algorithm is very simplistic and just counts the number of track plays per album. The new algorithm uses the following formula: <code>(album track plays/no. tracks) * (1 + album length / 2700)</code>, which adds a weighting for the length of the album to give more accurate results.</p><br />
+            <p>The search function is being rewritten using SQL FTS5, which will deliver a list of results based on most relevant results to the search query.</p><br />
+            <p>The album sort is being updated to include sorting by album Release Date and the sorting will apply globally across the app wherever a list of albums is displayed.</p><br />
+            <p>As well, there are numerous small bug fixes, which will be listed in the release notes once the release is pushed to the server.</p>
+        </div>
         <br />
-        <p>The album sort is being updated to include sorting by album Release Date and the sorting will apply globally across the app wherever a list of albums is displayed.</p>
         <br />
         <h2>Latest Release: Version 0.2.0</h2>
-        <h3>Release Notes</h3>
+        <h3>January 2021 - Release Notes</h3>
         <div class="divSingle">
             <p><b>Release Date: 18.01.2021</b></p>
             <ol>
@@ -64,20 +72,14 @@
         </div>
         <br />
         <br />
-        <h2>Previous Release: Version 0.1.3</h2>
-        <h3>Release Notes</h3>
+        <h2>Gracenote Termination</h2>
+        <h3>April 2021 - Gracenote Terminate My Licence</h3>
         <div class="divSingle">
-            <p><b>Release Date: 19.10.2020</b></p>
-            <ol>
-                <li>Added dropdown boxes to select tempo, mood and genre in metadata.</li>
-                <li>Enabled Content Security Policy.</li>
-                <li>Moved shell operations to back end.</li>
-                <li>Moved image operations to back end.</li>
-                <li>Moved file system operations to back end.</li>
-                <li>Disabled remote module.</li>
-                <li>Added blur effect to modal box background.</li>
-                <li>Bumped Electron to 8.2.3</li>
-            </ol>
+            <p>Since 2013, when I first started building this app in python3, I have been using the Gracenote Free Open Developer Program, which allowed developers to use the Gracenote web API to query their database and retrieve music metadata and album artwork.</p><br />
+            <p>In mid April I suddenly began receiving error messages whenever my app contacted the Gracenote servers. Upon investigation of the error code sent back, I found out that my licence had expired.</p><br />
+            <p>At first I thought that this was an oversight on my behalf, as I have always received an annual email from Gracenote for me to log into my account and renew my licence. I went to their website to log in, but my account details were no longer valid. I checked my emails, but there were no emails from Gracenote.</p><br />
+            <p>Upon contacting Gracenote I was informed that the free Open Developer Program had been discontinued and that they now only licence access to the web API for a monthly subscription, starting at $3,500 a month.</p><br />
+            <p>So, after 8 years I had to sit down and research where to get music metadata from. To the rescue came the Musicbrainz and the Spotify web API's, which has now beingincorporated into release version 0.3.0.</p>
         </div>
         <br />
         <br />

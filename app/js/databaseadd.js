@@ -1,6 +1,13 @@
 //#################################
 // Sync Database to Music Directory
 //#################################
+
+var newArtist = "";
+var newAlbum = "";
+var artistMBID = "";
+var coverArtSpot = "";
+var importType = "";
+
 $(document).on('click', '#btnSync', function (event) {
     event.preventDefault();
     btnSyncClick()
@@ -22,33 +29,63 @@ function btnSyncClick() {
         $('.background').css('filter', 'blur(5px)');
         return
     }
+
+    // Display newmusic.html page
+    $("#divContent").css("width", "475px");
+    // Hide A to Z menu
+    $('#spnAtoZmenu').css('display', 'none');
+    // Hide Artist and Album column of Song table
+    $("#tblSongs td:nth-child(2)").css("display", "none");
+    $("#tblSongs th:nth-child(2)").css("display", "none");
+    $("#tblSongs td:nth-child(3)").css("display", "none");
+    $("#tblSongs th:nth-child(3)").css("display", "none");
+    // Show and load newmusic.html file
+    $("#divTrackListing").css("display", "block");
+    $('#divTrackListing').load("./html/newmusic.html");
+    // Disable btnSync
+    $("#btnSync").prop("disabled", true);
+    $(document).ajaxComplete(function () {
+        $(document).scrollTop(0);
+        backgroundChange()
+    });
+}
+
+//#########################################
+// Onclick event for Manual button
+//#########################################
+$(document).on('click', '#btnManual', function (event) {
+    event.preventDefault();
     // Check if online
     var connection = navigator.onLine;
 
     if (connection) {
-        // If connected to internet
-        // Check there is a global_userID, if not run function newUser() to get gracenote userID
-        if (global_UserID == null) {
-            newUser()
+        newArtist = $("#tblImportMusic tr.highlight").find('td:first').text();
+        newAlbum = $("#tblImportMusic tr.highlight").find('td:nth-child(2)').text();
+        if (!newArtist) {
+            newArtist = $("#selectedArtist").text();
+            newAlbum = $("#selectedAlbum").text();
         }
+        // Get value of import radio buttons
+        //importType = $("input[name='albumType']:checked").val();
 
-        $("#divContent").css("width", "475px");
-        // Hide A to Z menu
-        $('#spnAtoZmenu').css('display', 'none');
-        // Hide Artist and Album column of Song table
-        $("#tblSongs td:nth-child(2)").css("display", "none");
-        $("#tblSongs th:nth-child(2)").css("display", "none");
-        $("#tblSongs td:nth-child(3)").css("display", "none");
-        $("#tblSongs th:nth-child(3)").css("display", "none");
-        // Show and load newmusic.html file
-        $("#divTrackListing").css("display", "block");
-        $('#divTrackListing').load("./html/newmusic.html");
-        // Disable btnSync
-        $("#btnSync").prop("disabled", true);
-        $(document).ajaxComplete(function () {
-            $(document).scrollTop(0);
-            backgroundChange()
-        });
+        if (newArtist) {
+            // Populate hidden elements with selected album details
+            $("#selectedArtist").text(newArtist);
+            $("#selectedAlbum").text(newAlbum);
+            // Set variables for screen width
+            var srnWidth = $(window).width();
+            var width = (srnWidth - 260);
+            // Load add to database page
+            $("#divTrackListing").css("display", "none");
+            $("#divContent").css("width", width);
+            // Set url
+            var url = ("./html/importtodatabase.html");
+            // Load Add to Database page
+            $("#divContent").load(url);
+        }
+        else {
+            return;
+        }
     }
     else {
         // If not connected display modal box warning
@@ -64,210 +101,6 @@ function btnSyncClick() {
         $('.background').css('filter', 'blur(5px)');
         return
     }
-}
-
-//#########################################
-// Onclick event for Search Gracenote button
-//#########################################
-$(document).on('click', '#btnSearchGracenote', function (event) {
-    event.preventDefault();
-    var newArtist = $("#tblGracenote tr.highlight").find('td:first').text();
-    // Call function to display input form
-    if (!newArtist) {
-        return false;
-    }
-    else {
-        // Display modal box checking Gracenote
-        $('#okModal').css('display', 'block');
-        $('.modalHeader').empty();
-        $('#okModalText').empty();
-        $(".modalFooter").empty();
-        $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
-        $('#okModalText').append("<div class='modalIcon'><img src='./graphics/record.gif'></div><p>&nbsp<br>Searching the Gracenote database. Please wait.<br>&nbsp<br>&nbsp</p >");
-        var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
-        $('.modalFooter').append(buttons);
-        $("#btnOkModal").focus();
-        $('.background').css('filter', 'blur(5px)');
-        albumMatches();
-    }
-});
-
-//#########################################
-// Onclick event for Manual button
-//#########################################
-$(document).on('click', '#btnManual', function (event) {
-    event.preventDefault();
-    global_ImportMode = "manual";
-
-    var newArtist = $("#tblGracenote tr.highlight").find('td:first').text();
-    var newAlbum = $("#tblGracenote tr.highlight").find('td:nth-child(2)').text();
-    if (!newArtist) {
-        newArtist = $("#selectedArtist").text();
-        newAlbum = $("#selectedAlbum").text();
-    }
-
-    if (newArtist) {
-        // Populate hidden elements with selected album details
-        $("#selectedArtist").text(newArtist);
-        $("#selectedAlbum").text(newAlbum);
-        // Set variables for screen width
-        var srnWidth = $(window).width();
-        var width = (srnWidth - 260);
-        // Load add to database page
-        $("#divTrackListing").css("display", "none");
-        $("#divContent").css("width", width);
-        // Set url
-        var url = ("./html/importtodatabase.html");
-        // Load Add to Database page
-        $("#divContent").load(url);
-    }
-    else {
-        return;
-    }
-});
-
-//#################################################
-// Function to display album matches from Gracenote
-//#################################################
-function albumMatches() {
-    // Send xml query to Gracenote to find number of matches
-    var newArtist = $("#tblGracenote tr.highlight").find('td:first').text();
-    var newAlbum = $("#tblGracenote tr.highlight").find('td:nth-child(2)').text();
-
-    var queryData = "<?xml version='1.0' encoding='UTF-8'?><QUERIES><AUTH><CLIENT>12398848-977A13ABAD0F2E143D38E61AF28B78DB</CLIENT>" +
-        "<USER>" + global_UserID + "</USER></AUTH><LANG>eng</LANG><COUNTRY>uk</COUNTRY>" +
-        "<QUERY CMD='ALBUM_SEARCH'>" +
-        "<TEXT TYPE='ARTIST'>" + newArtist + "</TEXT>" +
-        "<TEXT TYPE='ALBUM_TITLE'>" + newAlbum + "</TEXT>" +
-        "<RANGE><START>1</START><END>10</END></RANGE>" +
-        "</QUERY></QUERIES>";
-
-    // Populate hidden elements with selected album details
-    $("#selectedArtist").text(newArtist);
-    $("#selectedAlbum").text(newAlbum);
-    $("#selectedNoTracks").text($("#tblGracenote tr.highlight").find('td:nth-child(3)').text());
-
-    // Call ajax function albumQuery
-    albumQuery(queryData).done(checkData);
-
-    // Function to send ajax xml query to Gracenote server
-    function albumQuery(query) {
-        var queryAlbum = query;
-        return $.ajax({
-            url: gracenoteUrl,
-            data: queryAlbum,
-            type: "POST",
-            datatype: "xml"
-        });
-    }
-
-    // Function to process response of ajax xml query for album matches
-    function checkData(response) {
-        // Check for returned error
-        var error = $(response).find("ERROR").text();
-        // If error returned display error message and exit function
-        if (error) {
-            var message = $(response).find("MESSAGE").text();
-            // Display modal box if error message returned by Gracenote database
-            $('#okModal').css('display', 'block');
-            $('.modalHeader').empty();
-            $('#okModalText').empty();
-            $(".modalFooter").empty();
-            $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
-            $('#okModalText').append("<div class='modalIcon'><img src='./graphics/warning.png'></div><p>&nbsp<br><b>Gracenote database error message.</b><br>" + message + "<br>&nbsp</p>");
-            var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
-            $('.modalFooter').append(buttons);
-            $("#btnOkModal").focus();
-            $('.background').css('filter', 'blur(5px)');
-            // Hide recommendations page and go back
-            $("#divTrackListing").css("display", "none");
-            $("#divContent").css("width", "auto");
-            return false;
-            window.history.back();
-        }
-
-        var albumsFound = $(response).find("END").text();
-        // Convert albumsFound to an integer
-        var c = parseInt(albumsFound);
-
-        // Get number of tracks for album from main.js
-        ipcRenderer.send("count_tracks", [MUSIC_PATH, $("#selectedArtist").text(), $("#selectedAlbum").text()])
-
-        // Display details of album selected with numbr of tracks
-        ipcRenderer.on("from_count_tracks", (event, data) => {
-            var numberTracks = data[0];
-            $('#displayNewMusicDetails').empty();
-            $('#displayNewMusicDetails').append(albumsFound + " Album matches have been found in the Gracenote database.<br>" + "Searched for: " + $("#selectedArtist").text() + ", " + $("#selectedAlbum").text() + ", No. Tracks " + numberTracks);
-        });
-
-        // Clear existing elments from New Music search
-        $('#tblGracenote').empty();
-        $('#displayNewMusicDetails').empty();
-        $('#displayNewMusicInfo').empty();
-        $('#displayNewMusicInfo').append("Select the closest match and click on GET button to get album metadata.<br>If no suitable matches found click on MANUAL button to manually import album metadata.")
-
-        $('.background').css('filter', 'blur(0px)');
-        $('#btnSearchGracenote').css('display', 'none');
-        $('#btnDownloadGracenote').css('display', 'inline-block');
-        $("#btnDownloadGracenote").prop("disabled", true);
-
-        var table = $("#tblGracenote")
-        var tableHeader = $("<tr><th class='rowGraceTitle'>Title</th><th class='rowGraceDate'>Date</th><th class='rowGraceTracks'>No. Tracks</th></tr>");
-        tableHeader.appendTo(table);
-        var count = 1;
-        for (var i = 0; i < c; i++) {
-            var title = $(response).find('ALBUM[ORD="' + count + '"] TITLE').eq(0).text();
-            var date = $(response).find('ALBUM[ORD="' + count + '"] DATE').eq(0).text();
-            var number = $(response).find('ALBUM[ORD="' + count + '"] TRACK_COUNT').eq(0).text();
-            var gnID = $(response).find('ALBUM[ORD="' + count + '"] GN_ID').eq(0).text();
-            // Create table row
-            var tableRow = $("<tr class='tracks'><td>" + title + "</td><td>" + date + "</td><td>" + number + "</td><td>" + gnID + "</td></tr>");
-            // Append row to table
-            tableRow.appendTo(table);
-            count += 1;
-        }
-        // Hide modal box
-        $('#okModal').css('display', 'none');
-    }
-}
-
-//#########################################
-// Onclick event for Get Metadata button
-//#########################################
-$(document).on('click', '#btnDownloadGracenote', function (event) {
-    event.preventDefault();
-    var gnID = $("#tblGracenote tr.highlight").find('td:last').text();
-    // Call function to display input form
-    if (!gnID) {
-        return false;
-    }
-    else {
-        // Display modal box checking Gracenote
-        $('#okModal').css('display', 'block');
-        $('.modalHeader').empty();
-        $('#okModalText').empty();
-        $(".modalFooter").empty();
-        $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
-        $('#okModalText').append("<div class='modalIcon'><img src='./graphics/record.gif'></div><p>&nbsp<br>Searching the Gracenote database. Please wait.<br>&nbsp<br>&nbsp</p >");
-        var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
-        $('.modalFooter').append(buttons);
-        $("#btnOkModal").focus();
-        $('.background').css('filter', 'blur(5px)');
-
-        global_ImportMode = "auto";
-        // Set variables for screen width
-        var srnWidth = $(window).width();
-        var width = (srnWidth - 260);
-        // Load add to database page
-        $("#divTrackListing").css("display", "none");
-        $("#divContent").css("width", width);
-
-        // Set url
-        var url = ("./html/importtodatabase.html");
-        // Load Add to Database page
-        $("#divContent").load(url);
-        $('.background').css('filter', 'blur(0px)');
-    }
 });
 
 // Array to store list of files sent back by IPC from main.js
@@ -282,6 +115,7 @@ ipcRenderer.on("files_album_directory", (event, data) => {
         files = data[1];
         var artist = data[2];
         var album = data[3];
+        $("#inpCount").val(files.length)
         var counter = 1;
         var form = $("#frmAdd")
 
@@ -290,8 +124,13 @@ ipcRenderer.on("files_album_directory", (event, data) => {
             var audioSource = MUSIC_PATH + artist + "/" + album + "/" + files[i];
             var audio = $('<audio class="player" id="' + i + '" src="' + audioSource + '"></audio>');
 
+            // Send track 1 file path to main'js to read ID3 metadata
+            if (i == 0) {
+                ipcRenderer.send("read_ID3tags", [audioSource])
+            }
+
             $("#divAudioElements").append(audio);
-            var fieldset = $("<fieldset><legend>Track " + counter + "</legend><label class='lblTrackName'>Name: </label><input required class='inpTrackName' id='" + counter + "trackName' name=" + counter + "trackName' type='text' size='79' value='' /><label class='lblFileName'>File Name:</label><input required class='inpFileName' id='" + counter + "fileName' name='" + counter + "fileName' type='text' size='75' value='' readonly /><label class='lblTrackTime'>Time:</label><input required class='inpTrackTime' id='" + counter + "pTime' name='" + counter + "pTime' type='text' size='8 value='' /><br><label class='lblTrackName'>Mood 1:</label><select class='sltMood1' id='" + counter + "mood1' name=" + counter + "mood1'><option value=''></option><option value='Peaceful'>Peaceful</option><option value='Romantic'>Romantic</option><option value='Sentimental'>Sentimental</option><option value='Tender'>Tender</option><option value='Easygoing'>Easygoing</option><option value='Yearning'>Yearning</option><option value='Sophisticated'>Sophisticated</option><option value='Sensual'>Sensual</option><option value='Cool'>Cool</option><option value='Gritty'>Gritty</option><option value='Somber'>Somber</option><option value='Melancholy'>Melancholy</option><option value='Serious'>Serious</option><option value='Brooding'>Brooding</option><option value='Fiery'>Fiery</option><option value='Urgent'>Urgent</option><option value='Defiant'>Defiant</option><option value='Aggressive'>Aggressive</option><option value='Rowdy'>Rowdy</option><option value='Excited'>Excited</option><option value='Energizing'>Energizing</option><option value='Empowering'>Empowering</option><option value='Stirring'>Stirring</option><option value='Lively'>Lively</option><option value='Upbeat'>Upbeat</option><option value='Other'>Other</option></select><label class='lblFileName'>Mood 2:</label><select class='sltMood2' id='" + counter + "mood2' name=" + counter + "mood2'></select><br><label class='lblTrackName'>Tempo 1:</label><select class='sltTempo1' id='" + counter + "tempo1' name=" + counter + "tempo1'><option value=''></option><option value='Slow Tempo'>Slow Tempo</option><option value='Medium Tempo'>Medium Tempo</option><option value='Fast Tempo'>Fast Tempo</option></select><label class='lblFileName'>Tempo 2:</label><select class='sltTempo2' id='" + counter + "tempo2' name=" + counter + "tempo2'></select><br><label class='lblTrackName'>Genre 2:</label><input class='inpTrackName' id='" + counter + "genre2' name=" + counter + "genre2' type='text' size='40' value='' /><label class='lblFileName'>Genre 3:</label><input class='inpTrackName' id='" + counter + "genre3' name=" + counter + "genre3' type='text' size='40' value='' /></fieldset>");
+            var fieldset = $("<fieldset><legend>Track " + counter + "</legend><label class='lblTrackName'>Name: </label><input required class='inpTrackName' id='" + counter + "trackName' name=" + counter + "trackName' type='text' size='79' value='' /><label class='lblFileName'>File Name:</label><input required class='inpFileName' id='" + counter + "fileName' name='" + counter + "fileName' type='text' size='75' value='' readonly /><label class='lblTrackTime'>Time:</label><input required class='inpTrackTime' id='" + counter + "pTime' name='" + counter + "pTime' type='text' size='8 value='' readonly /><br><label class='lblTrackName'>Mood 1:</label><select class='sltMood1' id='" + counter + "mood1' name=" + counter + "mood1'><option value=''></option><option value='Peaceful'>Peaceful</option><option value='Romantic'>Romantic</option><option value='Sentimental'>Sentimental</option><option value='Tender'>Tender</option><option value='Easygoing'>Easygoing</option><option value='Yearning'>Yearning</option><option value='Sophisticated'>Sophisticated</option><option value='Sensual'>Sensual</option><option value='Cool'>Cool</option><option value='Gritty'>Gritty</option><option value='Somber'>Somber</option><option value='Melancholy'>Melancholy</option><option value='Serious'>Serious</option><option value='Brooding'>Brooding</option><option value='Fiery'>Fiery</option><option value='Urgent'>Urgent</option><option value='Defiant'>Defiant</option><option value='Aggressive'>Aggressive</option><option value='Rowdy'>Rowdy</option><option value='Excited'>Excited</option><option value='Energizing'>Energizing</option><option value='Empowering'>Empowering</option><option value='Stirring'>Stirring</option><option value='Lively'>Lively</option><option value='Upbeat'>Upbeat</option><option value='Other'>Other</option></select><label class='lblFileName'>Mood 2:</label><select class='sltMood2' id='" + counter + "mood2' name=" + counter + "mood2'></select><br><label class='lblTrackName'>Tempo 1:</label><select class='sltTempo1' id='" + counter + "tempo1' name=" + counter + "tempo1'><option value=''></option><option value='Slow Tempo'>Slow Tempo</option><option value='Medium Tempo'>Medium Tempo</option><option value='Fast Tempo'>Fast Tempo</option></select><label class='lblFileName'>Tempo 2:</label><select class='sltTempo2' id='" + counter + "tempo2' name=" + counter + "tempo2'></select><br><label class='lblTrackName'>Genre 2:</label><input class='inpTrackGenre' id='" + counter + "genre2' name=" + counter + "genre2' type='text' size='40' value='' readonly/><label class='lblFileName'>Genre 3:</label><input class='inpTrackGenre' id='" + counter + "genre3' name=" + counter + "genre3' type='text' size='40' value='' readonly/></fieldset>");
 
             // Append fieldset to form
             fieldset.appendTo(form);
@@ -331,248 +170,501 @@ ipcRenderer.on("files_album_directory", (event, data) => {
             });
         });
     }
-    // Function go get meta data fromn Gracenote in index.js
+    // Function go get meta data from Musicbrainz
     albumMetadata();
 });
 
-//#########################################
-// Function to display Add to Database page
-//######################################### 
-function albumMetadata() {
-    var gnID = $("#tblGracenote tr.highlight").find('td:last').text();
-    // Create XMl string query to query album tracks
-    var queryTracks = "<?xml version='1.0' encoding='UTF-8'?><QUERIES><AUTH><CLIENT>12398848-977A13ABAD0F2E143D38E61AF28B78DB</CLIENT><USER>" + global_UserID + "</USER></AUTH><LANG>eng</LANG><COUNTRY>uk</COUNTRY><QUERY CMD='ALBUM_FETCH'><GN_ID>" + gnID + "</GN_ID><OPTION><PARAMETER>SELECT_EXTENDED</PARAMETER><VALUE>ARTIST_OET,MOOD,TEMPO</VALUE></OPTION><OPTION><PARAMETER>SELECT_DETAIL</PARAMETER>  <VALUE>GENRE:3LEVEL,MOOD:2LEVEL,TEMPO:3LEVEL,ARTIST_ORIGIN:4LEVEL,ARTIST_ERA:2LEVEL,ARTIST_TYPE:2LEVEL</VALUE></OPTION><OPTION><PARAMETER>SELECT_EXTENDED</PARAMETER><VALUE>COVER</VALUE></OPTION></QUERY></QUERIES>"
-    trackQuery(queryTracks).done(trackData);
-
-    // Make ajax request for track details
-    function trackQuery(query) {
-        if (global_ImportMode == "auto") {
-            var queryTracks = query;
-            return $.ajax({
-                url: gracenoteUrl,
-                data: queryTracks,
-                type: "POST",
-                datatype: "xml"
-            });
-        }
-        // If importing manually with no Gracenote metadata
-        else {
-            return $.ajax({
-                type: "POST",
-                datatype: "xml"
-            });
-        }
+// Receive IPC response from reading first track file's ID3 metadata tags
+ipcRenderer.on("from_read_ID3tags", (event, data) => {
+    var metaData = data[0];
+    var mainGenre = metaData.tags.genre
+    $("#mainGenreTag").css('display', 'inline-block');
+    if (mainGenre) {
+        $("#mainGenre").text(" " + mainGenre)
     }
+    else {
+        $("#mainGenre").text(" No genre metadata found in audio file.")
+    }
+});
 
-    // Callback function referenced from trackQuery.
-    function trackData(response) {
-        // Check for returned error
-        var error = $(response).find("ERROR").text();
-        // If error returned display error message and exit function
-        if (error) {
-            var message = $(response).find("MESSAGE").text();
-            // Display modal box if error message returned by Gracenote database
-            $('#okModal').css('display', 'block');
-            $('.modalHeader').empty();
-            $('#okModalText').empty();
-            $(".modalFooter").empty();
-            $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
-            $('#okModalText').append("<div class='modalIcon'><img src='./graphics/warning.png'></div><p>&nbsp<br><b>Gracenote database error message.</b><br>" + message + "<br>&nbsp</p>");
-            var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
-            $('.modalFooter').append(buttons);
-            $("#btnOkModal").focus();
-            $('.background').css('filter', 'blur(5px)');
-            // Hide recommendations page and go back
-            $("#divTrackListing").css("display", "none");
-            $("#divContent").css("width", "auto");
+// Receive IPC search response Spotify for album and artist
+ipcRenderer.on("from_spotify_search", (event, data) => {
+    var spotifyResponse = data[0];
+    var album = data[1];
+    var albumType = "";
+    var albumSpotID = "";
+    album = album.toLowerCase();
+
+    // Get value of import radio buttons
+    importType = $("input[name='albumType']:checked").val();
+    if (importType == "single") {
+        albumType = "single"
+    }
+    else {
+        albumType = "album"
+    }
+    
+    // Find Spotify album ID to use to search for tracks
+    $.each(spotifyResponse.albums.items, function (i, items) {
+        var spotifyName = items.name.toLowerCase();
+        if (spotifyName == album && items.album_type == albumType) {
+            albumSpotID = items.id;
             return false;
-            window.history.back();
-        }
+        }       
+    });
 
-        // Set variables
-        var artist = $("#selectedArtist").text();
-        var album = $("#selectedAlbum").text();
-        // Replace encoded &amp with &
-        artist = artist.replace(/&amp;/g, '&');
-        album = album.replace(/&amp;/g, '&');
-        var counter = 1;
+    // Send IPC to get albums tracks from Spotify
+    var query = albumSpotID + '/tracks';
+    ipcRenderer.send("spotify_getTracks", [query])
+});
 
-        // moodCount is a separte counter for when mood1 = other and there is no mood2, increase the moodcount by 1 
-        //otherwise the following tracks read the previous tracks mood
-        var moodCount = 0;
+// Receive IPC response from Spotify for album tracks
+ipcRenderer.on("from_getTracks", (event, data) => {
+    var spotifyResponse = data[0];
+    var tracksSpotID = "";
 
-        // Get main genre for album
-        var genre1 = $(response).find('GENRE[ORD="1"]').eq(0).text();
+    // Get each track ID
+    $.each(spotifyResponse.items, function (i, items) {
+        tracksSpotID += items.id + ","
+    });
+    tracksSpotID = tracksSpotID.substring(0, tracksSpotID.length - 1);
 
-        $('[name=sltGenre]').val(genre1);
+    // Send IPC to get audio features from Spotify
+    var query = tracksSpotID;
+    ipcRenderer.send("spotify_getAudioFeatures", [query])
+});
 
-        // Genre 2
-        var genre2 = $(response).find('GENRE[ORD="2"]').eq(0).text();
-        // Genre 3
-        var genre3 = $(response).find('GENRE[ORD="3"]').eq(0).text();
+// Receive IPC response from Spotify for album tracks
+ipcRenderer.on("from_getAudioFeatures", (event, data) => {
+    var spotifyResponse = data[0];
 
-        // Loop through each music file and populate XML data
-        for (var i = 0; i < files.length; i++) {
-            // Check if file ext is flac or mp3/m4a/wav
-            var check = files[i].substr(-4);
-            if (check == "flac") {
-                var tName = files[i].slice(0, -5);
+    // Check if any data returned from spotify
+    if (spotifyResponse.audio_features[0] != null) {
+        // Declare variables
+        var valence;
+        var mood1;
+        var noTracks = $("#inpCount").val();
+        var counter;
+        var baseX;
+        var baseY;
+
+        // Loop over each track and match track number to spotify array
+        for (var i = 0; i < (noTracks); i++) {
+            counter = i + 1;
+
+            // Get the tracknumber from the leading numbers of the trackname
+            var trackName = $("#" + counter + "trackName").val();
+            var tNumber = trackName.substr(0, trackName.indexOf(' '));
+            tNumber = tNumber.replace(/^0+/, '');
+            // Track number
+            var trackNumber = parseInt(tNumber);
+            // Track numbers from spotify json start at zero
+            trackNumber -= 1;
+
+            // Get valence from json file
+            var valenceFloat = spotifyResponse.audio_features[trackNumber].valence;
+            valenceFloat *= 100;
+            var valenceInt = Math.round(valenceFloat);
+
+            // Get energy from json file
+            var energyFloat = spotifyResponse.audio_features[trackNumber].energy;
+            energyFloat *= 100;
+            var energyInt = Math.round(energyFloat);
+
+            // Get tempo from json file
+            var tempoFloat = spotifyResponse.audio_features[trackNumber].tempo;
+            var tempoInt = Math.round(tempoFloat);
+            var tempo2;
+
+            //##################################
+            //## Populate json data into form ##
+            //##################################
+            // Populate Tempo 1 into form
+            if (tempoInt <= 26) {
+                $("#" + counter + "tempo1").val("Slow Tempo");
+                tempo2 = "Static";
+            }
+            else if (tempoInt <= 53) {
+                $("#" + counter + "tempo1").val("Slow Tempo");
+                tempo2 = "Very Slow";
+            }
+            else if (tempoInt <= 79) {
+                $("#" + counter + "tempo1").val("Slow Tempo");
+                tempo2 = "Slow";
+            }
+            else if (tempoInt <= 96) {
+                $("#" + counter + "tempo1").val("Medium Tempo");
+                tempo2 = "Medium Slow";
+            }
+            else if (tempoInt <= 112) {
+                $("#" + counter + "tempo1").val("Medium Tempo");
+                tempo2 = "Medium";
+            }
+            else if (tempoInt <= 129) {
+                $("#" + counter + "tempo1").val("Medium Tempo");
+                tempo2 = "Medium Fast";
+            }
+            else if (tempoInt <= 149) {
+                $("#" + counter + "tempo1").val("Fast Tempo");
+                tempo2 = "Fast";
+            }
+            else if (tempoInt > 150) {
+                $("#" + counter + "tempo1").val("Fast Tempo");
+                tempo2 = "Very Fast";
             }
             else {
-                var tName = files[i].slice(0, -4);
+                $("#" + counter + "tempo1").val("");
+                tempo2 = "";
             }
-            
-            // Check filename format if downloaded from Amazon in format "01 - SongName" and remove the dash after the track number
-            var format = tName.substring(2, 5);
-            if (format == " - ") {
-                // Slice tName around the " - " in order to remove the dash
-                tName = tName.slice(0, 2) + tName.slice(4, tName.length);
-            }
+            var tempo1 = $("#" + counter + "tempo1").val();
 
-            // Get the track number from start of track name
-            var tNumber = files[i].substr(0, files[i].indexOf(' '));
-            // Remove leading zero
-            tNumber = tNumber.replace(/^0+/, '');
-            // number = for accessing the xml data which is zero indexed
-            var number = parseInt(tNumber);
-
-            number -= 1;
-            // Trackname
-            $("#" + counter + "trackName").val(tName);
-            // Filename
-            $("#" + counter + "fileName").val(files[i]);
-            // Get XML data for each track
-            // Mood 1;
-            var mood1 = $(response).find('TRACK MOOD[ORD="1"]').eq(number).text();
-            $("#" + counter + "mood1").val(mood1);
-            // Tempo 1
-            var tempo1 = $(response).find('TRACK TEMPO[ORD="1"]').eq(number).text();
-            $("#" + counter + "tempo1").val(tempo1);
-            // Tempo 2
-            var tempo2 = $(response).find('TRACK TEMPO[ORD="2"]').eq(number).text();
+            // Populate Tempo 2 value and options into selection box
             switch (tempo1) {
                 case "Slow Tempo":
                     $("#" + counter + "tempo2").append("<option></option>");
                     $("#" + counter + "tempo2").append("<option>Static</option>");
                     $("#" + counter + "tempo2").append("<option>Very Slow</option>");
                     $("#" + counter + "tempo2").append("<option>Slow</option>");
+                    $("#" + counter + "tempo2").val(tempo2);
                     break;
                 case "Medium Tempo":
                     $("#" + counter + "tempo2").append("<option></option>");
                     $("#" + counter + "tempo2").append("<option>Medium Slow</option>");
                     $("#" + counter + "tempo2").append("<option>Medium</option>");
                     $("#" + counter + "tempo2").append("<option>Medium Fast</option>");
+                    $("#" + counter + "tempo2").val(tempo2);
                     break;
                 case "Fast Tempo":
                     $("#" + counter + "tempo2").append("<option></option>");
                     $("#" + counter + "tempo2").append("<option>Fast</option>");
                     $("#" + counter + "tempo2").append("<option>Very Fast</option>");
+                    $("#" + counter + "tempo2").val(tempo2);
                     break;
             }
-            $("#" + counter + "tempo2").val(tempo2);
-            // Genre  2
-            $("#" + counter + "genre2").val(genre2);
-            // Genre 3
-            $("#" + counter + "genre3").val(genre3);
-            // Mood 2
+
+            // Mood 1
+            // Create array of for values for mood1 grouped by valence
+            if (valenceInt <= 19) {
+                valence = ['Somber', 'Gritty', 'Serious', 'Brooding', 'Aggressive'];
+                baseY = 0;
+            }
+            else if (valenceInt <= 39) {
+                valence = ['Melancholy', 'Cool', 'Yearning', 'Urgent', 'Defiant'];
+                baseY = 20;
+            }
+            else if (valenceInt <= 59) {
+                valence = ['Sentimental', 'Sophisticated', 'Sensual', 'Fiery', 'Energizing'];
+                baseY = 40;
+            }
+            else if (valenceInt <= 79) {
+                valence = ['Tender', 'Romantic', 'Empowering', 'Stirring', 'Rowdy'];
+                baseY = 60;
+            }
+            else {
+                valence = ['Peaceful', 'Easygoing', 'Upbeat', 'Lively', 'Excited'];
+                baseY = 80;
+            }
+
+            // Select mood1 array matching energy data from json file
+            if (energyInt <= 19) {
+                mood1 = valence[0];
+                baseX = 0;
+            }
+            else if (energyInt <= 39) {
+                mood1 = valence[1];
+                baseX = 20;
+            }
+            else if (energyInt <= 59) {
+                mood1 = valence[2];
+                baseX = 40;
+            }
+            else if (energyInt <= 79) {
+                mood1 = valence[3];
+                baseX = 60;
+            }
+            else {
+                mood1 = valence[4];
+                baseX = 80;
+            }
+
+            // Populate mood1 value into form
+            $("#" + counter + "mood1").val(mood1);
+
+            // Calculate x and y values for mood2 matric, which is a 2 x 2 matrix
+            var mood2X = (energyInt - baseX) / 20;
+            var mood2Y = (valenceInt - baseY) / 20;
+
+            // Populate mood2 selection options
             switch (mood1) {
                 case "Peaceful":
                     $("#" + counter + "mood2").append("<option></option>");
+                    $("#" + counter + "mood2").append("<option>Pastoral / Serene</option>");
+                    $("#" + counter + "mood2").append("<option>Delicate / Tranquil</option>");
                     $("#" + counter + "mood2").append("<option>Reverent / Healing</option>");
                     $("#" + counter + "mood2").append("<option>Quiet / Introspective</option>");
-                    $("#" + counter + "mood2").append("<option>Delicate / Tranquil</option>");
-                    $("#" + counter + "mood2").append("<option>Pastoral / Serene</option>");
+                    // Calm Positive
+                    if (mood2X <= 0.5 && mood2Y > 0.5) {
+                        $("#" + counter + "mood2").val("Pastoral / Serene");
+                    }
+                    // Energetic Positive
+                    else if (mood2X > 0.5 && mood2Y > 0.5) {
+                        $("#" + counter + "mood2").val("Delicate / Tranquil");
+                    }
+                    // Calm Dark
+                    else if (mood2X <= 0.5 && mood2Y <= 0.5) {
+                        $("#" + counter + "mood2").val("Reverent / Healing");
+                    }
+                    // Energetic Dark
+                    else {
+                        $("#" + counter + "mood2").val("Quiet / Introspective");
+                    }
                     break;
                 case "Romantic":
                     $("#" + counter + "mood2").append("<option></option>");
-                    $("#" + counter + "mood2").append("<option>Lush / Romantic</option>");
                     $("#" + counter + "mood2").append("<option>Sweet / Sincere</option>");
                     $("#" + counter + "mood2").append("<option>Heartfelt Passion</option>");
                     $("#" + counter + "mood2").append("<option>Dramatic / Romantic</option>");
+                    $("#" + counter + "mood2").append("<option>Lush / Romantic</option>");
+                    if (mood2X <= 0.5 && mood2Y > 0.5) {
+                        $("#" + counter + "mood2").val("Sweet / Sincere");
+                    }
+                    else if (mood2X > 0.5 && mood2Y > 0.5) {
+                        $("#" + counter + "mood2").val("Heartfelt Passion");
+                    }
+                    else if (mood2X <= 0.5 && mood2Y <= 0.5) {
+                        $("#" + counter + "mood2").val("Dramatic / Romantic");
+                    }
+                    else {
+                        $("#" + counter + "mood2").val("Lush / Romantic");
+                    }
                     break;
                 case "Sentimental":
                     $("#" + counter + "mood2").append("<option></option>");
-                    $("#" + counter + "mood2").append("<option>Lyrical Sentimental</option>");
-                    $("#" + counter + "mood2").append("<option>Gentle Bittersweet</option>");
                     $("#" + counter + "mood2").append("<option>Tender / Sincere</option>");
+                    $("#" + counter + "mood2").append("<option>Gentle Bittersweet</option>");
+                    $("#" + counter + "mood2").append("<option>Lyrical Sentimental</option>");
                     $("#" + counter + "mood2").append("<option>Cool Melancholy</option>");
+                    if (mood2X <= 0.5 && mood2Y > 0.5) {
+                        $("#" + counter + "mood2").val("Tender / Sincere");
+                    }
+                    else if (mood2X > 0.5 && mood2Y > 0.5) {
+                        $("#" + counter + "mood2").val("Gentle Bittersweet");
+                    }
+                    else if (mood2X <= 0.5 && mood2Y <= 0.5) {
+                        $("#" + counter + "mood2").val("Lyrical Sentimental");
+                    }
+                    else {
+                        $("#" + counter + "mood2").val("Cool Melancholy");
+                    }
                     break;
                 case "Tender":
                     $("#" + counter + "mood2").append("<option></option>");
-                    $("#" + counter + "mood2").append("<option>Romantic / Lyrical</option>");
                     $("#" + counter + "mood2").append("<option>Refined / Mannered</option>");
                     $("#" + counter + "mood2").append("<option>Awakening / Stately</option>");
+                    $("#" + counter + "mood2").append("<option>Romantic / Lyrical</option>");
                     $("#" + counter + "mood2").append("<option>Light Groovy</option>");
+                    if (mood2X <= 0.5 && mood2Y > 0.5) {
+                        $("#" + counter + "mood2").val("Refined / Mannered");
+                    }
+                    else if (mood2X > 0.5 && mood2Y > 0.5) {
+                        $("#" + counter + "mood2").val("Awakening / Stately");
+                    }
+                    else if (mood2X <= 0.5 && mood2Y <= 0.5) {
+                        $("#" + counter + "mood2").val("Romantic / Lyrical");
+                    }
+                    else {
+                        $("#" + counter + "mood2").val("Light Groovy");
+                    }
                     break;
                 case "Easygoing":
                     $("#" + counter + "mood2").append("<option></option>");
-                    $("#" + counter + "mood2").append("<option>Friendly</option>");
                     $("#" + counter + "mood2").append("<option>Hopeful / Breezy</option>");
                     $("#" + counter + "mood2").append("<option>Cheerful / Playful</option>");
+                    $("#" + counter + "mood2").append("<option>Friendly</option>");
                     $("#" + counter + "mood2").append("<option>Charming / Easygoing</option>");
+                    if (mood2X <= 0.5 && mood2Y > 0.5) {
+                        $("#" + counter + "mood2").val("Hopeful / Breezy");
+                    }
+                    else if (mood2X > 0.5 && mood2Y > 0.5) {
+                        $("#" + counter + "mood2").val("Cheerful / Playful");
+                    }
+                    else if (mood2X <= 0.5 && mood2Y <= 0.5) {
+                        $("#" + counter + "mood2").val("Friendly");
+                    }
+                    else {
+                        $("#" + counter + "mood2").val("Charming / Easygoing");
+                    }
                     break;
                 case "Yearning":
                     $("#" + counter + "mood2").append("<option></option>");
-                    $("#" + counter + "mood2").append("<option>Sensitive / Exploring</option>");
-                    $("#" + counter + "mood2").append("<option>Energetic Yearning</option>");
-                    $("#" + counter + "mood2").append("<option>Energetic Dreamy</option>");
                     $("#" + counter + "mood2").append("<option>Bittersweet Pop</option>");
+                    $("#" + counter + "mood2").append("<option>Energetic Yearning</option>");
+                    $("#" + counter + "mood2").append("<option>Sensitive / Exploring</option>");
+                    $("#" + counter + "mood2").append("<option>Energetic Dreamy</option>");
+                    if (mood2X <= 0.5 && mood2Y > 0.5) {
+                        $("#" + counter + "mood2").val("Bittersweet Pop");
+                    }
+                    else if (mood2X > 0.5 && mood2Y > 0.5) {
+                        $("#" + counter + "mood2").val("Energetic Yearning");
+                    }
+                    else if (mood2X <= 0.5 && mood2Y <= 0.5) {
+                        $("#" + counter + "mood2").val("Sensitive / Exploring");
+                    }
+                    else {
+                        $("#" + counter + "mood2").val("Energetic Dreamy");
+                    }
                     break;
                 case "Sophisticated":
                     $("#" + counter + "mood2").append("<option></option>");
-                    $("#" + counter + "mood2").append("<option>Smoky / Romantic</option>");
-                    $("#" + counter + "mood2").append("<option>Intimate Bittersweet</option>");
                     $("#" + counter + "mood2").append("<option>Suave / Sultry</option>");
                     $("#" + counter + "mood2").append("<option>Dark Playful</option>");
+                    $("#" + counter + "mood2").append("<option>Intimate Bittersweet</option>");
+                    $("#" + counter + "mood2").append("<option>Smoky / Romantic</option>");
+                    if (mood2X <= 0.5 && mood2Y > 0.5) {
+                        $("#" + counter + "mood2").val("Suave / Sultry");
+                    }
+                    else if (mood2X > 0.5 && mood2Y > 0.5) {
+                        $("#" + counter + "mood2").val("Dark Playful");
+                    }
+                    else if (mood2X <= 0.5 && mood2Y <= 0.5) {
+                        $("#" + counter + "mood2").val("Intimate Bittersweet");
+                    }
+                    else {
+                        $("#" + counter + "mood2").val("Smoky / Romantic");
+                    }
                     break;
                 case "Sensual":
                     $("#" + counter + "mood2").append("<option></option>");
                     $("#" + counter + "mood2").append("<option>Soft Soulful</option>");
                     $("#" + counter + "mood2").append("<option>Sensual Groove</option>");
-                    $("#" + counter + "mood2").append("<option>Intimate</option>");
                     $("#" + counter + "mood2").append("<option>Dreamy Pulse</option>");
+                    $("#" + counter + "mood2").append("<option>Intimate</option>");
+                    if (mood2X <= 0.5 && mood2Y > 0.5) {
+                        $("#" + counter + "mood2").val("Soft Soulful");
+                    }
+                    else if (mood2X > 0.5 && mood2Y > 0.5) {
+                        $("#" + counter + "mood2").val("Sensual Groove");
+                    }
+                    else if (mood2X <= 0.5 && mood2Y <= 0.5) {
+                        $("#" + counter + "mood2").val("Dreamy Pulse");
+                    }
+                    else {
+                        $("#" + counter + "mood2").val("Intimate");
+                    }
                     break;
                 case "Cool":
                     $("#" + counter + "mood2").append("<option></option>");
-                    $("#" + counter + "mood2").append("<option>Cool Confidence</option>");
                     $("#" + counter + "mood2").append("<option>Casual Groove</option>");
-                    $("#" + counter + "mood2").append("<option>Dark Groovy</option>");
                     $("#" + counter + "mood2").append("<option>Wary / Defiant</option>");
+                    $("#" + counter + "mood2").append("<option>Cool Confidence</option>");
+                    $("#" + counter + "mood2").append("<option>Dark Groovy</option>");
+                    if (mood2X <= 0.5 && mood2Y > 0.5) {
+                        $("#" + counter + "mood2").val("Casual Groove");
+                    }
+                    else if (mood2X > 0.5 && mood2Y > 0.5) {
+                        $("#" + counter + "mood2").val("Wary / Defiant");
+                    }
+                    else if (mood2X <= 0.5 && mood2Y <= 0.5) {
+                        $("#" + counter + "mood2").val("Cool Confidence");
+                    }
+                    else {
+                        $("#" + counter + "mood2").val("Dark Groovy");
+                    }
                     break;
                 case "Gritty":
-                    $("#" + counter + "mood2").append("<option></option>");
-                    $("#" + counter + "mood2").append("<option>Depressed / Lonely</option>");
+                    $("#" + counter + "mood2").append("<option></option>"); 
                     $("#" + counter + "mood2").append("<option>Sober / Determined</option>");
-                    $("#" + counter + "mood2").append("<option>Gritty / Soulful</option>");
                     $("#" + counter + "mood2").append("<option>Strumming Yearning</option>");
+                    $("#" + counter + "mood2").append("<option>Depressed / Lonely</option>");
+                    $("#" + counter + "mood2").append("<option>Gritty / Soulful</option>");
+                    if (mood2X <= 0.5 && mood2Y > 0.5) {
+                        $("#" + counter + "mood2").val("Sober / Determined");
+                    }
+                    else if (mood2X > 0.5 && mood2Y > 0.5) {
+                        $("#" + counter + "mood2").val("Strumming Yearning");
+                    }
+                    else if (mood2X <= 0.5 && mood2Y <= 0.5) {
+                        $("#" + counter + "mood2").val("Depressed / Lonely");
+                    }
+                    else {
+                        $("#" + counter + "mood2").val("Gritty / Soulful");
+                    }
                     break;
                 case "Somber":
                     $("#" + counter + "mood2").append("<option></option>");
-                    $("#" + counter + "mood2").append("<option>Dark Cosmic</option>");
-                    $("#" + counter + "mood2").append("<option>Enigmatic / Mysterious</option>");
-                    $("#" + counter + "mood2").append("<option>Creepy / Ominous</option>");
                     $("#" + counter + "mood2").append("<option>Solemn / Spiritual</option>");
+                    $("#" + counter + "mood2").append("<option>Enigmatic / Mysterious</option>");
+                    $("#" + counter + "mood2").append("<option>Dark Cosmic</option>");
+                    $("#" + counter + "mood2").append("<option>Creepy / Ominous</option>");
+                    if (mood2X <= 0.5 && mood2Y > 0.5) {
+                        $("#" + counter + "mood2").val("Solemn / Spiritual");
+                    }
+                    else if (mood2X > 0.5 && mood2Y > 0.5) {
+                        $("#" + counter + "mood2").val("Enigmatic / Mysterious");
+                    }
+                    else if (mood2X <= 0.5 && mood2Y <= 0.5) {
+                        $("#" + counter + "mood2").val("Dark Cosmic");
+                    }
+                    else {
+                        $("#" + counter + "mood2").val("Creepy / Ominous");
+                    }
                     break;
                 case "Melancholy":
                     $("#" + counter + "mood2").append("<option></option>");
                     $("#" + counter + "mood2").append("<option>Mysterious / Dreamy</option>");
-                    $("#" + counter + "mood2").append("<option>Wistful / Forlorn</option>");
                     $("#" + counter + "mood2").append("<option>Light Melancholy</option>");
+                    $("#" + counter + "mood2").append("<option>Wistful / Forlorn</option>");
                     $("#" + counter + "mood2").append("<option>Sad / Soulful</option>");
+                    if (mood2X <= 0.5 && mood2Y > 0.5) {
+                        $("#" + counter + "mood2").val("Mysterious / Dreamy");
+                    }
+                    else if (mood2X > 0.5 && mood2Y > 0.5) {
+                        $("#" + counter + "mood2").val("Light Melancholy");
+                    }
+                    else if (mood2X <= 0.5 && mood2Y <= 0.5) {
+                        $("#" + counter + "mood2").val("Wistful / Forlorn");
+                    }
+                    else {
+                        $("#" + counter + "mood2").val("Sad / Soulful");
+                    }
                     break;
                 case "Serious":
                     $("#" + counter + "mood2").append("<option></option>");
-                    $("#" + counter + "mood2").append("<option>Thrilling</option>");
                     $("#" + counter + "mood2").append("<option>Melodramatic</option>");
-                    $("#" + counter + "mood2").append("<option>Serious / Cerebral</option>");
                     $("#" + counter + "mood2").append("<option>Hypnotic Rhythm</option>");
+                    $("#" + counter + "mood2").append("<option>Serious / Cerebral</option>");
+                    $("#" + counter + "mood2").append("<option>Thrilling</option>");
+                    if (mood2X <= 0.5 && mood2Y > 0.5) {
+                        $("#" + counter + "mood2").val("Melodramatic");
+                    }
+                    else if (mood2X > 0.5 && mood2Y > 0.5) {
+                        $("#" + counter + "mood2").val("Hypnotic Rhythm");
+                    }
+                    else if (mood2X <= 0.5 && mood2Y <= 0.5) {
+                        $("#" + counter + "mood2").val("Serious / Cerebral");
+                    }
+                    else {
+                        $("#" + counter + "mood2").val("Thrilling");
+                    }
                     break;
                 case "Brooding":
                     $("#" + counter + "mood2").append("<option></option>");
-                    $("#" + counter + "mood2").append("<option>Energetic Melancholy</option>");
-                    $("#" + counter + "mood2").append("<option>Alienated / Brooding</option>");
                     $("#" + counter + "mood2").append("<option>Evocative / Intriguing</option>");
+                    $("#" + counter + "mood2").append("<option>Energetic Melancholy</option>");
                     $("#" + counter + "mood2").append("<option>Dreamy Brooding</option>");
+                    $("#" + counter + "mood2").append("<option>Alienated / Brooding</option>");
+                    if (mood2X <= 0.5 && mood2Y > 0.5) {
+                        $("#" + counter + "mood2").val("Evocative / Intriguing");
+                    }
+                    else if (mood2X > 0.5 && mood2Y > 0.5) {
+                        $("#" + counter + "mood2").val("Energetic Melancholy");
+                    }
+                    else if (mood2X <= 0.5 && mood2Y <= 0.5) {
+                        $("#" + counter + "mood2").val("Dreamy Brooding");
+                    }
+                    else {
+                        $("#" + counter + "mood2").val("Alienated / Brooding");
+                    }
                     break;
                 case "Fiery":
                     $("#" + counter + "mood2").append("<option></option>");
@@ -580,20 +672,56 @@ function albumMetadata() {
                     $("#" + counter + "mood2").append("<option>Fiery Groove</option>");
                     $("#" + counter + "mood2").append("<option>Passionate Rhythm</option>");
                     $("#" + counter + "mood2").append("<option>Energetic Abstract Groove</option>");
+                    if (mood2X <= 0.5 && mood2Y > 0.5) {
+                        $("#" + counter + "mood2").val("Dark Sparkling Lyrical");
+                    }
+                    else if (mood2X > 0.5 && mood2Y > 0.5) {
+                        $("#" + counter + "mood2").val("Fiery Groove");
+                    }
+                    else if (mood2X <= 0.5 && mood2Y <= 0.5) {
+                        $("#" + counter + "mood2").val("Passionate Rhythm");
+                    }
+                    else {
+                        $("#" + counter + "mood2").val("Energetic Abstract Groove");
+                    }
                     break;
                 case "Urgent":
                     $("#" + counter + "mood2").append("<option></option>");
-                    $("#" + counter + "mood2").append("<option>Dark Urgent</option>");
                     $("#" + counter + "mood2").append("<option>Dark Pop</option>");
                     $("#" + counter + "mood2").append("<option>Dark Pop Intensity</option>");
+                    $("#" + counter + "mood2").append("<option>Dark Urgent</option>");
                     $("#" + counter + "mood2").append("<option>Energetic Anxious</option>");
+                    if (mood2X <= 0.5 && mood2Y > 0.5) {
+                        $("#" + counter + "mood2").val("Dark Pop");
+                    }
+                    else if (mood2X > 0.5 && mood2Y > 0.5) {
+                        $("#" + counter + "mood2").val("Dark Pop Intensity");
+                    }
+                    else if (mood2X <= 0.5 && mood2Y <= 0.5) {
+                        $("#" + counter + "mood2").val("Dark Urgent");
+                    }
+                    else {
+                        $("#" + counter + "mood2").val("Energetic Anxious");
+                    }
                     break;
                 case "Defiant":
                     $("#" + counter + "mood2").append("<option></option>");
                     $("#" + counter + "mood2").append("<option>Heavy Brooding</option>");
-                    $("#" + counter + "mood2").append("<option>Hard Dark Excitement</option>");
                     $("#" + counter + "mood2").append("<option>Hard Positive Excitement</option>");
                     $("#" + counter + "mood2").append("<option>Attitude / Defiant</option>");
+                    $("#" + counter + "mood2").append("<option>Hard Dark Excitement</option>");
+                    if (mood2X <= 0.5 && mood2Y > 0.5) {
+                        $("#" + counter + "mood2").val("Heavy Brooding");
+                    }
+                    else if (mood2X > 0.5 && mood2Y > 0.5) {
+                        $("#" + counter + "mood2").val("Hard Positive Excitement");
+                    }
+                    else if (mood2X <= 0.5 && mood2Y <= 0.5) {
+                        $("#" + counter + "mood2").val("Attitude / Defiant");
+                    }
+                    else {
+                        $("#" + counter + "mood2").val("Hard Dark Excitement");
+                    }
                     break;
                 case "Aggressive":
                     $("#" + counter + "mood2").append("<option></option>");
@@ -601,113 +729,1386 @@ function albumMetadata() {
                     $("#" + counter + "mood2").append("<option>Heavy Triumphant</option>");
                     $("#" + counter + "mood2").append("<option>Chaotic / Intense</option>");
                     $("#" + counter + "mood2").append("<option>Aggressive Power</option>");
+                    if (mood2X <= 0.5 && mood2Y > 0.5) {
+                        $("#" + counter + "mood2").val("Dark Hard Beat");
+                    }
+                    else if (mood2X > 0.5 && mood2Y > 0.5) {
+                        $("#" + counter + "mood2").val("Heavy Triumphant");
+                    }
+                    else if (mood2X <= 0.5 && mood2Y <= 0.5) {
+                        $("#" + counter + "mood2").val("Chaotic / Intense");
+                    }
+                    else {
+                        $("#" + counter + "mood2").val("Aggressive Power");
+                    }
                     break;
                 case "Rowdy":
                     $("#" + counter + "mood2").append("<option></option>");
-                    $("#" + counter + "mood2").append("<option>Driving Dark Groove</option>");
-                    $("#" + counter + "mood2").append("<option>Wild / Rowdy</option>");
                     $("#" + counter + "mood2").append("<option>Ramshackle / Rollicking</option>");
+                    $("#" + counter + "mood2").append("<option>Wild / Rowdy</option>");
                     $("#" + counter + "mood2").append("<option>Confident / Tough</option>");
+                    $("#" + counter + "mood2").append("<option>Driving Dark Groove</option>");
+                    if (mood2X <= 0.5 && mood2Y > 0.5) {
+                        $("#" + counter + "mood2").val("Ramshackle / Rollicking");
+                    }
+                    else if (mood2X > 0.5 && mood2Y > 0.5) {
+                        $("#" + counter + "mood2").val("Wild / Rowdy");
+                    }
+                    else if (mood2X <= 0.5 && mood2Y <= 0.5) {
+                        $("#" + counter + "mood2").val("Confident / Tough");
+                    }
+                    else {
+                        $("#" + counter + "mood2").val("Driving Dark Groove");
+                    }
                     break;
                 case "Excited":
                     $("#" + counter + "mood2").append("<option></option>");
                     $("#" + counter + "mood2").append("<option>Loud Celebratory</option>");
-                    $("#" + counter + "mood2").append("<option>Happy Excitement</option>");
-                    $("#" + counter + "mood2").append("<option>Upbeat Pop Groove</option>");
                     $("#" + counter + "mood2").append("<option>Euphoric Energy</option>");
+                    $("#" + counter + "mood2").append("<option>Upbeat Pop Groove</option>");
+                    $("#" + counter + "mood2").append("<option>Happy Excitement</option>");
+                    if (mood2X <= 0.5 && mood2Y > 0.5) {
+                        $("#" + counter + "mood2").val("Loud Celebratory");
+                    }
+                    else if (mood2X > 0.5 && mood2Y > 0.5) {
+                        $("#" + counter + "mood2").val("Euphoric Energy");
+                    }
+                    else if (mood2X <= 0.5 && mood2Y <= 0.5) {
+                        $("#" + counter + "mood2").val("Upbeat Pop Groove");
+                    }
+                    else {
+                        $("#" + counter + "mood2").val("Happy Excitement");
+                    }
                     break;
                 case "Energizing":
                     $("#" + counter + "mood2").append("<option></option>");
                     $("#" + counter + "mood2").append("<option>Arousing Groove</option>");
                     $("#" + counter + "mood2").append("<option>Heavy Beat</option>");
-                    $("#" + counter + "mood2").append("<option>Abstract Beat</option>");
                     $("#" + counter + "mood2").append("<option>Edgy / Sexy</option>");
+                    $("#" + counter + "mood2").append("<option>Abstract Beat</option>");
+                    if (mood2X <= 0.5 && mood2Y > 0.5) {
+                        $("#" + counter + "mood2").val("Arousing Groove");
+                    }
+                    else if (mood2X > 0.5 && mood2Y > 0.5) {
+                        $("#" + counter + "mood2").val("Heavy Beat");
+                    }
+                    else if (mood2X <= 0.5 && mood2Y <= 0.5) {
+                        $("#" + counter + "mood2").val("Edgy / Sexy");
+                    }
+                    else {
+                        $("#" + counter + "mood2").val("Abstract Beat");
+                    }
                     break;
                 case "Empowering":
                     $("#" + counter + "mood2").append("<option></option>");
-                    $("#" + counter + "mood2").append("<option>Dramatic Emotion</option>");
-                    $("#" + counter + "mood2").append("<option>Powerful / Heroic</option>");
-                    $("#" + counter + "mood2").append("<option>Idealistic / Stirring</option>");
                     $("#" + counter + "mood2").append("<option>Strong / Stable</option>");
+                    $("#" + counter + "mood2").append("<option>Powerful / Heroic</option>");
+                    $("#" + counter + "mood2").append("<option>Dramatic Emotion</option>");
+                    $("#" + counter + "mood2").append("<option>Idealistic / Stirring</option>");
+                    if (mood2X <= 0.5 && mood2Y > 0.5) {
+                        $("#" + counter + "mood2").val("Strong / Stable");
+                    }
+                    else if (mood2X > 0.5 && mood2Y > 0.5) {
+                        $("#" + counter + "mood2").val("Powerful / Heroic");
+                    }
+                    else if (mood2X <= 0.5 && mood2Y <= 0.5) {
+                        $("#" + counter + "mood2").val("Dramatic Emotion");
+                    }
+                    else {
+                        $("#" + counter + "mood2").val("Idealistic / Stirring");
+                    }
                     break;
                 case "Stirring":
                     $("#" + counter + "mood2").append("<option></option>");
-                    $("#" + counter + "mood2").append("<option>Jubilant / Soulful</option>");
-                    $("#" + counter + "mood2").append("<option>Triumphant / Rousing</option>");
-                    $("#" + counter + "mood2").append("<option>Focused Sparkling</option>");
                     $("#" + counter + "mood2").append("<option>Invigorating / Joyous</option>");
+                    $("#" + counter + "mood2").append("<option>Jubilant / Soulful</option>");
+                    $("#" + counter + "mood2").append("<option>Focused Sparkling</option>");
+                    $("#" + counter + "mood2").append("<option>Triumphant / Rousing</option>");
+                    if (mood2X <= 0.5 && mood2Y > 0.5) {
+                        $("#" + counter + "mood2").val("Invigorating / Joyous");
+                    }
+                    else if (mood2X > 0.5 && mood2Y > 0.5) {
+                        $("#" + counter + "mood2").val("Jubilant / Soulful");
+                    }
+                    else if (mood2X <= 0.5 && mood2Y <= 0.5) {
+                        $("#" + counter + "mood2").val("Focused Sparkling");
+                    }
+                    else {
+                        $("#" + counter + "mood2").val("Triumphant / Rousing");
+                    }
                     break;
                 case "Lively":
                     $("#" + counter + "mood2").append("<option></option>");
                     $("#" + counter + "mood2").append("<option>Showy / Rousing</option>");
-                    $("#" + counter + "mood2").append("<option>Playful / Swingin'</option>");
-                    $("#" + counter + "mood2").append("<option>Exuberant / Festive</option>");
                     $("#" + counter + "mood2").append("<option>Lusty / Jaunty</option>");
+                    $("#" + counter + "mood2").append("<option>Playful / Swinging</option>");
+                    $("#" + counter + "mood2").append("<option>Exuberant / Festive</option>");
+                    if (mood2X <= 0.5 && mood2Y > 0.5) {
+                        $("#" + counter + "mood2").val("Showy / Rousing");
+                    }
+                    else if (mood2X > 0.5 && mood2Y > 0.5) {
+                        $("#" + counter + "mood2").val("Lusty / Jaunty");
+                    }
+                    else if (mood2X <= 0.5 && mood2Y <= 0.5) {
+                        $("#" + counter + "mood2").val("Playful / Swinging");
+                    }
+                    else {
+                        $("#" + counter + "mood2").val("Exuberant / Festive");
+                    }
                     break;
                 case "Upbeat":
                     $("#" + counter + "mood2").append("<option></option>");
-                    $("#" + counter + "mood2").append("<option>Happy / Soulful</option>");
                     $("#" + counter + "mood2").append("<option>Carefree Pop</option>");
                     $("#" + counter + "mood2").append("<option>Party / Fun</option>");
                     $("#" + counter + "mood2").append("<option>Soulful / Easygoing</option>");
+                    $("#" + counter + "mood2").append("<option>Happy / Soulful</option>");
+                    if (mood2X <= 0.5 && mood2Y > 0.5) {
+                        $("#" + counter + "mood2").val("Carefree Pop");
+                    }
+                    else if (mood2X > 0.5 && mood2Y > 0.5) {
+                        $("#" + counter + "mood2").val("Party / Fun");
+                    }
+                    else if (mood2X <= 0.5 && mood2Y <= 0.5) {
+                        $("#" + counter + "mood2").val("Soulful / Easygoing");
+                    }
+                    else {
+                        $("#" + counter + "mood2").val("Happy / Soulful");
+                    }
                     break;
                 case "Other":
                     $("#" + counter + "mood2").append("<option></option>");
                     $("#" + counter + "mood2").append("<option>Other</option>");
                     break;
             }
-
-            // Mood 2
-            if (mood1 == "Other") {
-                var mood2 = "Other";
-                moodCount += 1;
-            }
-            else {
-                var mood2 = $(response).find('TRACK MOOD[ORD="2"]').eq(number - moodCount).text();
-            }
-            $("#" + counter + "mood2").val(mood2);
-            counter += 1;
-        }
-
-        // Populate hidden field with number of tracks
-        counter -= 1
-        $("#inpCount").val(counter)
-
-        // Populate meta data from Gracenote XML file
-        // Get URL of cover art and display image and URl in text input box
-        var coverArt = $(response).find('URL').eq(0).text();
-        $("#imgCoverArt").attr('src', coverArt);
-        $("#inpCoverArtURL").val(coverArt);
-
-        // Get album release date
-        var albumDate = $(response).find('DATE').eq(0).text();
-        if (albumDate == "") {
-            albumDate = "";
-        }
-        $("#inpReleaseDate").val(albumDate);
-
-        // Get artist origin
-        var origin = "";
-        for (i = 4; i > 0; i--) {
-            var tempOrigin = $(response).find('ARTIST_ORIGIN[ORD="' + i + '"]').eq(0).text();
-            if (tempOrigin != "" && i != 1) {
-                origin = origin + tempOrigin + ", ";
-            }
-            else {
-                origin = origin + tempOrigin;
-            }
-        }
-        // Check if artist is Various Artists and if it is don't add artist origin
-        if (artist == "Various Artists") {
-            $("#inpArtistOrigin").val("");
-        }
-        else {
-            $("#inpArtistOrigin").val(origin);
         }
     }
-    // Hide modal box
-    $('#okModal').css('display', 'none');
+});
+
+function albumMetadata() {
+    // Set variables
+    var artist = $("#selectedArtist").text();
+    var album = $("#selectedAlbum").text();
+
+    // Replace encoded &amp with &
+    artist = artist.replace(/&amp;/g, '&');
+    album = album.replace(/&amp;/g, '&');
+
+    // Send IPC to search Spotify for album and artist
+    var query = 'album:' + album + ' artist:' + artist + '&type=album';
+
+    ipcRenderer.send("spotify_search", [query, album])
+
+    // Call ajax function artistIDQuery
+    queryArtistID(newArtist).done(artistIDProcessData);
+
+    // Function to send ajax xml query to Musicbrainz server
+    function queryArtistID(query) {
+        var queryArtist = query;
+        // Artist serach url
+        var url = "https://musicbrainz.org/ws/2/artist/?query=artist:" + queryArtist;
+        // Encode url
+        var encodedUrl = encodeURI(url);
+        return $.ajax({
+            url: encodedUrl
+        });
+    }
+
+    // Function to process data from received xml file searching for artistID
+    function artistIDProcessData(xml) {
+        var releaseGroupID = "";
+
+        $(xml).find('artist').each(function () {
+            var $artist = $(this);
+            var matchScore = $artist.attr('ns2:score')
+            // Find the 100% artist match
+            if (matchScore == "100") {
+                artistMBID = $artist.attr("id");
+            }
+        });
+
+        // Check if at musicbrainz ID has been found
+        if (artistMBID != "") {
+            // Call ajax function artistIDQuery
+            releaseQueryArtist(artistMBID).done(dataReleaseProcess);
+
+            // Function to send ajax xml query to Musicbrainz server
+            function releaseQueryArtist(query) {
+                var queryArtistID = query;
+                var url;
+                // Artist search url
+                if (importType == "single") {
+                    url = "https://musicbrainz.org/ws/2/release-group?artist=" + queryArtistID + "&limit=100&type=single"
+                }
+                else {
+                    url = "https://musicbrainz.org/ws/2/release-group?artist=" + queryArtistID + "&limit=100&type=album|ep"
+                }
+                return $.ajax({
+                    url: url
+                });
+            }
+
+            // Function to process data from received xml file searching for releaseQueryArtist
+            function dataReleaseProcess(xml) {
+                // Get number of releases from xml file
+                var $releaseCount = $(xml).find('release-group-list');
+                var count = $releaseCount.attr('count')
+                var checkCount = parseInt(count)
+                if (checkCount > 100) {
+                    count = "100";
+                }
+
+                // Check if any albums found
+                if (count != "0") {
+                    // Loop through each release-group and get data
+                    $(xml).find('release-group').each(function () {
+                        var $release = $(this);
+                        var title = $release.find('title').text().toLowerCase();
+                        // Remove any commas to aid matching
+                        title = title.replace(',', '');
+                        var date = $release.find('first-release-date').text();
+                        newAlbum = newAlbum.toLowerCase();
+                        // Remove any commas to aid matching
+                        newAlbum = newAlbum.replace(',', '');
+                        if (title == newAlbum) {
+                            releaseGroupID = $release.attr('id')
+                            var albumDate = date.substring(0, 4);
+                            $("#inpReleaseDate").val(albumDate);
+
+                            // Get cover artwork
+                            // Call ajax function releaseIDQuery
+                            releaseIDQuery(releaseGroupID).done(dataReleaseIDProcess);
+
+                            // Function to send ajax xml query to Musicbrainz server
+                            function releaseIDQuery(query) {
+                                var queryreleaseGroupID = query;
+                                // Artist serach url
+                                var url = "https://musicbrainz.org/ws/2/release?release-group=" + queryreleaseGroupID
+                                return $.ajax({
+                                    url: url
+                                });
+                            }
+
+                            // Function to process data from received xml file searching for releaseIDQuery
+                            function dataReleaseIDProcess(xml) {
+                                var frontFound = false;
+                                $(xml).find('release').each(function () {
+                                    var $release = $(this);
+                                    var releaseID = $release.attr('id');
+                                    var title = $release.find('title').text().toLowerCase();
+                                    var front = $release.find('front').text();
+                                    var back = $release.find('back').text();
+
+                                    if (title == newAlbum) {
+                                        // Back cover art
+                                        if (back == "true") {
+                                            var backArt = "https://coverartarchive.org/release/" + releaseID + "/back-500"
+                                            $("#inpBackArtURL").val(backArt);
+                                            $("#backArt").text("Back Cover Artwork Found.")
+                                        }
+
+                                        if (front == "true" && frontFound == false) {
+                                            // Front cover art
+                                            frontFound = true;
+                                            var coverArt = "https://coverartarchive.org/release/" + releaseID + "/front-500"
+
+                                            $("#imgCoverArt").attr('src', coverArt);
+                                            $("#inpCoverArtURL").val(coverArt);
+
+                                            var coverArtUrl = $("#inpCoverArtURL").val();
+                                            var artFilePath = MUSIC_PATH + artist + "/" + album + "/tempArt.jpg"
+                                            // Send message to main.js to save and tempArt image
+                                            ipcRenderer.send("save_temp_artwork", [artFilePath, coverArtUrl]);
+                                        }
+                                    }
+                                });
+                                if (frontFound == false) {
+                                    console.log("No artwork found")
+                                }
+                            }
+
+                            // Call ajax function releaseQueryGenre
+                            releaseQueryGenre(releaseGroupID).done(dataGenreProcess);
+
+                            // Function to send ajax xml query to Musicbrainz server
+                            function releaseQueryGenre(query) {
+                                var queryreleaseGroupID = query;
+                                // Artist serach url
+                                var url = "https://musicbrainz.org/ws/2/release-group/" + queryreleaseGroupID + "?inc=genres"
+                                return $.ajax({
+                                    url: url
+                                });
+                            }
+
+                            // Function to process data from received xml file searching for releaseQueryGenre 
+                            function dataGenreProcess(xml) {
+                                var tags = "";
+                                // Get name of each genre in genre-list
+                                $(xml).find('genre').each(function () {
+                                    var $genreList = $(this);
+                                    var genreName = $genreList.find('name').text();
+                                    tags += ", " + genreName
+                                });
+                                // Remove leading comma from string
+                                var genreTags = tags.substring(1);
+                                // Display list of genres found
+                                $("#genreTagsFound").css('display', 'inline-block');
+                                $("#genreTags").text(genreTags)
+                            }
+                            return false;
+                        }    
+                    });                   
+                }
+            }
+            // Call ajax function originQueryArtist
+            originQueryArtist(artistMBID).done(dataOriginProcess);
+
+            // Function to send ajax xml query to Musicbrainz server
+            function originQueryArtist(query) {
+                var queryArtistID = query;
+                // Artist serach url
+                var url = "https://musicbrainz.org/ws/2/artist/" + queryArtistID
+                return $.ajax({
+                    url: url
+                });
+            }
+
+            // Function to process data from received xml file searching for originQueryArtist
+            function dataOriginProcess(xml) {
+                var $area = $(xml).find('area');
+                var origin = $area.find('name').text();
+
+                // Check if artist is Various Artists and if it is don't add artist origin
+                if (artist == "Various Artists") {
+                    $("#inpArtistOrigin").val("");
+                }
+                else {
+                    $("#inpArtistOrigin").val(origin);
+                }
+            }
+        }
+    }
+
+    var counter = 1;
+    for (var i = 0; i < files.length; i++) {
+        // Check if file ext is flac or mp3/m4a/wav
+        var check = files[i].substr(-4);
+        if (check == "flac") {
+            var tName = files[i].slice(0, -5);
+        }
+        else {
+            var tName = files[i].slice(0, -4);
+        }
+
+        // Check filename format if downloaded from Amazon in format "01 - SongName" and remove the dash after the track number
+        var format = tName.substring(2, 5);
+        if (format == " - ") {
+            // Slice tName around the " - " in order to remove the dash
+            tName = tName.slice(0, 2) + tName.slice(4, tName.length);
+        }
+        // Trackname
+        $("#" + counter + "trackName").val(tName);
+        // Filename
+        $("#" + counter + "fileName").val(files[i]);
+
+        counter += 1;
+    }
 }
+
+//#########################
+//### GENRE 2 SELECTION ###
+//#########################
+// Change Genre2 selection box when Genre changed
+$(document).on('change', '#sltGenre1', function () {
+    // Get value selected
+    var genreName = $(this).val();
+    if (genreName != "") {
+        $("#lblGenre2").css('display', 'inline-block');
+        $("#inpGenre2").css('display', 'inline-block');
+        $('#inpGenre2').val("");
+        $('#listGenre2').empty();
+
+        populateGenre2()
+    }
+    else {
+        $("#lblGenre2").css('display', 'none');
+        $("#inpGenre2").css('display', 'none');
+        $('#inpGenre2').val("");
+        $('#listGenre2').empty();
+        $("#lblGenre3").css('display', 'none');
+        $("#inpGenre3").css('display', 'none');
+        $('#inpGenre3').val("");
+        $('#listGenre3').empty();
+        // Clear each track genre2 and genre3
+        var counter = 1;
+        for (var i = 0; i < files.length; i++) {
+            // Genre2
+            $("#" + counter + "genre2").val('');
+            // Genre3
+            $("#" + counter + "genre3").val('');
+            counter += 1;
+        }
+    }
+
+    // Populate list values of genre2 based on main genre
+    async function populateGenre2() {
+        // Array of database values for genre2
+        var dbGenre2 = [];
+        // Get genreID for main genre selected
+        var sql = "SELECT genreID FROM genre WHERE genreName=?";
+        var row = await dBase.get(sql, genreName);
+
+        // Select all current genre2 from database
+        try {
+            var sql = "SELECT DISTINCT genre2 FROM track WHERE genreID=? ORDER BY genre2 ASC";
+            var rows = await dBase.all(sql, row.genreID);
+            // And put into array 
+            rows.forEach((row) => {
+                dbGenre2.push(row.genre2);
+            });
+        }
+        catch{
+            dbGenre2 = [];
+        }
+
+        // Empty contents of genre2 selection element
+        $('#inpGenre2').empty();
+        // Populate genre2 selection element based on value in genre selection element
+        switch (genreName) {
+            case "Alternative & Punk":
+                var fixedGenre2 = ['Alternative', 'Alternative Folk', 'Brit Rock', 'Garage Rock Revival', 'New Wave Pop', 'Punk'];
+                // Combine and remove duplicates from fixedGenre2 and database genre2 into 1 array
+                var genre2 = fixedGenre2.concat(dbGenre2.filter((item) => fixedGenre2.indexOf(item) < 0))
+                // Populate inpubox list
+                for (const item of genre2) {
+                    $('#listGenre2').append($("<option>").attr('value', item));
+                }
+                break;
+            case "Blues":
+                var fixedGenre2 = ['Acoustic Blues', 'Blues Rock', 'Electric Blues', 'General Blues'];
+                // Combine and remove duplicates from fixedGenre2 and database genre2 into 1 array
+                var genre2 = fixedGenre2.concat(dbGenre2.filter((item) => fixedGenre2.indexOf(item) < 0))
+                // Populate inpubox list
+                for (const item of genre2) {
+                    $('#listGenre2').append($("<option>").attr('value', item));
+                }
+                break;
+            case "Classical":
+                var fixedGenre2 = ['Baroque', 'Chamber Music', 'Classical Guitar', 'Contemporary', 'General Classical', 'Opera'];
+                // Combine and remove duplicates from fixedGenre2 and database genre2 into 1 array
+                var genre2 = fixedGenre2.concat(dbGenre2.filter((item) => fixedGenre2.indexOf(item) < 0))
+                // Populate inpubox list
+                for (const item of genre2) {
+                    $('#listGenre2').append($("<option>").attr('value', item));
+                }
+                break;
+            case "Comedy":
+                var fixedGenre2 = ['Comedy'];
+                // Combine and remove duplicates from fixedGenre2 and database genre2 into 1 array
+                var genre2 = fixedGenre2.concat(dbGenre2.filter((item) => fixedGenre2.indexOf(item) < 0))
+                // Populate inpubox list
+                for (const item of genre2) {
+                    $('#listGenre2').append($("<option>").attr('value', item));
+                }
+                break;
+            case "Country":
+                var fixedGenre2 = ['Classic Country', 'General Country', 'Traditional Country'];
+                // Combine and remove duplicates from fixedGenre2 and database genre2 into 1 array
+                var genre2 = fixedGenre2.concat(dbGenre2.filter((item) => fixedGenre2.indexOf(item) < 0))
+                // Populate inpubox list
+                for (const item of genre2) {
+                    $('#listGenre2').append($("<option>").attr('value', item));
+                }
+                break;
+            case "Dance":
+                var fixedGenre2 = ['Dance & Club', 'General Dance'];
+                // Combine and remove duplicates from fixedGenre2 and database genre2 into 1 array
+                var genre2 = fixedGenre2.concat(dbGenre2.filter((item) => fixedGenre2.indexOf(item) < 0))
+                // Populate inpubox list
+                for (const item of genre2) {
+                    $('#listGenre2').append($("<option>").attr('value', item));
+                }
+                break;
+            case "Electronica":
+                var fixedGenre2 = ['Disco', 'Downtempo, Lounge & Ambient', 'Electronic', 'Electronica Fusion', 'Electronica Mainstream', 'House', 'Techno', 'Trance'];
+                // Combine and remove duplicates from fixedGenre2 and database genre2 into 1 array
+                var genre2 = fixedGenre2.concat(dbGenre2.filter((item) => fixedGenre2.indexOf(item) < 0))
+                // Populate inpubox list
+                for (const item of genre2) {
+                    $('#listGenre2').append($("<option>").attr('value', item));
+                }
+                break;
+            case "Folk":
+                var fixedGenre2 = ['Alternative Folk', 'Celtic', 'Contemporary Folk', 'Folk Rock'];
+                // Combine and remove duplicates from fixedGenre2 and database genre2 into 1 array
+                var genre2 = fixedGenre2.concat(dbGenre2.filter((item) => fixedGenre2.indexOf(item) < 0))
+                // Populate inpubox list
+                for (const item of genre2) {
+                    $('#listGenre2').append($("<option>").attr('value', item));
+                }
+                break;
+            case "Hip-Hop/Rap":
+                var fixedGenre2 = ['General Hip Hop', 'General Rap', 'Old School Hip Hop'];
+                // Combine and remove duplicates from fixedGenre2 and database genre2 into 1 array
+                var genre2 = fixedGenre2.concat(dbGenre2.filter((item) => fixedGenre2.indexOf(item) < 0))
+                // Populate inpubox list
+                for (const item of genre2) {
+                    $('#listGenre2').append($("<option>").attr('value', item));
+                }
+                break;
+            case "Holiday":
+                var fixedGenre2 = ['Christmas'];
+                // Combine and remove duplicates from fixedGenre2 and database genre2 into 1 array
+                var genre2 = fixedGenre2.concat(dbGenre2.filter((item) => fixedGenre2.indexOf(item) < 0))
+                // Populate inpubox list
+                for (const item of genre2) {
+                    $('#listGenre2').append($("<option>").attr('value', item));
+                }
+                break;
+            case "Indie":
+                var fixedGenre2 = ['Indie Rock', 'Indie Pop'];
+                // Combine and remove duplicates from fixedGenre2 and database genre2 into 1 array
+                var genre2 = fixedGenre2.concat(dbGenre2.filter((item) => fixedGenre2.indexOf(item) < 0))
+                // Populate inpubox list
+                for (const item of genre2) {
+                    $('#listGenre2').append($("<option>").attr('value', item));
+                }
+                break;
+            case "Jazz":
+                var fixedGenre2 = ['Bebop & Modern Jazz', 'Big Band & Swing', 'Contemporary Jazz & Fusion', 'Early Jazz'];
+                // Combine and remove duplicates from fixedGenre2 and database genre2 into 1 array
+                var genre2 = fixedGenre2.concat(dbGenre2.filter((item) => fixedGenre2.indexOf(item) < 0))
+                // Populate inpubox list
+                for (const item of genre2) {
+                    $('#listGenre2').append($("<option>").attr('value', item));
+                }
+                break;
+            case "Metal":
+                var fixedGenre2 = ['General Metal', 'Hardcore Metal'];
+                // Combine and remove duplicates from fixedGenre2 and database genre2 into 1 array
+                var genre2 = fixedGenre2.concat(dbGenre2.filter((item) => fixedGenre2.indexOf(item) < 0))
+                // Populate inpubox list
+                for (const item of genre2) {
+                    $('#listGenre2').append($("<option>").attr('value', item));
+                }
+                break;
+            case "Pop":
+                var fixedGenre2 = ['Classic Pop Vocals', 'European Pop', 'Latin Pop', 'Western Pop'];
+                // Combine and remove duplicates from fixedGenre2 and database genre2 into 1 array
+                var genre2 = fixedGenre2.concat(dbGenre2.filter((item) => fixedGenre2.indexOf(item) < 0))
+                // Populate inpubox list
+                for (const item of genre2) {
+                    $('#listGenre2').append($("<option>").attr('value', item));
+                }
+                break;
+            case "Reggae":
+                var fixedGenre2 = ['General Reggae', 'Ska/Rock Steady'];
+                // Combine and remove duplicates from fixedGenre2 and database genre2 into 1 array
+                var genre2 = fixedGenre2.concat(dbGenre2.filter((item) => fixedGenre2.indexOf(item) < 0))
+                // Populate inpubox list
+                for (const item of genre2) {
+                    $('#listGenre2').append($("<option>").attr('value', item));
+                }
+                break;
+            case "Rock":
+                var fixedGenre2 = ["Alternative", "Alternative Roots", "Classic Rock", "Hard Rock", "Mainstream Rock", "Psychedelic Rock", "Rock & Roll", "Soft Rock"];
+                // Combine and remove duplicates from fixedGenre2 and database genre2 into 1 array
+                var genre2 = fixedGenre2.concat(dbGenre2.filter((item) => fixedGenre2.indexOf(item) < 0))
+                // Populate inpubox list
+                for (const item of genre2) {
+                    $('#listGenre2').append($("<option>").attr('value', item));
+                }
+            case "Soul":
+                var fixedGenre2 = ['Classic R&B/Soul', 'General R&B/Soul'];
+                // Combine and remove duplicates from fixedGenre2 and database genre2 into 1 array
+                var genre2 = fixedGenre2.concat(dbGenre2.filter((item) => fixedGenre2.indexOf(item) < 0))
+                // Populate inpubox list
+                for (const item of genre2) {
+                    $('#listGenre2').append($("<option>").attr('value', item));
+                }
+                break;
+            case "Soundtrack":
+                var fixedGenre2 = ['Original Film/TV Music'];
+                // Combine and remove duplicates from fixedGenre2 and database genre2 into 1 array
+                var genre2 = fixedGenre2.concat(dbGenre2.filter((item) => fixedGenre2.indexOf(item) < 0))
+                // Populate inpubox list
+                for (const item of genre2) {
+                    $('#listGenre2').append($("<option>").attr('value', item));
+                }
+                break;     
+            case "Traditional":
+                var fixedGenre2 = ['Easy Listening', 'European Traditional', 'Religious'];
+                // Combine and remove duplicates from fixedGenre2 and database genre2 into 1 array
+                var genre2 = fixedGenre2.concat(dbGenre2.filter((item) => fixedGenre2.indexOf(item) < 0))
+                // Populate inpubox list
+                for (const item of genre2) {
+                    $('#listGenre2').append($("<option>").attr('value', item));
+                }
+                break; 
+            case "Urban":
+                var fixedGenre2 = ['Contemporary Jazz & Fusion', 'Contemporary R&B/Soul', 'Western Hip-Hop/Rap'];
+                // Combine and remove duplicates from fixedGenre2 and database genre2 into 1 array
+                var genre2 = fixedGenre2.concat(dbGenre2.filter((item) => fixedGenre2.indexOf(item) < 0))
+                // Populate inpubox list
+                for (const item of genre2) {
+                    $('#listGenre2').append($("<option>").attr('value', item));
+                }
+                break;                 
+            case "World":
+                var fixedGenre2 = ['African Traditional', 'European Traditional', 'Latin Traditional', 'New Age', 'Other Traditions'];
+                // Combine and remove duplicates from fixedGenre2 and database genre2 into 1 array
+                var genre2 = fixedGenre2.concat(dbGenre2.filter((item) => fixedGenre2.indexOf(item) < 0))
+                // Populate inpubox list
+                for (const item of genre2) {
+                    $('#listGenre2').append($("<option>").attr('value', item));
+                }
+                break;
+        }
+        
+    }
+});
+
+//#########################
+//### GENRE 3 SELECTION ###
+//#########################
+// Change Genre3 selection box when Genre2 changed
+$(document).on('change', '#inpGenre2', function () {
+    // Change each track genre2 when changed
+    var counter = 1;
+    var genre2 = $('#inpGenre2').val();
+    for (var i = 0; i < files.length; i++) {
+        // Genre2
+        $("#" + counter + "genre2").val(genre2);
+        counter += 1;
+    }
+
+    var genreName = $(this).val();
+    if (genreName != "") {
+        $("#lblGenre3").css('display', 'inline-block');
+        $("#inpGenre3").css('display', 'inline-block');
+        $('#inpGenre3').val("");
+        $('#listGenre3').empty();
+
+        populateGenre3()
+    }
+    else {
+        $("#lblGenre3").css('display', 'none');
+        $("#inpGenre3").css('display', 'none');
+        $('#inpGenre3').val("");
+        $('#listGenre3').empty();
+        // Clear each track genre3
+        var counter = 1;
+        for (var i = 0; i < files.length; i++) {
+            // Genre3
+            $("#" + counter + "genre3").val('');
+            counter += 1;
+        }
+    }
+
+    // Populate list values of genre2 based on main genre
+    async function populateGenre3() {
+        // Array of database values for genre2
+        var dbGenre3 = [];
+        // Select all current genre3 from database
+        try {
+            var sql = "SELECT DISTINCT genre3 FROM track WHERE genre2=? ORDER BY genre3 ASC";
+            var rows = await dBase.all(sql, genre2);
+            // And put into array 
+            rows.forEach((row) => {
+                dbGenre3.push(row.genre3);
+            });
+        }
+        catch{
+            dbGenre3 = [];
+        }
+
+        // Empty contents of genre3 selection element
+        $('#inpGenre3').empty();
+        // Populate genre3 selection element based on value in genre2 selection element
+        switch (genre2) {
+            case "Alternative":
+                var fixedGenre3 = ['Adult Alternative Rock', 'Alternative Dance', 'Alternative Pop', 'Alternative Rock', 'Alternative Singer-Songwriter', 'Grunge', 'Rockabilly Revival'];
+                // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+                var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+                // Populate inputbox list
+                for (const item of genre3) {
+                    $('#listGenre3').append($("<option>").attr('value', item));
+                }
+                break;
+            case "Alternative Folk":
+                var fixedGenre3 = ['Contemporary U.S. Folk'];
+                // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+                var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+                // Populate inputbox list
+                for (const item of genre3) {
+                    $('#listGenre3').append($("<option>").attr('value', item));
+                }
+                break;
+            case "Brit Rock":
+                var fixedGenre3 = ['Brit Pop'];
+                // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+                var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+                // Populate inputbox list
+                for (const item of genre3) {
+                    $('#listGenre3').append($("<option>").attr('value', item));
+                }
+                break;
+            case "Garage Rock Revival":
+                var fixedGenre3 = ['Lo-Fi/Garage'];
+                // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+                var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+                // Populate inputbox list
+                for (const item of genre3) {
+                    $('#listGenre3').append($("<option>").attr('value', item));
+                }
+                break;
+            case "New Wave Pop":
+                var fixedGenre3 = ['Synth Pop'];
+                // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+                var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+                // Populate inputbox list
+                for (const item of genre3) {
+                    $('#listGenre3').append($("<option>").attr('value', item));
+                }
+                break;
+            case "Punk":
+                var fixedGenre3 = ['General Punk', 'Hardcore Punk', 'Old School Punk', 'Pop Punk', 'Post - Punk', 'Straight Edge Punk'];
+                // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+                var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+                // Populate inputbox list
+                for (const item of genre3) {
+                    $('#listGenre3').append($("<option>").attr('value', item));
+                }
+                break;
+            case "Acoustic Blues":
+                var fixedGenre3 = ['General Acoustic Blues', 'Harmonica Blues'];
+                // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+                var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+                // Populate inputbox list
+                for (const item of genre3) {
+                    $('#listGenre3').append($("<option>").attr('value', item));
+                }
+                break;
+            case "Blues Rock":
+                var fixedGenre3 = ['British Blues Rock', 'Chicago Blues', 'Texas Blues'];
+                // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+                var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+                // Populate inputbox list
+                for (const item of genre3) {
+                    $('#listGenre3').append($("<option>").attr('value', item));
+                }
+                break;   
+            case "Electric Blues":
+                var fixedGenre3 = ['Chicago Blues', 'General Electric Blues', 'Texas Blues'];
+                // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+                var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+                // Populate inputbox list
+                for (const item of genre3) {
+                    $('#listGenre3').append($("<option>").attr('value', item));
+                }
+                break;  
+            case "General Blues":
+                var fixedGenre3 = ['Contemporary Blues', 'Country Blues'];
+                // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+                var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+                // Populate inputbox list
+                for (const item of genre3) {
+                    $('#listGenre3').append($("<option>").attr('value', item));
+                }
+                break;  
+            case "Christmas":
+                var fixedGenre3 = [];
+                // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+                var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+                // Populate inputbox list
+                for (const item of genre3) {
+                    $('#listGenre3').append($("<option>").attr('value', item));
+                }
+                break;    
+            case "Baroque":
+                var fixedGenre3 = [];
+                // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+                var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+                // Populate inputbox list
+                for (const item of genre3) {
+                    $('#listGenre3').append($("<option>").attr('value', item));
+                }
+                break;   
+            case "Chamber Music":
+                var fixedGenre3 = [];
+                // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+                var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+                // Populate inputbox list
+                for (const item of genre3) {
+                    $('#listGenre3').append($("<option>").attr('value', item));
+                }
+                break; 
+            case "Classical Guitar":
+                var fixedGenre3 = [];
+                // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+                var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+                // Populate inputbox list
+                for (const item of genre3) {
+                    $('#listGenre3').append($("<option>").attr('value', item));
+                }
+                break;
+            case "Contemporary":
+                var fixedGenre3 = ['Piano', 'Strings'];
+                // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+                var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+                // Populate inputbox list
+                for (const item of genre3) {
+                    $('#listGenre3').append($("<option>").attr('value', item));
+                }
+                break;
+            case "General Classical":
+                var fixedGenre3 = ['Piano', 'Strings'];
+                // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+                var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+                // Populate inputbox list
+                for (const item of genre3) {
+                    $('#listGenre3').append($("<option>").attr('value', item));
+                }
+                break;
+            case "Opera":
+                var fixedGenre3 = ['Romantic Era', 'Reniassance Era'];
+                // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+                var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+                // Populate inputbox list
+                for (const item of genre3) {
+                    $('#listGenre3').append($("<option>").attr('value', item));
+                }
+                break;
+            case "Comedy":
+                var fixedGenre3 = [];
+                // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+                var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+                // Populate inputbox list
+                for (const item of genre3) {
+                    $('#listGenre3').append($("<option>").attr('value', item));
+                }
+                break;
+            case "Classic Country":
+                var fixedGenre3 = ['Bluegrass', 'Outlaw Country', 'Rockabiliy'];
+                // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+                var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+                // Populate inputbox list
+                for (const item of genre3) {
+                    $('#listGenre3').append($("<option>").attr('value', item));
+                }
+                break;
+            case "General Country":
+                var fixedGenre3 = ['Alternative Country', 'Americana', 'Contemporary Country', 'Country Pop', 'Country Rock'];
+                // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+                var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+                // Populate inputbox list
+                for (const item of genre3) {
+                    $('#listGenre3').append($("<option>").attr('value', item));
+                }
+                break;
+            case "Traditional Country":
+                var fixedGenre3 = ['Americana', 'Bluegrass', 'Country Blues'];
+                // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+                var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+                // Populate inputbox list
+                for (const item of genre3) {
+                    $('#listGenre3').append($("<option>").attr('value', item));
+                }
+                break;
+            case "Dance & Club":
+                var fixedGenre3 = ['Acid House', 'Big Beat', 'Club Dance', 'Hi-NRG', "Jungle/Drum 'n' Bass"];
+                // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+                var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+                // Populate inputbox list
+                for (const item of genre3) {
+                    $('#listGenre3').append($("<option>").attr('value', item));
+                }
+                break;
+            case "General Dance":
+                var fixedGenre3 = ['Disco', 'Rave Music'];
+                // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+                var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+                // Populate inputbox list
+                for (const item of genre3) {
+                    $('#listGenre3').append($("<option>").attr('value', item));
+                }
+                break;
+            case "Disco":
+                var fixedGenre3 = [];
+                // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+                var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+                // Populate inputbox list
+                for (const item of genre3) {
+                    $('#listGenre3').append($("<option>").attr('value', item));
+                }
+                break;
+            case "Downtempo, Lounge & Ambient":
+                var fixedGenre3 = ['Ambient Electronica', 'General Downtempo', 'Neo-Lounge', 'Trip Hop'];
+                // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+                var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+                // Populate inputbox list
+                for (const item of genre3) {
+                    $('#listGenre3').append($("<option>").attr('value', item));
+                }
+                break;
+            case "Electronic":
+                var fixedGenre3 = ['General Electronic', 'Minimalist Experimental'];
+                // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+                var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+                // Populate inputbox list
+                for (const item of genre3) {
+                    $('#listGenre3').append($("<option>").attr('value', item));
+                }
+                break;
+            case "Electronica Fusion":
+                var fixedGenre3 = ['Ethno-Lounge Electronica'];
+                // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+                var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+                // Populate inputbox list
+                for (const item of genre3) {
+                    $('#listGenre3').append($("<option>").attr('value', item));
+                }
+                break;
+            case "Electronica Mainstream":
+                var fixedGenre3 = ['Ambient Electronica', 'Big Beat', 'Pop Electronica'];
+                // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+                var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+                // Populate inputbox list
+                for (const item of genre3) {
+                    $('#listGenre3').append($("<option>").attr('value', item));
+                }
+                break;
+            case "House":
+                var fixedGenre3 = ['Deep House', 'Euro House', 'General House', 'Happy House', 'Progressive House', 'Tech House', 'U.K. Garage'];
+                // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+                var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+                // Populate inputbox list
+                for (const item of genre3) {
+                    $('#listGenre3').append($("<option>").attr('value', item));
+                }
+                break;
+            case "Techno":
+                var fixedGenre3 = ['Classic Techno', 'Dark Techno/Darkwave', 'General Techno', 'Hardcore Techno', 'Minimalist Techno'];
+                // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+                var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+                // Populate inputbox list
+                for (const item of genre3) {
+                    $('#listGenre3').append($("<option>").attr('value', item));
+                }
+                break;
+            case "Trance":
+                var fixedGenre3 = ['Ambient Trance', 'General Trance', 'Hard Trance/Acid', 'Progressive/Dream', 'Tech Trance'];
+                // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+                var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+                // Populate inputbox list
+                for (const item of genre3) {
+                    $('#listGenre3').append($("<option>").attr('value', item));
+                }
+                break;
+            case "Alternative Folk":
+                var fixedGenre3 = ['Contemporary U.S. Folk'];
+                // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+                var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+                // Populate inputbox list
+                for (const item of genre3) {
+                    $('#listGenre3').append($("<option>").attr('value', item));
+                }
+                break;
+            case "Celtic":
+                var fixedGenre3 = [];
+                // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+                var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+                // Populate inputbox list
+                for (const item of genre3) {
+                    $('#listGenre3').append($("<option>").attr('value', item));
+                }
+                break;
+            case "Contemporary Folk":
+                var fixedGenre3 = ['Folk Pop'];
+                // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+                var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+                // Populate inputbox list
+                for (const item of genre3) {
+                    $('#listGenre3').append($("<option>").attr('value', item));
+                }
+                break;
+            case "Folk Rock":
+                var fixedGenre3 = ['English Folk Rock', 'Classic Folk Rock'];
+                // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+                var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+                // Populate inputbox list
+                for (const item of genre3) {
+                    $('#listGenre3').append($("<option>").attr('value', item));
+                }
+                break;
+            case "General Hip Hop":
+                var fixedGenre3 = [];
+                // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+                var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+                // Populate inputbox list
+                for (const item of genre3) {
+                    $('#listGenre3').append($("<option>").attr('value', item));
+                }
+                break;
+            case "General Rap":
+                var fixedGenre3 = ['Freestyle Rap', 'Hardcore Rap', 'Underground Rap'];
+                // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+                var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+                // Populate inputbox list
+                for (const item of genre3) {
+                    $('#listGenre3').append($("<option>").attr('value', item));
+                }
+                break;           
+            case "Old School Hip Hop":
+                var fixedGenre3 = [];
+                // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+                var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+                // Populate inputbox list
+                for (const item of genre3) {
+                    $('#listGenre3').append($("<option>").attr('value', item));
+                }
+                break;      
+            case "Indie Rock":
+                var fixedGenre3 = ['Art Rock', 'Experimental Rock', 'General Indie Rock', 'Madchester', 'Neo-Glam', 'Original Post-Punk', 'Post-Modern Art Music', 'Post-Punk Revival'];
+                // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+                var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+                // Populate inputbox list
+                for (const item of genre3) {
+                    $('#listGenre3').append($("<option>").attr('value', item));
+                }
+                break;
+            case "Indie Pop":
+                var fixedGenre3 = ['Dream Pop', 'Post-Modern Electronic Pop', 'Twee Pop'];
+                // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+                var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+                // Populate inputbox list
+                for (const item of genre3) {
+                    $('#listGenre3').append($("<option>").attr('value', item));
+                }
+                break;    
+            case "Bebop & Modern Jazz":
+                var fixedGenre3 = ['Avant Garde', 'Bebop', 'Modern Jazz', 'Post-Bop'];
+                // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+                var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+                // Populate inputbox list
+                for (const item of genre3) {
+                    $('#listGenre3').append($("<option>").attr('value', item));
+                }
+                break; 
+            case "Big Band & Swing":
+                var fixedGenre3 = ['Big Band', 'Jump Blues', 'Swing Revival'];
+                // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+                var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+                // Populate inputbox list
+                for (const item of genre3) {
+                    $('#listGenre3').append($("<option>").attr('value', item));
+                }
+                break;      
+            case "Contemporary Jazz & Fusion":
+                var fixedGenre3 = ['Cool/West Coast Jazz', 'Fusion', 'Jazz Funk', 'Soul Jazz'];
+                // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+                var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+                // Populate inputbox list
+                for (const item of genre3) {
+                    $('#listGenre3').append($("<option>").attr('value', item));
+                }
+                break;    
+            case "Early Jazz":
+                var fixedGenre3 = ['New Orleans Jazz', 'Ragtime'];
+                // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+                var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+                // Populate inputbox list
+                for (const item of genre3) {
+                    $('#listGenre3').append($("<option>").attr('value', item));
+                }
+                break;                
+            case "General Metal":
+                var fixedGenre3 = ['Alternative Metal', 'Gothic Metal', 'Heavy Metal', 'Pop/Hair Metal', 'Progressive Metal'];
+                // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+                var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+                // Populate inputbox list
+                for (const item of genre3) {
+                    $('#listGenre3').append($("<option>").attr('value', item));
+                }
+                break;
+            case "Hardcore Metal":
+                var fixedGenre3 = ['Black/Death Metal', 'Rap Metal', 'Thrash/Speed Metal'];
+                // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+                var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+                // Populate inputbox list
+                for (const item of genre3) {
+                    $('#listGenre3').append($("<option>").attr('value', item));
+                }
+                break;   
+            case "Classic Pop Vocals":
+                var fixedGenre3 = ['Classic Female Vocal Pop', 'Classic Male Vocal Pop'];
+                // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+                var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+                // Populate inputbox list
+                for (const item of genre3) {
+                    $('#listGenre3').append($("<option>").attr('value', item));
+                }
+                break; 
+            case "European Pop":
+                var fixedGenre3 = ['Euro Disco', 'Euro Pop', 'Eurobeat', 'French Pop'];
+                // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+                var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+                // Populate inputbox list
+                for (const item of genre3) {
+                    $('#listGenre3').append($("<option>").attr('value', item));
+                }
+                break;   
+            case "Latin Pop":
+                var fixedGenre3 = ['General Latin Pop'];
+                // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+                var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+                // Populate inputbox list
+                for (const item of genre3) {
+                    $('#listGenre3').append($("<option>").attr('value', item));
+                }
+                break;   
+            case "Western Pop":
+                var fixedGenre3 = ['Acoustic Pop', 'Adult Alternative Pop', 'Adult Contemporary', 'Dance Pop', 'Dream Pop', 'Folk Pop', 'Pop Punk', 'Pop Vocal', 'Power Pop', 'R&B', 'Singer-Songwriter', 'Teen Girl Group', 'Teen Pop', 'Twee Pop'];
+                // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+                var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+                // Populate inputbox list
+                for (const item of genre3) {
+                    $('#listGenre3').append($("<option>").attr('value', item));
+                }
+                break;   
+            case "General Reggae":
+                var fixedGenre3 = [];
+                // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+                var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+                // Populate inputbox list
+                for (const item of genre3) {
+                    $('#listGenre3').append($("<option>").attr('value', item));
+                }
+                break; 
+            case "Ska/Rock Steady":
+                var fixedGenre3 = ['Dancehall', 'Dub', 'Ragga'];
+                // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+                var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+                // Populate inputbox list
+                for (const item of genre3) {
+                    $('#listGenre3').append($("<option>").attr('value', item));
+                }
+                break; 
+            case "Alternative":
+                var fixedGenre3 = ['Adult Alternative Rock', 'Alternative Rock', 'Alternative Singer-Songwriter', 'Grunge', 'Rockabilly Revival'];
+                // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+                var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+                // Populate inputbox list
+                for (const item of genre3) {
+                    $('#listGenre3').append($("<option>").attr('value', item));
+                }
+                break;
+            case "Alternative Roots":
+                var fixedGenre3 = ['Alt Country', 'Roots Rock', 'Southern Rock'];
+                // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+                var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+                // Populate inputbox list
+                for (const item of genre3) {
+                    $('#listGenre3').append($("<option>").attr('value', item));
+                }
+                break; 
+            case "Classic Rock":
+                var fixedGenre3 = ['Blues Rock', 'Boogie Rock', 'Classic Hard Rock', 'Classic Prog', 'Classic Rock'];
+                // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+                var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+                // Populate inputbox list
+                for (const item of genre3) {
+                    $('#listGenre3').append($("<option>").attr('value', item));
+                }
+                break;
+            case "Hard Rock":
+                var fixedGenre3 = ['General Hard Rock', 'Glam'];
+                // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+                var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+                // Populate inputbox list
+                for (const item of genre3) {
+                    $('#listGenre3').append($("<option>").attr('value', item));
+                }
+                break; 
+            case "Mainstream Rock":
+                var fixedGenre3 = ['General Mainstream Rock'];
+                // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+                var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+                // Populate inputbox list
+                for (const item of genre3) {
+                    $('#listGenre3').append($("<option>").attr('value', item));
+                }
+                break; 
+            case "Psychedelic Rock":
+                var fixedGenre3 = ['Acid Rock'];
+                // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+                var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+                // Populate inputbox list
+                for (const item of genre3) {
+                    $('#listGenre3').append($("<option>").attr('value', item));
+                }
+                break; 
+            case "Rock & Roll":
+                var fixedGenre3 = ['Rockabilly'];
+                // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+                var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+                // Populate inputbox list
+                for (const item of genre3) {
+                    $('#listGenre3').append($("<option>").attr('value', item));
+                }
+                break; 
+            case "Soft Rock":
+                var fixedGenre3 = ['Instrumental Rock'];
+                // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+                var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+                // Populate inputbox list
+                for (const item of genre3) {
+                    $('#listGenre3').append($("<option>").attr('value', item));
+                }
+                break; 
+            case "Classic R&B/Soul":
+                var fixedGenre3 = ['Motown'];
+                // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+                var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+                // Populate inputbox list
+                for (const item of genre3) {
+                    $('#listGenre3').append($("<option>").attr('value', item));
+                }
+                break; 
+            case "General R&B/Soul":
+                var fixedGenre3 = ['Funk', 'Urban Crossover'];
+                // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+                var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+                // Populate inputbox list
+                for (const item of genre3) {
+                    $('#listGenre3').append($("<option>").attr('value', item));
+                }
+                break; 
+            case "Original Film/TV Music":
+                var fixedGenre3 = [];
+                // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+                var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+                // Populate inputbox list
+                for (const item of genre3) {
+                    $('#listGenre3').append($("<option>").attr('value', item));
+                }
+                break; 
+            case "Easy Listening":
+                var fixedGenre3 = [];
+                // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+                var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+                // Populate inputbox list
+                for (const item of genre3) {
+                    $('#listGenre3').append($("<option>").attr('value', item));
+                }
+                break; 
+            case "European Traditional":
+                var fixedGenre3 = [];
+                // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+                var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+                // Populate inputbox list
+                for (const item of genre3) {
+                    $('#listGenre3').append($("<option>").attr('value', item));
+                }
+                break; 
+            case "Religious":
+                var fixedGenre3 = ['Choral', 'Christian', 'Gospel'];
+                // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+                var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+                // Populate inputbox list
+                for (const item of genre3) {
+                    $('#listGenre3').append($("<option>").attr('value', item));
+                }
+                break;   
+            case "Contemporary R&B/Soul":
+                var fixedGenre3 = ['Contemporary R&B', 'Neo-Soul', 'Urban AC', 'Urban Crossover'];
+                // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+                var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+                // Populate inputbox list
+                for (const item of genre3) {
+                    $('#listGenre3').append($("<option>").attr('value', item));
+                }
+                break;   
+            case "Western Hip-Hop/Rap":
+                var fixedGenre3 = ['European Hip-Hop/Rap', 'European Hip-Hop/Rap'];
+                // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+                var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+                // Populate inputbox list
+                for (const item of genre3) {
+                    $('#listGenre3').append($("<option>").attr('value', item));
+                }
+                break;  
+            case "African Traditional":
+                var fixedGenre3 = ['African', 'West African'];
+                // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+                var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+                // Populate inputbox list
+                for (const item of genre3) {
+                    $('#listGenre3').append($("<option>").attr('value', item));
+                }
+                break;  
+            case "European Traditional":
+                var fixedGenre3 = ['British Isles', 'General Celtic', 'Klezmer & European Jewish'];
+                // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+                var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+                // Populate inputbox list
+                for (const item of genre3) {
+                    $('#listGenre3').append($("<option>").attr('value', item));
+                }
+                break;   
+            case "Latin Traditional":
+                var fixedGenre3 = ['Cuban'];
+                // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+                var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+                // Populate inputbox list
+                for (const item of genre3) {
+                    $('#listGenre3').append($("<option>").attr('value', item));
+                }
+                break; 
+            case "New Age":
+                var fixedGenre3 = ['New Age World Music', 'World Fusion'];
+                // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+                var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+                // Populate inputbox list
+                for (const item of genre3) {
+                    $('#listGenre3').append($("<option>").attr('value', item));
+                }
+                break;
+            case "Other Traditions":
+                var fixedGenre3 = ['Central Asian', 'Eastern European', 'General World', ' Middle East/Arabic', 'Native American', 'Zydeco/Cajun'];
+                // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+                var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+                // Populate inputbox list
+                for (const item of genre3) {
+                    $('#listGenre3').append($("<option>").attr('value', item));
+                }
+                break;
+        }      
+    }
+});
+
+$(document).on('change', '#inpGenre3', function () {
+    // Change each track genre3 when changed
+    var counter = 1;
+    var genre3 = $('#inpGenre3').val();
+    if (genre3 != "") {
+        for (var i = 0; i < files.length; i++) {
+            // Genre3
+            $("#" + counter + "genre3").val(genre3);
+            counter += 1;
+        }
+    }
+    else {
+        $('#inpGenre3').val("");
+        // Clear each track genre2 and genre3
+        var counter = 1;
+        for (var i = 0; i < files.length; i++) {
+            // Genre3
+            $("#" + counter + "genre3").val('');
+            counter += 1;
+        }
+    }
+
+});
 
 // Change Mood2 selection box when Mood1 changed
 $(document).on('change', '.sltMood1', function () {
@@ -947,10 +2348,6 @@ $(document).on('click', '#btnImportCancel', function (event) {
     event.preventDefault();
     $("#frmAdd").empty();
     $("#divContent").load("./html/home.html");
-    //window.history.back();
-
-    //$("#divTrackListing").css("display", "none");
-    //$("#divContent").css("display", "block");
 
     // Enable btnSync
     $("#btnSync").prop("disabled", false);
@@ -978,7 +2375,7 @@ $(document).on('click', '#btnImportAlbum', function (event) {
 
         var releaseDate = $("#inpReleaseDate").val();
         var albumTime = $("#inpAlbumTime").val();
-        var genre = $('[name=sltGenre]').val();
+        var genre = $('[name=sltGenre1]').val();
         var noTracks = $("#inpCount").val();
         var coverArtUrl = $("#inpCoverArtURL").val();
         // Get todays date and convert
@@ -1067,14 +2464,15 @@ $(document).on('click', '#btnImportAlbum', function (event) {
                 // COVER ART
                 // Check first 4 chars of coverArtUrl to see if it is a URL or filepath
                 var check = coverArtUrl.substring(0, 4);
-
                 // coverArtUrl is a URL
                 if (coverArtUrl != "" && check == "http") {
-                    // Save cover art to album folder in music directory
+                    var tempArtPath = MUSIC_PATH + artist + "/" + album + "/tempArt.jpg";
                     var artFilePath = MUSIC_PATH + artist + "/" + album + "/AlbumArtXLarge.jpg";
                     var resizedFilePath = MUSIC_PATH + artist + "/" + album + "/folder.jpg";
-                    // Send message to main.js to save and resize art image
-                    ipcRenderer.send("save_artwork", [artFilePath, resizedFilePath, coverArtUrl, genre]);
+                    // Send message to main.js to save AlbumArtXLarge image
+                    ipcRenderer.send("save_artXlarge_file", [tempArtPath, artFilePath]);
+                    // Send message to main.js to resize folder image
+                    ipcRenderer.send("save_folder_file", [tempArtPath, resizedFilePath]);
                 }
 
                 // coverArtUrl is a filepath
@@ -1087,6 +2485,14 @@ $(document).on('click', '#btnImportAlbum', function (event) {
                     ipcRenderer.send("save_folder_file", [coverArtUrl, resizedFilePath]);
                 }
 
+                // Back cover art
+                var backCoverArt = $('#inpBackArtURL').val();
+                if (backCoverArt) {
+                    var artFilePath = MUSIC_PATH + artist + "/" + album + "/backCover.jpg";
+                    // Send message to main.js to save AlbumArtXLarge image
+                    ipcRenderer.send("save_backCover_art", [artFilePath, backCoverArt]);
+                }
+                
                 // Show OK modal box to confirm album added to database
                 $('#okModal').css('display', 'block');
                 $('.modalHeader').empty();
@@ -1100,7 +2506,7 @@ $(document).on('click', '#btnImportAlbum', function (event) {
                 $('.background').css('filter', 'blur(5px)');
                 // Enable btnSync
                 $("#btnSync").prop("disabled", false);
-
+                
             }
             catch (err) {
                 console.log(err)
@@ -1138,3 +2544,5 @@ ipcRenderer.on("add_artwork", (event, data) => {
     $("#imgCoverArt").attr('src', coverArt);
     $("#inpCoverArtURL").val(coverArt);
 });
+
+

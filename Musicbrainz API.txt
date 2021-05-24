@@ -1,0 +1,53 @@
+SEARCH FOR ARTIST
+https://musicbrainz.org/ws/2/artist/?query=artist:bicep
+
+	ns2:score="100"
+	mbid= 10e8f0df-90f9-4957-aedd-c4e0d187e3a8
+
+GET ARTIST ORIGIN
+https://musicbrainz.org/ws/2/artist/10e8f0df-90f9-4957-aedd-c4e0d187e3a8
+
+	<area id="057ce294-2684-46fd-aee1-4d8c6b4bf4ef">
+	<name>Belfast</name>
+
+SEARCH FOR ALBUMS
+https://musicbrainz.org/ws/2/release-group?artist=10e8f0df-90f9-4957-aedd-c4e0d187e3a8&limit=100&type=album
+
+	<release-group id="6f34e134-49d5-4e56-b3e0-4fe6b9900380" type="Album" type-id="f529b476-6e62-324f-b0aa-1f3e33d313fc">
+	<title>Bicep</title>
+	<first-release-date>2017-09-01</first-release-date>
+	<primary-type id="f529b476-6e62-324f-b0aa-1f3e33d313fc">Album</primary-type>
+	</release-group>
+
+GET COVER ART
+FRONT COVER THUMBNAILED 500x500
+https://coverartarchive.org/release-group/6f34e134-49d5-4e56-b3e0-4fe6b9900380/front-500
+BACK COVER *note use release instead of release-group
+https://coverartarchive.org/release/24747fda-584d-4557-b72b-6fb29854dd77/back-500
+
+GET GENRES
+https://musicbrainz.org/ws/2/release-group/6f34e134-49d5-4e56-b3e0-4fe6b9900380?inc=genres
+
+https://musicbrainz.org/ws/2/artist/?query=artist:London Grammar
+https://musicbrainz.org/ws/2/release-group?artist=4dbe08c1-b40a-43b3-ab89-210000bd8ab2&limit=100&type=album|ep
+https://musicbrainz.org/ws/2/release-group/b290e941-2908-4ef2-9815-63f084f041a6?inc=genres
+
+release group ID: 6f34e134-49d5-4e56-b3e0-4fe6b9900380
+
+
+https://musicbrainz.org/ws/2/release-group?artist=8be564c3-dfba-440b-af8c-4ffbceeef45e&limit=100&type=album
+https://musicbrainz.org/ws/2/release-group?artist=10e8f0df-90f9-4957-aedd-c4e0d187e3a8&limit=100&type=ep|album
+
+https://coverartarchive.org/release/09dec61b-ae0d-4a91-b61d-f1d74ea16ccd/back
+https://musicbrainz.org/ws/2/release-group?artist=70248960-cb53-4ea4-943a-edb18f7d336f&limit=100&type=album|ep
+
+BACK COVER ART
+Get 'release' MBID from 'release-group' and use 'release' in call to coverartarchive.org
+https://musicbrainz.org/ws/2/release?release-group=48e335f3-8e4a-4e38-b2df-e1514b9f9126
+https://coverartarchive.org/release/8349e49e-e6dc-4bf6-9cee-60a990f2673a/back-500
+
+https://coverartarchive.org/release-group/aa366795-92d7-4d67-91fa-6741f82a4858/front-500
+aa366795-92d7-4d67-91fa-6741f82a4858
+
+https://coverartarchive.org/release/bb75b90b-02ad-49f3-b51f-0e65b1568b42/front-500
+

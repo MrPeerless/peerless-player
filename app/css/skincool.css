@@ -309,13 +309,13 @@ button#btnFastForward {
         background: white;
     }
 
-/*Gracenote search table*/
-#tblGracenote th {
+/*Import Music table*/
+#tblImportMusic th {
     background: #7576F9;
     color: white;
 }
 
-#tblGracenote tr:nth-child(even) {
+#tblImportMusic tr:nth-child(even) {
     background: white;
 }
 

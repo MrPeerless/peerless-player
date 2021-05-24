@@ -1,5 +1,4 @@
 $(document).ready(function () {
-
     // Get name of artist and album
     var artist = $("#selectedArtist").text();
     var album = $("#selectedAlbum").text();
@@ -9,12 +8,7 @@ $(document).ready(function () {
 
     // Update headings
     $("#addToDatabaseDetails").text("Syncing " + album + " by " + artist);
-    if (global_ImportMode == "auto") {
-        $("#addToDatabaseInfo").append("The below metadata has been found in the Gracenote database.<br>Please check and make any manual adjustments if necessary and click on the IMPORT button to add the album to " + global_AppName + " database.<br>&nbsp;<br />")
-    }
-    else {
-        $("#addToDatabaseInfo").append("You have selected to manually input the album metadata.<br>The only required fields are Release Date and Genre. Once completed, click on the IMPORT button to add the album to " + global_AppName + " database.<br>&nbsp;<br />")
-    }
+    $("#addToDatabaseInfo").append("Blank metadata fields can be changed or completed later when editing the album.<br>The only required fields are Release Date and Genre.<br>Genre tags found are listed in the Album Details.<br>Once completed, click on the IMPORT button to add the album to " + global_AppName + " database.<br />")
 
     // Add artist and album to form input
     $("#inpArtistName").val(artist);

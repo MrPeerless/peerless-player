@@ -2,6 +2,9 @@ $(document).ready(function () {
     // Arrays to store results
     var databaseAlbums = [];
 
+    // Album/Single radio button default value
+    $("#radioAlbum").prop("checked", true);
+
     getAlbums()
 
     // Get all artists|albums from database

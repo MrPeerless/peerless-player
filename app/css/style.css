@@ -144,8 +144,8 @@ select {
     border: 1px solid #000000;
 }
 
-#sltGenre {
-    width: 150px;
+#sltGenre1 {
+    width: 173px;
     border: 1px solid #000000;
 }
 
@@ -481,34 +481,97 @@ textarea {
     width: 40px;
     margin-left: 5px;     
 }
-#inpAlbumTime{
-    display:inline-block;
-    width: 50px;    
+#inpAlbumTime {
+    display: inline-block;
+    width: 50px;
+    background: #d2d2d2;
 }
 #inpEditAlbumTime {
     display: inline-block;
     width: 50px;
     background: #d2d2d2;
 }
-#lblGenre{
-    display:inline-block;
+#lblGenre {
+    display: inline-block;
     text-align: right;
-    width: 40px;
-    margin-right: 5px;     
+    width: 45px;
+    margin-left: 16px;
+    margin-right: 2px;
 }
 #inpGenre{
     display:inline-block;
-    width: 185px;    
+    width: 250px;    
 }
-.lblTrackName{
-    display:inline-block;
+#lblGenre2 {
+    text-align: right;
+    width: 60px;
+    margin-left: 648px;
+    margin-right: 1px;
+    display: none;
+}
+
+#lblGenre2Edit {
+    text-align: right;
+    width: 60px;
+    margin-left: 648px;
+    margin-right: 1px;
+    display: inline-block;
+}
+
+#inpGenre2 {
+    width: 170px;
+    border: 1px solid #000000;
+    display: none;
+}
+
+#inpGenre2Edit {
+    width: 170px;
+    border: 1px solid #000000;
+    display: inline-block;
+}
+
+#lblGenre3 {
+    text-align: right;
+    width: 60px;
+    margin-left: 648px;
+    margin-right: 1px;
+    display: none;
+}
+
+#lblGenre3Edit {
+    text-align: right;
+    width: 60px;
+    margin-left: 648px;
+    margin-right: 1px;
+    display: inline-block;
+}
+
+#inpGenre3 {
+    width: 170px;
+    border: 1px solid #000000;
+    display: none;
+}
+
+#inpGenre3Edit {
+    width: 170px;
+    border: 1px solid #000000;
+    display: inline-block;
+}
+
+.lblTrackName {
+    display: inline-block;
     text-align: right;
     width: 95px;
-    margin-right: 5px;   
+    margin-right: 5px;
 }
 .inpTrackName{
     display:inline-block;
     width: 275px;
+}
+.inpTrackGenre {
+    display: inline-block;
+    width: 275px;
+    background: #d2d2d2;
 }
 .download{
     display:inline-block;
@@ -531,9 +594,10 @@ textarea {
     width: 63px;
     margin-right: 5px;     
 }
-.inpTrackTime{
-    display:inline-block;
-    width: 50px;    
+.inpTrackTime {
+    display: inline-block;
+    width: 50px;
+    background: #d2d2d2;
 }
 .inpEditTrackTime {
     display: inline-block;
@@ -1187,6 +1251,11 @@ button#btnMoodExpand {
     cursor: pointer;
 }
 
+#backArtFound {
+    margin-left: 15px;
+    clear: left;
+}
+
 /*TABLE STYLES
 #######################*/
 /*Track table*/
@@ -1369,8 +1438,8 @@ button#btnMoodExpand {
     width: 20%
 }
 
-/*Gracenote search table*/
-#tblGracenote {
+/*Import Music table*/
+#tblImportMusic {
     left: 0px;
     font-family: 'Calibri', 'Arial', 'sans-serif';
     border-collapse: collapse;
@@ -1380,24 +1449,24 @@ button#btnMoodExpand {
     table-layout: fixed;
 }
 
-    #tblGracenote caption{
+    #tblImportMusic caption {
         text-align: left;
     }
 
-    #tblGracenote td, th {
+    #tblImportMusic td, th {
         text-align: left;
         padding-left: 5px;
         padding-top: 5px;
         padding-bottom: 5px;
     }
 
-    #tblGracenote th {
+    #tblImportMusic th {
         font-size: 1.15em;
         border: none;
         outline: none;
     }
 
-    #tblGracenote td:nth-child(4) {
+    #tblImportMusic td:nth-child(4) {
         display: none;
     }
 

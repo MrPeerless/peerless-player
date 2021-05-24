@@ -435,7 +435,6 @@ $(document).ready(function () {
 
         // If tracklisting is true display current album tracklisting page
         if (global_TrackListing == true) {
-            console.log("load display album")
             $("#divTrackListing").load("./html/displayalbum.html?artist=" + global_ArtistID + "&album=" + global_AlbumID);
         }
         else {
@@ -447,20 +446,6 @@ $(document).ready(function () {
     }
 
     backgroundChange();
-
-    // Function to check if URL for wiki image exists, returns boolean value
-    function urlExists(url, callback) {
-        $.ajax({
-            type: 'HEAD',
-            url: url,
-            success: function () {
-                callback(true);
-            },
-            error: function () {
-                callback(false);
-            }
-        });
-    }
 });
 
 

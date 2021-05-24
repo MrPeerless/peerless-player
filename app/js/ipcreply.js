@@ -196,9 +196,9 @@ ipcRenderer.on("from_dir_artists", (event, data) => {
     }
     else {
         $('#displayNewMusicDetails').append(foundMusic.length + " new albums found in Directory<br>The below list of new albums have been found.")
-        $('#displayNewMusicInfo').append("Select an album and click on the GET button to search for album metadata.<br>If no album metadata is found, select an album and click on the MANUAL button")
+        $('#displayNewMusicInfo').append("First select either Album or Single from the radio buttons.<br>Then select an album to import from the table below.<br>Once the selected album is highlighted in the table, click on the IMPORT button.")
 
-        var table = $("#tblGracenote")
+        var table = $("#tblImportMusic")
         var tableHeader = $("<tr><th class='rowGraceArtist'>Artist</th><th class='rowGraceAlbum'>Album</th></tr>");
         tableHeader.appendTo(table);
 

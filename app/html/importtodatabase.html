@@ -15,9 +15,13 @@
         </div>
 
         <input class="hidden" id="inpCoverArtURL" name="inpCoverArtURL" type="text" value="" />
-        <br><br>
+        <input class="hidden" id="inpBackArtURL" name="inpBackArtURL" type="text" value="" />
 
-        <br /><br />
+        <div id="backArtFound">
+            <span id="backArt"><br /></span>
+        </div>
+        <br />
+
         <fieldset>
             <legend>Artist Details</legend>
             <p>
@@ -29,10 +33,12 @@
                 <input class="hidden" id="inpOriginalArtistName" name="inpOriginalArtistName" type="text" size="75" value="" />
             </p>
         </fieldset>
-        <br>
+        <br />
         <fieldset>
             <legend>Album Details</legend>
             <p>
+                <span id="mainGenreTag" class="hidden"><b>Main Genre: </b></span><span id="mainGenre"></span><br />
+                <span id="genreTagsFound" class="hidden"><b>Genre Tags: </b></span><span id="genreTags"></span><br /><br />
                 <label id="lblAlbumName">Name:</label>
                 <input required id="inpAlbumName" name="inpAlbumName" type="text" size="75" value="" />
                 <!--Hidden input for original album name in case it is changed to then update the music directory-->
@@ -40,31 +46,27 @@
                 <label id="lblReleaseDate">Release Date:</label>
                 <input required id="inpReleaseDate" name="inpReleaseDate" type="text" size="5" value="" />
                 <label id="lblAlbumTime">Time:</label>
-                <input required id="inpAlbumTime" name="inpAlbumTime" type="text" size="8" value="" />
+                <input required id="inpAlbumTime" name="inpAlbumTime" type="text" size="8" value="" readonly />
                 <label id="lblGenre">Genre:</label>
-                <!--<input required id="inpGenre" name="inpGenre" type="text" size="50" value="" />-->
 
-                <select class='sltGenre' id='sltGenre' name='sltGenre'>
+                <select required class='sltGenre' id='sltGenre1' name='sltGenre1'>
                     <option></option>
                     <option value='Alternative & Punk'>Alternative & Punk</option>
                     <option value='Blues'>Blues</option>
-                    <option value='Christmas'>Christmas</option>
                     <option value='Classical'>Classical</option>"
                     <option value='Comedy'>Comedy</option>"
                     <option value='Country'>Country</option>"
                     <option value='Dance'>Dance</option>"
-                    <option value='Electronic'>Electronic</option>"
                     <option value='Electronica'>Electronica</option>"
                     <option value='Folk'>Folk</option>"
-                    <option value='Hip-Hop'>Hip-Hop</option>"
+                    <option value='Hip-Hop/Rap'>Hip-Hop/Rap</option>"
+                    <option value='Holiday'>Holiday</option>
                     <option value='Indie'>Indie</option>"
                     <option value='Jazz'>Jazz</option>"
                     <option value='Metal'>Metal</option>"
                     <option value='Pop'>Pop</option>"
-                    <option value='Rap'>Rap</option>"
                     <option value='Reggae'>Reggae</option>"
                     <option value='Rock'>Rock</option>"
-                    <option value='Singer Songwriter'>Singer Songwriter</option>"
                     <option value='Soul'>Soul</option>"
                     <option value='Soundtrack'>Soundtrack</option>"
                     <option value='Traditional'>Traditional</option>"
@@ -72,6 +74,14 @@
                     <option value='World'>World</option>"
                     <option value='Other'>Other</option>"
                 </select>
+                <br />
+                <label id="lblGenre2">Genre 2:</label>
+                <input id="inpGenre2" name="inpGenre2" list="listGenre2" type="text" value="" />
+                <datalist id="listGenre2"></datalist>
+                <br />
+                <label id="lblGenre3">Genre 3:</label>
+                <input id="inpGenre3" name="inpGenre3" list="listGenre3" type="text" value="" />
+                <datalist id="listGenre3"></datalist>
             </p>
             <input id="inpCount" name="inpCount" class="hidden" type="text" value="" />
         </fieldset>

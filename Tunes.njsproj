@@ -47,7 +47,8 @@
     <Compile Include="app\js\playlistfunctions.js" />
     <Compile Include="App\js\playlistsexported.js" />
     <Compile Include="App\js\preload.js" />
-    <Compile Include="App\js\recommends.js" />
+    <Compile Include="docs\js\pages_metadata.js" />
+    <Compile Include="Redundant Files\recommends.js" />
     <Compile Include="App\js\search.js" />
     <Compile Include="Redundant Files\search_old.js" />
     <Compile Include="App\js\settings.js" />
@@ -98,6 +99,7 @@
     <Content Include="App\Graphics\genres\Electronica.gif" />
     <Content Include="App\Graphics\genres\Folk.gif" />
     <Content Include="App\Graphics\genres\Hip-Hop.gif" />
+    <Content Include="app\graphics\genres\Holiday.gif" />
     <Content Include="App\Graphics\genres\Indie.gif" />
     <Content Include="App\Graphics\genres\Jazz.gif" />
     <Content Include="App\Graphics\genres\Metal.gif" />
@@ -168,7 +170,8 @@
     <Content Include="App\html\editalbum.html" />
     <Content Include="App\html\keyboardshortcuts.html" />
     <Content Include="App\html\playlistsexported.html" />
-    <Content Include="App\html\recommends.html" />
+    <Content Include="Redundant Files\Gracenote Old Data.txt" />
+    <Content Include="Redundant Files\recommends.html" />
     <Content Include="App\html\search.html" />
     <Content Include="Redundant Files\search_old.html" />
     <Content Include="App\html\settings.html" />

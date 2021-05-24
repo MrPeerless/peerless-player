@@ -29,10 +29,10 @@ $(document).ready(function () {
         // Adjust size of rows to number of columns
         rows.length = totalList;
         rows.forEach((row) => {
-
             //var artworkSource = MUSIC_PATH + row.artistName + "/" + row.albumName + "/folder.jpg"
             var modifiedDate = Date().toLocaleString();
             var artworkSource = MUSIC_PATH + row.artistName + "/" + row.albumName + "/folder.jpg?modified=" + modifiedDate;
+
             var albumLink = "./html/displayalbum.html?album=" + row.albumID + "&artist=" + row.artistID;
             // Format dateAdd string
             var albumDate = formatDate(row.dateAdd);

@@ -11,392 +11,204 @@ $(document).on('click', '#btnEditAlbum', function (event) {
     $("#btnSync").prop("disabled", true);
 });
 
-// Function to popualte the gracenote matches table in edit album
-function editAlbumMatches(artist, album) {
-
+//#################
+//### ARTWORK   ###
+//#################
+// Button click for Artwork button in edit album
+$(document).on('click', '#btnArtworkAlbum', function (event) {
+    event.preventDefault();
     // Check if online
     var connection = navigator.onLine;
-
-    if (!connection) {
-        // If not connected display modal nox warning
+    if (connection) {
+        // If connected to internet
+        getArtwork();
+    }
+    else {
+        // If not connected display modal box warning
         $('#okModal').css('display', 'block');
         $('.modalHeader').empty();
         $('#okModalText').empty();
         $(".modalFooter").empty();
         $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
-        $('#okModalText').append("<div class='modalIcon'><img src='./graphics/warning.png'></div><p>&nbsp<br><b>WARNING. No internet connection.</b><br>Cannot access data from Gracenote server.<br>&nbsp</p >");
+        $('#okModalText').append("<div class='modalIcon'><img src='./graphics/warning.png'></div><p>&nbsp<br><b>WARNING. No internet connection.</b><br>Please connect to the internet and try again.<br>&nbsp</p >");
         var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
         $('.modalFooter').append(buttons);
         $("#btnOkModal").focus();
         $('.background').css('filter', 'blur(5px)');
+        return
     }
-    else {
-        // Check there is a global_userID, if not run function newUser() to get gracenote userID
-        if (global_UserID == null) {
-            newUser()
-        }
-
-        // Replace ampersand in album and artist name for XML query to Gracenote
-        album = album.replace('&', 'and');
-        artist = artist.replace('&', 'and');
-
-        // Send xml query to Gracenote to find number of matches
-        var queryData = "<?xml version='1.0' encoding='UTF-8'?><QUERIES><AUTH><CLIENT>12398848-977A13ABAD0F2E143D38E61AF28B78DB</CLIENT>" +
-            "<USER>" + global_UserID + "</USER></AUTH><LANG>eng</LANG><COUNTRY>uk</COUNTRY>" +
-            "<QUERY CMD='ALBUM_SEARCH'>" +
-            "<TEXT TYPE='ARTIST'>" + artist + "</TEXT>" +
-            "<TEXT TYPE='ALBUM_TITLE'>" + album + "</TEXT>" +
-            "<RANGE><START>1</START><END>10</END></RANGE>" +
-            "</QUERY></QUERIES>";
-
-        // Call ajax function albumQuery
-        editAlbumQuery(queryData).done(editCheckData);
-
-        // Function to send ajax xml query to Gracenote server
-        function editAlbumQuery(query) {
-            var queryAlbum = query;
-            return $.ajax({
-                url: gracenoteUrl,
-                data: queryAlbum,
-                type: "POST",
-                datatype: "xml"
-            });
-        }
-    }
-
-    // Function to process response of ajax xml query for album matches
-    function editCheckData(response) {
-        // Check for returned error
-        var error = $(response).find("ERROR").text();
-        // If error returned display error message and exit function
-        if (error) {
-            var message = $(response).find("MESSAGE").text();
-            // Display modal box if error message returned by Gracenote database
-            $('#okModal').css('display', 'block');
-            $('.modalHeader').empty();
-            $('#okModalText').empty();
-            $(".modalFooter").empty();
-            $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
-            $('#okModalText').append("<div class='modalIcon'><img src='./graphics/warning.png'></div><p>&nbsp<br><b>Gracenote database error message.</b><br>" + message + "<br>&nbsp</p>");
-            var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
-            $('.modalFooter').append(buttons);
-            $("#btnOkModal").focus();
-            $('.background').css('filter', 'blur(5px)');
-            // Hide recommendations page and go back
-            $("#divTrackListing").css("display", "none");
-            $("#divContent").css("width", "auto");
-            return false;
-            window.history.back();
-        }
-
-        var albumsFound = $(response).find("END").text();
-        // Convert albumsFound to an integer
-        var c = parseInt(albumsFound);
-
-        var table = $("#tblGracenote")
-        var tableCaption = $("<caption><b>Matches found in Gracenote database</b></caption>");
-        tableCaption.appendTo(table);
-        var tableHeader = $("<tr><th>Title</th><th>Date</th><th>No. Tracks</th></tr>");
-        tableHeader.appendTo(table);
-        var count = 1;
-        for (var i = 0; i < c; i++) {
-            var title = $(response).find('ALBUM[ORD="' + count + '"] TITLE').eq(0).text();
-            var date = $(response).find('ALBUM[ORD="' + count + '"] DATE').eq(0).text();
-            var number = $(response).find('ALBUM[ORD="' + count + '"] TRACK_COUNT').eq(0).text();
-            var gnID = $(response).find('ALBUM[ORD="' + count + '"] GN_ID').eq(0).text();
-            // Create table row
-            var tableRow = $("<tr class='tracks'><td>" + title + "</td><td>" + date + "</td><td>" + number + "</td><td>" + gnID + "</td></tr>");
-            // Append row to table
-            tableRow.appendTo(table);
-            count += 1;
-        }
-        // Hide modal box
-        $('#okModal').css('display', 'none');
-    }
-}
-
-// Button click for Artwork button in edit album
-$(document).on('click', '#btnArtworkAlbum', function (event) {
-    event.preventDefault();
-    getArtwork();
 });
 
-// Function to get artowrk from edit album
+// Function to get artwork from edit album
 function getArtwork() {
-    // Display modal box checking Gracenote
-    $('#okModal').css('display', 'block');
-    $('.modalHeader').empty();
-    $('#okModalText').empty();
-    $(".modalFooter").empty();
-    $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
-    $('#okModalText').append("<div class='modalIcon'><img src='./graphics/record.gif'></div><p>&nbsp<br>Searching the Gracenote database. Please wait.<br>&nbsp<br>&nbsp</p >");
-    var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
-    $('.modalFooter').append(buttons);
-    $("#btnOkModal").focus();
-    $('.background').css('filter', 'blur(5px)');
+    var artistMBID = $("#inpArtistMBID").val();
+    var artist = $("#inpArtistName").val();
+    var album = $("#inpAlbumName").val();
 
-    var gnID = $("#tblGracenote tr.highlight").find('td:last').text();
+    if (artistMBID != "") {
+        // Call ajax function artistIDQuery
+        releaseQueryArtist(artistMBID).done(dataReleaseProcess);
 
-    // Create XMl string query to query album tracks
-    var queryTracks = "<?xml version='1.0' encoding='UTF-8'?><QUERIES><AUTH><CLIENT>12398848-977A13ABAD0F2E143D38E61AF28B78DB</CLIENT><USER>" + global_UserID + "</USER></AUTH><LANG>eng</LANG><COUNTRY>uk</COUNTRY><QUERY CMD='ALBUM_FETCH'><GN_ID>" + gnID + "</GN_ID><OPTION><PARAMETER>SELECT_EXTENDED</PARAMETER><VALUE>ARTIST_OET,MOOD,TEMPO</VALUE></OPTION><OPTION><PARAMETER>SELECT_DETAIL</PARAMETER>  <VALUE>GENRE:3LEVEL,MOOD:2LEVEL,TEMPO:3LEVEL,ARTIST_ORIGIN:4LEVEL,ARTIST_ERA:2LEVEL,ARTIST_TYPE:2LEVEL</VALUE></OPTION><OPTION><PARAMETER>SELECT_EXTENDED</PARAMETER><VALUE>COVER</VALUE></OPTION></QUERY></QUERIES>"
-    artQuery(queryTracks).done(showArtwork);
-
-    // Make ajax request for track details
-    function artQuery(query) {
-        var queryTracks = query;
-        return $.ajax({
-            url: gracenoteUrl,
-            data: queryTracks,
-            type: "POST",
-            datatype: "xml"
-        });
-    }
-
-    // Callback function referenced from artQuery.
-    function showArtwork(response) {
-        // Check for returned error
-        var error = $(response).find("ERROR").text();
-        // If error returned display error message and exit function
-        if (error) {
-            var message = $(response).find("MESSAGE").text();
-            // Display modal box if error message returned by Gracenote database
-            $('#okModal').css('display', 'block');
-            $('.modalHeader').empty();
-            $('#okModalText').empty();
-            $(".modalFooter").empty();
-            $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
-            $('#okModalText').append("<div class='modalIcon'><img src='./graphics/warning.png'></div><p>&nbsp<br><b>Gracenote database error message.</b><br>" + message + "<br>&nbsp</p>");
-            var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
-            $('.modalFooter').append(buttons);
-            $("#btnOkModal").focus();
-            $('.background').css('filter', 'blur(5px)');
-            // Hide recommendations page and go back
-            $("#divTrackListing").css("display", "none");
-            $("#divContent").css("width", "auto");
-            return false;
-            window.history.back();
+        // Function to send ajax xml query to Musicbrainz server
+        function releaseQueryArtist(query) {
+            var queryArtistID = query;
+            // Artist search url
+            var url = "https://musicbrainz.org/ws/2/release-group?artist=" + queryArtistID + "&limit=100&type=album|ep"
+            return $.ajax({
+                url: url
+            });
         }
 
-        // Get URL of cover art and display image and URl in text input box
-        var coverArt = $(response).find('URL').eq(0).text();
-        if (coverArt) {
-            $("#imgCoverArt").attr('src', coverArt);
-            $("#inpEditCoverArtURL").val(coverArt);
-            // Hide modal box
-            $('#okModal').css('display', 'none');
-            $('.background').css('filter', 'blur(0px)');
-        }
-        else {
-            $("#inpEditCoverArtURL").val("");
-            // Hide modal box
-            $('#okModal').css('display', 'none');
-            // Show ERROR modal to display
-            $('#okModal').css('display', 'block');
-            $('.modalHeader').empty();
-            $('#okModalText').empty();
-            $(".modalFooter").empty();
-            $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
-            $('#okModalText').append("<div class='modalIcon'><img src='./graphics/warning.png'></div><p>&nbsp<br><b>NO ARTWORK FOUND</b> for the selection in the Gracenote table.<br>&nbsp<br>&nbsp</p >");
-            var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
-            $('.modalFooter').append(buttons);
-            $("#btnOkModal").focus();
-            $('.background').css('filter', 'blur(5px)');
+        function dataReleaseProcess(xml) {
+            // Get number of releases from xml file
+            var $releaseCount = $(xml).find('release-group-list');
+            var count = $releaseCount.attr('count')
+            var checkCount = parseInt(count)
+            if (checkCount > 100) {
+                count = "100";
+            }
+
+            // Check if any albums found
+            if (count != "0") {
+                // Loop through each release-group and get data
+                $(xml).find('release-group').each(function () {
+                    var $release = $(this);
+                    var title = $release.find('title').text().toLowerCase();
+                    // Remove any commas to aid matching
+                    title = title.replace(',', '');
+                    var date = $release.find('first-release-date').text();
+                    album = album.toLowerCase();
+                    // Remove any commas to aid matching
+                    album = album.replace(',', '');
+                    if (title == album) {
+                        releaseGroupID = $release.attr('id')
+                        var albumDate = date.substring(0, 4);
+                        $("#inpReleaseDate").val(albumDate);
+
+                        // Get cover artwork
+                        // Call ajax function releaseIDQuery
+                        releaseIDQuery(releaseGroupID).done(dataReleaseIDProcess);
+
+                        // Function to send ajax xml query to Musicbrainz server
+                        function releaseIDQuery(query) {
+                            var queryreleaseGroupID = query;
+                            // Artist serach url
+                            var url = "https://musicbrainz.org/ws/2/release?release-group=" + queryreleaseGroupID
+                            return $.ajax({
+                                url: url
+                            });
+                        }
+
+                        // Function to process data from received xml file searching for releaseIDQuery
+                        function dataReleaseIDProcess(xml) {
+                            var frontFound = false;
+                            $(xml).find('release').each(function () {
+                                var $release = $(this);
+                                var releaseID = $release.attr('id');
+                                var title = $release.find('title').text().toLowerCase();
+                                var front = $release.find('front').text();
+                                var back = $release.find('back').text();
+
+                                if (title == album) {
+                                    // Back cover art
+                                    if (back == "true") {
+                                        var backArt = "https://coverartarchive.org/release/" + releaseID + "/back-500"
+                                        $("#inpEditBackArtURL").val(backArt);
+                                        $("#backArt").text("Back Cover Artwork Found.")
+                                    }
+
+                                    if (front == "true" && frontFound == false) {
+                                        // Front cover art
+
+                                        frontFound = true;
+                                        var coverArt = "https://coverartarchive.org/release/" + releaseID + "/front-500"
+
+                                        $("#imgCoverArt").attr('src', coverArt);
+                                        $("#inpEditCoverArtURL").val(coverArt);
+
+                                        var coverArtUrl = $("#inpEditCoverArtURL").val();
+                                        var artFilePath = MUSIC_PATH + artist + "/" + album + "/tempArt.jpg"
+                                        // Send message to main.js to save and tempArt image
+                                        ipcRenderer.send("save_temp_artwork", [artFilePath, coverArtUrl]);
+                                    }
+                                }
+                            });
+                            if (frontFound == false) {
+                                // If not connected display modal box warning
+                                $('#okModal').css('display', 'block');
+                                $('.modalHeader').empty();
+                                $('#okModalText').empty();
+                                $(".modalFooter").empty();
+                                $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
+                                $('#okModalText').append("<div class='modalIcon'><img src='./graphics/information.png'></div><p>&nbsp<br><b>No artwork found.</b><br>Click album image to add manually.<br>&nbsp</p >");
+                                var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
+                                $('.modalFooter').append(buttons);
+                                $("#btnOkModal").focus();
+                                $('.background').css('filter', 'blur(5px)');
+                                return
+                            }
+                        }
+                    }
+                });
+            }
         }
     }
 }
 
-// Button click for Get button in edit album to get Gracenote metadata
-$(document).on('click', '#btnGetGracenote', function (event) {
+//##################
+//### METADATA   ###
+//##################
+// Button click for Get button in edit album to get metadata
+$(document).on('click', '#btnGetMetadata', function (event) {
     event.preventDefault();
-    // Display modal box checking Gracenote
-    $('#okModal').css('display', 'block');
-    $('.modalHeader').empty();
-    $('#okModalText').empty();
-    $(".modalFooter").empty();
-    $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
-    $('#okModalText').append("<div class='modalIcon'><img src='./graphics/record.gif'></div><p>&nbsp<br>Searching the Gracenote database. Please wait.<br>&nbsp<br>&nbsp</p >");
-    var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
-    $('.modalFooter').append(buttons);
-    $("#btnOkModal").focus();
-    $('.background').css('filter', 'blur(5px)');
-    getMetadata();
+    // Check if online
+    var connection = navigator.onLine;
+    if (connection) {
+        getMetadata();
+    }
+    else {
+        // If not connected display modal box warning
+        $('#okModal').css('display', 'block');
+        $('.modalHeader').empty();
+        $('#okModalText').empty();
+        $(".modalFooter").empty();
+        $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
+        $('#okModalText').append("<div class='modalIcon'><img src='./graphics/warning.png'></div><p>&nbsp<br><b>WARNING. No internet connection.</b><br>Please connect to the internet and try again.<br>&nbsp</p >");
+        var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
+        $('.modalFooter').append(buttons);
+        $("#btnOkModal").focus();
+        $('.background').css('filter', 'blur(5px)');
+        return
+    }   
 });
 
 // Function to update metatdata from edit album
 function getMetadata() {
-    var gnID = $("#tblGracenote tr.highlight").find('td:last').text();
-    // Create XMl string query to query album tracks
-    var queryTracks = "<?xml version='1.0' encoding='UTF-8'?><QUERIES><AUTH><CLIENT>12398848-977A13ABAD0F2E143D38E61AF28B78DB</CLIENT><USER>" + global_UserID + "</USER></AUTH><LANG>eng</LANG><COUNTRY>uk</COUNTRY><QUERY CMD='ALBUM_FETCH'><GN_ID>" + gnID + "</GN_ID><OPTION><PARAMETER>SELECT_EXTENDED</PARAMETER><VALUE>ARTIST_OET,MOOD,TEMPO</VALUE></OPTION><OPTION><PARAMETER>SELECT_DETAIL</PARAMETER>  <VALUE>GENRE:3LEVEL,MOOD:2LEVEL,TEMPO:3LEVEL,ARTIST_ORIGIN:4LEVEL,ARTIST_ERA:2LEVEL,ARTIST_TYPE:2LEVEL</VALUE></OPTION><OPTION><PARAMETER>SELECT_EXTENDED</PARAMETER><VALUE>COVER</VALUE></OPTION></QUERY></QUERIES>"
-    metaQuery(queryTracks).done(updateMetadata);
+    // Set variables
+    var artist = $("#inpArtistName").val();
+    var album = $("#inpAlbumName").val();
+    // Replace encoded &amp with &
+    artist = artist.replace(/&amp;/g, '&');
+    album = album.replace(/&amp;/g, '&');
 
-    // Make ajax request for track details
-    function metaQuery(query) {
-        var queryTracks = query;
-        return $.ajax({
-            url: gracenoteUrl,
-            data: queryTracks,
-            type: "POST",
-            datatype: "xml"
-        });
-    }
+    // Get Origin from temp hidden field when page was loaded.
+    var origin = $("#inpTempOrigin").val();
+    $("#inpArtistOrigin").val(origin);
 
-    // Callback function referenced from artQuery.
-    function updateMetadata(response) {
-        // Check for returned error
-        var error = $(response).find("ERROR").text();
-        // If error returned display error message and exit function
-        if (error) {
-            var message = $(response).find("MESSAGE").text();
-            // Display modal box if error message returned by Gracenote database
-            $('#okModal').css('display', 'block');
-            $('.modalHeader').empty();
-            $('#okModalText').empty();
-            $(".modalFooter").empty();
-            $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
-            $('#okModalText').append("<div class='modalIcon'><img src='./graphics/warning.png'></div><p>&nbsp<br><b>Gracenote database error message.</b><br>" + message + "<br>&nbsp</p>");
-            var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
-            $('.modalFooter').append(buttons);
-            $("#btnOkModal").focus();
-            $('.background').css('filter', 'blur(5px)');
-            // Hide recommendations page and go back
-            $("#divTrackListing").css("display", "none");
-            $("#divContent").css("width", "auto");
-            return false;
-            window.history.back();
-        }
-        // Variable to check if meta data is updated in page
-        var chkMeta = "";
+    // Get Year from temp hidden field when page was loaded.
+    var year = $("#inpTempYear").val();
+    $("#inpReleaseDate").val(year);
 
-        // Get album release date
-        var albumDate = $(response).find('DATE').eq(0).text();
-        if (albumDate == "") {
-            albumDate = "";
-        }
-        //Check for changes and highlight
-        chkMeta = $("#inpReleaseDate").val();
-        if (chkMeta != albumDate) {
-            $("#inpReleaseDate").val(albumDate);
-            $("#inpReleaseDate").css("background-color", "yellow");
-        }
+    // Send IPC to search Spotify for album and artist
+    var query = 'album:' + album + ' artist:' + artist + '&type=album';
 
-        // Get artist origin
-        var origin = "";
-        for (i = 4; i > 0; i--) {
-            var tempOrigin = $(response).find('ARTIST_ORIGIN[ORD="' + i + '"]').eq(0).text();
-            if (tempOrigin != "" && i != 1) {
-                origin = origin + tempOrigin + ", ";
-            }
-            else {
-                origin = origin + tempOrigin;
-            }
-        }
-        $("#inpArtistOrigin").val(origin);
-
-        // Get main genre for album
-        var genre1 = $(response).find('GENRE[ORD="1"]').eq(0).text();
-        //Check for changes and highlight
-        chkMeta = $("#genre").val();
-        if (chkMeta != genre1) {
-            $("#genre").val(genre1);
-            $("#genre").css("background-color", "yellow");
-        }
-        // Genre 2
-        var genre2 = $(response).find('GENRE[ORD="2"]').eq(0).text();
-        // Genre 3
-        var genre3 = $(response).find('GENRE[ORD="3"]').eq(0).text();
-
-        // moodCount is a separte counter for when mood1 = other and there is no mood2, increase the moodcount by 1 
-        //otherwise the following tracks read the previous tracks mood
-        var moodCount = 0;
-        // formTrackCount = number of tracks on add to database form
-        var formTrackCount = $("#inpCount").val();
-        var count = 1;
-        // Get meta data for tracks in a loop
-        // count = counter to count up to number of tracks on add to database form
-        for (let i = 0; i < (formTrackCount); i++) {
-            // trackNumber = from hidden field in add to database form
-            var trackNumber = $("#" + (count) + "trackNumber").val();
-            trackNumber = parseInt(trackNumber);
-            // number = for accessing the xml data which is zero indexed
-            var number = trackNumber - 1;
-
-            // Get name track name from XML file and Update page to compare
-            var metaTrackName = $(response).find('TITLE').eq(number + 1).text().toLowerCase();
-            var trackName = $("#" + (count) + "trackName").val().toLowerCase();
-            // Remove track number from start of track name
-            trackName = trackName.substring(trackName.indexOf(" ") + 1);
-            // If track name from database and gracenote match the update
-            if (metaTrackName == trackName) {
-                // Mood 1;
-                var mood1 = $(response).find('TRACK MOOD[ORD="1"]').eq(number).text();
-                var m1 = "#" + (count) + "mood1";
-                //Check for changes and highlight
-                chkMeta = $(m1).val();
-                if (chkMeta != mood1) {
-                    $(m1).val(mood1);
-                    $(m1).css("background-color", "yellow");
-                }
-                // Mood 2
-                if (mood1 == "Other") {
-                    var mood2 = "Other";
-                    var m2 = "#" + (count) + "mood2";
-                    moodCount += 1;
-                }
-                else {
-                    var mood2 = $(response).find('TRACK MOOD[ORD="2"]').eq(number - moodCount).text();
-                    var m2 = "#" + (count) + "mood2";
-                }
-                //Check for changes and highlight
-                chkMeta = $(m2).val();
-                if (chkMeta != mood2) {
-                    $(m2).val(mood2);
-                    $(m2).css("background-color", "yellow");
-                }
-
-                // Tempo 1
-                var tempo1 = $(response).find('TRACK TEMPO[ORD="1"]').eq(number).text();
-                var t1 = "#" + (count) + "tempo1";
-                //Check for changes and highlight
-                chkMeta = $(t1).val();
-                if (chkMeta != tempo1) {
-                    $(t1).val(tempo1);
-                    $(t1).css("background-color", "yellow");
-                }
-
-                // Tempo 2
-                var tempo2 = $(response).find('TRACK TEMPO[ORD="2"]').eq(number).text();
-                var t2 = "#" + (count) + "tempo2";
-                //Check for changes and highlight
-                chkMeta = $(t2).val();
-                if (chkMeta != tempo2) {
-                    $(t2).val(tempo2);
-                    $(t2).css("background-color", "yellow");
-                }
-                // Genre 2
-                var g2 = "#" + (count) + "genre2";
-                //Check for changes and highlight
-                chkMeta = $(g2).val();
-                if (chkMeta != genre2) {
-                    $(g2).val(genre2);
-                    $(g2).css("background-color", "yellow");
-                }
-                // Genre 3
-                var g3 = "#" + (count) + "genre3";
-                //Check for changes and highlight
-                chkMeta = $(g3).val();
-                if (chkMeta != genre3) {
-                    $(g3).val(genre3);
-                    $(g3).css("background-color", "yellow");
-                }
-            }
-            count += 1;
-        }
-        // Hide modal box
-        $('#okModal').css('display', 'none');
-        $('.background').css('filter', 'blur(0px)');
-    }
+    ipcRenderer.send("spotify_search", [query, album])
+    // The rest of the metadata received from Spotify is updated in the databaseadd.js file reusing the import code.
 }
 
+//############################
+//## Save Album to Database ##
+//############################
 // Update button on edit album in database
 $(document).on('click', '#btnSaveAlbum', function (event) {
     event.preventDefault();
@@ -420,12 +232,9 @@ $(document).on('click', '#btnSaveAlbum', function (event) {
             originalArtistName = originalArtistName.replace(/&amp;/g, '&');
 
             var releaseDate = $("#inpReleaseDate").val();
-            var genre = $('[name=sltGenre]').val();
+            var genre = $('[name=sltGenre1]').val();
             var noTracks = $("#inpCount").val();
             var coverArtUrl = $("#inpEditCoverArtURL").val();
-            // Get todays date and convert
-            var todayDate = new Date();
-            var dateAdd = convertDate(todayDate);
 
             // Rename directories if changed on input
             ipcRenderer.send("rename_directory", [MUSIC_PATH, originalArtistName, originalAlbumName, artist, album, "edit"]);
@@ -477,8 +286,6 @@ $(document).on('click', '#btnSaveAlbum', function (event) {
                 var update = await dBase.run(sql);
 
                 // TRACK TABLE
-                // Zero variable for initial playCount
-                var count = 0;
                 // Set counters
                 var counter1 = 1;
                 noTracks = parseInt(noTracks);
@@ -495,26 +302,25 @@ $(document).on('click', '#btnSaveAlbum', function (event) {
                     var genre3 = $("#" + counter1 + "genre3").val();
 
                     var sql = 'UPDATE track SET artistID=' + artistID + ', genreID=' + genreID + ', trackName="' + trackName + '", fileName="' + fileName + '", mood1="' + mood1 + '", mood2="' + mood2 + '", tempo1="' + tempo1 + '", tempo2="' + tempo2 + '", genre2="' + genre2 + '", genre3="' + genre3 + '" WHERE trackID=' + trackID;
-
                     var update = await dBase.run(sql);
-
-                    counter1 += 1;
+                   counter1 += 1;
                 }
 
                 // COVER ART
                 // Check first 4 chars of coverArtUrl to see if it is a URL or filepath
                 var check = coverArtUrl.substring(0, 4);
-
-                // coverArtUrl is a URL
+                // CoverArtUrl is a URL
                 if (coverArtUrl != "" && check == "http") {
-                    // Save cover art to album folder in music directory
+                    var tempArtPath = MUSIC_PATH + artist + "/" + album + "/tempArt.jpg";
                     var artFilePath = MUSIC_PATH + artist + "/" + album + "/AlbumArtXLarge.jpg";
                     var resizedFilePath = MUSIC_PATH + artist + "/" + album + "/folder.jpg";
-                    // Send message to main.js to save and resize art image
-                    ipcRenderer.send("save_artXlarge_URL", [coverArtUrl, artFilePath, resizedFilePath]);
+                    // Send message to main.js to save AlbumArtXLarge image
+                    ipcRenderer.send("save_artXlarge_file", [tempArtPath, artFilePath]);
+                    // Send message to main.js to resize folder image
+                    ipcRenderer.send("save_folder_file", [tempArtPath, resizedFilePath]);
                 }
 
-                // coverArtUrl is a filepath
+                // CoverArtUrl is a filepath
                 if (coverArtUrl != "" && check != "http") {
                     var artFilePath = MUSIC_PATH + artist + "/" + album + "/AlbumArtXLarge.jpg";
                     var resizedFilePath = MUSIC_PATH + artist + "/" + album + "/folder.jpg";
@@ -522,6 +328,14 @@ $(document).on('click', '#btnSaveAlbum', function (event) {
                     ipcRenderer.send("save_artXlarge_file", [coverArtUrl, artFilePath]);
                     // Send message to main.js to resize folder image
                     ipcRenderer.send("save_folder_file", [coverArtUrl, resizedFilePath]);
+                }
+
+                // Back cover art
+                var backCoverArt = $('#inpEditBackArtURL').val();
+                if (backCoverArt) {
+                    var artFilePath = MUSIC_PATH + artist + "/" + album + "/backCover.jpg";
+                    // Send message to main.js to save back Cover image
+                    ipcRenderer.send("save_backCover_art", [artFilePath, backCoverArt]);
                 }
 
                 // Show OK modal box to confirm album updated in database
@@ -570,7 +384,6 @@ ipcRenderer.on("renamed_artist_directory", (event, data) => {
         var sql = "SELECT n.artistID, COALESCE(t.albumCount, 0) AS albumCount, n.artistName FROM artist n LEFT JOIN(SELECT artistID, COUNT(*) AS albumCount FROM album GROUP BY artistID) t ON n.artistID = t.artistID WHERE n.artistName=?";
         var row = await dBase.get(sql, originalArtistName);
         // If there was only 1 album for artist delete artist from database
-        //if (row.albumCount == 1) {
         if (!row.albumCount) {
             var sql = "DELETE FROM artist WHERE artistID=" + row.artistID;
             var del = await dBase.run(sql);
@@ -664,3 +477,996 @@ $(document).on('click', '#btnDeleteOkAlbum', async function (event) {
         $('.background').css('filter', 'blur(5px)');
     }
 });
+
+//#########################
+//### GENRE 2 SELECTION ###
+//#########################
+// Change Genre2 selection box when Genre changed
+$(document).on('change', '#sltGenre1', function () {
+    // Get value selected
+    var noTracks = $("#inpCount").val();
+    var genreName = $(this).val();
+
+    if (genreName != "") {
+        $('#inpGenre2Edit').val("");
+        $('#listGenre2Edit').empty();
+        $('#inpGenre3Edit').val("");
+        $('#listGenre3Edit').empty();
+
+        populateGenre2(genreName)
+    }
+    else {
+        $('#inpGenre2Edit').val("");
+        $('#listGenre2Edit').empty();
+        $('#inpGenre3Edit').val("");
+        $('#listGenre3Edit').empty();
+        // Clear each track genre2 and genre3
+        var counter = 1;
+        for (var i = 0; i < noTracks; i++) {
+            // Genre2
+            $("#" + counter + "genre2").val('');
+            // Genre3
+            $("#" + counter + "genre3").val('');
+            counter += 1;
+        }
+    }
+});
+
+//#########################
+//### GENRE 3 SELECTION ###
+//#########################
+// Change Genre3 selection box when Genre2 changed
+$(document).on('change', '#inpGenre2Edit', function () {
+    var noTracks = $("#inpCount").val();
+    // Change each track genre2 when changed
+    var counter = 1;
+    var genre2 = $('#inpGenre2Edit').val();
+    for (var i = 0; i < noTracks; i++) {
+        // Genre2
+        $("#" + counter + "genre2").val(genre2);
+        counter += 1;
+    }
+
+    if (genre2 != "") {
+        $('#inpGenre3Edit').val("");
+        $('#listGenre3Edit').empty();
+        populateGenre3(genre2)
+    }
+    else {
+        $('#inpGenre3Edit').val("");
+        $('#listGenre3Edit').empty();
+        $('#listGenre2Edit').empty();
+        // Clear each track genre3
+        var counter = 1;
+        for (var i = 0; i < noTracks; i++) {
+            // Genre3
+            $("#" + counter + "genre3").val('');
+            counter += 1;
+        }
+        var genreName = $("#sltGenre1").val();
+        populateGenre2(genreName)
+    }
+});
+
+
+$(document).on('change', '#inpGenre3Edit', function () {
+    var noTracks = $("#inpCount").val();
+    // Change each track genre3 when changed
+    var counter = 1;
+    var genre3 = $('#inpGenre3Edit').val();
+    if (genre3 != "") {
+        for (var i = 0; i < noTracks; i++) {
+            // Genre3
+            $("#" + counter + "genre3").val(genre3);
+            counter += 1;
+        }
+    }
+    else {
+        var genre2 = $('#inpGenre2Edit').val();
+        $('#inpGenre3Edit').val("");
+        // Clear each track genre2 and genre3
+        var counter = 1;
+        for (var i = 0; i < noTracks; i++) {
+            // Genre3
+            $("#" + counter + "genre3").val('');
+            counter += 1;
+        }
+        populateGenre3(genre2)
+    }
+});
+
+// Populate list values of genre2 based on main genre
+async function populateGenre2(genreName) {
+    // Array of database values for genre2
+    var dbGenre2 = [];
+    // Get genreID for main genre selected
+    var sql = "SELECT genreID FROM genre WHERE genreName=?";
+    var row = await dBase.get(sql, genreName);
+
+    // Select all current genre2 from database
+    try {
+        var sql = "SELECT DISTINCT genre2 FROM track WHERE genreID=? ORDER BY genre2 ASC";
+        var rows = await dBase.all(sql, row.genreID);
+        // And put into array 
+        rows.forEach((row) => {
+            dbGenre2.push(row.genre2);
+        });
+    }
+    catch{
+        dbGenre2 = [];
+    }
+
+    // Empty contents of genre2 selection element
+    // Populate genre2 selection element based on value in genre selection element
+    switch (genreName) {
+        case "Alternative & Punk":
+            var fixedGenre2 = ['Alternative', 'Alternative Folk', 'Brit Rock', 'Garage Rock Revival', 'New Wave Pop', 'Punk'];
+            // Combine and remove duplicates from fixedGenre2 and database genre2 into 1 array
+            var genre2 = fixedGenre2.concat(dbGenre2.filter((item) => fixedGenre2.indexOf(item) < 0))
+            // Populate inpubox list
+            for (const item of genre2) {
+                $('#listGenre2Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "Blues":
+            var fixedGenre2 = ['Acoustic Blues', 'Blues Rock', 'Electric Blues', 'General Blues'];
+            // Combine and remove duplicates from fixedGenre2 and database genre2 into 1 array
+            var genre2 = fixedGenre2.concat(dbGenre2.filter((item) => fixedGenre2.indexOf(item) < 0))
+            // Populate inpubox list
+            for (const item of genre2) {
+                $('#listGenre2Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "Classical":
+            var fixedGenre2 = ['Baroque', 'Chamber Music', 'Classical Guitar', 'Contemporary', 'General Classical', 'Opera'];
+            // Combine and remove duplicates from fixedGenre2 and database genre2 into 1 array
+            var genre2 = fixedGenre2.concat(dbGenre2.filter((item) => fixedGenre2.indexOf(item) < 0))
+            // Populate inpubox list
+            for (const item of genre2) {
+                $('#listGenre2Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "Comedy":
+            var fixedGenre2 = ['Comedy'];
+            // Combine and remove duplicates from fixedGenre2 and database genre2 into 1 array
+            var genre2 = fixedGenre2.concat(dbGenre2.filter((item) => fixedGenre2.indexOf(item) < 0))
+            // Populate inpubox list
+            for (const item of genre2) {
+                $('#listGenre2Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "Country":
+            var fixedGenre2 = ['Classic Country', 'General Country', 'Traditional Country'];
+            // Combine and remove duplicates from fixedGenre2 and database genre2 into 1 array
+            var genre2 = fixedGenre2.concat(dbGenre2.filter((item) => fixedGenre2.indexOf(item) < 0))
+            // Populate inpubox list
+            for (const item of genre2) {
+                $('#listGenre2Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "Dance":
+            var fixedGenre2 = ['Dance & Club', 'General Dance'];
+            // Combine and remove duplicates from fixedGenre2 and database genre2 into 1 array
+            var genre2 = fixedGenre2.concat(dbGenre2.filter((item) => fixedGenre2.indexOf(item) < 0))
+            // Populate inpubox list
+            for (const item of genre2) {
+                $('#listGenre2Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "Electronica":
+            var fixedGenre2 = ['Disco', 'Downtempo, Lounge & Ambient', 'Electronic', 'Electronica Fusion', 'Electronica Mainstream', 'House', 'Techno', 'Trance'];
+            // Combine and remove duplicates from fixedGenre2 and database genre2 into 1 array
+            var genre2 = fixedGenre2.concat(dbGenre2.filter((item) => fixedGenre2.indexOf(item) < 0))
+            // Populate inpubox list
+            for (const item of genre2) {
+                $('#listGenre2Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "Folk":
+            var fixedGenre2 = ['Alternative Folk', 'Celtic', 'Contemporary Folk', 'Folk Rock'];
+            // Combine and remove duplicates from fixedGenre2 and database genre2 into 1 array
+            var genre2 = fixedGenre2.concat(dbGenre2.filter((item) => fixedGenre2.indexOf(item) < 0))
+            // Populate inpubox list
+            for (const item of genre2) {
+                $('#listGenre2Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "Hip-Hop/Rap":
+            var fixedGenre2 = ['General Hip Hop', 'General Rap', 'Old School Hip Hop'];
+            // Combine and remove duplicates from fixedGenre2 and database genre2 into 1 array
+            var genre2 = fixedGenre2.concat(dbGenre2.filter((item) => fixedGenre2.indexOf(item) < 0))
+            // Populate inpubox list
+            for (const item of genre2) {
+                $('#listGenre2Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "Holiday":
+            var fixedGenre2 = ['Christmas'];
+            // Combine and remove duplicates from fixedGenre2 and database genre2 into 1 array
+            var genre2 = fixedGenre2.concat(dbGenre2.filter((item) => fixedGenre2.indexOf(item) < 0))
+            // Populate inpubox list
+            for (const item of genre2) {
+                $('#listGenre2Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "Indie":
+            var fixedGenre2 = ['Indie Rock', 'Indie Pop'];
+            // Combine and remove duplicates from fixedGenre2 and database genre2 into 1 array
+            var genre2 = fixedGenre2.concat(dbGenre2.filter((item) => fixedGenre2.indexOf(item) < 0))
+            // Populate inpubox list
+            for (const item of genre2) {
+                $('#listGenre2Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "Jazz":
+            var fixedGenre2 = ['Bebop & Modern Jazz', 'Big Band & Swing', 'Contemporary Jazz & Fusion', 'Early Jazz'];
+            // Combine and remove duplicates from fixedGenre2 and database genre2 into 1 array
+            var genre2 = fixedGenre2.concat(dbGenre2.filter((item) => fixedGenre2.indexOf(item) < 0))
+            // Populate inpubox list
+            for (const item of genre2) {
+                $('#listGenre2Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "Metal":
+            var fixedGenre2 = ['General Metal', 'Hardcore Metal'];
+            // Combine and remove duplicates from fixedGenre2 and database genre2 into 1 array
+            var genre2 = fixedGenre2.concat(dbGenre2.filter((item) => fixedGenre2.indexOf(item) < 0))
+            // Populate inpubox list
+            for (const item of genre2) {
+                $('#listGenre2Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "Pop":
+            var fixedGenre2 = ['Classic Pop Vocals', 'European Pop', 'Latin Pop', 'Western Pop'];
+            // Combine and remove duplicates from fixedGenre2 and database genre2 into 1 array
+            var genre2 = fixedGenre2.concat(dbGenre2.filter((item) => fixedGenre2.indexOf(item) < 0))
+            // Populate inpubox list
+            for (const item of genre2) {
+                $('#listGenre2Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "Reggae":
+            var fixedGenre2 = ['General Reggae', 'Ska/Rock Steady'];
+            // Combine and remove duplicates from fixedGenre2 and database genre2 into 1 array
+            var genre2 = fixedGenre2.concat(dbGenre2.filter((item) => fixedGenre2.indexOf(item) < 0))
+            // Populate inpubox list
+            for (const item of genre2) {
+                $('#listGenre2Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "Rock":
+            var fixedGenre2 = ["Alternative", "Alternative Roots", "Classic Rock", "Hard Rock", "Mainstream Rock", "Psychedelic Rock", "Rock & Roll", "Soft Rock"];
+            // Combine and remove duplicates from fixedGenre2 and database genre2 into 1 array
+            var genre2 = fixedGenre2.concat(dbGenre2.filter((item) => fixedGenre2.indexOf(item) < 0))
+            // Populate inpubox list
+            for (const item of genre2) {
+                $('#listGenre2Edit').append($("<option>").attr('value', item));
+            }
+        case "Soul":
+            var fixedGenre2 = ['Classic R&B/Soul', 'General R&B/Soul'];
+            // Combine and remove duplicates from fixedGenre2 and database genre2 into 1 array
+            var genre2 = fixedGenre2.concat(dbGenre2.filter((item) => fixedGenre2.indexOf(item) < 0))
+            // Populate inpubox list
+            for (const item of genre2) {
+                $('#listGenre2Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "Soundtrack":
+            var fixedGenre2 = ['Original Film/TV Music'];
+            // Combine and remove duplicates from fixedGenre2 and database genre2 into 1 array
+            var genre2 = fixedGenre2.concat(dbGenre2.filter((item) => fixedGenre2.indexOf(item) < 0))
+            // Populate inpubox list
+            for (const item of genre2) {
+                $('#listGenre2Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "Traditional":
+            var fixedGenre2 = ['Easy Listening', 'European Traditional', 'Religious'];
+            // Combine and remove duplicates from fixedGenre2 and database genre2 into 1 array
+            var genre2 = fixedGenre2.concat(dbGenre2.filter((item) => fixedGenre2.indexOf(item) < 0))
+            // Populate inpubox list
+            for (const item of genre2) {
+                $('#listGenre2Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "Urban":
+            var fixedGenre2 = ['Contemporary Jazz & Fusion', 'Contemporary R&B/Soul', 'Western Hip-Hop/Rap'];
+            // Combine and remove duplicates from fixedGenre2 and database genre2 into 1 array
+            var genre2 = fixedGenre2.concat(dbGenre2.filter((item) => fixedGenre2.indexOf(item) < 0))
+            // Populate inpubox list
+            for (const item of genre2) {
+                $('#listGenre2Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "World":
+            var fixedGenre2 = ['African Traditional', 'European Traditional', 'Latin Traditional', 'New Age', 'Other Traditions'];
+            // Combine and remove duplicates from fixedGenre2 and database genre2 into 1 array
+            var genre2 = fixedGenre2.concat(dbGenre2.filter((item) => fixedGenre2.indexOf(item) < 0))
+            // Populate inpubox list
+            for (const item of genre2) {
+                $('#listGenre2Edit').append($("<option>").attr('value', item));
+            }
+            break;
+    }
+}
+
+// Populate list values of genre3 based on main genre
+async function populateGenre3(genre2) {
+    // Array of database values for genre2
+    var dbGenre3 = [];
+    // Select all current genre3 from database
+    try {
+        var sql = "SELECT DISTINCT genre3 FROM track WHERE genre2=? ORDER BY genre3 ASC";
+        var rows = await dBase.all(sql, genre2);
+        // And put into array 
+        rows.forEach((row) => {
+            dbGenre3.push(row.genre3);
+        });
+    }
+    catch{
+        dbGenre3 = [];
+    }
+
+    // Populate genre3 selection element based on value in genre2 selection element
+    switch (genre2) {
+        case "Alternative":
+            var fixedGenre3 = ['Adult Alternative Rock', 'Alternative Dance', 'Alternative Pop', 'Alternative Rock', 'Alternative Singer-Songwriter', 'Grunge', 'Rockabilly Revival'];
+            // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+            var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+            // Populate inputbox list
+            for (const item of genre3) {
+                $('#listGenre3Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "Alternative Folk":
+            var fixedGenre3 = ['Contemporary U.S. Folk'];
+            // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+            var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+            // Populate inputbox list
+            for (const item of genre3) {
+                $('#listGenre3Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "Brit Rock":
+            var fixedGenre3 = ['Brit Pop'];
+            // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+            var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+            // Populate inputbox list
+            for (const item of genre3) {
+                $('#listGenre3Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "Garage Rock Revival":
+            var fixedGenre3 = ['Lo-Fi/Garage'];
+            // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+            var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+            // Populate inputbox list
+            for (const item of genre3) {
+                $('#listGenre3Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "New Wave Pop":
+            var fixedGenre3 = ['Synth Pop'];
+            // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+            var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+            // Populate inputbox list
+            for (const item of genre3) {
+                $('#listGenre3Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "Punk":
+            var fixedGenre3 = ['General Punk', 'Hardcore Punk', 'Old School Punk', 'Pop Punk', 'Post - Punk', 'Straight Edge Punk'];
+            // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+            var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+            // Populate inputbox list
+            for (const item of genre3) {
+                $('#listGenre3Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "Acoustic Blues":
+            var fixedGenre3 = ['General Acoustic Blues', 'Harmonica Blues'];
+            // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+            var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+            // Populate inputbox list
+            for (const item of genre3) {
+                $('#listGenre3Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "Blues Rock":
+            var fixedGenre3 = ['British Blues Rock', 'Chicago Blues', 'Texas Blues'];
+            // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+            var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+            // Populate inputbox list
+            for (const item of genre3) {
+                $('#listGenre3Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "Electric Blues":
+            var fixedGenre3 = ['Chicago Blues', 'General Electric Blues', 'Texas Blues'];
+            // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+            var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+            // Populate inputbox list
+            for (const item of genre3) {
+                $('#listGenre3Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "General Blues":
+            var fixedGenre3 = ['Contemporary Blues', 'Country Blues'];
+            // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+            var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+            // Populate inputbox list
+            for (const item of genre3) {
+                $('#listGenre3Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "Christmas":
+            var fixedGenre3 = [];
+            // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+            var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+            // Populate inputbox list
+            for (const item of genre3) {
+                $('#listGenre3Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "Baroque":
+            var fixedGenre3 = [];
+            // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+            var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+            // Populate inputbox list
+            for (const item of genre3) {
+                $('#listGenre3Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "Chamber Music":
+            var fixedGenre3 = [];
+            // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+            var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+            // Populate inputbox list
+            for (const item of genre3) {
+                $('#listGenre3Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "Classical Guitar":
+            var fixedGenre3 = [];
+            // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+            var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+            // Populate inputbox list
+            for (const item of genre3) {
+                $('#listGenre3Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "Contemporary":
+            var fixedGenre3 = ['Piano', 'Strings'];
+            // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+            var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+            // Populate inputbox list
+            for (const item of genre3) {
+                $('#listGenre3Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "General Classical":
+            var fixedGenre3 = ['Piano', 'Strings'];
+            // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+            var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+            // Populate inputbox list
+            for (const item of genre3) {
+                $('#listGenre3Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "Opera":
+            var fixedGenre3 = ['Romantic Era', 'Reniassance Era'];
+            // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+            var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+            // Populate inputbox list
+            for (const item of genre3) {
+                $('#listGenre3Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "Comedy":
+            var fixedGenre3 = [];
+            // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+            var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+            // Populate inputbox list
+            for (const item of genre3) {
+                $('#listGenre3Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "Classic Country":
+            var fixedGenre3 = ['Bluegrass', 'Outlaw Country', 'Rockabiliy'];
+            // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+            var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+            // Populate inputbox list
+            for (const item of genre3) {
+                $('#listGenre3Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "General Country":
+            var fixedGenre3 = ['Alternative Country', 'Americana', 'Contemporary Country', 'Country Pop', 'Country Rock'];
+            // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+            var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+            // Populate inputbox list
+            for (const item of genre3) {
+                $('#listGenre3Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "Traditional Country":
+            var fixedGenre3 = ['Americana', 'Bluegrass', 'Country Blues'];
+            // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+            var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+            // Populate inputbox list
+            for (const item of genre3) {
+                $('#listGenre3Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "Dance & Club":
+            var fixedGenre3 = ['Acid House', 'Big Beat', 'Club Dance', 'Hi-NRG', "Jungle/Drum 'n' Bass"];
+            // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+            var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+            // Populate inputbox list
+            for (const item of genre3) {
+                $('#listGenre3Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "General Dance":
+            var fixedGenre3 = ['Disco', 'Rave Music'];
+            // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+            var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+            // Populate inputbox list
+            for (const item of genre3) {
+                $('#listGenre3Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "Disco":
+            var fixedGenre3 = [];
+            // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+            var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+            // Populate inputbox list
+            for (const item of genre3) {
+                $('#listGenre3Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "Downtempo, Lounge & Ambient":
+            var fixedGenre3 = ['Ambient Electronica', 'General Downtempo', 'Neo-Lounge', 'Trip Hop'];
+            // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+            var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+            // Populate inputbox list
+            for (const item of genre3) {
+                $('#listGenre3Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "Electronic":
+            var fixedGenre3 = ['General Electronic', 'Minimalist Experimental'];
+            // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+            var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+            // Populate inputbox list
+            for (const item of genre3) {
+                $('#listGenre3Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "Electronica Fusion":
+            var fixedGenre3 = ['Ethno-Lounge Electronica'];
+            // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+            var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+            // Populate inputbox list
+            for (const item of genre3) {
+                $('#listGenre3Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "Electronica Mainstream":
+            var fixedGenre3 = ['Ambient Electronica', 'Big Beat', 'Pop Electronica'];
+            // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+            var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+            // Populate inputbox list
+            for (const item of genre3) {
+                $('#listGenre3Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "House":
+            var fixedGenre3 = ['Deep House', 'Euro House', 'General House', 'Happy House', 'Progressive House', 'Tech House', 'U.K. Garage'];
+            // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+            var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+            // Populate inputbox list
+            for (const item of genre3) {
+                $('#listGenre3Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "Techno":
+            var fixedGenre3 = ['Classic Techno', 'Dark Techno/Darkwave', 'General Techno', 'Hardcore Techno', 'Minimalist Techno'];
+            // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+            var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+            // Populate inputbox list
+            for (const item of genre3) {
+                $('#listGenre3Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "Trance":
+            var fixedGenre3 = ['Ambient Trance', 'General Trance', 'Hard Trance/Acid', 'Progressive/Dream', 'Tech Trance'];
+            // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+            var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+            // Populate inputbox list
+            for (const item of genre3) {
+                $('#listGenre3Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "Alternative Folk":
+            var fixedGenre3 = ['Contemporary U.S. Folk'];
+            // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+            var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+            // Populate inputbox list
+            for (const item of genre3) {
+                $('#listGenre3Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "Celtic":
+            var fixedGenre3 = [];
+            // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+            var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+            // Populate inputbox list
+            for (const item of genre3) {
+                $('#listGenre3Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "Contemporary Folk":
+            var fixedGenre3 = ['Folk Pop'];
+            // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+            var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+            // Populate inputbox list
+            for (const item of genre3) {
+                $('#listGenre3Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "Folk Rock":
+            var fixedGenre3 = ['English Folk Rock', 'Classic Folk Rock'];
+            // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+            var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+            // Populate inputbox list
+            for (const item of genre3) {
+                $('#listGenre3Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "General Hip Hop":
+            var fixedGenre3 = [];
+            // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+            var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+            // Populate inputbox list
+            for (const item of genre3) {
+                $('#listGenre3Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "General Rap":
+            var fixedGenre3 = ['Freestyle Rap', 'Hardcore Rap', 'Underground Rap'];
+            // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+            var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+            // Populate inputbox list
+            for (const item of genre3) {
+                $('#listGenre3Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "Old School Hip Hop":
+            var fixedGenre3 = [];
+            // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+            var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+            // Populate inputbox list
+            for (const item of genre3) {
+                $('#listGenre3Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "Indie Rock":
+            var fixedGenre3 = ['Art Rock', 'Experimental Rock', 'General Indie Rock', 'Madchester', 'Neo-Glam', 'Original Post-Punk', 'Post-Modern Art Music', 'Post-Punk Revival'];
+            // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+            var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+            // Populate inputbox list
+            for (const item of genre3) {
+                $('#listGenre3Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "Indie Pop":
+            var fixedGenre3 = ['Dream Pop', 'Post-Modern Electronic Pop', 'Twee Pop'];
+            // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+            var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+            // Populate inputbox list
+            for (const item of genre3) {
+                $('#listGenre3Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "Bebop & Modern Jazz":
+            var fixedGenre3 = ['Avant Garde', 'Bebop', 'Modern Jazz', 'Post-Bop'];
+            // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+            var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+            // Populate inputbox list
+            for (const item of genre3) {
+                $('#listGenre3Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "Big Band & Swing":
+            var fixedGenre3 = ['Big Band', 'Jump Blues', 'Swing Revival'];
+            // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+            var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+            // Populate inputbox list
+            for (const item of genre3) {
+                $('#listGenre3Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "Contemporary Jazz & Fusion":
+            var fixedGenre3 = ['Cool/West Coast Jazz', 'Fusion', 'Jazz Funk', 'Soul Jazz'];
+            // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+            var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+            // Populate inputbox list
+            for (const item of genre3) {
+                $('#listGenre3Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "Early Jazz":
+            var fixedGenre3 = ['New Orleans Jazz', 'Ragtime'];
+            // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+            var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+            // Populate inputbox list
+            for (const item of genre3) {
+                $('#listGenre3Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "General Metal":
+            var fixedGenre3 = ['Alternative Metal', 'Gothic Metal', 'Heavy Metal', 'Pop/Hair Metal', 'Progressive Metal'];
+            // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+            var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+            // Populate inputbox list
+            for (const item of genre3) {
+                $('#listGenre3Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "Hardcore Metal":
+            var fixedGenre3 = ['Black/Death Metal', 'Rap Metal', 'Thrash/Speed Metal'];
+            // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+            var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+            // Populate inputbox list
+            for (const item of genre3) {
+                $('#listGenre3Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "Classic Pop Vocals":
+            var fixedGenre3 = ['Classic Female Vocal Pop', 'Classic Male Vocal Pop'];
+            // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+            var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+            // Populate inputbox list
+            for (const item of genre3) {
+                $('#listGenre3Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "European Pop":
+            var fixedGenre3 = ['Euro Disco', 'Euro Pop', 'Eurobeat', 'French Pop'];
+            // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+            var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+            // Populate inputbox list
+            for (const item of genre3) {
+                $('#listGenre3Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "Latin Pop":
+            var fixedGenre3 = ['General Latin Pop'];
+            // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+            var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+            // Populate inputbox list
+            for (const item of genre3) {
+                $('#listGenre3Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "Western Pop":
+            var fixedGenre3 = ['Acoustic Pop', 'Adult Alternative Pop', 'Adult Contemporary', 'Dance Pop', 'Dream Pop', 'Folk Pop', 'Pop Punk', 'Pop Vocal', 'Power Pop', 'R&B', 'Singer-Songwriter', 'Teen Girl Group', 'Teen Pop', 'Twee Pop'];
+            // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+            var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+            // Populate inputbox list
+            for (const item of genre3) {
+                $('#listGenre3Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "General Reggae":
+            var fixedGenre3 = [];
+            // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+            var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+            // Populate inputbox list
+            for (const item of genre3) {
+                $('#listGenre3Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "Ska/Rock Steady":
+            var fixedGenre3 = ['Dancehall', 'Dub', 'Ragga'];
+            // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+            var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+            // Populate inputbox list
+            for (const item of genre3) {
+                $('#listGenre3Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "Alternative":
+            var fixedGenre3 = ['Adult Alternative Rock', 'Alternative Rock', 'Alternative Singer-Songwriter', 'Grunge', 'Rockabilly Revival'];
+            // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+            var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+            // Populate inputbox list
+            for (const item of genre3) {
+                $('#listGenre3Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "Alternative Roots":
+            var fixedGenre3 = ['Alt Country', 'Roots Rock', 'Southern Rock'];
+            // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+            var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+            // Populate inputbox list
+            for (const item of genre3) {
+                $('#listGenre3Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "Classic Rock":
+            var fixedGenre3 = ['Blues Rock', 'Boogie Rock', 'Classic Hard Rock', 'Classic Prog', 'Classic Rock'];
+            // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+            var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+            // Populate inputbox list
+            for (const item of genre3) {
+                $('#listGenre3Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "Hard Rock":
+            var fixedGenre3 = ['General Hard Rock', 'Glam'];
+            // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+            var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+            // Populate inputbox list
+            for (const item of genre3) {
+                $('#listGenre3Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "Mainstream Rock":
+            var fixedGenre3 = ['General Mainstream Rock'];
+            // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+            var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+            // Populate inputbox list
+            for (const item of genre3) {
+                $('#listGenre3Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "Psychedelic Rock":
+            var fixedGenre3 = ['Acid Rock'];
+            // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+            var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+            // Populate inputbox list
+            for (const item of genre3) {
+                $('#listGenre3Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "Rock & Roll":
+            var fixedGenre3 = ['Rockabilly'];
+            // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+            var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+            // Populate inputbox list
+            for (const item of genre3) {
+                $('#listGenre3Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "Soft Rock":
+            var fixedGenre3 = ['Instrumental Rock'];
+            // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+            var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+            // Populate inputbox list
+            for (const item of genre3) {
+                $('#listGenre3Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "Classic R&B/Soul":
+            var fixedGenre3 = ['Motown'];
+            // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+            var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+            // Populate inputbox list
+            for (const item of genre3) {
+                $('#listGenre3Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "General R&B/Soul":
+            var fixedGenre3 = ['Funk', 'Urban Crossover'];
+            // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+            var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+            // Populate inputbox list
+            for (const item of genre3) {
+                $('#listGenre3Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "Original Film/TV Music":
+            var fixedGenre3 = [];
+            // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+            var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+            // Populate inputbox list
+            for (const item of genre3) {
+                $('#listGenre3Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "Easy Listening":
+            var fixedGenre3 = [];
+            // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+            var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+            // Populate inputbox list
+            for (const item of genre3) {
+                $('#listGenre3Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "European Traditional":
+            var fixedGenre3 = [];
+            // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+            var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+            // Populate inputbox list
+            for (const item of genre3) {
+                $('#listGenre3Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "Religious":
+            var fixedGenre3 = ['Choral', 'Christian', 'Gospel'];
+            // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+            var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+            // Populate inputbox list
+            for (const item of genre3) {
+                $('#listGenre3Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "Contemporary R&B/Soul":
+            var fixedGenre3 = ['Contemporary R&B', 'Neo-Soul', 'Urban AC', 'Urban Crossover'];
+            // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+            var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+            // Populate inputbox list
+            for (const item of genre3) {
+                $('#listGenre3Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "Western Hip-Hop/Rap":
+            var fixedGenre3 = ['European Hip-Hop/Rap', 'European Hip-Hop/Rap'];
+            // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+            var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+            // Populate inputbox list
+            for (const item of genre3) {
+                $('#listGenre3Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "African Traditional":
+            var fixedGenre3 = ['African', 'West African'];
+            // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+            var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+            // Populate inputbox list
+            for (const item of genre3) {
+                $('#listGenre3Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "European Traditional":
+            var fixedGenre3 = ['British Isles', 'General Celtic', 'Klezmer & European Jewish'];
+            // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+            var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+            // Populate inputbox list
+            for (const item of genre3) {
+                $('#listGenre3Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "Latin Traditional":
+            var fixedGenre3 = ['Cuban'];
+            // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+            var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+            // Populate inputbox list
+            for (const item of genre3) {
+                $('#listGenre3Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "New Age":
+            var fixedGenre3 = ['New Age World Music', 'World Fusion'];
+            // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+            var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+            // Populate inputbox list
+            for (const item of genre3) {
+                $('#listGenre3Edit').append($("<option>").attr('value', item));
+            }
+            break;
+        case "Other Traditions":
+            var fixedGenre3 = ['Central Asian', 'Eastern European', 'General World', ' Middle East/Arabic', 'Native American', 'Zydeco/Cajun'];
+            // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
+            var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
+            // Populate inputbox list
+            for (const item of genre3) {
+                $('#listGenre3Edit').append($("<option>").attr('value', item));
+            }
+            break;
+    }
+}
+
+

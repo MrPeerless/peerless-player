@@ -9,9 +9,14 @@
         <div class="divAlbumText">
             <h1 style="margin-right: 1em;">Edit Music Database<br /></h1>
             <h2 id="editAlbumDetails"></h2>
-            <p id="editAlbumInfo"></p>
-            <button class="btnTrackListing" id="btnGetGracenote" disabled="disabled">Get</button>
-            <button class="btnTrackListing" id="btnArtworkAlbum" disabled="disabled">Artwork</button>
+            <span id="editAlbumInfo"></span>
+            <br />
+            Select to search data for 
+            <input type="radio" name="albumType" id="radioAlbum" value="album"> Album
+            <input type="radio" name="albumType" id="radioSingle" value="single"> Single
+            <br />
+            <button class="btnTrackListing" id="btnGetMetadata">Get</button>
+            <button class="btnTrackListing" id="btnArtworkAlbum">Artwork</button>
             <button class="btnTrackListing" id="btnSaveAlbum">Save</button>
             <button class="btnTrackListing" id="btnDeleteAlbum">Delete</button>
             <button class="btnTrackListing" id="btnImportCancel">Cancel</button>
@@ -19,13 +24,18 @@
         </div>
 
         <input class="hidden" id="inpEditCoverArtURL" name="inpEditCoverArtURL" type="text" value="" />
-        <br><br>
+        <input class="hidden" id="inpEditBackArtURL" name="inpEditBackArtURL" type="text" value="" />
 
-        <table id="tblGracenote">           
-            <tbody></tbody>
-        </table>
+        <input class="hidden" id="inpArtistMBID" name="inpArtistMBID" type="text" value="" />
+        <input class="hidden" id="inpReleaseGroupMBID" name="inpReleaseGroupMBID" type="text" value="" />
+        <input class="hidden" id="inpTempOrigin" name="inpTempOrigin" type="text" value="" />
+        <input class="hidden" id="inpTempYear" name="inpTempYear" type="text" value="" />
 
+        <div id="backArtFound">
+            <span id="backArt"><br /></span>
+        </div>
         <br />
+
         <fieldset>
             <legend>Artist Details</legend>
             <p>
@@ -41,6 +51,8 @@
         <fieldset>
             <legend>Album Details</legend>
             <p>
+                <span id="mainGenreTag" class="hidden"><b>Main Genre: </b></span><span id="mainGenre"></span><br />
+                <span id="genreTagsFoundEdit" class="hidden"><b>Genre Tags: </b></span><span id="genreTagsEdit"></span><br /><br />
                 <label id="lblAlbumName">Name:</label>
                 <input required id="inpAlbumName" name="inpAlbumName" type="text" size="75" value="" />
                 <!--Hidden input for original album name in case it is changed to then update the music directory-->
@@ -51,27 +63,24 @@
                 <input required id="inpEditAlbumTime" name="inpAlbumTime" type="text" size="8" value="" readonly />
                 <label id="lblGenre">Genre:</label>
 
-                <select class='sltGenre' id='sltGenre' name='sltGenre'>
+                <select class='sltGenre' id='sltGenre1' name='sltGenre1'>
                     <option></option>
                     <option value='Alternative & Punk'>Alternative & Punk</option>
                     <option value='Blues'>Blues</option>
-                    <option value='Christmas'>Christmas</option>
                     <option value='Classical'>Classical</option>"
                     <option value='Comedy'>Comedy</option>"
                     <option value='Country'>Country</option>"
                     <option value='Dance'>Dance</option>"
-                    <option value='Electronic'>Electronic</option>"
                     <option value='Electronica'>Electronica</option>"
                     <option value='Folk'>Folk</option>"
-                    <option value='Hip-Hop'>Hip-Hop</option>"
+                    <option value='Hip-Hop/Rap'>Hip-Hop/Rap</option>"
+                    <option value='Holiday'>Holiday</option>
                     <option value='Indie'>Indie</option>"
                     <option value='Jazz'>Jazz</option>"
                     <option value='Metal'>Metal</option>"
                     <option value='Pop'>Pop</option>"
-                    <option value='Rap'>Rap</option>"
                     <option value='Reggae'>Reggae</option>"
                     <option value='Rock'>Rock</option>"
-                    <option value='Singer Songwriter'>Singer Songwriter</option>"
                     <option value='Soul'>Soul</option>"
                     <option value='Soundtrack'>Soundtrack</option>"
                     <option value='Traditional'>Traditional</option>"
@@ -79,6 +88,14 @@
                     <option value='World'>World</option>"
                     <option value='Other'>Other</option>"
                 </select>
+                <br />
+                <label id="lblGenre2Edit">Genre 2:</label>
+                <input id="inpGenre2Edit" name="inpGenre2Edit" list="listGenre2Edit" type="text" value="" />
+                <datalist id="listGenre2Edit"></datalist>
+                <br />
+                <label id="lblGenre3Edit">Genre 3:</label>
+                <input id="inpGenre3Edit" name="inpGenre3Edit" list="listGenre3Edit" type="text" value="" />
+                <datalist id="listGenre3Edit"></datalist>
             </p>
             <input id="inpCount" name="inpCount" class="hidden" type="text" value="" />
         </fieldset>
