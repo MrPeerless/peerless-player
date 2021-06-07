@@ -22,7 +22,7 @@
     "jsmediatags": "^3.9.7",
     "lodash": "^4.17.21",
     "request": "^2.88.2",
-    "sanitize-html": "^1.25.0",
+    "sanitize-html": "^2.3.2",
     "sqlite3": "^4.0.6",
     "y18n": "^4.0.1"
   },
