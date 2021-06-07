@@ -11,7 +11,7 @@
             <h2 id="editAlbumDetails"></h2>
             <span id="editAlbumInfo"></span>
             <br />
-            Select to search data for 
+            Select to search data for
             <input type="radio" name="albumType" id="radioAlbum" value="album"> Album
             <input type="radio" name="albumType" id="radioSingle" value="single"> Single
             <br />
@@ -27,15 +27,17 @@
         <input class="hidden" id="inpEditBackArtURL" name="inpEditBackArtURL" type="text" value="" />
 
         <input class="hidden" id="inpArtistMBID" name="inpArtistMBID" type="text" value="" />
-        <input class="hidden" id="inpReleaseGroupMBID" name="inpReleaseGroupMBID" type="text" value="" />
-        <input class="hidden" id="inpTempOrigin" name="inpTempOrigin" type="text" value="" />
-        <input class="hidden" id="inpTempYear" name="inpTempYear" type="text" value="" />
 
-        <div id="backArtFound">
-            <span id="backArt"><br /></span>
-        </div>
+        <fieldset>
+            <legend>Metadata Results</legend>
+            <label id="lblAlbumData">Album Data: </label><span id="albumData"></span>
+            <label id="lblTrackData">Track Data: </label><span id="trackData"></span><br />
+            <label id="lblFrontArtwork">Front Artwork: </label><span id="frontArtwork"></span>
+            <label id="lblBackArtwork">Back Artwork: </label><span id="backArtwork"></span><br />
+            <label id="lblMainGenre">Main Genre: </label><span id="mainGenre"></span><br />
+            <label id="lblGenreTags">Genre Tags: </label><span id="genreTags"></span>
+        </fieldset>
         <br />
-
         <fieldset>
             <legend>Artist Details</legend>
             <p>

@@ -6,9 +6,17 @@ const { autoUpdater } = require('electron-updater');// Require electron-updater 
 const shell = require('electron').shell;// Require shell to open external websites in default browser
 const path = require('path');// Require Path module
 const fs = require("fs");// Require FS module
+const { readFileSync } = require('fs'); // To read json files
+
 var request = require('request'); // Used for saving images
 var Jimp = require('jimp');// Require Jimp for resizing images
 var jsmediatags = require("jsmediatags"); // To read ID3 tages in audio files
+
+// Read variables from resources file in root dir.
+var resources = JSON.parse(readFileSync('./resources.json'));
+// Get spotify api keys
+var client_id = resources.clientID;
+var client_secret = resources.client_secret;
 
 // CREATE RENDERER WINDOW
 //------------------------
@@ -319,13 +327,18 @@ ipcMain.on('save_temp_artwork', (event, message) => {
     // If there is cover art found on server
 
     if (coverArtUrl != "") {
-        saveImage(coverArtUrl, artFilePath, function () {
-            // save image
-            Jimp.read(artFilePath).then(tpl => (tpl.clone().write(artFilePath)))
-            // For future reference
-            // Use Jimp to copy and resize art file from URL
-            //Jimp.read(urlPath).then(tpl => (tpl.clone().resize(250, 250).write(resizedFilePath)))
-        });
+        try {
+            saveImage(coverArtUrl, artFilePath, function () {
+                // save image
+                Jimp.read(artFilePath).then(tpl => (tpl.clone().write(artFilePath)))
+                // For future reference
+                // Use Jimp to copy and resize art file from URL
+                //Jimp.read(urlPath).then(tpl => (tpl.clone().resize(250, 250).write(resizedFilePath)))
+            });
+        }
+        catch{
+            console.log("Error saving temp image.")
+        }
     }
 });
 
@@ -334,10 +347,15 @@ ipcMain.on('save_artXlarge_file', (event, message) => {
     var tempArtPath = message[0];
     var artFilePath = message[1];
     if (fs.existsSync(tempArtPath)) {
-        Jimp.read(tempArtPath, function (err, image) {
-            if (err) throw err;
-            image.write(artFilePath);
-        });
+        try {
+            Jimp.read(tempArtPath, function (err, image) {
+                //if (err) throw err;
+                image.write(artFilePath);
+            });
+        }
+        catch{
+            console.log("Error saving artXlarge image.")
+        }
     }
 });
 
@@ -356,10 +374,15 @@ ipcMain.on('save_backCover_art', (event, message) => {
     // Call function to save art image
     // If there is cover art found on server
     if (coverArtUrl != "") {
-        saveImage(coverArtUrl, artFilePath, function () {
-            // save image
-            Jimp.read(artFilePath).then(tpl => (tpl.clone().write(artFilePath)))
-        });
+        try {
+            saveImage(coverArtUrl, artFilePath, function () {
+                // save image
+                Jimp.read(artFilePath).then(tpl => (tpl.clone().write(artFilePath)))
+            });
+        }
+        catch{
+            console.log("Error saving back image.")
+        }
     }
 });
 
@@ -369,14 +392,19 @@ ipcMain.on('save_folder_file', (event, message) => {
     var resizedFilePath = message[1];
     // Resize and save folder.jpg
     if (fs.existsSync(tempArtPath)) {
-        Jimp.read(tempArtPath, function (err, image) {
-            if (err) throw err;
-            // Delete folder.jpg if it exists because Windows Media Player rips files as hidden system files, which don't overwrite.
-            if (fs.existsSync(resizedFilePath)) {
-                fs.unlinkSync(resizedFilePath);
-            }
-            image.resize(250, 250).write(resizedFilePath);
-        });
+        try {
+            Jimp.read(tempArtPath, function (err, image) {
+                if (err) throw err;
+                // Delete folder.jpg if it exists because Windows Media Player rips files as hidden system files, which don't overwrite.
+                if (fs.existsSync(resizedFilePath)) {
+                    fs.unlinkSync(resizedFilePath);
+                }
+                image.resize(250, 250).write(resizedFilePath);
+            });
+        }
+        catch{
+            console.log("Error saving folder image.")
+        }
     }
 });
 
@@ -609,10 +637,6 @@ autoUpdater.on('update-downloaded', () => {
 });
 
 // SPOTIFY CODE
-// Spotify variables
-var client_id = '57b3d0e905ec424ab732a4e739a9c28e';
-var client_secret = '0d58a8739b5c44a6a4d78c8938a050a2';
-
 // Authorisation request to get api token
 var authOptions = {
     url: 'https://accounts.spotify.com/api/token',

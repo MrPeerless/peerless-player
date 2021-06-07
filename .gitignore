@@ -1,9 +1,11 @@
 electron-builder.yml
+resources.json
 node_modules
 dist
 Misc
 Redundant Files
 hideFile.vbs
 My Tunes.bat
+Musicbrainz API.txt
 UPDATES TO GIT CHECKLIST.txt
 UPDATE LOG.txt

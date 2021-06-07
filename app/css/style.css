@@ -435,11 +435,62 @@ textarea {
         border-radius: 8px;
     }
 
-#lblArtistName{
-    display:inline-block;
+#lblAlbumData {
+    display: inline-block;
+    text-align: right;
+    width: 100px;
+    margin-right: 5px;
+}
+#albumData {
+    display: inline-block;
+    width: 275px;
+}
+#lblTrackData {
+    display: inline-block;
+    text-align: right;
+    width: 100px;
+    margin-right: 5px;
+}
+#lblFrontArtwork {
+    display: inline-block;
+    text-align: right;
+    width: 100px;
+    margin-right: 5px;
+}
+#frontArtwork {
+    display: inline-block;
+    width: 275px;
+}
+#lblBackArtwork {
+    display: inline-block;
+    text-align: right;
+    width: 100px;
+    margin-right: 5px;
+}
+#lblMainGenre {
+    display: inline-block;
+    text-align: right;
+    width: 100px;
+    margin-right: 5px;
+}
+#mainGenre {
+    display: inline-block;
+    width: 275px;
+}
+#lblGenreTags {
+    display: inline-block;
+    text-align: right;
+    width: 100px;
+    margin-right: 5px;
+}
+#genreTags{
+    text-transform: capitalize;
+}
+#lblArtistName {
+    display: inline-block;
     text-align: right;
     width: 93px;
-    margin-right: 5px;   
+    margin-right: 5px;
 }
 #inpArtistName{
     display:inline-block;

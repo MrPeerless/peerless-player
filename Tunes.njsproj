@@ -170,6 +170,7 @@
     <Content Include="App\html\editalbum.html" />
     <Content Include="App\html\keyboardshortcuts.html" />
     <Content Include="App\html\playlistsexported.html" />
+    <Content Include="docs\pages_privacy.html" />
     <Content Include="Redundant Files\Gracenote Old Data.txt" />
     <Content Include="Redundant Files\recommends.html" />
     <Content Include="App\html\search.html" />
@@ -209,6 +210,7 @@
     <Content Include="LICENSE.txt" />
     <Content Include="package.json" />
     <Content Include="README.md" />
+    <Content Include="resources.json" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App\" />

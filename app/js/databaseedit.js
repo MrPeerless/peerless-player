@@ -2,6 +2,8 @@
 // EDIT DATABASE
 //######################
 
+var importType = "";
+
 $(document).on('click', '#btnEditAlbum', function (event) {
     event.preventDefault();
     $("body").css("background", global_Background);
@@ -44,6 +46,10 @@ function getArtwork() {
     var artistMBID = $("#inpArtistMBID").val();
     var artist = $("#inpArtistName").val();
     var album = $("#inpAlbumName").val();
+    var albumCheck = $("#inpAlbumName").val();
+
+    // Get value of import radio buttons
+    importType = $("input[name='albumType']:checked").val();
 
     if (artistMBID != "") {
         // Call ajax function artistIDQuery
@@ -52,8 +58,14 @@ function getArtwork() {
         // Function to send ajax xml query to Musicbrainz server
         function releaseQueryArtist(query) {
             var queryArtistID = query;
-            // Artist search url
-            var url = "https://musicbrainz.org/ws/2/release-group?artist=" + queryArtistID + "&limit=100&type=album|ep"
+            var url;
+            // Artist serach url
+            if (importType == "single") {
+                url = "https://musicbrainz.org/ws/2/release-group?artist=" + queryArtistID + "&limit=100&type=single"
+            }
+            else {
+                url = "https://musicbrainz.org/ws/2/release-group?artist=" + queryArtistID + "&limit=100&type=album|ep"
+            }
             return $.ajax({
                 url: url
             });
@@ -70,17 +82,20 @@ function getArtwork() {
 
             // Check if any albums found
             if (count != "0") {
+                var releaseFound = false;
                 // Loop through each release-group and get data
-                $(xml).find('release-group').each(function () {
+                $(xml).find('release-group').each(function () {                  
                     var $release = $(this);
                     var title = $release.find('title').text().toLowerCase();
                     // Remove any commas to aid matching
                     title = title.replace(',', '');
                     var date = $release.find('first-release-date').text();
-                    album = album.toLowerCase();
+                    albumCheck = albumCheck.toLowerCase();
                     // Remove any commas to aid matching
-                    album = album.replace(',', '');
-                    if (title == album) {
+                    albumCheck = albumCheck.replace(',', '');
+
+                    if (title == albumCheck) {
+                        releaseFound = true;
                         releaseGroupID = $release.attr('id')
                         var albumDate = date.substring(0, 4);
                         $("#inpReleaseDate").val(albumDate);
@@ -102,24 +117,27 @@ function getArtwork() {
                         // Function to process data from received xml file searching for releaseIDQuery
                         function dataReleaseIDProcess(xml) {
                             var frontFound = false;
+                            var backFound = false;
                             $(xml).find('release').each(function () {
                                 var $release = $(this);
                                 var releaseID = $release.attr('id');
                                 var title = $release.find('title').text().toLowerCase();
+                                // Remove any commas to aid matching
+                                title = title.replace(',', '');
                                 var front = $release.find('front').text();
                                 var back = $release.find('back').text();
 
-                                if (title == album) {
+                                if (title == albumCheck) {
                                     // Back cover art
-                                    if (back == "true") {
+                                    if (back == "true" && backFound == false) {
+                                        backFound = true;
                                         var backArt = "https://coverartarchive.org/release/" + releaseID + "/back-500"
                                         $("#inpEditBackArtURL").val(backArt);
-                                        $("#backArt").text("Back Cover Artwork Found.")
+                                        $("#backArtwork").html('<img width="15" height="15" src="./graphics/tick.png"/>');    
                                     }
 
                                     if (front == "true" && frontFound == false) {
                                         // Front cover art
-
                                         frontFound = true;
                                         var coverArt = "https://coverartarchive.org/release/" + releaseID + "/front-500"
 
@@ -128,28 +146,30 @@ function getArtwork() {
 
                                         var coverArtUrl = $("#inpEditCoverArtURL").val();
                                         var artFilePath = MUSIC_PATH + artist + "/" + album + "/tempArt.jpg"
+                                        $("#frontArtwork").html('<img width="15" height="15" src="./graphics/tick.png"/>');
                                         // Send message to main.js to save and tempArt image
                                         ipcRenderer.send("save_temp_artwork", [artFilePath, coverArtUrl]);
                                     }
                                 }
                             });
                             if (frontFound == false) {
-                                // If not connected display modal box warning
-                                $('#okModal').css('display', 'block');
-                                $('.modalHeader').empty();
-                                $('#okModalText').empty();
-                                $(".modalFooter").empty();
-                                $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
-                                $('#okModalText').append("<div class='modalIcon'><img src='./graphics/information.png'></div><p>&nbsp<br><b>No artwork found.</b><br>Click album image to add manually.<br>&nbsp</p >");
-                                var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
-                                $('.modalFooter').append(buttons);
-                                $("#btnOkModal").focus();
-                                $('.background').css('filter', 'blur(5px)');
-                                return
+                                $("#frontArtwork").html('<img width="15" height="15" src="./graphics/cross.png"/>');
+                            }
+                            if (backFound == false) {
+                                $("#backArtwork").html('<img width="15" height="15" src="./graphics/cross.png"/>');
                             }
                         }
                     }
                 });
+                if (releaseFound == false) {
+                    $("#frontArtwork").html('<img width="15" height="15" src="./graphics/cross.png"/>');
+                    $("#backArtwork").html('<img width="15" height="15" src="./graphics/cross.png"/>');
+                }
+            }
+            else {
+                // If count == 0 then no data found
+                $("#frontArtwork").html('<img width="15" height="15" src="./graphics/cross.png"/>');
+                $("#backArtwork").html('<img width="15" height="15" src="./graphics/cross.png"/>');
             }
         }
     }
@@ -191,17 +211,144 @@ function getMetadata() {
     artist = artist.replace(/&amp;/g, '&');
     album = album.replace(/&amp;/g, '&');
 
-    // Get Origin from temp hidden field when page was loaded.
-    var origin = $("#inpTempOrigin").val();
-    $("#inpArtistOrigin").val(origin);
+    // Get value of import radio buttons
+    importType = $("input[name='albumType']:checked").val();
 
-    // Get Year from temp hidden field when page was loaded.
-    var year = $("#inpTempYear").val();
-    $("#inpReleaseDate").val(year);
+    artistMBID = $("#inpArtistMBID").val();
+
+    // Check if at musicbrainz ID has been found
+    if (artistMBID != "") {
+        // Call ajax function artistIDQuery
+        releaseQueryArtist(artistMBID).done(dataReleaseProcess);
+
+        // Function to send ajax xml query to Musicbrainz server
+        function releaseQueryArtist(query) {
+            var queryArtistID = query;
+            var url;
+            // Artist serach url
+            if (importType == "single") {
+                url = "https://musicbrainz.org/ws/2/release-group?artist=" + queryArtistID + "&limit=100&type=single"
+            }
+            else {
+                url = "https://musicbrainz.org/ws/2/release-group?artist=" + queryArtistID + "&limit=100&type=album|ep"
+            }
+            return $.ajax({
+                url: url
+            });
+        }
+
+        // Function to process data from received xml file searching for releaseQueryArtist
+        function dataReleaseProcess(xml) {
+            // Get number of releases from xml file
+            var $releaseCount = $(xml).find('release-group-list');
+            var count = $releaseCount.attr('count')
+            var checkCount = parseInt(count)
+            if (checkCount > 100) {
+                count = "100";
+            }
+
+            // Check if any albums found
+            if (count != "0") {
+                var releaseFound = false;
+                // Loop through each release-group and get data
+                $(xml).find('release-group').each(function () {
+                    var $release = $(this);
+                    var title = $release.find('title').text().toLowerCase();
+                    // Remove any commas to aid matching
+                    title = title.replace(',', '');
+                    var date = $release.find('first-release-date').text();
+                    album = album.toLowerCase();
+                    // Remove any commas to aid matching
+                    album = album.replace(',', '');
+                    if (title == album) {
+                        releaseFound = true;
+                        releaseGroupID = $release.attr('id')
+                        var albumDate = date.substring(0, 4);
+                        $("#inpReleaseDate").val(albumDate);
+                        $("#albumData").html('<img width="15" height="15" src="./graphics/tick.png"/>');
+
+                        // Call ajax function releaseQueryGenre
+                        releaseQueryGenre(releaseGroupID).done(dataGenreProcess);
+
+                        // Function to send ajax xml query to Musicbrainz server
+                        function releaseQueryGenre(query) {
+                            var queryreleaseGroupID = query;
+                            // Artist serach url
+                            var url = "https://musicbrainz.org/ws/2/release-group/" + queryreleaseGroupID + "?inc=genres"
+                            return $.ajax({
+                                url: url
+                            });
+                        }
+
+                        // Function to process data from received xml file searching for releaseQueryGenre 
+                        function dataGenreProcess(xml) {
+                            var tags = "";
+                            // Get name of each genre in genre-list
+                            $(xml).find('genre').each(function () {
+                                var $genreList = $(this);
+                                var genreName = $genreList.find('name').text();
+                                tags += ", " + genreName
+                            });
+                            // Remove leading comma from string
+                            var genreTags = tags.substring(1);
+                            // Display list of genres found
+                            if (genreTags) {
+                                $("#genreTags").html('<img width="15" height="15" src="./graphics/tick.png"/>');
+                                $("#genreTags").append(genreTags)
+                            }
+                            else {
+                                $("#genreTags").html('<img width="15" height="15" src="./graphics/cross.png"/>');
+                            }
+                        }
+                        return false;
+                    }
+                });
+                if (releaseFound == false) {
+                    $("#albumData").html('<img width="15" height="15" src="./graphics/cross.png"/>');
+                    $("#genreTags").html('<img width="15" height="15" src="./graphics/cross.png"/>');
+                }
+            }
+            else {
+                // If count == 0 then no data found
+                $("#albumData").html('<img width="15" height="15" src="./graphics/cross.png"/>');
+                $("#genreTags").html('<img width="15" height="15" src="./graphics/cross.png"/>');
+            }
+        }
+
+        // Call ajax function originQueryArtist
+        originQueryArtist(artistMBID).done(dataOriginProcess);
+
+        // Function to send ajax xml query to Musicbrainz server
+        function originQueryArtist(query) {
+            var queryArtistID = query;
+            // Artist serach url
+            var url = "https://musicbrainz.org/ws/2/artist/" + queryArtistID
+            return $.ajax({
+                url: url
+            });
+        }
+
+        // Function to process data from received xml file searching for originQueryArtist
+        function dataOriginProcess(xml) {
+            var $area = $(xml).find('area');
+            var origin = $area.find('name').text();
+
+            // Check if artist is Various Artists and if it is don't add artist origin
+            if (artist == "Various Artists") {
+                $("#inpArtistOrigin").val("");
+            }
+            else {
+                $("#inpArtistOrigin").val(origin);
+            }
+        }
+    } 
+    // Send file path of track 1 to read ID3 tags
+    var track1 = $("#1fileName").val();
+    var audioSource = MUSIC_PATH + artist + "/" + album + "/" + track1;
+    ipcRenderer.send("read_ID3tags", [audioSource])
 
     // Send IPC to search Spotify for album and artist
     var query = 'album:' + album + ' artist:' + artist + '&type=album';
-
     ipcRenderer.send("spotify_search", [query, album])
     // The rest of the metadata received from Spotify is updated in the databaseadd.js file reusing the import code.
 }

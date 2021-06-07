@@ -335,10 +335,12 @@ $(document).ready(function () {
         counter -= 1
         $("#inpCount").val(counter)
 
+        /*
         // Send file path of track 1 to read ID3 tags
         var track1 = $("#1fileName").val();
         var audioSource = MUSIC_PATH + artist + "/" + album + "/" + track1;
         ipcRenderer.send("read_ID3tags", [audioSource])
+        */
 
         // Replace encoded &amp with &
         artist = artist.replace(/&amp;/g, '&');
@@ -358,7 +360,6 @@ $(document).ready(function () {
                 url: encodedUrl
             });
         }
-
         // Function to process data from received xml file searching for artistID
         function artistIDProcessData(xml) {
             var releaseGroupID = "";
@@ -372,113 +373,6 @@ $(document).ready(function () {
                     $("#inpArtistMBID").val(artistMBID);
                 }
             });
-
-            // Check if at musicbrainz ID has been found
-            if (artistMBID != "") {
-                // Call ajax function artistIDQuery
-                releaseQueryArtist(artistMBID).done(dataReleaseProcess);
-
-                // Function to send ajax xml query to Musicbrainz server
-                function releaseQueryArtist(query) {
-                    var queryArtistID = query;
-                    // Artist serach url
-                    var url = "https://musicbrainz.org/ws/2/release-group?artist=" + queryArtistID + "&limit=100&type=album|ep"
-                    return $.ajax({
-                        url: url
-                    });
-                }
-
-                // Function to process data from received xml file searching for releaseQueryArtist
-                function dataReleaseProcess(xml) {
-                    // Get number of releases from xml file
-                    var $releaseCount = $(xml).find('release-group-list');
-                    var count = $releaseCount.attr('count')
-                    var checkCount = parseInt(count)
-                    if (checkCount > 100) {
-                        count = "100";
-                    }
-
-                    // Check if any albums found
-                    if (count != "0") {
-                        // Loop through each release-group and get data
-                        $(xml).find('release-group').each(function () {
-                            var $release = $(this);
-                            var title = $release.find('title').text().toLowerCase();
-                            // Remove any commas to aid matching
-                            title = title.replace(',', '');
-                            var date = $release.find('first-release-date').text();
-                            album = album.toLowerCase();
-                            // Remove any commas to aid matching
-                            album = album.replace(',', '');
-                            if (title == album) {
-                                releaseGroupID = $release.attr('id')
-                                var albumDate = date.substring(0, 4);
-                                // Store Release Group MBID in hidden field
-                                $("#inpReleaseGroupMBID").val(releaseGroupID);
-                                // Store Release Year in temp hidden field
-                                $("#inpTempYear").val(albumDate);
-
-                                // Call ajax function releaseQueryGenre
-                                releaseQueryGenre(releaseGroupID).done(dataGenreProcess);
-
-                                // Function to send ajax xml query to Musicbrainz server
-                                function releaseQueryGenre(query) {
-                                    var queryreleaseGroupID = query;
-                                    // Artist serach url
-                                    var url = "https://musicbrainz.org/ws/2/release-group/" + queryreleaseGroupID + "?inc=genres"
-                                    return $.ajax({
-                                        url: url
-                                    });
-                                }
-
-                                // Function to process data from received xml file searching for releaseQueryGenre 
-                                function dataGenreProcess(xml) {
-                                    var tags = "";
-                                    // Get name of each genre in genre-list
-                                    $(xml).find('genre').each(function () {
-                                        var $genreList = $(this);
-                                        var genreName = $genreList.find('name').text();
-                                        tags += ", " + genreName
-                                    });
-                                    // Remove leading comma from string
-                                    var genreTags = tags.substring(1);
-                                    // Display list of genres found
-                                    $("#genreTagsFoundEdit").css('display', 'inline-block');
-                                    $("#genreTagsEdit").text(genreTags)
-                                }
-                            }
-                        });
-                    }
-                }
-
-                // Call ajax function originQueryArtist
-                originQueryArtist(artistMBID).done(dataOriginProcess);
-
-                // Function to send ajax xml query to Musicbrainz server
-                function originQueryArtist(query) {
-                    var queryArtistID = query;
-                    // Artist serach url
-                    var url = "https://musicbrainz.org/ws/2/artist/" + queryArtistID
-                    return $.ajax({
-                        url: url
-                    });
-                }
-
-                // Function to process data from received xml file searching for originQueryArtist
-                function dataOriginProcess(xml) {
-                    var $area = $(xml).find('area');
-                    var origin = $area.find('name').text();
-
-                    // Check if artist is Various Artists and if it is don't add artist origin
-                    if (artist == "Various Artists") {
-                        $("#inpTempOrigin").val("");
-                    }
-                    else {
-                        // Store Release Year in temp hidden field
-                        $("#inpTempOrigin").val(origin);
-                    }
-                }
-            }
         }
     }
 

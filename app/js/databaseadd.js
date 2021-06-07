@@ -66,7 +66,7 @@ $(document).on('click', '#btnManual', function (event) {
             newAlbum = $("#selectedAlbum").text();
         }
         // Get value of import radio buttons
-        //importType = $("input[name='albumType']:checked").val();
+        importType = $("input[name='albumType']:checked").val();
 
         if (newArtist) {
             // Populate hidden elements with selected album details
@@ -178,12 +178,16 @@ ipcRenderer.on("files_album_directory", (event, data) => {
 ipcRenderer.on("from_read_ID3tags", (event, data) => {
     var metaData = data[0];
     var mainGenre = metaData.tags.genre
-    $("#mainGenreTag").css('display', 'inline-block');
     if (mainGenre) {
-        $("#mainGenre").text(" " + mainGenre)
+
+        $("#mainGenre").html('<img width="15" height="15" src="./graphics/tick.png"/>');
+        $("#mainGenre").append(" " + mainGenre)
+
+        //$("#mainGenre").text(" " + mainGenre)
     }
     else {
-        $("#mainGenre").text(" No genre metadata found in audio file.")
+        $("#mainGenre").html('<img width="15" height="15" src="./graphics/cross.png"/>');
+        //$("#mainGenre").text(" No genre metadata found in audio file.")
     }
 });
 
@@ -214,8 +218,13 @@ ipcRenderer.on("from_spotify_search", (event, data) => {
     });
 
     // Send IPC to get albums tracks from Spotify
-    var query = albumSpotID + '/tracks';
-    ipcRenderer.send("spotify_getTracks", [query])
+    if (albumSpotID == "") {
+        $("#trackData").html('<img width="15" height="15" src="./graphics/cross.png"/>');
+    }
+    else {
+        var query = albumSpotID + '/tracks';
+        ipcRenderer.send("spotify_getTracks", [query])
+    }
 });
 
 // Receive IPC response from Spotify for album tracks
@@ -231,22 +240,34 @@ ipcRenderer.on("from_getTracks", (event, data) => {
 
     // Send IPC to get audio features from Spotify
     var query = tracksSpotID;
-    ipcRenderer.send("spotify_getAudioFeatures", [query])
+    if (tracksSpotID == "") {
+        $("#trackData").html('<img width="15" height="15" src="./graphics/cross.png"/>');
+    }
+    else {
+        var query = tracksSpotID;
+        ipcRenderer.send("spotify_getAudioFeatures", [query])
+    }
 });
 
 // Receive IPC response from Spotify for album tracks
 ipcRenderer.on("from_getAudioFeatures", (event, data) => {
     var spotifyResponse = data[0];
-
     // Check if any data returned from spotify
     if (spotifyResponse.audio_features[0] != null) {
         // Declare variables
         var valence;
         var mood1;
+        var spotifyNoTracks = spotifyResponse.audio_features.length;
         var noTracks = $("#inpCount").val();
         var counter;
         var baseX;
         var baseY;
+
+        // Check if number of tracks from spotify matches database, if not alter noTracks to match spotify
+        // Otherwise it throws an error trying to get data for a track that doesn't exist in spotify
+        if (noTracks > spotifyNoTracks) {
+            noTracks = spotifyNoTracks;
+        }
 
         // Loop over each track and match track number to spotify array
         for (var i = 0; i < (noTracks); i++) {
@@ -321,6 +342,7 @@ ipcRenderer.on("from_getAudioFeatures", (event, data) => {
             // Populate Tempo 2 value and options into selection box
             switch (tempo1) {
                 case "Slow Tempo":
+                    $("#" + counter + "tempo2").empty();
                     $("#" + counter + "tempo2").append("<option></option>");
                     $("#" + counter + "tempo2").append("<option>Static</option>");
                     $("#" + counter + "tempo2").append("<option>Very Slow</option>");
@@ -328,6 +350,7 @@ ipcRenderer.on("from_getAudioFeatures", (event, data) => {
                     $("#" + counter + "tempo2").val(tempo2);
                     break;
                 case "Medium Tempo":
+                    $("#" + counter + "tempo2").empty();
                     $("#" + counter + "tempo2").append("<option></option>");
                     $("#" + counter + "tempo2").append("<option>Medium Slow</option>");
                     $("#" + counter + "tempo2").append("<option>Medium</option>");
@@ -335,6 +358,7 @@ ipcRenderer.on("from_getAudioFeatures", (event, data) => {
                     $("#" + counter + "tempo2").val(tempo2);
                     break;
                 case "Fast Tempo":
+                    $("#" + counter + "tempo2").empty();
                     $("#" + counter + "tempo2").append("<option></option>");
                     $("#" + counter + "tempo2").append("<option>Fast</option>");
                     $("#" + counter + "tempo2").append("<option>Very Fast</option>");
@@ -420,6 +444,7 @@ ipcRenderer.on("from_getAudioFeatures", (event, data) => {
                     }
                     break;
                 case "Romantic":
+                    $("#" + counter + "mood2").empty();
                     $("#" + counter + "mood2").append("<option></option>");
                     $("#" + counter + "mood2").append("<option>Sweet / Sincere</option>");
                     $("#" + counter + "mood2").append("<option>Heartfelt Passion</option>");
@@ -439,6 +464,7 @@ ipcRenderer.on("from_getAudioFeatures", (event, data) => {
                     }
                     break;
                 case "Sentimental":
+                    $("#" + counter + "mood2").empty();
                     $("#" + counter + "mood2").append("<option></option>");
                     $("#" + counter + "mood2").append("<option>Tender / Sincere</option>");
                     $("#" + counter + "mood2").append("<option>Gentle Bittersweet</option>");
@@ -458,6 +484,7 @@ ipcRenderer.on("from_getAudioFeatures", (event, data) => {
                     }
                     break;
                 case "Tender":
+                    $("#" + counter + "mood2").empty();
                     $("#" + counter + "mood2").append("<option></option>");
                     $("#" + counter + "mood2").append("<option>Refined / Mannered</option>");
                     $("#" + counter + "mood2").append("<option>Awakening / Stately</option>");
@@ -477,6 +504,7 @@ ipcRenderer.on("from_getAudioFeatures", (event, data) => {
                     }
                     break;
                 case "Easygoing":
+                    $("#" + counter + "mood2").empty();
                     $("#" + counter + "mood2").append("<option></option>");
                     $("#" + counter + "mood2").append("<option>Hopeful / Breezy</option>");
                     $("#" + counter + "mood2").append("<option>Cheerful / Playful</option>");
@@ -496,6 +524,7 @@ ipcRenderer.on("from_getAudioFeatures", (event, data) => {
                     }
                     break;
                 case "Yearning":
+                    $("#" + counter + "mood2").empty();
                     $("#" + counter + "mood2").append("<option></option>");
                     $("#" + counter + "mood2").append("<option>Bittersweet Pop</option>");
                     $("#" + counter + "mood2").append("<option>Energetic Yearning</option>");
@@ -515,6 +544,7 @@ ipcRenderer.on("from_getAudioFeatures", (event, data) => {
                     }
                     break;
                 case "Sophisticated":
+                    $("#" + counter + "mood2").empty();
                     $("#" + counter + "mood2").append("<option></option>");
                     $("#" + counter + "mood2").append("<option>Suave / Sultry</option>");
                     $("#" + counter + "mood2").append("<option>Dark Playful</option>");
@@ -534,6 +564,7 @@ ipcRenderer.on("from_getAudioFeatures", (event, data) => {
                     }
                     break;
                 case "Sensual":
+                    $("#" + counter + "mood2").empty();
                     $("#" + counter + "mood2").append("<option></option>");
                     $("#" + counter + "mood2").append("<option>Soft Soulful</option>");
                     $("#" + counter + "mood2").append("<option>Sensual Groove</option>");
@@ -553,6 +584,7 @@ ipcRenderer.on("from_getAudioFeatures", (event, data) => {
                     }
                     break;
                 case "Cool":
+                    $("#" + counter + "mood2").empty();
                     $("#" + counter + "mood2").append("<option></option>");
                     $("#" + counter + "mood2").append("<option>Casual Groove</option>");
                     $("#" + counter + "mood2").append("<option>Wary / Defiant</option>");
@@ -572,7 +604,8 @@ ipcRenderer.on("from_getAudioFeatures", (event, data) => {
                     }
                     break;
                 case "Gritty":
-                    $("#" + counter + "mood2").append("<option></option>"); 
+                    $("#" + counter + "mood2").empty();
+                    $("#" + counter + "mood2").append("<option></option>");
                     $("#" + counter + "mood2").append("<option>Sober / Determined</option>");
                     $("#" + counter + "mood2").append("<option>Strumming Yearning</option>");
                     $("#" + counter + "mood2").append("<option>Depressed / Lonely</option>");
@@ -591,6 +624,7 @@ ipcRenderer.on("from_getAudioFeatures", (event, data) => {
                     }
                     break;
                 case "Somber":
+                    $("#" + counter + "mood2").empty();
                     $("#" + counter + "mood2").append("<option></option>");
                     $("#" + counter + "mood2").append("<option>Solemn / Spiritual</option>");
                     $("#" + counter + "mood2").append("<option>Enigmatic / Mysterious</option>");
@@ -610,6 +644,7 @@ ipcRenderer.on("from_getAudioFeatures", (event, data) => {
                     }
                     break;
                 case "Melancholy":
+                    $("#" + counter + "mood2").empty();
                     $("#" + counter + "mood2").append("<option></option>");
                     $("#" + counter + "mood2").append("<option>Mysterious / Dreamy</option>");
                     $("#" + counter + "mood2").append("<option>Light Melancholy</option>");
@@ -629,6 +664,7 @@ ipcRenderer.on("from_getAudioFeatures", (event, data) => {
                     }
                     break;
                 case "Serious":
+                    $("#" + counter + "mood2").empty();
                     $("#" + counter + "mood2").append("<option></option>");
                     $("#" + counter + "mood2").append("<option>Melodramatic</option>");
                     $("#" + counter + "mood2").append("<option>Hypnotic Rhythm</option>");
@@ -648,6 +684,7 @@ ipcRenderer.on("from_getAudioFeatures", (event, data) => {
                     }
                     break;
                 case "Brooding":
+                    $("#" + counter + "mood2").empty();
                     $("#" + counter + "mood2").append("<option></option>");
                     $("#" + counter + "mood2").append("<option>Evocative / Intriguing</option>");
                     $("#" + counter + "mood2").append("<option>Energetic Melancholy</option>");
@@ -667,6 +704,7 @@ ipcRenderer.on("from_getAudioFeatures", (event, data) => {
                     }
                     break;
                 case "Fiery":
+                    $("#" + counter + "mood2").empty();
                     $("#" + counter + "mood2").append("<option></option>");
                     $("#" + counter + "mood2").append("<option>Dark Sparkling Lyrical</option>");
                     $("#" + counter + "mood2").append("<option>Fiery Groove</option>");
@@ -686,6 +724,7 @@ ipcRenderer.on("from_getAudioFeatures", (event, data) => {
                     }
                     break;
                 case "Urgent":
+                    $("#" + counter + "mood2").empty();
                     $("#" + counter + "mood2").append("<option></option>");
                     $("#" + counter + "mood2").append("<option>Dark Pop</option>");
                     $("#" + counter + "mood2").append("<option>Dark Pop Intensity</option>");
@@ -705,6 +744,7 @@ ipcRenderer.on("from_getAudioFeatures", (event, data) => {
                     }
                     break;
                 case "Defiant":
+                    $("#" + counter + "mood2").empty();
                     $("#" + counter + "mood2").append("<option></option>");
                     $("#" + counter + "mood2").append("<option>Heavy Brooding</option>");
                     $("#" + counter + "mood2").append("<option>Hard Positive Excitement</option>");
@@ -724,6 +764,7 @@ ipcRenderer.on("from_getAudioFeatures", (event, data) => {
                     }
                     break;
                 case "Aggressive":
+                    $("#" + counter + "mood2").empty();
                     $("#" + counter + "mood2").append("<option></option>");
                     $("#" + counter + "mood2").append("<option>Dark Hard Beat</option>");
                     $("#" + counter + "mood2").append("<option>Heavy Triumphant</option>");
@@ -743,6 +784,7 @@ ipcRenderer.on("from_getAudioFeatures", (event, data) => {
                     }
                     break;
                 case "Rowdy":
+                    $("#" + counter + "mood2").empty();
                     $("#" + counter + "mood2").append("<option></option>");
                     $("#" + counter + "mood2").append("<option>Ramshackle / Rollicking</option>");
                     $("#" + counter + "mood2").append("<option>Wild / Rowdy</option>");
@@ -762,6 +804,7 @@ ipcRenderer.on("from_getAudioFeatures", (event, data) => {
                     }
                     break;
                 case "Excited":
+                    $("#" + counter + "mood2").empty();
                     $("#" + counter + "mood2").append("<option></option>");
                     $("#" + counter + "mood2").append("<option>Loud Celebratory</option>");
                     $("#" + counter + "mood2").append("<option>Euphoric Energy</option>");
@@ -781,6 +824,7 @@ ipcRenderer.on("from_getAudioFeatures", (event, data) => {
                     }
                     break;
                 case "Energizing":
+                    $("#" + counter + "mood2").empty();
                     $("#" + counter + "mood2").append("<option></option>");
                     $("#" + counter + "mood2").append("<option>Arousing Groove</option>");
                     $("#" + counter + "mood2").append("<option>Heavy Beat</option>");
@@ -800,6 +844,7 @@ ipcRenderer.on("from_getAudioFeatures", (event, data) => {
                     }
                     break;
                 case "Empowering":
+                    $("#" + counter + "mood2").empty();
                     $("#" + counter + "mood2").append("<option></option>");
                     $("#" + counter + "mood2").append("<option>Strong / Stable</option>");
                     $("#" + counter + "mood2").append("<option>Powerful / Heroic</option>");
@@ -819,6 +864,7 @@ ipcRenderer.on("from_getAudioFeatures", (event, data) => {
                     }
                     break;
                 case "Stirring":
+                    $("#" + counter + "mood2").empty();
                     $("#" + counter + "mood2").append("<option></option>");
                     $("#" + counter + "mood2").append("<option>Invigorating / Joyous</option>");
                     $("#" + counter + "mood2").append("<option>Jubilant / Soulful</option>");
@@ -838,6 +884,7 @@ ipcRenderer.on("from_getAudioFeatures", (event, data) => {
                     }
                     break;
                 case "Lively":
+                    $("#" + counter + "mood2").empty();
                     $("#" + counter + "mood2").append("<option></option>");
                     $("#" + counter + "mood2").append("<option>Showy / Rousing</option>");
                     $("#" + counter + "mood2").append("<option>Lusty / Jaunty</option>");
@@ -857,6 +904,7 @@ ipcRenderer.on("from_getAudioFeatures", (event, data) => {
                     }
                     break;
                 case "Upbeat":
+                    $("#" + counter + "mood2").empty();
                     $("#" + counter + "mood2").append("<option></option>");
                     $("#" + counter + "mood2").append("<option>Carefree Pop</option>");
                     $("#" + counter + "mood2").append("<option>Party / Fun</option>");
@@ -876,11 +924,16 @@ ipcRenderer.on("from_getAudioFeatures", (event, data) => {
                     }
                     break;
                 case "Other":
+                    $("#" + counter + "mood2").empty();
                     $("#" + counter + "mood2").append("<option></option>");
                     $("#" + counter + "mood2").append("<option>Other</option>");
                     break;
             }
         }
+        $("#trackData").html('<img width="15" height="15" src="./graphics/tick.png"/>');
+    }
+    else {
+        $("#trackData").html('<img width="15" height="15" src="./graphics/cross.png"/>');
     }
 });
 
@@ -888,6 +941,7 @@ function albumMetadata() {
     // Set variables
     var artist = $("#selectedArtist").text();
     var album = $("#selectedAlbum").text();
+    var albumCheck = $("#selectedAlbum").text();
 
     // Replace encoded &amp with &
     artist = artist.replace(/&amp;/g, '&');
@@ -959,6 +1013,7 @@ function albumMetadata() {
 
                 // Check if any albums found
                 if (count != "0") {
+                    var releaseFound = false;
                     // Loop through each release-group and get data
                     $(xml).find('release-group').each(function () {
                         var $release = $(this);
@@ -966,13 +1021,15 @@ function albumMetadata() {
                         // Remove any commas to aid matching
                         title = title.replace(',', '');
                         var date = $release.find('first-release-date').text();
-                        newAlbum = newAlbum.toLowerCase();
+                        albumCheck = albumCheck.toLowerCase();
                         // Remove any commas to aid matching
-                        newAlbum = newAlbum.replace(',', '');
-                        if (title == newAlbum) {
+                        albumCheck = albumCheck.replace(',', '');
+                        if (title == albumCheck) {
+                            releaseFound = true;
                             releaseGroupID = $release.attr('id')
                             var albumDate = date.substring(0, 4);
                             $("#inpReleaseDate").val(albumDate);
+                            $("#albumData").html('<img width="15" height="15" src="./graphics/tick.png"/>');
 
                             // Get cover artwork
                             // Call ajax function releaseIDQuery
@@ -991,19 +1048,25 @@ function albumMetadata() {
                             // Function to process data from received xml file searching for releaseIDQuery
                             function dataReleaseIDProcess(xml) {
                                 var frontFound = false;
+                                var backFound = false;
+                                newAlbum = newAlbum.toLowerCase();
+                                // Remove any commas to aid matching
+                                albumCheck = albumCheck.replace(',', '');
                                 $(xml).find('release').each(function () {
                                     var $release = $(this);
                                     var releaseID = $release.attr('id');
                                     var title = $release.find('title').text().toLowerCase();
+                                    // Remove any commas to aid matching
+                                    title = title.replace(',', '');
                                     var front = $release.find('front').text();
                                     var back = $release.find('back').text();
-
                                     if (title == newAlbum) {
                                         // Back cover art
-                                        if (back == "true") {
+                                        if (back == "true" && backFound == false) {
+                                            backFound = true;
                                             var backArt = "https://coverartarchive.org/release/" + releaseID + "/back-500"
                                             $("#inpBackArtURL").val(backArt);
-                                            $("#backArt").text("Back Cover Artwork Found.")
+                                            $("#backArtwork").html('<img width="15" height="15" src="./graphics/tick.png"/>');
                                         }
 
                                         if (front == "true" && frontFound == false) {
@@ -1016,13 +1079,17 @@ function albumMetadata() {
 
                                             var coverArtUrl = $("#inpCoverArtURL").val();
                                             var artFilePath = MUSIC_PATH + artist + "/" + album + "/tempArt.jpg"
+                                            $("#frontArtwork").html('<img width="15" height="15" src="./graphics/tick.png"/>');
                                             // Send message to main.js to save and tempArt image
                                             ipcRenderer.send("save_temp_artwork", [artFilePath, coverArtUrl]);
                                         }
                                     }
                                 });
                                 if (frontFound == false) {
-                                    console.log("No artwork found")
+                                    $("#frontArtwork").html('<img width="15" height="15" src="./graphics/cross.png"/>');
+                                }
+                                if (backFound == false) {
+                                    $("#backArtwork").html('<img width="15" height="15" src="./graphics/cross.png"/>');
                                 }
                             }
 
@@ -1051,12 +1118,31 @@ function albumMetadata() {
                                 // Remove leading comma from string
                                 var genreTags = tags.substring(1);
                                 // Display list of genres found
-                                $("#genreTagsFound").css('display', 'inline-block');
-                                $("#genreTags").text(genreTags)
+                                if (genreTags) {
+                                    $("#genreTags").html('<img width="15" height="15" src="./graphics/tick.png"/>');
+                                    $("#genreTags").append(genreTags)
+                                }
+                                else {
+                                    $("#genreTags").html('<img width="15" height="15" src="./graphics/cross.png"/>');
+                                }
+                                //$("#genreTags").text(genreTags)
                             }
                             return false;
-                        }    
-                    });                   
+                        }
+                    });
+                    if (releaseFound == false) {
+                        $("#albumData").html('<img width="15" height="15" src="./graphics/cross.png"/>');
+                        $("#frontArtwork").html('<img width="15" height="15" src="./graphics/cross.png"/>');
+                        $("#backArtwork").html('<img width="15" height="15" src="./graphics/cross.png"/>');
+                        $("#genreTags").html('<img width="15" height="15" src="./graphics/cross.png"/>');
+                    }
+                }
+                else {
+                    // If count == 0 then no data found
+                    $("#albumData").html('<img width="15" height="15" src="./graphics/cross.png"/>');
+                    $("#frontArtwork").html('<img width="15" height="15" src="./graphics/cross.png"/>');
+                    $("#backArtwork").html('<img width="15" height="15" src="./graphics/cross.png"/>');
+                    $("#genreTags").html('<img width="15" height="15" src="./graphics/cross.png"/>');
                 }
             }
             // Call ajax function originQueryArtist
