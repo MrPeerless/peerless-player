@@ -13,7 +13,7 @@ var Jimp = require('jimp');// Require Jimp for resizing images
 var jsmediatags = require("jsmediatags"); // To read ID3 tages in audio files
 
 // Read variables from resources file in root dir.
-var resources = JSON.parse(readFileSync('./resources.json'));
+var resources = JSON.parse(readFileSync('./resources/data.json'));
 // Get spotify api keys
 var client_id = resources.clientID;
 var client_secret = resources.client_secret;

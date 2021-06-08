@@ -1,5 +1,5 @@
 electron-builder.yml
-resources.json
+resources
 node_modules
 dist
 Misc

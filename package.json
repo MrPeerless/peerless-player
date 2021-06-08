@@ -39,10 +39,8 @@
     "icon": "build/icon.ico"
   },
   "build": {
-    "extraResources": [
-      {
-        "filter": [ "resources.json" ]
-      }
+    "extraFiles": [
+      "resources"
     ]
   }
 }

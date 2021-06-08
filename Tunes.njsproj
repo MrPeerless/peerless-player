@@ -210,7 +210,7 @@
     <Content Include="LICENSE.txt" />
     <Content Include="package.json" />
     <Content Include="README.md" />
-    <Content Include="resources.json" />
+    <Content Include="resources\data.json" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App\" />
@@ -227,6 +227,7 @@
     <Folder Include="docs\images\" />
     <Folder Include="docs\js\" />
     <Folder Include="docs\video\" />
+    <Folder Include="resources\" />
     <Folder Include="Redundant Files\" />
   </ItemGroup>
   <!-- Do not delete the following Import Project.  While this appears to do nothing it is a marker for setting TypeScript properties before our import that depends on them. -->
