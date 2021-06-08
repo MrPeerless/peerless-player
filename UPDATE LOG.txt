@@ -52,20 +52,16 @@
 
 **** VERSION 0.3.0 UPDATES ****
 1. New most played algorithm added.
-2. Minor updates to data displayed in albums page.
-3. Bug fix on Home page to clear cache to display new album artwork.
-4. Album sort function moved to Player Functions.
-5. Sort by album Release Date added to album sort.
-6. Album sort now works globally on any page which displays a list of albums.
-7. Bug fix in shuffling sub genre albums.
-8. New search algorithm and results page using SQL FTS5 table.
-9. Error message handling added to Gracenote server callbacks.
-10. Support for FLAC files added.
-11. Gracenote web api removed and replaced with Musicbrainz and Spotify api.
-
-
-
-
+2. Bug fix on Home page to clear cache to display new album artwork.
+3. Album sort function moved to Player Functions.
+4. Sort by album Release Date added to album sort.
+5. Album sort now works globally on any page which displays a list of albums.
+6. Bug fix in shuffling sub genre albums.
+7. New search algorithm and results page using SQL FTS5 table.
+8. Support for FLAC audio files added.
+9. Gracenote web api removed and replaced with Musicbrainz and Spotify api.
+10. Recommendations function removed temporarily after Gracenote termination.
+11. Bumped: sanitize-html to 2.3.2, lodash to 4.17.21,  hosted-git-info to 2.8.9
 
 
 
