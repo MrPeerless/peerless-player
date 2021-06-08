@@ -41,7 +41,7 @@
   "build": {
     "extraResources": [
       {
-        "filter": [ "./resources.json" ]
+        "filter": [ "resources.json" ]
       }
     ]
   }
