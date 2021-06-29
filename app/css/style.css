@@ -1740,7 +1740,6 @@ button#btnMoodExpand {
     position: relative;
     top: 0;
     left: 0;
-    cursor: pointer;
 }
 
 #artModalImage {
@@ -1751,12 +1750,23 @@ button#btnMoodExpand {
     height: 600px;
 }
 
+#backcoverImage {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    width: 600px;
+    /*height: 600px;*/
+    display: none;
+    cursor: pointer;
+}
+
 .artModalClose {
     position: absolute;
     top: -15px;
     left: 585px;
     width: 40px;
     height: 40px;
+    cursor: pointer;
 }
 
 .bioArtModalClose {
@@ -1765,6 +1775,7 @@ button#btnMoodExpand {
     left: 585px;
     width: 40px;
     height: 40px;
+    cursor: pointer;
 }
 
 /*Display large bio artwork modal pop up*/

@@ -130,7 +130,7 @@ ipcRenderer.on("files_album_directory", (event, data) => {
             }
 
             $("#divAudioElements").append(audio);
-            var fieldset = $("<fieldset><legend>Track " + counter + "</legend><label class='lblTrackName'>Name: </label><input required class='inpTrackName' id='" + counter + "trackName' name=" + counter + "trackName' type='text' size='79' value='' /><label class='lblFileName'>File Name:</label><input required class='inpFileName' id='" + counter + "fileName' name='" + counter + "fileName' type='text' size='75' value='' readonly /><label class='lblTrackTime'>Time:</label><input required class='inpTrackTime' id='" + counter + "pTime' name='" + counter + "pTime' type='text' size='8 value='' readonly /><br><label class='lblTrackName'>Mood 1:</label><select class='sltMood1' id='" + counter + "mood1' name=" + counter + "mood1'><option value=''></option><option value='Peaceful'>Peaceful</option><option value='Romantic'>Romantic</option><option value='Sentimental'>Sentimental</option><option value='Tender'>Tender</option><option value='Easygoing'>Easygoing</option><option value='Yearning'>Yearning</option><option value='Sophisticated'>Sophisticated</option><option value='Sensual'>Sensual</option><option value='Cool'>Cool</option><option value='Gritty'>Gritty</option><option value='Somber'>Somber</option><option value='Melancholy'>Melancholy</option><option value='Serious'>Serious</option><option value='Brooding'>Brooding</option><option value='Fiery'>Fiery</option><option value='Urgent'>Urgent</option><option value='Defiant'>Defiant</option><option value='Aggressive'>Aggressive</option><option value='Rowdy'>Rowdy</option><option value='Excited'>Excited</option><option value='Energizing'>Energizing</option><option value='Empowering'>Empowering</option><option value='Stirring'>Stirring</option><option value='Lively'>Lively</option><option value='Upbeat'>Upbeat</option><option value='Other'>Other</option></select><label class='lblFileName'>Mood 2:</label><select class='sltMood2' id='" + counter + "mood2' name=" + counter + "mood2'></select><br><label class='lblTrackName'>Tempo 1:</label><select class='sltTempo1' id='" + counter + "tempo1' name=" + counter + "tempo1'><option value=''></option><option value='Slow Tempo'>Slow Tempo</option><option value='Medium Tempo'>Medium Tempo</option><option value='Fast Tempo'>Fast Tempo</option></select><label class='lblFileName'>Tempo 2:</label><select class='sltTempo2' id='" + counter + "tempo2' name=" + counter + "tempo2'></select><br><label class='lblTrackName'>Genre 2:</label><input class='inpTrackGenre' id='" + counter + "genre2' name=" + counter + "genre2' type='text' size='40' value='' readonly/><label class='lblFileName'>Genre 3:</label><input class='inpTrackGenre' id='" + counter + "genre3' name=" + counter + "genre3' type='text' size='40' value='' readonly/></fieldset>");
+            var fieldset = $("<fieldset><legend>Track " + counter + "</legend><label class='lblTrackName'>Name: </label><input required class='inpTrackName' id='" + counter + "trackName' name=" + counter + "trackName' type='text' size='79' value='' /><label class='lblFileName'>File Name:</label><input required class='inpFileName' id='" + counter + "fileName' name='" + counter + "fileName' type='text' size='75' value='' readonly /><label class='lblTrackTime'>Time:</label><input required class='inpTrackTime' id='" + counter + "pTime' name='" + counter + "pTime' type='text' size='8 value='' readonly /><br><label class='lblTrackName'>Mood 1:</label><select class='sltMood1' id='" + counter + "mood1' name=" + counter + "mood1'><option value=''></option><option value='Aggressive'>Aggressive</option><option value='Brooding'>Brooding</option><option value='Cool'>Cool</option><option value='Defiant'>Defiant</option><option value='Easygoing'>Easygoing</option><option value='Empowering'>Empowering</option><option value='Energizing'>Energizing</option><option value='Excited'>Excited</option><option value='Fiery'>Fiery</option><option value='Gritty'>Gritty</option><option value='Lively'>Lively</option><option value='Melancholy'>Melancholy</option><option value='Peaceful'>Peaceful</option><option value='Romantic'>Romantic</option><option value='Rowdy'>Rowdy</option><option value='Sensual'>Sensual</option><option value='Sentimental'>Sentimental</option><option value='Serious'>Serious</option><option value='Somber'>Somber</option><option value='Sophisticated'>Sophisticated</option><option value='Stirring'>Stirring</option><option value='Tender'>Tender</option><option value='Upbeat'>Upbeat</option><option value='Urgent'>Urgent</option><option value='Yearning'>Yearning</option><option value='Other'>Other</option></select><label class='lblFileName'>Mood 2:</label><select class='sltMood2' id='" + counter + "mood2' name=" + counter + "mood2'></select><br><label class='lblTrackName'>Tempo 1:</label><select class='sltTempo1' id='" + counter + "tempo1' name=" + counter + "tempo1'><option value=''></option><option value='Slow Tempo'>Slow Tempo</option><option value='Medium Tempo'>Medium Tempo</option><option value='Fast Tempo'>Fast Tempo</option></select><label class='lblFileName'>Tempo 2:</label><select class='sltTempo2' id='" + counter + "tempo2' name=" + counter + "tempo2'></select><br><label class='lblTrackName'>Genre 2:</label><input class='inpTrackGenre' id='" + counter + "genre2' name=" + counter + "genre2' type='text' size='40' value='' readonly/><label class='lblFileName'>Genre 3:</label><input class='inpTrackGenre' id='" + counter + "genre3' name=" + counter + "genre3' type='text' size='40' value='' readonly/></fieldset>");
 
             // Append fieldset to form
             fieldset.appendTo(form);
@@ -282,20 +282,27 @@ ipcRenderer.on("from_getAudioFeatures", (event, data) => {
             // Track numbers from spotify json start at zero
             trackNumber -= 1;
 
-            // Get valence from json file
-            var valenceFloat = spotifyResponse.audio_features[trackNumber].valence;
-            valenceFloat *= 100;
-            var valenceInt = Math.round(valenceFloat);
+            try {
+                // Get valence from json file
+                var valenceFloat = spotifyResponse.audio_features[trackNumber].valence;
+                valenceFloat *= 100;
+                var valenceInt = Math.round(valenceFloat);
 
-            // Get energy from json file
-            var energyFloat = spotifyResponse.audio_features[trackNumber].energy;
-            energyFloat *= 100;
-            var energyInt = Math.round(energyFloat);
+                // Get energy from json file
+                var energyFloat = spotifyResponse.audio_features[trackNumber].energy;
+                energyFloat *= 100;
+                var energyInt = Math.round(energyFloat);
 
-            // Get tempo from json file
-            var tempoFloat = spotifyResponse.audio_features[trackNumber].tempo;
-            var tempoInt = Math.round(tempoFloat);
-            var tempo2;
+                // Get tempo from json file
+                var tempoFloat = spotifyResponse.audio_features[trackNumber].tempo;
+                var tempoInt = Math.round(tempoFloat);
+                var tempo2;
+            }
+            catch{
+                console.log("Error reading json file.")
+                $("#trackData").html('<img width="15" height="15" src="./graphics/cross.png"/>');
+                return false;
+            }
 
             //##################################
             //## Populate json data into form ##
@@ -2203,7 +2210,9 @@ $(document).on('change', '.sltMood1', function () {
     // Get value selected
     var mood1Value = $(this).val();
     // Get first digit of ID which represents track no.
-    var trackNo = mood1ID.substring(0, 1);
+    var trackNo = mood1ID.substring(0, 2);
+    // Remove aplha characters to just get track number
+    trackNo = trackNo.replace(/\D/g, '');
     // Mood2 ID
     var mood2ID = trackNo + "mood2";
     // Empty contents of mood2 selection element
@@ -2399,7 +2408,9 @@ $(document).on('change', '.sltTempo1', function () {
     // Get value selected
     var tempo1Value = $(this).val();
     // Get first digit of ID which represents track no.
-    var trackNo = tempo1ID.substring(0, 1);
+    var trackNo = tempo1ID.substring(0, 2);
+    // Remove aplha characters to just get track number
+    trackNo = trackNo.replace(/\D/g, '');
     // Tempo2 ID
     var tempo2ID = trackNo + "tempo2";
     // Empty contents of mood2 selection element

@@ -28,6 +28,7 @@ var global_Playing = false;
 var global_Paused = false;
 var global_Queued = false;
 var global_TrackListing = false; // Used for the shuffle function
+var global_Backcover = false;
 
 // Menu variables
 var global_AlbumID;
@@ -1232,12 +1233,15 @@ $(document).ready(function () {
         var row = await dBase.get(sql, global_AlbumID)
         var artist = row.artistName;
         var album = row.albumName;
+        var backCoverSource = MUSIC_PATH + artist + "/" + album + "/backcover.jpg";
+
+        // Remove image title on mouseover
+        $("#artModalImage").prop('title', '');
+        ipcRenderer.send("check_backcover", [backCoverSource])
 
         // Get AlbumArtXLarge.jpg file path
-        //try {
         var modifiedDate = Date().toLocaleString();
         var artworkSource = MUSIC_PATH + artist + "/" + album + "/AlbumArtXLarge.jpg?modified=" + modifiedDate;
-        //}
 
         colour()
 
@@ -1256,10 +1260,66 @@ $(document).ready(function () {
             $('.artModal').css('padding-top', artModalTop + 'px');
             $('.background').css('filter', 'blur(5px)');
             $('.artModal').css('display', 'block');
-
-            $("#artModalImage").attr('src', artworkSource);
+            
+            $("#artModalImage").attr('src', artworkSource);            
             $('.artModal').css('background-color', domColour);
         };
+    });
+
+    // Add backcover filepath to backcover image src.
+    ipcRenderer.on('from_check_backcover', (event, data) => {
+        var backcoverSource = data[0];
+        // Add title to image on mouseover
+        $("#artModalImage").prop('title', 'Click for back cover');
+        $("#artModalImage").css('cursor', 'pointer');
+        $("#backcoverImage").attr('src', backcoverSource);
+        global_Backcover = true;
+    });
+
+    // Switch from front to back cover when image clicked
+    $(document).on('click', '#artModalImage', function () {
+        if (global_Backcover == true) {
+            $('#artModalImage').css('display', 'none');
+            $('#backcoverImage').css('display', 'block');
+            var backcoverHeight = $('#backcoverImage').height();
+            $('.artModalContent').css('height', backcoverHeight + 8);
+        }
+    });
+
+    // Switch from back to front cover when image clicked
+    $(document).on('click', '#backcoverImage', function () {
+        if (global_Backcover == true) {
+            $('#artModalImage').css('display', 'block');
+            $('#backcoverImage').css('display', 'none');
+            $('.artModalContent').css('height', 608);
+        }
+    });
+
+    // Close when clicked outside art modal boxes
+    // Album Art
+    $(document).on('click', '#artModal', function (event) {
+        // Ignore if images are clicked
+        if (event.target.id == "artModalImage" || event.target.id == "backcoverImage") {
+            return false;
+        }
+        else {
+            // Close art modal box
+            $('#artModal').css('display', 'none');
+            $('.background').css('filter', 'blur(0px)');
+            $('#artModalImage').css('display', 'block');
+            $('#backcoverImage').css('display', 'none');
+            $("#artModalImage").css('cursor', 'default');
+            $('.artModalContent').css('height', 608);
+            global_Backcover = false;
+        }
+    });
+   
+    // Wiki Biography Image
+    $(document).on('click', '#bioArtModal', function (event) {
+        if (event.target.id != "artModalImage") {
+            $('#bioArtModal').css('display', 'none');
+            $('.background').css('filter', 'blur(0px)');
+        }
     });
 
     // Click event on artist image in biography
@@ -1530,22 +1590,26 @@ $(document).ready(function () {
         $('#okModal').css('display', 'none');
         $('.background').css('filter', 'blur(0px)');       
     })
-
+    /*
     $(document).on('click', '#artModalImage', function () {
         $('#artModal').css('display', 'none');
         $('.background').css('filter', 'blur(0px)');
     })
-
+    */
     $(document).on('click', '#artModalClose', function () {
         $('#artModal').css('display', 'none');
         $('.background').css('filter', 'blur(0px)');
+        global_Backcover = false;
+        $('#artModalImage').css('display', 'block');
+        $('#backcoverImage').css('display', 'none');
+        $("#artModalImage").css('cursor', 'default');
     })
-
+    /*
     $(document).on('click', '#bioArtModalImage', function () {
         $('#bioArtModal').css('display', 'none');
         $('.background').css('filter', 'blur(0px)');
     })
-
+    */
     $(document).on('click', '#bioArtModalClose', function () {
         $('#bioArtModal').css('display', 'none');
         $('.background').css('filter', 'blur(0px)');

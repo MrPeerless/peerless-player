@@ -45,7 +45,13 @@ $(document).on('click', '#btnArtworkAlbum', function (event) {
 function getArtwork() {
     var artistMBID = $("#inpArtistMBID").val();
     var artist = $("#inpArtistName").val();
+    // Escape apostrophe in artist name
+    //artist = artist.replace(/'/g, "\\'");
+
     var album = $("#inpAlbumName").val();
+    // Escape apostrophe in album name
+    //album = album.replace(/'/g, "\\'");
+
     var albumCheck = $("#inpAlbumName").val();
 
     // Get value of import radio buttons
@@ -142,6 +148,11 @@ function getArtwork() {
                                         var coverArt = "https://coverartarchive.org/release/" + releaseID + "/front-500"
 
                                         $("#imgCoverArt").attr('src', coverArt);
+
+                                        $("#imgCoverArt").on('error', function (err) {
+                                            console.log("Error Loading Image: " + err)
+                                        })
+
                                         $("#inpEditCoverArtURL").val(coverArt);
 
                                         var coverArtUrl = $("#inpEditCoverArtURL").val();

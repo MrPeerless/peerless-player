@@ -63,5 +63,9 @@
 10. Recommendations function removed temporarily after Gracenote termination.
 11. Bumped: sanitize-html to 2.3.2, lodash to 4.17.21,  hosted-git-info to 2.8.9
 
+**** VERSION 0.3.1 UPDATES ****
+1. Display back cover artwork added to display large cover art.
+2. Bug fixes to trap some 503 and 429 errors while saving artwork images.
+3. Bug fix in selecting track metadata manually when editing album.
 
 

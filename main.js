@@ -55,12 +55,12 @@ function createWindow() {
     })
 
     // Open the DevTools.
-    //win.webContents.openDevTools()
+    win.webContents.openDevTools()
 
     // Emitted when the window is closed.
     win.on('closed', () => {
         // Close database connection
-        closeDatabase()
+        //closeDatabase()
         // Dereference the window object
         win = null
     })
@@ -108,12 +108,17 @@ app.on("web-contents-created", (event, contents) => {
     });
 });
 
+// Uncaught Exception Errors - send message to ipcreply.js
+process.on('uncaughtException', function (error) {
+    win.webContents.send("from_main_error", error);
+});
+
 // OTHER FUNCTIONS
 //-----------------
 // Close database connection
-async function closeDatabase() {
-    dBase.close();
-}
+//async function closeDatabase() {
+//    dBase.close();
+//}
 
 // Function to open dialog box to select directory
 function openFolderDialog(message) {
@@ -346,15 +351,21 @@ ipcMain.on('save_temp_artwork', (event, message) => {
 ipcMain.on('save_artXlarge_file', (event, message) => {
     var tempArtPath = message[0];
     var artFilePath = message[1];
+
     if (fs.existsSync(tempArtPath)) {
-        try {
-            Jimp.read(tempArtPath, function (err, image) {
-                //if (err) throw err;
-                image.write(artFilePath);
-            });
-        }
-        catch{
-            console.log("Error saving artXlarge image.")
+        // Check size of image tempArt file to check it downloaded
+        var stats = fs.statSync(tempArtPath)
+        var fileSizeInBytes = stats.size;
+        if (fileSizeInBytes > 1000) {
+            try {
+                Jimp.read(tempArtPath, function (err, image) {
+                    //if (err) throw err;
+                    image.write(artFilePath);
+                });
+            }
+            catch{
+                console.log("Error saving artXlarge image.")
+            }
         }
     }
 });
@@ -392,18 +403,23 @@ ipcMain.on('save_folder_file', (event, message) => {
     var resizedFilePath = message[1];
     // Resize and save folder.jpg
     if (fs.existsSync(tempArtPath)) {
-        try {
-            Jimp.read(tempArtPath, function (err, image) {
-                if (err) throw err;
-                // Delete folder.jpg if it exists because Windows Media Player rips files as hidden system files, which don't overwrite.
-                if (fs.existsSync(resizedFilePath)) {
-                    fs.unlinkSync(resizedFilePath);
-                }
-                image.resize(250, 250).write(resizedFilePath);
-            });
-        }
-        catch{
-            console.log("Error saving folder image.")
+        // Check size of image tempArt file to check it downloaded
+        var stats = fs.statSync(tempArtPath)
+        var fileSizeInBytes = stats.size;
+        if (fileSizeInBytes > 1000) {
+            try {
+                Jimp.read(tempArtPath, function (err, image) {
+                    if (err) throw err;
+                    // Delete folder.jpg if it exists because Windows Media Player rips files as hidden system files, which don't overwrite.
+                    if (fs.existsSync(resizedFilePath)) {
+                        fs.unlinkSync(resizedFilePath);
+                    }
+                    image.resize(250, 250).write(resizedFilePath);
+                });
+            }
+            catch{
+                console.log("Error saving folder image.")
+            }
         }
     }
 });
@@ -470,6 +486,14 @@ ipcMain.on('count_tracks', (event, data) => {
     win.webContents.send("from_count_tracks", [trackCount]);
 });
 
+// IPC Check if BackCover Art file exists
+ipcMain.on('check_backcover', (event, data) => {
+    var filePath = data[0];
+    // Check if filepath to backcover exists
+    if (fs.existsSync(filePath)) {
+        win.webContents.send("from_check_backcover", [filePath]);
+    }
+});
 
 // IPC SYNC DIRECTORY 
 // Sync directory

@@ -70,32 +70,33 @@ $(document).ready(function () {
 
             // Populate mood1 listbox
             $("#" + counter + "mood1").append("<option></option>");
+            $("#" + counter + "mood1").append("<option value='Aggressive'>Aggressive</option>");
+            $("#" + counter + "mood1").append("<option value='Brooding'>Brooding</option>");
+            $("#" + counter + "mood1").append("<option value='Cool'>Cool</option>");
+            $("#" + counter + "mood1").append("<option value='Defiant'>Defiant</option>");
+            $("#" + counter + "mood1").append("<option value='Easygoing'>Easygoing</option>");
+            $("#" + counter + "mood1").append("<option value='Empowering'>Empowering</option>");
+            $("#" + counter + "mood1").append("<option value='Energizing'>Energizing</option>");
+            $("#" + counter + "mood1").append("<option value='Excited'>Excited</option>");
+            $("#" + counter + "mood1").append("<option value='Fiery'>Fiery</option>");
+            $("#" + counter + "mood1").append("<option value='Gritty'>Gritty</option>");
+            $("#" + counter + "mood1").append("<option value='Lively'>Lively</option>");
+            $("#" + counter + "mood1").append("<option value='Melancholy'>Melancholy</option>");
             $("#" + counter + "mood1").append("<option value='Peaceful'>Peaceful</option>");
             $("#" + counter + "mood1").append("<option value='Romantic'>Romantic</option>");
-            $("#" + counter + "mood1").append("<option value='Sentimental'>Sentimental</option>");
-            $("#" + counter + "mood1").append("<option value='Tender'>Tender</option>");
-            $("#" + counter + "mood1").append("<option value='Easygoing'>Easygoing</option>");
-            $("#" + counter + "mood1").append("<option value='Yearning'>Yearning</option>");
-            $("#" + counter + "mood1").append("<option value='Sophisticated'>Sophisticated</option>");
-            $("#" + counter + "mood1").append("<option value='Sensual'>Sensual</option>");
-            $("#" + counter + "mood1").append("<option value='Cool'>Cool</option>");
-            $("#" + counter + "mood1").append("<option value='Gritty'>Gritty</option>");
-            $("#" + counter + "mood1").append("<option value='Somber'>Somber</option>");
-            $("#" + counter + "mood1").append("<option value='Melancholy'>Melancholy</option>");
-            $("#" + counter + "mood1").append("<option value='Serious'>Serious</option>");
-            $("#" + counter + "mood1").append("<option value='Brooding'>Brooding</option>");
-            $("#" + counter + "mood1").append("<option value='Fiery'>Fiery</option>");
-            $("#" + counter + "mood1").append("<option value='Urgent'>Urgent</option>");
-            $("#" + counter + "mood1").append("<option value='Defiant'>Defiant</option>");
-            $("#" + counter + "mood1").append("<option value='Aggressive'>Aggressive</option>");
             $("#" + counter + "mood1").append("<option value='Rowdy'>Rowdy</option>");
-            $("#" + counter + "mood1").append("<option value='Excited'>Excited</option>");
-            $("#" + counter + "mood1").append("<option value='Energizing'>Energizing</option>");
-            $("#" + counter + "mood1").append("<option value='Empowering'>Empowering</option>");
+            $("#" + counter + "mood1").append("<option value='Sensual'>Sensual</option>");
+            $("#" + counter + "mood1").append("<option value='Sentimental'>Sentimental</option>");
+            $("#" + counter + "mood1").append("<option value='Serious'>Serious</option>");
+            $("#" + counter + "mood1").append("<option value='Somber'>Somber</option>");
+            $("#" + counter + "mood1").append("<option value='Sophisticated'>Sophisticated</option>");
             $("#" + counter + "mood1").append("<option value='Stirring'>Stirring</option>");
-            $("#" + counter + "mood1").append("<option value='Lively'>Lively</option>");
+            $("#" + counter + "mood1").append("<option value='Tender'>Tender</option>");
             $("#" + counter + "mood1").append("<option value='Upbeat'>Upbeat</option>");
+            $("#" + counter + "mood1").append("<option value='Urgent'>Urgent</option>");
+            $("#" + counter + "mood1").append("<option value='Yearning'>Yearning</option>");
             $("#" + counter + "mood1").append("<option value='Other'>Other</option>");
+
 
             // Populate tempo1 listbox
             $("#" + counter + "tempo1").append("<option></option>");
@@ -335,13 +336,6 @@ $(document).ready(function () {
         counter -= 1
         $("#inpCount").val(counter)
 
-        /*
-        // Send file path of track 1 to read ID3 tags
-        var track1 = $("#1fileName").val();
-        var audioSource = MUSIC_PATH + artist + "/" + album + "/" + track1;
-        ipcRenderer.send("read_ID3tags", [audioSource])
-        */
-
         // Replace encoded &amp with &
         artist = artist.replace(/&amp;/g, '&');
         album = album.replace(/&amp;/g, '&');
@@ -375,200 +369,4 @@ $(document).ready(function () {
             });
         }
     }
-
-    // Change Mood2 selection box when Mood1 changed
-    $(document).on('change', '.sltMood1', function () {
-        // Get ID of selection element
-        var mood1ID = $(this).attr('id');
-        // Get value selected
-        var mood1Value = $(this).val();
-        // Get first digit of ID which represents track no.
-        var trackNo = mood1ID.substring(0, 1);
-        // Mood2 ID
-        var mood2ID = trackNo + "mood2";
-        // Empty contents of mood2 selection element
-        $('#' + mood2ID).empty();
-        // populate mood2 selection element based on value in mood1 selection element
-        switch (mood1Value) {
-            case "Peaceful":
-                $('#' + mood2ID).append("<option></option>");
-                $('#' + mood2ID).append("<option>Reverent / Healing</option>");
-                $('#' + mood2ID).append("<option>Quiet / Introspective</option>");
-                $('#' + mood2ID).append("<option>Delicate / Tranquil</option>");
-                $('#' + mood2ID).append("<option>Pastoral / Serene</option>");
-                break;
-            case "Romantic":
-                $('#' + mood2ID).append("<option></option>");
-                $('#' + mood2ID).append("<option>Lush / Romantic</option>");
-                $('#' + mood2ID).append("<option>Sweet / Sincere</option>");
-                $('#' + mood2ID).append("<option>Heartfelt Passion</option>");
-                $('#' + mood2ID).append("<option>Dramatic / Romantic</option>");
-                break;
-            case "Sentimental":
-                $('#' + mood2ID).append("<option></option>");
-                $('#' + mood2ID).append("<option>Lyrical Sentimental</option>");
-                $('#' + mood2ID).append("<option>Gentle Bittersweet</option>");
-                $('#' + mood2ID).append("<option>Tender / Sincere</option>");
-                $('#' + mood2ID).append("<option>Cool Melancholy</option>");
-                break;
-            case "Tender":
-                $('#' + mood2ID).append("<option></option>");
-                $('#' + mood2ID).append("<option>Romantic / Lyrical</option>");
-                $('#' + mood2ID).append("<option>Refined / Mannered</option>");
-                $('#' + mood2ID).append("<option>Awakening / Stately</option>");
-                $('#' + mood2ID).append("<option>Light Groovy</option>");
-                break;
-            case "Easygoing":
-                $('#' + mood2ID).append("<option></option>");
-                $('#' + mood2ID).append("<option>Friendly</option>");
-                $('#' + mood2ID).append("<option>Hopeful / Breezy</option>");
-                $('#' + mood2ID).append("<option>Cheerful / Playful</option>");
-                $('#' + mood2ID).append("<option>Charming / Easygoing</option>");
-                break;
-            case "Yearning":
-                $('#' + mood2ID).append("<option></option>");
-                $('#' + mood2ID).append("<option>Sensitive / Exploring</option>");
-                $('#' + mood2ID).append("<option>Energetic Yearning</option>");
-                $('#' + mood2ID).append("<option>Energetic Dreamy</option>");
-                $('#' + mood2ID).append("<option>Bittersweet Pop</option>");
-                break;
-            case "Sophisticated":
-                $('#' + mood2ID).append("<option></option>");
-                $('#' + mood2ID).append("<option>Smoky / Romantic</option>");
-                $('#' + mood2ID).append("<option>Intimate Bittersweet</option>");
-                $('#' + mood2ID).append("<option>Suave / Sultry</option>");
-                $('#' + mood2ID).append("<option>Dark Playful</option>");
-                break;
-            case "Sensual":
-                $('#' + mood2ID).append("<option></option>");
-                $('#' + mood2ID).append("<option>Soft Soulful</option>");
-                $('#' + mood2ID).append("<option>Sensual Groove</option>");
-                $('#' + mood2ID).append("<option>Intimate</option>");
-                $('#' + mood2ID).append("<option>Dreamy Pulse</option>");
-                break;
-            case "Cool":
-                $('#' + mood2ID).append("<option></option>");
-                $('#' + mood2ID).append("<option>Cool Confidence</option>");
-                $('#' + mood2ID).append("<option>Casual Groove</option>");
-                $('#' + mood2ID).append("<option>Dark Groovy</option>");
-                $('#' + mood2ID).append("<option>Wary / Defiant</option>");
-                break;
-            case "Gritty":
-                $('#' + mood2ID).append("<option></option>");
-                $('#' + mood2ID).append("<option>Depressed / Lonely</option>");
-                $('#' + mood2ID).append("<option>Sober / Determined</option>");
-                $('#' + mood2ID).append("<option>Gritty / Soulful</option>");
-                $('#' + mood2ID).append("<option>Strumming Yearning</option>");
-                break;
-            case "Somber":
-                $('#' + mood2ID).append("<option></option>");
-                $('#' + mood2ID).append("<option>Dark Cosmic</option>");
-                $('#' + mood2ID).append("<option>Enigmatic / Mysterious</option>");
-                $('#' + mood2ID).append("<option>Creepy / Ominous</option>");
-                $('#' + mood2ID).append("<option>Solemn / Spiritual</option>");
-                break;
-            case "Melancholy":
-                $('#' + mood2ID).append("<option></option>");
-                $('#' + mood2ID).append("<option>Mysterious / Dreamy</option>");
-                $('#' + mood2ID).append("<option>Wistful / Forlorn</option>");
-                $('#' + mood2ID).append("<option>Light Melancholy</option>");
-                $('#' + mood2ID).append("<option>Sad / Soulful</option>");
-                break;
-            case "Serious":
-                $('#' + mood2ID).append("<option></option>");
-                $('#' + mood2ID).append("<option>Thrilling</option>");
-                $('#' + mood2ID).append("<option>Melodramatic</option>");
-                $('#' + mood2ID).append("<option>Serious / Cerebral</option>");
-                $('#' + mood2ID).append("<option>Hypnotic Rhythm</option>");
-                break;
-            case "Brooding":
-                $('#' + mood2ID).append("<option></option>");
-                $('#' + mood2ID).append("<option>Energetic Melancholy</option>");
-                $('#' + mood2ID).append("<option>Alienated / Brooding</option>");
-                $('#' + mood2ID).append("<option>Evocative / Intriguing</option>");
-                $('#' + mood2ID).append("<option>Dreamy Brooding</option>");
-                break;
-            case "Fiery":
-                $('#' + mood2ID).append("<option></option>");
-                $('#' + mood2ID).append("<option>Dark Sparkling Lyrical</option>");
-                $('#' + mood2ID).append("<option>Fiery Groove</option>");
-                $('#' + mood2ID).append("<option>Passionate Rhythm</option>");
-                $('#' + mood2ID).append("<option>Energetic Abstract Groove</option>");
-                break;
-            case "Urgent":
-                $('#' + mood2ID).append("<option></option>");
-                $('#' + mood2ID).append("<option>Dark Urgent</option>");
-                $('#' + mood2ID).append("<option>Dark Pop</option>");
-                $('#' + mood2ID).append("<option>Dark Pop Intensity</option>");
-                $('#' + mood2ID).append("<option>Energetic Anxious</option>");
-                break;
-            case "Defiant":
-                $('#' + mood2ID).append("<option></option>");
-                $('#' + mood2ID).append("<option>Heavy Brooding</option>");
-                $('#' + mood2ID).append("<option>Hard Dark Excitement</option>");
-                $('#' + mood2ID).append("<option>Hard Positive Excitement</option>");
-                $('#' + mood2ID).append("<option>Attitude / Defiant</option>");
-                break;
-            case "Aggressive":
-                $('#' + mood2ID).append("<option></option>");
-                $('#' + mood2ID).append("<option>Dark Hard Beat</option>");
-                $('#' + mood2ID).append("<option>Heavy Triumphant</option>");
-                $('#' + mood2ID).append("<option>Chaotic / Intense</option>");
-                $('#' + mood2ID).append("<option>Aggressive Power</option>");
-                break;
-            case "Rowdy":
-                $('#' + mood2ID).append("<option></option>");
-                $('#' + mood2ID).append("<option>Driving Dark Groove</option>");
-                $('#' + mood2ID).append("<option>Wild / Rowdy</option>");
-                $('#' + mood2ID).append("<option>Ramshackle / Rollicking</option>");
-                $('#' + mood2ID).append("<option>Confident / Tough</option>");
-                break;
-            case "Excited":
-                $('#' + mood2ID).append("<option></option>");
-                $('#' + mood2ID).append("<option>Loud Celebratory</option>");
-                $('#' + mood2ID).append("<option>Happy Excitement</option>");
-                $('#' + mood2ID).append("<option>Upbeat Pop Groove</option>");
-                $('#' + mood2ID).append("<option>Euphoric Energy</option>");
-                break;
-            case "Energizing":
-                $('#' + mood2ID).append("<option></option>");
-                $('#' + mood2ID).append("<option>Arousing Groove</option>");
-                $('#' + mood2ID).append("<option>Heavy Beat</option>");
-                $('#' + mood2ID).append("<option>Abstract Beat</option>");
-                $('#' + mood2ID).append("<option>Edgy / Sexy</option>");
-                break;
-            case "Empowering":
-                $('#' + mood2ID).append("<option></option>");
-                $('#' + mood2ID).append("<option>Dramatic Emotion</option>");
-                $('#' + mood2ID).append("<option>Powerful / Heroic</option>");
-                $('#' + mood2ID).append("<option>Idealistic / Stirring</option>");
-                $('#' + mood2ID).append("<option>Strong / Stable</option>");
-                break;
-            case "Stirring":
-                $('#' + mood2ID).append("<option></option>");
-                $('#' + mood2ID).append("<option>Jubilant / Soulful</option>");
-                $('#' + mood2ID).append("<option>Triumphant / Rousing</option>");
-                $('#' + mood2ID).append("<option>Focused Sparkling</option>");
-                $('#' + mood2ID).append("<option>Invigorating / Joyous</option>");
-                break;
-            case "Lively":
-                $('#' + mood2ID).append("<option></option>");
-                $('#' + mood2ID).append("<option>Showy / Rousing</option>");
-                $('#' + mood2ID).append("<option>Playful / Swingin'</option>");
-                $('#' + mood2ID).append("<option>Exuberant / Festive</option>");
-                $('#' + mood2ID).append("<option>Lusty / Jaunty</option>");
-                break;
-            case "Upbeat":
-                $('#' + mood2ID).append("<option></option>");
-                $('#' + mood2ID).append("<option>Happy / Soulful</option>");
-                $('#' + mood2ID).append("<option>Carefree Pop</option>");
-                $('#' + mood2ID).append("<option>Party / Fun</option>");
-                $('#' + mood2ID).append("<option>Soulful / Easygoing</option>");
-                break;
-            case "Other":
-                $('#' + mood2ID).append("<option></option>");
-                $('#' + mood2ID).append("<option>Other</option>");
-                break;
-        }
-    });
 });
