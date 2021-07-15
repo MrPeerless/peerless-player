@@ -1316,7 +1316,7 @@ $(document).ready(function () {
    
     // Wiki Biography Image
     $(document).on('click', '#bioArtModal', function (event) {
-        if (event.target.id != "artModalImage") {
+        if (event.target.id != "bioArtModalImage") {
             $('#bioArtModal').css('display', 'none');
             $('.background').css('filter', 'blur(0px)');
         }

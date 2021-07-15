@@ -1,6 +1,8 @@
 $(document).ready(function () {
     // Declare artist variable
     var artistID = "";
+    var wikiID;
+
     // Set expanded text to false
     global_BioTextExpand = false;
 
@@ -25,18 +27,18 @@ $(document).ready(function () {
     // Function to send ajax xml query to Musicbrainz server
     function artistIDQuery(query) {
         var queryArtist = query;
-        var url = musicbrainzUrl + "artist/?"
-        // Send ajax request to musicbrainz
+        // Artist search url
+        var url = musicbrainzUrl + "artist/?query=artist:" + queryArtist;
+        // Encode url
+        var encodedUrl = encodeURI(url);
         return $.ajax({
-            url: url,
-            data: {
-                query: "artist:" + queryArtist
-            }
+            url: encodedUrl
         });
     }
 
-    // Get Musicbrainz artist ID
+    // Function to process data from received xml file searching for artistID
     function processDataArtistID(xml) {
+        var $artist = $(this);
         // Get the first artist in xml and check it is match score = 100
         var $artist = $(xml).find('artist').eq(0);
         var matchScore = $artist.attr('ns2:score')
@@ -44,6 +46,7 @@ $(document).ready(function () {
         // Find the 100% artist match
         if (matchScore == "100") {
             global_TrackListing = false;
+            var artistName = $artist.find('name').eq(0).text();
             artistID = $artist.attr("id");
             var type = $artist.attr('type')
             var begin = $artist.find('begin').text();
@@ -80,59 +83,80 @@ $(document).ready(function () {
                 $("#bioArtistDetails").append(discographyDetails);
             }
 
-            // Search wikipedia for artist page using Musicbrainz ID
-            wikiQuery(artistID).done(processWiki);
+            // Check if artist name is in xml result
+            var checkArtist = artist.replace(/\W/g, '');
+            checkArtist = checkArtist.toLowerCase();
+            var checkArtistName = artistName.replace(/\W/g, '');
+            checkArtistName = checkArtistName.toLowerCase();
 
-            // Function to send ajax xml query to Wikipedia server to get wiki page details for artist
-            function wikiQuery(query) {
+            // Check if artist name appears in the xml artist name retrieved
+            var checkResult = checkArtistName.includes(checkArtist);
+            // If checkResult is false exit
+            if (checkResult == false) {
+                noResult();
+                return;
+            }
+        }
+
+        // Check if at musicbrainz ID has been found
+        if (artistID != "") {
+            // Call ajax function artistLinksQuery
+            artistLinksQuery(artistID).done(processLinksQuery);
+
+            // Function to send ajax xml query to Musicbrainz server to get URLs
+            function artistLinksQuery(query) {
                 var queryArtist = query;
-                // Send ajax query to wikipedia
+                var url = musicbrainzUrl + "artist/" + queryArtist + "?inc=url-rels"
+                // Send ajax request to musicbrainz
                 return $.ajax({
-                    url: wikiQueryUrl,
-                    data: {
-                        action: 'query',
-                        origin: '*',
-                        format: 'xml',
-                        generator: 'search',
-                        gsrnamespace: '0',
-                        gsrlimit: '5',
-                        prop: 'info',
-                        inprop: 'url',
-                        gsrsearch: queryArtist
-                    }
+                    url: url
                 });
             }
 
-            function processWiki(xml) {
-                var wikiTitle = $(xml).find('page').attr('title');
-                var wikiPageid = $(xml).find('page').attr('pageid');
+            // Process response from Musicbrainz of URLs
+            function processLinksQuery(xml) {
+                // Declare variables for URLs
+                var wikidata = "";
 
-                // Populate title and add href to wiki link
-                $("#bioArtistName").append("Biography for " + wikiTitle);
+                // Loop through each relation in xml
+                $(xml).find('relation').each(function () {
+                    var $link = $(this);
+                    var linkType = $link.attr('type')
+                    if (linkType == "wikidata") {
+                        wikidata = $link.find('target').text();
+                    }
+                });
+                wikidata = wikidata.split("wiki/");
+                wikiID = wikidata[1];
 
-                // If nothing found for artist in wikipedia exit
-                if (wikiTitle == undefined) {
-                    noResult(wikiTitle);
-                    return;
+                // Call ajax function wikiUrlQuery
+                wikiUrlQuery(wikiID).done(processWikiUrlQuery);
+
+                // Function to send ajax xml query to Musicbrainz server to get URLs
+                function wikiUrlQuery(query) {
+                    var queryWikiID = query;
+                    // Send ajax query to wikipedia
+                    return $.ajax({
+                        url: 'https://www.wikidata.org/w/api.php?',
+                        data: {
+                            action: 'wbgetentities',
+                            format: 'xml',
+                            props: 'sitelinks/urls',
+                            sitefilter: 'enwiki',
+                            ids: queryWikiID
+                        }
+                    });
                 }
 
-                // Remove non alphanumeric characters in artist name variables to check
-                var checkArtist = artist.replace(/\W/g, '');
-                checkArtist = checkArtist.toLowerCase();
-                var checkWikiTitle = wikiTitle.replace(/\W/g, '');
-                checkWikiTitle = checkWikiTitle.toLowerCase();
+                function processWikiUrlQuery(xml) {
+                    var $pageTitle = $(xml).find('sitelink');
+                    var wikiTitle = $pageTitle.attr('title');
 
-                // Check if artist name appears in the wikiTitle retrieved
-                var checkResult = checkWikiTitle.includes(checkArtist);
-                if (checkResult == true) {
                     // Search wikipedia for summary text of artist
                     wikiText(wikiTitle).done(processWikiText);
 
                     // Function to send ajax xml query to Wikipedia server to get wiki page summary for artist
                     function wikiText(query) {
-                        var queryTitle = query.replace('&', 'and');
-                        var queryTitle = query.replace(' ', '_');
-
                         // Send ajax query to wikipedia
                         return $.ajax({
                             url: wikiQueryUrl,
@@ -142,7 +166,7 @@ $(document).ready(function () {
                                 prop: 'extracts',
                                 //exintro: '', use this option to just get opening summary paragraph
                                 redirects: '1',
-                                titles: queryTitle
+                                titles: query
                             }
                         });
                     }
@@ -150,6 +174,18 @@ $(document).ready(function () {
                     function processWikiText(xml) {
                         // Get summary extract from xml
                         var wikiSummary = $(xml).find('extract').text();
+                        var wikiPageid = $(xml).find('page').attr('pageid');
+
+                        var wikiTitle = $(xml).find('page').attr('title');
+                        // Populate title and add href to wiki link
+                        $("#bioArtistName").append("Biography for " + wikiTitle);
+
+                        // If nothing found for artist in wikipedia exit
+                        if (wikiTitle == undefined) {
+                            noResult(wikiTitle);
+                            return;
+                        }
+
                         // Split the text at end of summmary
                         var splitExtract1 = wikiSummary.substr(0, wikiSummary.indexOf('<h2>'));
                         var splitExtract2 = wikiSummary.substr(wikiSummary.indexOf('<h2>'));
@@ -186,7 +222,7 @@ $(document).ready(function () {
                             });
                         }
 
-                        function processWikiImage(xml) {   
+                        function processWikiImage(xml) {
                             // Get file name of main image  
                             var wikiImageFile = $(xml).find('pageprops').attr('page_image_free')
                             // Get artist description
@@ -255,7 +291,6 @@ $(document).ready(function () {
                             }
                         }
                     }
-
                     // Hide modal box
                     $('#okModal').css('display', 'none');
                     $('.background').css('filter', 'blur(0px)');
@@ -409,9 +444,6 @@ $(document).ready(function () {
                             }
                         });
                     }
-                }
-                else {
-                    noResult(wikiTitle);
                 }
             }
         }
