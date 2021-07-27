@@ -51,3 +51,7 @@ aa366795-92d7-4d67-91fa-6741f82a4858
 
 https://coverartarchive.org/release/bb75b90b-02ad-49f3-b51f-0e65b1568b42/front-500
 
+
+TO GET ALBUM ID BY SEARCHING ARTIST & ALBUM
+http://musicbrainz.org/ws/2/release/?query=release:isles&creditname:bicep
+
