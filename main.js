@@ -59,8 +59,6 @@ function createWindow() {
 
     // Emitted when the window is closed.
     win.on('closed', () => {
-        // Close database connection
-        //closeDatabase()
         // Dereference the window object
         win = null
     })
@@ -115,10 +113,6 @@ process.on('uncaughtException', function (error) {
 
 // OTHER FUNCTIONS
 //-----------------
-// Close database connection
-//async function closeDatabase() {
-//    dBase.close();
-//}
 
 // Function to open dialog box to select directory
 function openFolderDialog(message) {

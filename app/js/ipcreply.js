@@ -225,18 +225,5 @@ ipcRenderer.on("from_dir_artists", (event, data) => {
 // Display Modal Information box for uncaught error in main process.
 ipcRenderer.on("from_main_error", (event, data) => {  
     var error = data;
-    console.log("Main Process Error: " + error);
-    // Display modal information box
-    $('#okModal').css('display', 'block');
-    $('.modalHeader').empty();
-    $('#okModalText').empty();
-    $(".modalFooter").empty();
-    $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
-    $('#okModalText').append("<div class='modalIcon'><img src='./graphics/warning.png'></div><p>&nbsp<br><b>Uncaught Error in Main Process.</b><br>" + error + "<br>&nbsp</p >");
-    var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
-    $('.modalFooter').append(buttons);
-    $("#btnOkModal").focus();
-    $("#btnSync").prop("disabled", false);
-    $('.background').css('filter', 'blur(5px)');
-    return
+    console.log("main.js uncaughtException error: " + error);
 });
