@@ -8,7 +8,9 @@ const path = require('path');// Require Path module
 const fs = require("fs");// Require FS module
 const { readFileSync } = require('fs'); // To read json files
 
-var request = require('request'); // Used for saving images
+//var request = require('request'); // Used for saving images
+var request = require('request').defaults({ strictSSL: false }); // defaults as downloading art images throws 'certificate expired' error message
+
 var Jimp = require('jimp');// Require Jimp for resizing images
 var jsmediatags = require("jsmediatags"); // To read ID3 tages in audio files
 
@@ -55,7 +57,7 @@ function createWindow() {
     })
 
     // Open the DevTools.
-    //win.webContents.openDevTools()
+    win.webContents.openDevTools()
 
     // Emitted when the window is closed.
     win.on('closed', () => {
@@ -71,6 +73,9 @@ function createWindow() {
 //---------------
 // Once electron has initialised create browser window
 app.on('ready', () => {
+    // Loading non-context-aware native module in renderer flag: for Sqlite3
+    app.allowRendererProcessReuse = false;
+    // Create app window
     createWindow();
     // Add check for updates
     autoUpdater.checkForUpdatesAndNotify();

@@ -125,7 +125,7 @@ $(document).ready(function () {
                 // Split at start of accolades
                 var splitExtract1 = splitExtract[0].split('<h3><span id="Accolades');
 
-                $("#albumInfoText").append(splitExtract1[0] + "<br><br>");
+                $("#albumInfoText").append(splitExtract1[0]);
                 // Hide modal box
                 $('#okModal').css('display', 'none');
                 $('.background').css('filter', 'blur(0px)');

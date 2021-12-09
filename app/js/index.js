@@ -64,8 +64,8 @@ const app_path = splitString[1];
 const dBase = require(splitString[3]);
 
 // Path to database file
-//const DB_PATH = app_path + "/peerless-player-TEST.db";
-const DB_PATH = app_path + "/peerless-player-database.db";
+const DB_PATH = app_path + "/peerless-player-TEST.db";
+//const DB_PATH = app_path + "/peerless-player-database.db";
 //const DB_PATH = app_path + "/peerless-player-music_test.db";
 
 // JQuery
@@ -296,7 +296,7 @@ ipcRenderer.on('Help Release', (event) => {
     $('#okModalText').empty();
     $(".modalFooter").empty();
     $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>Release Notes Version: ' + global_Version + '</h2>');
-    $('#okModalText').append("<div class='modalIcon'><img src='./graphics/peerless_player_thumb.png'></div><p>1. New most played algorithm added.<br>2. Bug fix on Home page to clear cache to display new album artwork.<br>3. Album sort function moved to Player Functions.<br>4. Sort by album Release Date added to album sort.<br>5. Album sort now works globally on any page which displays a list of albums.<br>6. Bug fix in shuffling sub genre albums.<br>7. New search algorithm and results page using SQL FTS5 table.<br>8. Support for FLAC files added.<br>9. Gracenote web api removed and replaced with Musicbrainz and Spotify api.<br>10. Recommendations function removed temporarily after Gracenote termination.<br>11. Bumped: sanitize-html to 2.3.2, lodash to 4.17.21,  hosted-git-info to 2.8.9<br><br><b>Version: 0.3.1</b><br>1. Display of back cover artwork added.<br>2. Rewrite of Biography code after wikidata changes.<br>3. Bug fixes identified from version 0.3.0<br><br> &nbsp</p >");
+    $('#okModalText').append("<div class='modalIcon'><img src='./graphics/peerless_player_thumb.png'></div><p>1. Fixed expired certificate error when importing music.<br>2. Security updates in npm dependencies.<br>3. Jimp bumped to latest version.<br><br> &nbsp</p >");
     var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
     $('.modalFooter').append(buttons);
     $("#btnOkModal").focus();

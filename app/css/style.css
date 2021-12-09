@@ -556,7 +556,7 @@ textarea {
 #lblGenre2 {
     text-align: right;
     width: 60px;
-    margin-left: 648px;
+    margin-left: 653px;
     margin-right: 1px;
     display: none;
 }
@@ -570,7 +570,7 @@ textarea {
 }
 
 #inpGenre2 {
-    width: 170px;
+    width: 168px;
     border: 1px solid #000000;
     display: none;
 }
@@ -584,7 +584,7 @@ textarea {
 #lblGenre3 {
     text-align: right;
     width: 60px;
-    margin-left: 648px;
+    margin-left: 653px;
     margin-right: 1px;
     display: none;
 }
@@ -598,7 +598,7 @@ textarea {
 }
 
 #inpGenre3 {
-    width: 170px;
+    width: 168px;
     border: 1px solid #000000;
     display: none;
 }
@@ -628,10 +628,11 @@ textarea {
     display:inline-block;
     width: 350px;
 }
+
 .lblFileName{
     display:inline-block;
     text-align: right;
-    width: 100px;
+    width: 95px;
     margin-right: 5px;     
 }
 .inpFileName{
