@@ -64,9 +64,8 @@ const app_path = splitString[1];
 const dBase = require(splitString[3]);
 
 // Path to database file
-const DB_PATH = app_path + "/peerless-player-TEST.db";
-//const DB_PATH = app_path + "/peerless-player-database.db";
-//const DB_PATH = app_path + "/peerless-player-music_test.db";
+//const DB_PATH = app_path + "/peerless-player-TEST.db";
+const DB_PATH = app_path + "/peerless-player-database.db";
 
 // JQuery
 window.$ = window.jQuery = require('jquery')
@@ -296,7 +295,7 @@ ipcRenderer.on('Help Release', (event) => {
     $('#okModalText').empty();
     $(".modalFooter").empty();
     $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>Release Notes Version: ' + global_Version + '</h2>');
-    $('#okModalText').append("<div class='modalIcon'><img src='./graphics/peerless_player_thumb.png'></div><p>1. Fixed expired certificate error when importing music.<br>2. Security updates in npm dependencies.<br>3. Jimp bumped to latest version.<br><br> &nbsp</p >");
+    $('#okModalText').append("<div class='modalIcon'><img src='./graphics/peerless_player_thumb.png'></div><p>1. Fixed expired certificate error when importing music.<br>2. Bumped:- jimp:0.16.1, sqlite3:5.0.2, electron-builder:22.14.5, electron:16.0.4<br><br> &nbsp</p >");
     var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
     $('.modalFooter').append(buttons);
     $("#btnOkModal").focus();
