@@ -47,6 +47,7 @@
     <Compile Include="app\js\playlistfunctions.js" />
     <Compile Include="App\js\playlistsexported.js" />
     <Compile Include="App\js\preload.js" />
+    <Compile Include="App\js\recommendations.js" />
     <Compile Include="docs\js\pages_metadata.js" />
     <Compile Include="Redundant Files\recommends.js" />
     <Compile Include="App\js\search.js" />
@@ -170,6 +171,7 @@
     <Content Include="App\html\editalbum.html" />
     <Content Include="App\html\keyboardshortcuts.html" />
     <Content Include="App\html\playlistsexported.html" />
+    <Content Include="App\html\recommendations.html" />
     <Content Include="docs\pages_privacy.html" />
     <Content Include="Redundant Files\Gracenote Old Data.txt" />
     <Content Include="Redundant Files\recommends.html" />

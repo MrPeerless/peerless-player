@@ -222,6 +222,49 @@ ipcRenderer.on("from_dir_artists", (event, data) => {
     }
 });
 
+
+// SENT FROM syncDirectory() recommendations.js
+//------------------------------------
+// Data received for recommendations.js from main to display recommended albums from spotify
+ipcRenderer.on("from_getArtistID", (event, data) => {
+    //console.log(data)
+    var spotifyResponse = data[0];
+
+    var name = spotifyResponse.artists.items[0].name;
+    var spotifyID = spotifyResponse.artists.items[0].id;
+    //console.log("ID = " + spotifyID)
+
+    ipcRenderer.send("spotify_recommendations", [spotifyID])
+});
+
+ipcRenderer.on("from_recommendations", (event, data) => {
+    //console.log(data)
+    var spotifyResponse = data;
+
+    // Get each spotify albumID
+    $.each(spotifyResponse[0].tracks, function (i, tracks) {
+        //console.log(tracks.album.id)
+        var spotifyalbumID = tracks.album.id
+
+        ipcRenderer.send("spotify_album", [spotifyalbumID])
+    });
+
+});
+
+
+ipcRenderer.on("from_album", (event, data) => {
+    console.log(data)
+    var spotifyResponse = data[0];
+
+    var name = spotifyResponse.artists[0].name;
+    var album = spotifyResponse.name;
+    console.log(album + " by " + name)
+    //var spotifyID = spotifyResponse.artists.items[0].id;
+    //console.log("ID = " + spotifyID)
+
+
+});
+
 // Display Modal Information box for uncaught error in main process.
 ipcRenderer.on("from_main_error", (event, data) => {  
     var error = data;

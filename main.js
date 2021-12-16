@@ -57,7 +57,7 @@ function createWindow() {
     })
 
     // Open the DevTools.
-    //win.webContents.openDevTools()
+    win.webContents.openDevTools()
 
     // Emitted when the window is closed.
     win.on('closed', () => {
@@ -748,6 +748,83 @@ ipcMain.on('spotify_getAudioFeatures', (event, data) => {
         }
     });
 });
+
+// Get artist ID
+ipcMain.on('spotify_getArtistID', (event, data) => {
+    var query = data[0];
+
+    request.post(authOptions, function (error, response, body) {
+        if (!error && response.statusCode === 200) {
+            // Encode URL
+            var url = 'https://api.spotify.com/v1/search?q=' + query;
+            var encodedUrl = encodeURI(url);
+            // Use the access token to access the Spotify Web API
+            var token = body.access_token;
+            var options = {
+                url: encodedUrl,
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                },
+                json: true
+            };
+            request.get(options, function (error, response, body) {
+                win.webContents.send("from_getArtistID", [body]);
+            });
+        }
+    });
+});
+
+// Get recommendations based on spotify artist ID
+ipcMain.on('spotify_recommendations', (event, data) => {
+    var query = data[0];
+
+    request.post(authOptions, function (error, response, body) {
+        if (!error && response.statusCode === 200) {
+            // Encode URL
+            var url = 'https://api.spotify.com/v1/recommendations?limit=10&market=GB&seed_artists=' + query;
+            var encodedUrl = encodeURI(url);
+            // Use the access token to access the Spotify Web API
+            var token = body.access_token;
+            var options = {
+                url: encodedUrl,
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                },
+                json: true
+            };
+            request.get(options, function (error, response, body) {
+                win.webContents.send("from_recommendations", [body]);
+            });
+        }
+    });
+});
+
+// Get spotify album details
+ipcMain.on('spotify_album', (event, data) => {
+    var query = data[0];
+
+    request.post(authOptions, function (error, response, body) {
+        if (!error && response.statusCode === 200) {
+            // Encode URL
+            var url = 'https://api.spotify.com/v1/albums/' + query;
+            var encodedUrl = encodeURI(url);
+            // Use the access token to access the Spotify Web API
+            var token = body.access_token;
+            var options = {
+                url: encodedUrl,
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                },
+                json: true
+            };
+            request.get(options, function (error, response, body) {
+                win.webContents.send("from_album", [body]);
+            });
+        }
+    });
+});
+
+
 
 // Get Audio Features of tracks from album
 ipcMain.on('read_ID3tags', (event, data) => {
