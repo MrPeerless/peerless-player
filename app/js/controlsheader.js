@@ -162,10 +162,11 @@ $(document).on('click', '#btnMood', function () {
 async function moodShuffle() {
     var mood = $('#sltMood').val();
     // Select all artist's albums from the database
-    var sql = "SELECT trackID FROM track WHERE mood1=?";
+    var sql = "SELECT trackID, mood1 FROM track WHERE mood1=?";
     var rows = await dBase.all(sql, mood);
     rows.forEach((row) => {
         global_Tracks.push(row.trackID)
+        console.log(row.mood1)
     });
 
     // Shuffle globalTracks array

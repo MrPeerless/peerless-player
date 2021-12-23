@@ -1250,7 +1250,13 @@ button#btnMoodExpand {
 .divDefaultInnerText{
     float: left;
 }
-#playingtracks{
+
+.divCredits {
+    clear: both;
+    padding-left: 15px;
+}
+
+#playingtracks {
     list-style: none;
     padding-left: 0;
 }

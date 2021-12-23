@@ -222,49 +222,122 @@ ipcRenderer.on("from_dir_artists", (event, data) => {
     }
 });
 
-
-// SENT FROM syncDirectory() recommendations.js
+// SENT FROM recommendations.
 //------------------------------------
 // Data received for recommendations.js from main to display recommended albums from spotify
 ipcRenderer.on("from_getArtistID", (event, data) => {
-    //console.log(data)
     var spotifyResponse = data[0];
+    var artist = data[1];
+    var artistFound = false;
+    var numberArtists = spotifyResponse.artists.items.length;
 
-    var name = spotifyResponse.artists.items[0].name;
-    var spotifyID = spotifyResponse.artists.items[0].id;
-    //console.log("ID = " + spotifyID)
+    for (var i = 0; i < numberArtists; i++) {
+        var name = spotifyResponse.artists.items[i].name;
+        if (artist == name) {
+            var spotifyID = spotifyResponse.artists.items[i].id;
+            ipcRenderer.send("spotify_recommendations", [spotifyID]);
+            artistFound = true;
+            break;
+        }
+    }
 
-    ipcRenderer.send("spotify_recommendations", [spotifyID])
+    if (artistFound == false) {
+        // Display modal information box
+        $('#okModal').css('display', 'block');
+        $('.modalHeader').empty();
+        $('#okModalText').empty();
+        $(".modalFooter").empty();
+        $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
+        $('#okModalText').append("<div class='modalIcon'><img src='./graphics/information.png'></div><p>&nbsp<br><b>No recommendations could be found.</b><br><br>&nbsp</p >");
+        var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
+        $('.modalFooter').append(buttons);
+        $("#btnOkModal").focus();
+        $("#btnSync").prop("disabled", false);
+        $('.background').css('filter', 'blur(5px)');
+        // Hide recommendations page and go back
+        $("#divTrackListing").css("display", "none");
+        $("#divContent").css("width", "auto");
+        window.history.back();
+        return false;
+    }
 });
 
 ipcRenderer.on("from_recommendations", (event, data) => {
-    //console.log(data)
     var spotifyResponse = data;
+    var numberRecommendations = spotifyResponse[0].tracks.length
 
-    // Get each spotify albumID
-    $.each(spotifyResponse[0].tracks, function (i, tracks) {
-        //console.log(tracks.album.id)
-        var spotifyalbumID = tracks.album.id
+    $("#recommendsCount").append(numberRecommendations + " Recommendations Found");
 
-        ipcRenderer.send("spotify_album", [spotifyalbumID])
-    });
-
+    if (numberRecommendations > 1) {
+        // Get each spotify albumID
+        $.each(spotifyResponse[0].tracks, function (i, tracks) {
+            var spotifyalbumID = tracks.album.id
+            ipcRenderer.send("spotify_album", [spotifyalbumID])
+        });
+    }
+    else {
+        // Display modal information box
+        $('#okModal').css('display', 'block');
+        $('.modalHeader').empty();
+        $('#okModalText').empty();
+        $(".modalFooter").empty();
+        $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
+        $('#okModalText').append("<div class='modalIcon'><img src='./graphics/information.png'></div><p>&nbsp<br><b>No recommendations could be found.</b><br><br>&nbsp</p >");
+        var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
+        $('.modalFooter').append(buttons);
+        $("#btnOkModal").focus();
+        $("#btnSync").prop("disabled", false);
+        $('.background').css('filter', 'blur(5px)');
+        // Hide recommendations page and go back
+        $("#divTrackListing").css("display", "none");
+        $("#divContent").css("width", "auto");
+        window.history.back();
+        return false;
+    }
 });
-
 
 ipcRenderer.on("from_album", (event, data) => {
-    console.log(data)
     var spotifyResponse = data[0];
+    var artist = spotifyResponse.artists[0].name;
+    var title = spotifyResponse.name;
+    var imageLink = spotifyResponse.images[1].url;
 
-    var name = spotifyResponse.artists[0].name;
-    var album = spotifyResponse.name;
-    console.log(album + " by " + name)
-    //var spotifyID = spotifyResponse.artists.items[0].id;
-    //console.log("ID = " + spotifyID)
+    // Set variable for overlay class on album image
+    var overlay = "overlay";
+    if (global_ArtIconShape == "round") {
+        overlay = "overlayRound";
+    }
 
+    // Variable for album list
+    var ul = $('#ulRecommends');
 
+    // Napster search link for album
+    var albumLink = napsterUrl + artist + "+" + title;
+    var encodedUrl = encodeURI(albumLink);
+
+    if (global_ArtIconSize == "small") {
+        $(ul).attr('class', 'albumDisplay');
+        var li = $('<li><a><img class="' + global_ArtIconShape + '"><span></span></a></li>');
+        li.find('img').attr('src', imageLink);
+        li.find('a').attr('href', encodedUrl);
+        li.find('a').attr('target', '_blank');
+        li.find('span').append('<br><b>' + artist + '</b><br>' + title);
+        li.appendTo(ul);
+    }
+
+    // Large art icons
+    else {
+        $(ul).attr('class', 'albumDisplayLarge');
+        var li = $('<li><a><img class="' + global_ArtIconShape + '"><div class="' + overlay + '"><div class="textAlbum"><span></span></div></div></a></li>');
+        li.find('img').attr('src', imageLink);
+        li.find('a').attr('href', encodedUrl);
+        li.find('a').attr('target', '_blank');
+        li.find('span').append('<br><b>' + artist + '</b><br>' + title);
+        li.appendTo(ul);
+    }
 });
 
+// ---------------------------------------
 // Display Modal Information box for uncaught error in main process.
 ipcRenderer.on("from_main_error", (event, data) => {  
     var error = data;

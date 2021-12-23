@@ -751,8 +751,8 @@ ipcMain.on('spotify_getAudioFeatures', (event, data) => {
 
 // Get artist ID
 ipcMain.on('spotify_getArtistID', (event, data) => {
-    var query = data[0];
-
+    var artist = data[0];
+    var query = artist + '&type=artist';
     request.post(authOptions, function (error, response, body) {
         if (!error && response.statusCode === 200) {
             // Encode URL
@@ -768,7 +768,7 @@ ipcMain.on('spotify_getArtistID', (event, data) => {
                 json: true
             };
             request.get(options, function (error, response, body) {
-                win.webContents.send("from_getArtistID", [body]);
+                win.webContents.send("from_getArtistID", [body, artist]);
             });
         }
     });
@@ -781,7 +781,7 @@ ipcMain.on('spotify_recommendations', (event, data) => {
     request.post(authOptions, function (error, response, body) {
         if (!error && response.statusCode === 200) {
             // Encode URL
-            var url = 'https://api.spotify.com/v1/recommendations?limit=10&market=GB&seed_artists=' + query;
+            var url = 'https://api.spotify.com/v1/recommendations?limit=12&market=GB&seed_artists=' + query;
             var encodedUrl = encodeURI(url);
             // Use the access token to access the Spotify Web API
             var token = body.access_token;
