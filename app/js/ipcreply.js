@@ -265,7 +265,6 @@ ipcRenderer.on("from_getArtistID", (event, data) => {
 ipcRenderer.on("from_recommendations", (event, data) => {
     var spotifyResponse = data;
     var numberRecommendations = spotifyResponse[0].tracks.length
-
     $("#recommendsCount").append(numberRecommendations + " Recommendations Found");
 
     if (numberRecommendations > 1) {
@@ -335,6 +334,47 @@ ipcRenderer.on("from_album", (event, data) => {
         li.find('span').append('<br><b>' + artist + '</b><br>' + title);
         li.appendTo(ul);
     }
+});
+
+ipcRenderer.on("from_getNewReleases", (event, data) => {
+    var spotifyResponse = data;
+    //console.log(JSON.stringify(data, null, 4));
+    console.log(spotifyResponse)
+
+    var numberReleases = spotifyResponse[0].albums.items.length
+
+    console.log(numberReleases)
+
+    if (numberReleases > 1) {
+        // Get each spotify albumID
+        $.each(spotifyResponse[0].albums.items, function (i, items) {
+            console.log("Artist = " + items.artists[0].name)
+            console.log("Album = " + items.name)
+            console.log("Release Date = " + items.release_date)
+        });
+    }
+
+    /*
+    else {
+        // Display modal information box
+        $('#okModal').css('display', 'block');
+        $('.modalHeader').empty();
+        $('#okModalText').empty();
+        $(".modalFooter").empty();
+        $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
+        $('#okModalText').append("<div class='modalIcon'><img src='./graphics/information.png'></div><p>&nbsp<br><b>No new releases could be found.</b><br><br>&nbsp</p >");
+        var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
+        $('.modalFooter').append(buttons);
+        $("#btnOkModal").focus();
+        $("#btnSync").prop("disabled", false);
+        $('.background').css('filter', 'blur(5px)');
+        // Hide recommendations page and go back
+        $("#divTrackListing").css("display", "none");
+        $("#divContent").css("width", "auto");
+        window.history.back();
+        return false;
+    }
+    */
 });
 
 // ---------------------------------------

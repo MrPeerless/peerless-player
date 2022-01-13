@@ -159,6 +159,18 @@ $(document).on('click', '#btnMood', function () {
     moodShuffle()
 });
 
+// Function to perform when Show New Releases button clicked on
+$(document).on('click', '#btnNewReleases', function () {
+    event.preventDefault();
+    $("#divTrackListing").css("display", "none");
+    $("#divContent").css("width", "auto");
+    $('#spnAtoZmenu').css('display', 'inline')
+    $('#divContent').load("./html/newreleases.html");
+    $(document).ajaxComplete(function () {
+        $(document).scrollTop(0);
+    });
+});
+
 async function moodShuffle() {
     var mood = $('#sltMood').val();
     // Select all artist's albums from the database

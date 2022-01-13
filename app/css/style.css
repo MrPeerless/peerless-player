@@ -92,12 +92,18 @@ a.anchortop {
     position: relative;
     top: -60px;
 }
+#editAlbumDetails{
+    width: 625px;
+}
+.hrPlaying{
+    width: 200px;
+}
 /*Offset for display*/
-.anchor{
-    display:block;
+.anchor {
+    display: block;
     height: 60px;
     margin-top: -60px;
-    visibility:hidden;
+    visibility: hidden;
 }
 
 .tracks:target {
@@ -161,22 +167,22 @@ select {
 }
 
 .sltMood1 {
-    width: 279px;
+    width: 281px;
     border: 1px solid #000000;
 }
 
 .sltMood2 {
-    width: 279px;
+    width: 281px;
     border: 1px solid #000000;
 }
 
 .sltTempo1 {
-    width: 279px;
+    width: 281px;
     border: 1px solid #000000;
 }
 
 .sltTempo2 {
-    width: 279px;
+    width: 281px;
     border: 1px solid #000000;
 }
 /* PAGE BUTTON STYLES
@@ -556,7 +562,7 @@ textarea {
 #lblGenre2 {
     text-align: right;
     width: 60px;
-    margin-left: 653px;
+    margin-left: 654px;
     margin-right: 1px;
     display: none;
 }
@@ -564,7 +570,7 @@ textarea {
 #lblGenre2Edit {
     text-align: right;
     width: 60px;
-    margin-left: 648px;
+    margin-left: 654px;
     margin-right: 1px;
     display: inline-block;
 }
@@ -576,7 +582,7 @@ textarea {
 }
 
 #inpGenre2Edit {
-    width: 170px;
+    width: 168px;
     border: 1px solid #000000;
     display: inline-block;
 }
@@ -584,7 +590,7 @@ textarea {
 #lblGenre3 {
     text-align: right;
     width: 60px;
-    margin-left: 653px;
+    margin-left: 654px;
     margin-right: 1px;
     display: none;
 }
@@ -592,7 +598,7 @@ textarea {
 #lblGenre3Edit {
     text-align: right;
     width: 60px;
-    margin-left: 648px;
+    margin-left: 654px;
     margin-right: 1px;
     display: inline-block;
 }
@@ -604,7 +610,7 @@ textarea {
 }
 
 #inpGenre3Edit {
-    width: 170px;
+    width: 168px;
     border: 1px solid #000000;
     display: inline-block;
 }

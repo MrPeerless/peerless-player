@@ -44,6 +44,7 @@
     <Compile Include="App\js\editalbum.js" />
     <Compile Include="App\js\ipcreply.js" />
     <Compile Include="app\js\mainmenu.js" />
+    <Compile Include="App\js\newreleases.js" />
     <Compile Include="app\js\playlistfunctions.js" />
     <Compile Include="App\js\playlistsexported.js" />
     <Compile Include="App\js\preload.js" />
@@ -170,6 +171,7 @@
     <Content Include="App\html\controlsheader.html" />
     <Content Include="App\html\editalbum.html" />
     <Content Include="App\html\keyboardshortcuts.html" />
+    <Content Include="App\html\newreleases.html" />
     <Content Include="App\html\playlistsexported.html" />
     <Content Include="App\html\recommendations.html" />
     <Content Include="docs\pages_privacy.html" />

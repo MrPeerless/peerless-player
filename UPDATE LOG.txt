@@ -73,4 +73,10 @@
 1. Fixed expired certificate error when importing music.
 2. Bumped:- jimp:0.16.1, sqlite3:5.0.2, electron-builder:22.14.5, electron:16.0.4
 
-**** VERSION 0.3.3 UPDATES ****
+**** VERSION 0.4.0 UPDATES ****
+1. Music recommendations added to artist page.
+2. Search both Spotify and Musicbrainz servers for album artwork.
+3. Improvements to api search queries to fetch metadata.
+
+
+

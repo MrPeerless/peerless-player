@@ -191,13 +191,17 @@ ipcMain.on('read_album_directory', (event, message) => {
     var artist = message[2];
     var album = message[3];
     var fnames = [];
+    var counter = 0;
+
     // Read all files from album directory
     var files = fs.readdirSync(dirPath + artist + "/" + album + "/");
 
+    // Loop through all files and find find audio files
     for (var i = 0; i < files.length; i++) {
         var ext = (path.extname(dirPath + artist + "/" + album + "/" + files[i]));
         if ((ext == '.mp3') || (ext == '.m4a') || (ext == '.flac') || (ext == '.wav')) {
-            fnames[i] = path.basename(dirPath + artist + "/" + album + "/" + files[i]);
+            fnames[counter] = path.basename(dirPath + artist + "/" + album + "/" + files[i]);
+            counter += 1;
         }
     }
     win.webContents.send("files_album_directory", [sender, fnames, artist, album]);
@@ -676,12 +680,20 @@ var authOptions = {
 ipcMain.on('spotify_search', (event, data) => {
     var query = data[0];
     var album = data[1];
+    var artist = data[2];
+    var sourceFunction = data[3];
+
+    // Remove following characters '& from album/artist query to avoid escaping
+    query = query.replace(/[']/g, "")
+    query = query.replace(" &", "")
+    query = query + "&type=album";
 
     request.post(authOptions, function (error, response, body) {
         if (!error && response.statusCode === 200) {
             // Encode URL
             var url = 'https://api.spotify.com/v1/search?q=' + query;
             var encodedUrl = encodeURI(url);
+
             // Use the access token to access the Spotify Web API
             var token = body.access_token;
             var options = {
@@ -692,7 +704,15 @@ ipcMain.on('spotify_search', (event, data) => {
                 json: true
             };
             request.get(options, function (error, response, body) {
-                win.webContents.send("from_spotify_search", [body, album]);
+                if (sourceFunction == "add") {
+                    win.webContents.send("from_spotify_search_add", [body, album, artist]);
+                }
+                if (sourceFunction == "artwork") {
+                    win.webContents.send("from_spotify_search_artwork", [body, album, artist]);
+                }
+                if (sourceFunction == "edit") {
+                    win.webContents.send("from_spotify_search_edit", [body, album, artist]);
+                }
             });
         }
     });
@@ -824,6 +844,28 @@ ipcMain.on('spotify_album', (event, data) => {
     });
 });
 
+// Get new releases
+ipcMain.on('spotify_getNewReleases', (event) => {
+
+    request.post(authOptions, function (error, response, body) {
+        if (!error && response.statusCode === 200) {
+            // Encode URL
+            var url = 'https://api.spotify.com/v1/browse/new-releases?country=GB&limit=24';
+            // Use the access token to access the Spotify Web API
+            var token = body.access_token;
+            var options = {
+                url: url,
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                },
+                json: true
+            };
+            request.get(options, function (error, response, body) {
+                win.webContents.send("from_getNewReleases", [body]);
+            });
+        }
+    });
+});
 
 
 // Get Audio Features of tracks from album

@@ -347,7 +347,7 @@ $(document).ready(function () {
         function queryArtistID(query) {
             var queryArtist = query;
             // Artist serach url
-            var url = "https://musicbrainz.org/ws/2/artist/?query=artist:" + queryArtist;
+            var url = musicbrainzUrl + "artist/?query=artist:" + queryArtist;
             // Encode url
             var encodedUrl = encodeURI(url);
             return $.ajax({
@@ -356,17 +356,42 @@ $(document).ready(function () {
         }
         // Function to process data from received xml file searching for artistID
         function artistIDProcessData(xml) {
-            var releaseGroupID = "";
-            $(xml).find('artist').each(function () {
-                var $artist = $(this);
-                var matchScore = $artist.attr('ns2:score')
-                // Find the 100% artist match
-                if (matchScore == "100") {
+            // Loop to find matching artist
+            for (var i = 0; i < 10; i++) {
+                var $artist = $(xml).find('artist').eq(i);
+                var name = $artist.find('name').eq(0).text().toLowerCase();
+                var artistCheck = artist.toLowerCase();
+
+                // Remove any punctuation to aid matching
+                name = name.replace(/[.,;:?()'-\/]/g, ' ')
+                // Remove  non standard unicode charcters from MB xml result
+                // Remove unicode char u-2019 single comma quotation mark
+                name = name.replace(/\u2019/g, ' ')
+                // Remove unicode char u-2013 en dash
+                name = name.replace(/\u2013/g, ' ')
+                // Remove unicode char u-2010 hyphen
+                name = name.replace(/\u2010/g, ' ')
+                // Remove any multiple spaces
+                name = name.replace(/  +/g, ' ')
+                // Remove any spaces at start and end
+                name = name.trim();
+                name = name.trimEnd();
+
+                // Remove any punctuation to aid matching
+                artistCheck = artistCheck.replace(/[.,;:?()'-\/]/g, ' ')
+                // Remove any multiple spaces
+                artistCheck = artistCheck.replace(/  +/g, ' ')
+                // Remove any spaces at start and end
+                artistCheck = artistCheck.trim();
+                artistCheck = artistCheck.trimEnd();
+
+                if (artistCheck == name) {
                     artistMBID = $artist.attr("id");
                     // Store Artist MBID in hidden field
                     $("#inpArtistMBID").val(artistMBID);
+                    break;
                 }
-            });
+            }
         }
     }
 });
