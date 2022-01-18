@@ -57,7 +57,7 @@ function createWindow() {
     })
 
     // Open the DevTools.
-    win.webContents.openDevTools()
+    //win.webContents.openDevTools()
 
     // Emitted when the window is closed.
     win.on('closed', () => {
@@ -850,7 +850,7 @@ ipcMain.on('spotify_getNewReleases', (event) => {
     request.post(authOptions, function (error, response, body) {
         if (!error && response.statusCode === 200) {
             // Encode URL
-            var url = 'https://api.spotify.com/v1/browse/new-releases?country=GB&limit=24';
+            var url = 'https://api.spotify.com/v1/browse/new-releases?country=GB&limit=2';
             // Use the access token to access the Spotify Web API
             var token = body.access_token;
             var options = {

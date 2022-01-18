@@ -201,7 +201,7 @@ ipcRenderer.on("files_album_directory", (event, data) => {
                 var tName = files[i].slice(0, -4);
             }
 
-            // Remove text before track number in track name
+            // Remove text if before track number in track name
             var firstDigit = tName.search(/\d/);
             tName = tName.slice(firstDigit, tName.length);
 
@@ -270,7 +270,7 @@ ipcRenderer.on("from_spotify_search_add", (event, data) => {
     // Find Spotify album ID to use to search for tracks
     $.each(spotifyResponse.albums.items, function (i, items) {
         var spotifyName = items.name.toLowerCase();
-        // Remove following punctuation ,;:()' from spotifyName and album to check for a match
+        // Remove following punctuation from spotifyName and album to check for a match
         var spotifyNameCheck = spotifyName.replace(/[.,;:?()'\-\[\]\/]/g, ' ')
         // Remove any multiple spaces
         spotifyNameCheck = spotifyNameCheck.replace(/  +/g, ' ')
@@ -404,7 +404,7 @@ ipcRenderer.on("from_spotify_search_add", (event, data) => {
                     $(xml).find('release-group').each(function () {
                         var $release = $(this);
                         var title = $release.find('title').text().toLowerCase();
-                        // Remove any commas to aid matching
+                        // Remove any punctuation to aid matching
                         title = title.replace(/[.,;:?()'\-\[\]\/]/g, ' ')
 
                         // Remove  non standard unicode charcters from MB xml result
@@ -422,7 +422,7 @@ ipcRenderer.on("from_spotify_search_add", (event, data) => {
 
                         var date = $release.find('first-release-date').text();
                         albumCheck = albumCheck.toLowerCase();
-                        // Remove any commas to aid matching
+                        // Remove any punctuation to aid matching
                         albumCheck = albumCheck.replace(/[.,;:?()'\-\[\]\/]/g, ' ')
                         // Remove any multiple spaces
                         albumCheck = albumCheck.replace(/  +/g, ' ')

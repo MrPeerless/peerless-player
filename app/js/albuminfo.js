@@ -18,7 +18,7 @@ $(document).ready(function () {
     $('#okModalText').empty();
     $(".modalFooter").empty();
     $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
-    $('#okModalText').append("<div class='modalIcon'><img src='./graphics/record.gif'></div><p>&nbsp<br>Retrieving information from database. Please wait.<br>&nbsp<br>&nbsp</p >");
+    $('#okModalText').append("<div class='modalIcon'><img src='./graphics/record.gif'></div><p>&nbsp<br>Retrieving information from wikidata.org. Please wait.<br>&nbsp<br>&nbsp</p >");
     var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
     $('.modalFooter').append(buttons);
     $("#btnOkModal").focus();

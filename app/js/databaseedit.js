@@ -82,7 +82,7 @@ ipcRenderer.on("from_spotify_search_artwork", (event, data) => {
     $.each(spotifyResponse.albums.items, function (i, items) {
         var spotifyName = items.name.toLowerCase();
 
-        // Remove following punctuation ,;:()' from spotifyName and check for a match
+        // Remove punctuation from spotifyName and check for a match
         var spotifyNameCheck = spotifyName.replace(/[.,;:()'\-?\[\]\/]/g, ' ')
         // Remove any spaces at end
         spotifyNameCheck = spotifyNameCheck.trimEnd();
@@ -91,7 +91,6 @@ ipcRenderer.on("from_spotify_search_artwork", (event, data) => {
             if (items.album_type == albumType || items.album_type == "compilation") {
                 $("#inpEditCoverArtURL").val(items.images[0].url);
                 $("#imgCoverArt").attr('src', items.images[0].url);
-
                 var artist = $("#inpArtistName").val();
                 var artFilePath = MUSIC_PATH + artist + "/" + album + "/tempArt.jpg"
                 var coverArtUrl = $("#inpEditCoverArtURL").val();
@@ -147,7 +146,7 @@ ipcRenderer.on("from_spotify_search_artwork", (event, data) => {
                 $(xml).find('release-group').each(function () {
                     var $release = $(this);
                     var title = $release.find('title').text().toLowerCase();
-                    // Remove any commas to aid matching
+                    // Remove any punctuation to aid matching
                     title = title.replace(/[.,;:?()'\-\[\]\/]/g, ' ')
                     // Remove  non standard unicode charcters from MB xml result
                     // Remove unicode char u-2019 single comma quotation mark
@@ -275,6 +274,7 @@ function getMetadata() {
     // Set variables
     var artist = $("#inpArtistName").val();
     var album = $("#inpAlbumName").val();
+    // Remove any punctuation to aid matching
     var albumCheck = album.replace(/[.,;:?()'\-\[\]\/]/g, ' ')
 
     // Remove any multiple spaces
@@ -330,8 +330,7 @@ function getMetadata() {
                 $(xml).find('release-group').each(function () {
                     var $release = $(this);
                     var title = $release.find('title').text().toLowerCase();
-
-                    // Remove any commas etc to aid matching
+                    // Remove any punctuation etc to aid matching
                     title = title.replace(/[.,;:?()'\-\[\]\/]/g, ' ')
                     // Remove  non standard unicode charcters from MB xml result
                     // Remove unicode char u-2019 single comma quotation mark
@@ -345,7 +344,6 @@ function getMetadata() {
                     // Remove any spaces at start and end
                     title = title.trim();
                     title = title.trimEnd();
-
                     var date = $release.find('first-release-date').text();
                     
                     if (albumCheck.startsWith(title)) {
@@ -445,12 +443,12 @@ ipcRenderer.on("from_spotify_search_edit", (event, data) => {
         albumType = "album"
     }
 
-    console.log(JSON.stringify(data, null, 4));
+    //console.log(JSON.stringify(data, null, 4));
 
     // Find Spotify album ID to use to search for tracks
     $.each(spotifyResponse.albums.items, function (i, items) {
         var spotifyName = items.name.toLowerCase();
-        // Remove following punctuation ,;:()' from spotifyName and album to check for a match
+        // Remove following punctuation from spotifyName and album to check for a match
         var spotifyNameCheck = spotifyName.replace(/[.,;:?()'\-\[\]\/]/g, ' ')
         // Remove any multiple spaces
         spotifyNameCheck = spotifyNameCheck.replace(/  +/g, ' ')
