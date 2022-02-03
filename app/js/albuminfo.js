@@ -12,6 +12,46 @@ $(document).ready(function () {
     // Call function to display album details and art
     displayAlbumInfo()
 
+    async function displayAlbumInfo() {
+        // Select the album details from database
+        var sql = "SELECT track.trackID, track.artistID, track.albumID, track.trackName, track.fileName, track.playTime, track.count, track.lastPlay, track.genre2, track.genre3, track.favourite, artist.artistName, album.albumName, album.genreID, album.releaseDate, album.albumTime, album.dateAdd, album.albumLastPlay, genre.genreName FROM track INNER JOIN artist ON track.artistID=artist.artistID INNER JOIN album ON track.albumID=album.albumID INNER JOIN genre ON album.genreID=genre.genreID WHERE track.albumID=? ORDER by track.trackName ASC";
+
+        var rows = await dBase.all(sql, global_AlbumID);
+
+        // Get folder.jpg file path
+        try {
+            var modifiedDate = Date().toLocaleString();
+            var artworkSource = MUSIC_PATH + rows[0].artistName + "/" + rows[0].albumName + "/folder.jpg?modified=" + modifiedDate;
+        }
+        catch{
+            var artworkSource = "./graphics/notFound.gif"
+        }
+        $("#imgInfoArtwork").attr('src', artworkSource);
+
+        // Create text for full genre list for album
+        var genreText = rows[0].genreName;
+        if (rows[0].genreName != rows[0].genre2) {
+            genreText = genreText + " - " + rows[0].genre2;
+        }
+        if (rows[0].genre2 != rows[0].genre3) {
+            genreText = genreText + " - " + rows[0].genre3;
+        }
+
+        var albumLastPlay = formatDate(rows[0].albumLastPlay);
+        // If album never played update variable with never else last play date
+        var lastPlayed;
+        if (albumLastPlay == null) {
+            lastPlayed = "Never";
+        }
+        else {
+            lastPlayed = albumLastPlay;
+        }
+
+        var albumDetails = " Released " + rows[0].releaseDate + "<br>Play time " + rows[0].albumTime + "<br>Last Played " + lastPlayed + "<br>";
+        $("#displayInfoAlbumName").append(rows[0].albumName + " <br>by " + rows[0].artistName);
+        $("#displayInfoAlbumDetails").append(albumDetails + genreText);
+    }
+
     // Display modal box checking wikipedia database
     $('#okModal').css('display', 'block');
     $('.modalHeader').empty();
@@ -44,6 +84,9 @@ $(document).ready(function () {
                     prop: 'info',
                     inprop: 'url',
                     gsrsearch: '"' + artist + '" intitle:"' + album + '" album'
+                },
+                error: function (textStatus) {
+                    ajaxError(textStatus.statusText, textStatus.status, wikiQueryUrl)
                 }
             });
         }
@@ -62,6 +105,9 @@ $(document).ready(function () {
                     prop: 'info',
                     inprop: 'url',
                     gsrsearch: artist + ' intitle:"' + album + '" album'
+                },
+                error: function (textStatus) {
+                    ajaxError(textStatus.statusText, textStatus.status, wikiQueryUrl)
                 }
             });
         }
@@ -89,6 +135,9 @@ $(document).ready(function () {
                     prop: 'extracts',
                     redirects: '1',
                     pageids: queryWikiPageID
+                },
+                error: function (textStatus) {
+                    ajaxError(textStatus.statusText, textStatus.status, wikiQueryUrl)
                 }
             });
         }
@@ -137,45 +186,6 @@ $(document).ready(function () {
         }
     }
 
-    async function displayAlbumInfo() {
-        // Select the album details from database
-        var sql = "SELECT track.trackID, track.artistID, track.albumID, track.trackName, track.fileName, track.playTime, track.count, track.lastPlay, track.genre2, track.genre3, track.favourite, artist.artistName, album.albumName, album.genreID, album.releaseDate, album.albumTime, album.dateAdd, album.albumLastPlay, genre.genreName FROM track INNER JOIN artist ON track.artistID=artist.artistID INNER JOIN album ON track.albumID=album.albumID INNER JOIN genre ON album.genreID=genre.genreID WHERE track.albumID=? ORDER by track.trackName ASC";
-        var rows = await dBase.all(sql, global_AlbumID);
-
-        // Get folder.jpg file path
-        try {
-            var modifiedDate = Date().toLocaleString();
-            var artworkSource = MUSIC_PATH + rows[0].artistName + "/" + rows[0].albumName + "/folder.jpg?modified=" + modifiedDate;
-        }
-        catch{
-            var artworkSource = "./graphics/notFound.gif"
-        }
-        $("#imgInfoArtwork").attr('src', artworkSource);
-
-        // Create text for full genre list for album
-        var genreText = rows[0].genreName;
-        if (rows[0].genreName != rows[0].genre2) {
-            genreText = genreText + " - " + rows[0].genre2;
-        }
-        if (rows[0].genre2 != rows[0].genre3) {
-            genreText = genreText + " - " + rows[0].genre3;
-        }
-
-        var albumLastPlay = formatDate(rows[0].albumLastPlay);
-        // If album never played update variable with never else last play date
-        var lastPlayed;
-        if (albumLastPlay == null) {
-            lastPlayed = "Never";
-        }
-        else {
-            lastPlayed = albumLastPlay;
-        }
-
-        var albumDetails = " Released " + rows[0].releaseDate + "<br>Play time " + rows[0].albumTime + "<br>Last Played " + lastPlayed + "<br>";
-        $("#displayInfoAlbumName").append(rows[0].albumName + " <br>by " + rows[0].artistName);
-        $("#displayInfoAlbumDetails").append(albumDetails + genreText);
-    }
-
     function noResult() {
         // Hide please wait modal box
         $('#okModal').css('display', 'none');
@@ -186,7 +196,7 @@ $(document).ready(function () {
         $('#okModalText').empty();
         $(".modalFooter").empty();
         $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
-        $('#okModalText').append("<div class='modalIcon'><img src='./graphics/information.png'></div><p>&nbsp<br><b>" + album + "</b> not found in album info database.<br>&nbsp<br>&nbsp</p>");
+        $('#okModalText').append("<div class='modalIcon'><img src='./graphics/information.png'></div><p>&nbsp<br><b>" + album + "</b> not found in wikidata database.<br>&nbsp<br>&nbsp</p>");
         var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
         $('.modalFooter').append(buttons);
         $("#btnOkModal").focus();
@@ -195,4 +205,35 @@ $(document).ready(function () {
         $('#divTrackListing').load("./html/displayalbum.html?artist=" + global_ArtistID + "&album=" + global_AlbumID);
         return;
     }
+
+    function ajaxError(statusText, status, url) {
+        // Hide modal box
+        $('#okModal').css('display', 'none');
+        $('.background').css('filter', 'blur(0px)');
+        // Display modal box if no artistID found in Musicbrainz database
+        $('#okModal').css('display', 'block');
+        $('.modalHeader').empty();
+        $('#okModalText').empty();
+        $(".modalFooter").empty();
+        $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
+        $('#okModalText').append("<div class='modalIcon'><img src='./graphics/warning.png'></div><p><b>Could not connect to remote server.</b><br>" + url + "<br>The remote server may be currently unavailable. See error code below.<br><b>" + statusText + ": " + status + "</b><br>&nbsp<br></p>");
+        var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
+        $('.modalFooter').append(buttons);
+        $("#btnOkModal").focus();
+        $('.background').css('filter', 'blur(5px)');
+        // If tracklisting is true display current album tracklisting page
+        if (global_TrackListing == true) {
+            $("#divTrackListing").load("./html/displayalbum.html?artist=" + global_ArtistID + "&album=" + global_AlbumID);
+        }
+        else {
+            // Hide biography page and go back
+            $("#divTrackListing").css("display", "none");
+            $("#divContent").css("width", "auto");
+        }
+        return;
+    }
+
+    backgroundChange();
+
+    
 });

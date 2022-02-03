@@ -324,7 +324,10 @@ ipcRenderer.on("from_spotify_search_add", (event, data) => {
         // Encode url
         var encodedUrl = encodeURI(url);
         return $.ajax({
-            url: encodedUrl
+            url: encodedUrl,
+            error: function (textStatus) {
+                ajaxErrorDA(textStatus.statusText, textStatus.status, url)
+            }
         });
     }
 
@@ -383,7 +386,10 @@ ipcRenderer.on("from_spotify_search_add", (event, data) => {
                     url = musicbrainzUrl + "release-group?artist=" + queryArtistID + "&limit=100&type=album|ep"
                 }
                 return $.ajax({
-                    url: url
+                    url: url,
+                    error: function (textStatus) {
+                        ajaxErrorDA(textStatus.statusText, textStatus.status, url)
+                    }
                 });
             }
 
@@ -447,7 +453,10 @@ ipcRenderer.on("from_spotify_search_add", (event, data) => {
                                 // Artist search url
                                 var url = musicbrainzUrl + "release?release-group=" + queryreleaseGroupID
                                 return $.ajax({
-                                    url: url
+                                    url: url,
+                                    error: function (textStatus) {
+                                        ajaxErrorDA(textStatus.statusText, textStatus.status, url)
+                                    }
                                 });
                             }
 
@@ -519,7 +528,10 @@ ipcRenderer.on("from_spotify_search_add", (event, data) => {
                                 // Artist serach url
                                 var url = musicbrainzUrl + "release-group/" + queryreleaseGroupID + "?inc=genres"
                                 return $.ajax({
-                                    url: url
+                                    url: url,
+                                    error: function (textStatus) {
+                                        ajaxErrorDA(textStatus.statusText, textStatus.status, url)
+                                    }
                                 });
                             }
 
@@ -554,7 +566,10 @@ ipcRenderer.on("from_spotify_search_add", (event, data) => {
                 // Artist serach url
                 var url = musicbrainzUrl + "artist/" + queryArtistID
                 return $.ajax({
-                    url: url
+                    url: url,
+                    error: function (textStatus) {
+                        ajaxErrorDA(textStatus.statusText, textStatus.status, url)
+                    }
                 });
             }
 
@@ -2730,5 +2745,23 @@ ipcRenderer.on("add_artwork", (event, data) => {
     $("#imgCoverArt").attr('src', coverArt);
     $("#inpCoverArtURL").val(coverArt);
 });
+
+// Error handling for ajax errors
+function ajaxErrorDA(statusText, status, url) {
+    // Hide modal box
+    $('#okModal').css('display', 'none');
+    $('.background').css('filter', 'blur(0px)');
+    // Display modal box if no artistID found in Musicbrainz database
+    $('#okModal').css('display', 'block');
+    $('.modalHeader').empty();
+    $('#okModalText').empty();
+    $(".modalFooter").empty();
+    $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
+    $('#okModalText').append("<div class='modalIcon'><img src='./graphics/warning.png'></div><p><b>Could not connect to remote server.</b><br>" + url + "<br>The remote server may be currently unavailable. See error code below.<br><b>" + statusText + ": " + status + "</b><br>&nbsp<br></p>");
+    var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
+    $('.modalFooter').append(buttons);
+    $("#btnOkModal").focus();
+    $('.background').css('filter', 'blur(5px)');
+}
 
 

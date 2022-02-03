@@ -104,6 +104,16 @@ $(document).ready(function () {
             $('#spnAtoZmenu').append("<b>Sort: </b>" + sort);
         }
 
+        // Smooth scrolling when # anchor clicked
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (event) {
+                event.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
         // Counter for most played album
         var i = 1;
 

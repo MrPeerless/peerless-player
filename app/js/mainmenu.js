@@ -140,6 +140,15 @@ const template = [
                     currentWindow.webContents.send('Clear Queued Music');
                 }
             },
+            {
+                type: 'separator'
+            },
+            {
+                label: 'New Music Releases',
+                click: function (menuItem, currentWindow) {
+                    currentWindow.webContents.send('New Music Releases');
+                }
+            },
         ]
     },
 

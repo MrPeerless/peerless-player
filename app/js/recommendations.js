@@ -4,7 +4,7 @@ $(document).ready(function () {
     // Display heading with artist name
     $("#recommendsArtistName").append(global_AppName + " Recommendations");
     $("#recommendsDetails").append("Based on " + artist);
-    
+
     // Send IPC to search Spotify for album and artist
     ipcRenderer.send("spotify_getArtistID", [artist])
 

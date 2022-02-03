@@ -265,7 +265,7 @@ ipcRenderer.on("from_getArtistID", (event, data) => {
 ipcRenderer.on("from_recommendations", (event, data) => {
     var spotifyResponse = data;
     var numberRecommendations = spotifyResponse[0].tracks.length
-    $("#recommendsCount").append(numberRecommendations + " Recommendations Found");
+    $("#recommendsCount").append("0");
 
     if (numberRecommendations > 1) {
         // Get each spotify albumID
@@ -300,39 +300,59 @@ ipcRenderer.on("from_album", (event, data) => {
     var artist = spotifyResponse.artists[0].name;
     var title = spotifyResponse.name;
     var imageLink = spotifyResponse.images[1].url;
-
+    var check = false;
+    // Get number of recommendations found
+    var numberRecommendations = Number($("#recommendsCount").text());
+    // Get list of owned artist albums from hidden field
+    var artistAlbums = $("#hiddenAlbumList").text();
+    // Get list of albums recommended
+    var recommendedAlbums = $("#hiddenRecommendList").text();
+    // Variable for album list
+    var ul = $('#ulRecommends');
     // Set variable for overlay class on album image
     var overlay = "overlay";
     if (global_ArtIconShape == "round") {
         overlay = "overlayRound";
     }
-
-    // Variable for album list
-    var ul = $('#ulRecommends');
-
-    // Napster search link for album
-    var albumLink = napsterUrl + artist + "+" + title;
-    var encodedUrl = encodeURI(albumLink);
-
-    if (global_ArtIconSize == "small") {
-        $(ul).attr('class', 'albumDisplay');
-        var li = $('<li><a><img class="' + global_ArtIconShape + '"><span></span></a></li>');
-        li.find('img').attr('src', imageLink);
-        li.find('a').attr('href', encodedUrl);
-        li.find('a').attr('target', '_blank');
-        li.find('span').append('<br><b>' + artist + '</b><br>' + title);
-        li.appendTo(ul);
+    // Change album title to lower case
+    var lcTitle = title.toLowerCase();
+    
+    // Check if album title is in database or already listed in recommendations
+    if (artistAlbums.includes(lcTitle) || recommendedAlbums.includes(lcTitle)) {
+        check = true;
     }
 
-    // Large art icons
-    else {
-        $(ul).attr('class', 'albumDisplayLarge');
-        var li = $('<li><a><img class="' + global_ArtIconShape + '"><div class="' + overlay + '"><div class="textAlbum"><span></span></div></div></a></li>');
-        li.find('img').attr('src', imageLink);
-        li.find('a').attr('href', encodedUrl);
-        li.find('a').attr('target', '_blank');
-        li.find('span').append('<br><b>' + artist + '</b><br>' + title);
-        li.appendTo(ul);
+    // Display album is not by artist in database or previoulsy listed
+    if (numberRecommendations < 12 & check == false) {
+        // Napster search link for album
+        var albumLink = napsterUrl + artist + "+" + title;
+        var encodedUrl = encodeURI(albumLink);
+        $("#hiddenRecommendList").append(lcTitle + ",");
+
+        if (global_ArtIconSize == "small") {
+            $(ul).attr('class', 'albumDisplay');
+            var li = $('<li><a><img class="' + global_ArtIconShape + '"><span></span></a></li>');
+            li.find('img').attr('src', imageLink);
+            li.find('a').attr('href', encodedUrl);
+            li.find('a').attr('target', '_blank');
+            li.find('span').append('<br><b>' + artist + '</b><br>' + title);
+            li.appendTo(ul);
+        }
+
+        // Large art icons
+        else {
+            $(ul).attr('class', 'albumDisplayLarge');
+            var li = $('<li><a><img class="' + global_ArtIconShape + '"><div class="' + overlay + '"><div class="textAlbum"><span></span></div></div></a></li>');
+            li.find('img').attr('src', imageLink);
+            li.find('a').attr('href', encodedUrl);
+            li.find('a').attr('target', '_blank');
+            li.find('span').append('<br><b>' + artist + '</b><br>' + title);
+            li.appendTo(ul);
+        }
+        // Count number of recommendations
+        numberRecommendations += 1;
+        $("#recommendsCount").empty();
+        $("#recommendsCount").append(numberRecommendations);
     }
 });
 

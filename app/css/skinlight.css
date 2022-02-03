@@ -145,6 +145,17 @@ button[disabled] {
     background: #eeeeee;
 }
 
+.divBackToTop {
+    border: 1px solid black;
+    background: #777777;
+    color: white;
+}
+
+    .divBackToTop:hover {
+        color: #005b96;
+    }
+
+
 /*ADD TO DATABASE FORM
 ##########################*/
 

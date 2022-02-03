@@ -73,7 +73,18 @@ $(document).ready(function () {
                 }
             }
             $('#spnAtoZmenu').append(menu + '<input type="text" id="songSearch" name="songSearch" placeholder="FIlter the song table.." title="Type in a term to filter">' + sort);
+
+            // Smooth scrolling when # anchor clicked
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (event) {
+                    event.preventDefault();
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
         }
+
         // If sort is not set to A - Z
         else {
             // Only display filter box and sort select

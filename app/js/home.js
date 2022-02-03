@@ -5,6 +5,8 @@ $(document).ready(function () {
         overlay = "overlayRound";
     }
 
+    $("#divTrackListing").empty();
+
     // Set number of columns to display depending on screenwidth
     var totalList = 0;
     var totalFirstRow = 0;
@@ -242,5 +244,4 @@ $(document).ready(function () {
     }
 
     backgroundChange();
-
 });

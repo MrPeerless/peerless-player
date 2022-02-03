@@ -32,7 +32,10 @@ $(document).ready(function () {
         // Encode url
         var encodedUrl = encodeURI(url);
         return $.ajax({
-            url: encodedUrl
+            url: encodedUrl,
+            error: function (textStatus) {
+                ajaxError(textStatus.statusText, textStatus.status, url)
+            }
         });
     }
 
@@ -109,7 +112,10 @@ $(document).ready(function () {
                 var url = musicbrainzUrl + "artist/" + queryArtist + "?inc=url-rels"
                 // Send ajax request to musicbrainz
                 return $.ajax({
-                    url: url
+                    url: url,
+                    error: function (textStatus) {
+                        ajaxError(textStatus.statusText, textStatus.status, url)
+                    }
                 });
             }
 
@@ -135,15 +141,19 @@ $(document).ready(function () {
                 // Function to send ajax xml query to Musicbrainz server to get URLs
                 function wikiUrlQuery(query) {
                     var queryWikiID = query;
+                    var url = 'https://www.wikidata.org/w/api.php?'
                     // Send ajax query to wikipedia
                     return $.ajax({
-                        url: 'https://www.wikidata.org/w/api.php?',
+                        url: url,
                         data: {
                             action: 'wbgetentities',
                             format: 'xml',
                             props: 'sitelinks/urls',
                             sitefilter: 'enwiki',
                             ids: queryWikiID
+                        },
+                        error: function (textStatus) {
+                            ajaxError(textStatus.statusText, textStatus.status, url)
                         }
                     });
                 }
@@ -166,7 +176,10 @@ $(document).ready(function () {
                                 prop: 'extracts',
                                 //exintro: '', use this option to just get opening summary paragraph
                                 redirects: '1',
-                                titles: query
+                                titles: query,
+                            },
+                            error: function (textStatus) {
+                                ajaxError(textStatus.statusText, textStatus.status, wikiQueryUrl)
                             }
                         });
                     }
@@ -218,6 +231,9 @@ $(document).ready(function () {
                                     pageids: queryPageid,
                                     prop: 'pageprops|pageterms',
                                     format: 'xml'
+                                },
+                                error: function (textStatus) {
+                                    ajaxError(textStatus.statusText, textStatus.status, wikiQueryUrl)
                                 }
                             });
                         }
@@ -257,6 +273,9 @@ $(document).ready(function () {
                                         prop: 'imageinfo',
                                         iiprop: 'url',
                                         format: 'xml'
+                                    },
+                                    error: function (textStatus) {
+                                        ajaxError(textStatus.statusText, textStatus.status, wikiQueryUrl)
                                     }
                                 });
                             }
@@ -307,7 +326,10 @@ $(document).ready(function () {
                         var url = musicbrainzUrl + "artist/" + queryArtist + "?inc=url-rels"
                         // Send ajax request to musicbrainz
                         return $.ajax({
-                            url: url
+                            url: url,
+                            error: function (textStatus) {
+                                ajaxError(textStatus.statusText, textStatus.status, url)
+                            }
                         });
                     }
 
@@ -459,7 +481,7 @@ $(document).ready(function () {
         $('#okModalText').empty();
         $(".modalFooter").empty();
         $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
-        $('#okModalText').append("<div class='modalIcon'><img src='./graphics/information.png'></div><p>&nbsp<br><b>" + artist + "</b> not found in biography database.<br>&nbsp<br>&nbsp</p>");
+        $('#okModalText').append("<div class='modalIcon'><img src='./graphics/information.png'></div><p>&nbsp<br><b>" + artist + "</b> not found in wikidata database.<br>&nbsp<br>&nbsp</p>");
         var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
         $('.modalFooter').append(buttons);
         $("#btnOkModal").focus();
@@ -474,6 +496,34 @@ $(document).ready(function () {
             $("#divTrackListing").css("display", "none");
             $("#divContent").css("width", "auto"); 
         }    
+        return;
+    }
+
+    // Error handling for ajax errors
+    function ajaxError(statusText, status, url) {
+        // Hide modal box
+        $('#okModal').css('display', 'none');
+        $('.background').css('filter', 'blur(0px)');
+        // Display modal box if no artistID found in Musicbrainz database
+        $('#okModal').css('display', 'block');
+        $('.modalHeader').empty();
+        $('#okModalText').empty();
+        $(".modalFooter").empty();
+        $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
+        $('#okModalText').append("<div class='modalIcon'><img src='./graphics/warning.png'></div><p><b>Could not connect to remote server.</b><br>" + url + "<br>The remote server may be currently unavailable. See error code below.<br><b>" + statusText + ": " + status + "</b><br>&nbsp<br></p>");
+        var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
+        $('.modalFooter').append(buttons);
+        $("#btnOkModal").focus();
+        $('.background').css('filter', 'blur(5px)');
+        // If tracklisting is true display current album tracklisting page
+        if (global_TrackListing == true) {
+            $("#divTrackListing").load("./html/displayalbum.html?artist=" + global_ArtistID + "&album=" + global_AlbumID);
+        }
+        else {
+            // Hide biography page and go back
+            $("#divTrackListing").css("display", "none");
+            $("#divContent").css("width", "auto");
+        }
         return;
     }
 

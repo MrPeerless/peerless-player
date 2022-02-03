@@ -5,6 +5,7 @@ $(document).ready(function () {
         overlay = "overlayRound";
     }
 
+    var artistAlbums = [];
     var sort = "";
 
     displayArtistAlbums()
@@ -98,6 +99,10 @@ $(document).ready(function () {
         var ul = $('#ulArtistAlbums');
         rows.forEach((row) => {
             var albumName = row.albumName;
+
+            artistAlbums.push(albumName)
+
+
             if (global_AlbumSort == "added") {
                 var dateAdd = formatDate(row.dateAdd);
             }
@@ -171,12 +176,21 @@ $(document).ready(function () {
 
             i++;
         });
+
+        // Add album title to hidden list for recommendations to check against
+        for (var i = 0; i < artistAlbums.length; i++) {
+            var title = artistAlbums[i].toLowerCase();
+            $("#hiddenAlbumList").append(title + ",");
+        }
+
         // Shuffle tracks
         // Select all trackIDs from track table
         var sql = "SELECT trackID FROM track WHERE artistID=?";
         var tracks = await dBase.all(sql, global_ArtistID);
         shuffleArray(tracks)
     }
+
+
 
     backgroundChange();
 });

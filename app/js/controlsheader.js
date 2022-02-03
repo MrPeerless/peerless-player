@@ -29,6 +29,10 @@ ipcRenderer.on('Shuffle', (event) => {
     btnShuffleClick()
 });
 
+ipcRenderer.on('New Music Releases', (event) => {
+    btnNewReleases()
+});
+
 //######################
 //Player button controls
 //######################
@@ -62,7 +66,10 @@ function btnPlayClick() {
     global_Tracks = $('.tblTrackTable tr').find('td:last').map(function () {
         return $(this).text()
     }).get()
-    playTrack();
+    // Check that a track has been selected
+    if (global_TrackSelected) {
+        playTrack();
+    }
 }
 
 // Pause button
@@ -130,7 +137,6 @@ function btnShuffleClick() {
     }
 }
 
-
 // Mute button
 $(document).on('click', '#btnMute', function () {
     $("#audio1").prop("muted", !$("#audio1").prop("muted"));
@@ -142,7 +148,6 @@ $(document).on('click', '#btnMute', function () {
         $("button#btnMute").css("background", "url(./graphics/mute_off.png) no-repeat");
     }
 });
-
 
 // Fast Forward button
 $(document).on('click', '#btnFastForward', function () {
@@ -159,17 +164,38 @@ $(document).on('click', '#btnMood', function () {
     moodShuffle()
 });
 
-// Function to perform when Show New Releases button clicked on
 $(document).on('click', '#btnNewReleases', function () {
-    event.preventDefault();
-    $("#divTrackListing").css("display", "none");
-    $("#divContent").css("width", "auto");
-    $('#spnAtoZmenu').css('display', 'inline')
-    $('#divContent').load("./html/newreleases.html");
-    $(document).ajaxComplete(function () {
-        $(document).scrollTop(0);
-    });
+    btnNewReleases()
 });
+
+// Function to perform when Show New Releases button clicked on
+function btnNewReleases() {
+    // Check if online
+    var connection = navigator.onLine;
+    if (connection) {
+        $("#divTrackListing").css("display", "none");
+        $("#divContent").css("width", "auto");
+        $('#spnAtoZmenu').css('display', 'inline')
+        $('#divContent').load("./html/newreleases.html");
+        $(document).ajaxComplete(function () {
+            $(document).scrollTop(0);
+        });
+    }
+    else {
+        // If not connected display modal box warning
+        $('#okModal').css('display', 'block');
+        $('.modalHeader').empty();
+        $('#okModalText').empty();
+        $(".modalFooter").empty();
+        $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
+        $('#okModalText').append("<div class='modalIcon'><img src='./graphics/warning.png'></div><p>&nbsp<br><b>WARNING. No internet connection.</b><br>Please connect to the internet and try again.<br>&nbsp</p >");
+        var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
+        $('.modalFooter').append(buttons);
+        $("#btnOkModal").focus();
+        $('.background').css('filter', 'blur(5px)');
+        return
+    }
+}
 
 async function moodShuffle() {
     var mood = $('#sltMood').val();

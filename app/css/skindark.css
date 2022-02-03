@@ -112,7 +112,6 @@ button[disabled] {
 #######################*/
 
 #divControlsHeader {
-    /*background: #555555;*/
     background: #555555;
     color: #404040;
 }
@@ -145,6 +144,17 @@ button[disabled] {
 .container {
     background: #111111;
 }
+
+.divBackToTop {
+    border: 1px solid white;
+    background: #555555;
+    color: white;
+}
+
+    .divBackToTop:hover {
+        color: #9E0000;
+    }
+
 
 /*ADD TO DATABASE FORM
 ##########################*/

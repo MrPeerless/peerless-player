@@ -54,10 +54,12 @@ function createWindow() {
     // Show window once all contents loaded
     win.once('ready-to-show', () => {
         win.show();
+        // Check for updates
+        autoUpdater.checkForUpdatesAndNotify();
     })
 
     // Open the DevTools.
-    //win.webContents.openDevTools()
+    win.webContents.openDevTools()
 
     // Emitted when the window is closed.
     win.on('closed', () => {
@@ -77,8 +79,6 @@ app.on('ready', () => {
     app.allowRendererProcessReuse = false;
     // Create app window
     createWindow();
-    // Add check for updates
-    autoUpdater.checkForUpdatesAndNotify();
     // Set App Name for notifications
     app.setAppUserModelId("Peerless Player");
 });
@@ -128,7 +128,7 @@ function openFolderDialog(message) {
 
     // Open dialog box to browse directory
     dialog.showOpenDialog(win, options).then(result => {
-        // Set message data to retun to renderer
+        // Set message data to return to renderer
         data[0] = message[0];
         data[1] = result.filePaths;
         // Send message back to renderer with data result
@@ -801,7 +801,7 @@ ipcMain.on('spotify_recommendations', (event, data) => {
     request.post(authOptions, function (error, response, body) {
         if (!error && response.statusCode === 200) {
             // Encode URL
-            var url = 'https://api.spotify.com/v1/recommendations?limit=12&market=GB&seed_artists=' + query;
+            var url = 'https://api.spotify.com/v1/recommendations?limit=18&market=GB&seed_artists=' + query;
             var encodedUrl = encodeURI(url);
             // Use the access token to access the Spotify Web API
             var token = body.access_token;
@@ -850,7 +850,7 @@ ipcMain.on('spotify_getNewReleases', (event) => {
     request.post(authOptions, function (error, response, body) {
         if (!error && response.statusCode === 200) {
             // Encode URL
-            var url = 'https://api.spotify.com/v1/browse/new-releases?country=GB&limit=2';
+            var url = 'https://api.spotify.com/v1/browse/new-releases?country=GB&limit=36';
             // Use the access token to access the Spotify Web API
             var token = body.access_token;
             var options = {

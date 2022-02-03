@@ -110,6 +110,16 @@ $(document).ready(function () {
             $('#spnAtoZmenu').append('<b>Sort: </b>' + sort + '<span style="margin-left: 1.5em;">' + favouriteLink);
         }
 
+        // Smooth scrolling when # anchor clicked
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (event) {
+                event.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
         // Counter for most played album
         var i = 1;
 

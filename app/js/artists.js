@@ -65,8 +65,20 @@ $(document).ready(function () {
 
             }
         }
+
         $('#spnAtoZmenu').empty();
         $('#spnAtoZmenu').append(menu);
+
+        // Smooth scrolling when # anchor clicked
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (event) {
+                event.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
         artists.forEach((artist) => {
             var ul = $('#ulArtists');
             var splitArtist = artist.split("|");

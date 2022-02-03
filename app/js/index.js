@@ -320,6 +320,23 @@ ipcRenderer.on('Help Guide', (event) => {
     $("#btnSync").prop("disabled", false);
 });
 
+// Show Back To Top link when scrolling
+$(window).scroll(function () {
+    if ($(this).scrollTop() == 0) {
+        $('.divBackToTop').fadeOut();
+    }
+    else {
+        $('.divBackToTop').css('position', 'fixed');
+        $('.divBackToTop').fadeIn();
+    }
+});
+
+// Scroll back to top when link clicked
+$(document).on('click', '.divBackToTop', function (event) {
+    $('html, body').animate({ scrollTop: $(".divLayout").offset().top - 70 }, "slow");
+});
+
+
 //#########################
 // FUNCTIONS
 //#########################
@@ -1034,7 +1051,6 @@ $(document).ready(function () {
             // Load link 
             $("#divContent").css("width", "475px");
             $("#divTrackListing").css("display", "block");
-            //$("#divTrackListing").css("min-height", height);
             $("#divTrackListing").load("./html/discography.html");
         }
         else {
@@ -1075,7 +1091,6 @@ $(document).ready(function () {
             // Load link 
             $("#divContent").css("width", "475px");
             $("#divTrackListing").css("display", "block");
-            //$("#divTrackListing").css("min-height", height);
             $("#divTrackListing").load("./html/recommendations.html");
         }
         else {
@@ -1102,23 +1117,7 @@ $(document).ready(function () {
         var connection = navigator.onLine;
         // If connected to internet
         if (connection) {
-            // Get window width
-            var winWidth = $(window).width();
-            // Get window height
-            var winHeight = $(window).height();
-            var height = (winHeight - 60);
-
-            // If screen is less than 1215px wide reset divTracklisting margin-left effectively hiding content div
-            if (winWidth < 1215) {
-                $("#divTrackListing").css("margin-left", "240px");
-            }
-            else {
-                $("#divTrackListing").css("margin-left", "715px");
-            }
             // Load link 
-            $("#divContent").css("width", "475px");
-            $("#divTrackListing").css("display", "block");
-            //$("#divTrackListing").css("min-height", height);
             $("#divTrackListing").load("./html/albuminfo.html");
         }
         else {
@@ -1139,6 +1138,11 @@ $(document).ready(function () {
 
     // Open external web link from recommendations page
     $(document).on('click', '.divRecommends a', function (event) {
+        ipcRenderer.send('open_external', this.href)
+    });
+
+    // Open external web link from new releases page
+    $(document).on('click', '.divNewReleases a', function (event) {
         ipcRenderer.send('open_external', this.href)
     });
 
