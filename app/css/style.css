@@ -400,10 +400,6 @@ textarea {
     bottom: 10px;
     right: 10px;
     width: 100px;
-    padding: 5px;
-    border-radius: 5px;
-    text-align: center;
-    cursor: pointer;
     display: none;
 }
 
@@ -1247,22 +1243,24 @@ button#btnMoodExpand {
 }
 
 .appMainHeading {
-    float: left;
     margin-top: 15px;
-    margin-left: 15px;
-    margin-bottom: 5px;
+    margin-bottom: 3px;
+    display: flex;
+    justify-content: center;
 }
 
-.divDefaultPlayingText{
+.divDefaultPlayingText {
     float: left;
     min-width: 220px;
-    margin: 13px 0 0 15px;
-    animation: fadein 0s;
+    margin: 15px 0 0 20px;
 }
 
 .divPlayingText {
     float: left;
+    /*
     padding-left: 15px;
+        */
+    margin: 0px 0 0 20px;
 }
 
 .divDefaultInnerText{

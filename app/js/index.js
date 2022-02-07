@@ -332,7 +332,7 @@ $(window).scroll(function () {
 });
 
 // Scroll back to top when link clicked
-$(document).on('click', '.divBackToTop', function (event) {
+$(document).on('click', '#btnBackToTop', function (event) {
     $('html, body').animate({ scrollTop: $(".divLayout").offset().top - 70 }, "slow");
 });
 

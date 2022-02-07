@@ -33,11 +33,8 @@ $(document).ready(function () {
 
     ipcRenderer.on("from_getNewReleases", (event, data) => {
         spotifyResponse = data;
-
         // Get number of releases found
         var numberReleases = spotifyResponse[0].albums.items.length
-        //$("#numberNewReleases").text("Displaying " + numberReleases + " new releases.")
-
         // If more than 1 release found call function to display releases
         if (numberReleases > 1) {
             displayAll("all");
@@ -62,8 +59,6 @@ $(document).ready(function () {
             return false;
         }
     });
-
-    // The code to populate the newreleases.js page is in the ipcreply.js file
 
     // Click event for releaseType radio button
     $(document).on('click', 'input[name="releaseType"]', function () {
@@ -109,21 +104,18 @@ $(document).ready(function () {
         // Get each spotify albumID
         $.each(spotifyResponse[0].albums.items, function (i, items) {
             var artist = items.artists[0].name;
+            var albumLink = items.external_urls.spotify;
             if (selection == "all") {
                 var album = items.name;
                 var releaseDate = items.release_date;
                 var imageLink = items.images[1].url;
-
-                // Napster search link for album
-                var albumLink = napsterUrl + artist + "+" + album;
-                var encodedUrl = encodeURI(albumLink);
 
                 // Small art icons
                 if (global_ArtIconSize == "small") {
                     $(ul).attr('class', 'albumDisplay');
                     var li = $('<li><a><img class="' + global_ArtIconShape + '"><span></span></a></li>');
                     li.find('img').attr('src', imageLink);
-                    li.find('a').attr('href', encodedUrl);
+                    li.find('a').attr('href', albumLink);
                     li.find('a').attr('target', '_blank');
                     li.find('span').append('<br><b>' + artist + '</b><br>' + album + '</b><br>' + releaseDate);
                     li.appendTo(ul);
@@ -134,7 +126,7 @@ $(document).ready(function () {
                     $(ul).attr('class', 'albumDisplayLarge');
                     var li = $('<li><a><img class="' + global_ArtIconShape + '"><div class="' + overlay + '"><div class="textAlbum"><span></span></div></div></a></li>');
                     li.find('img').attr('src', imageLink);
-                    li.find('a').attr('href', encodedUrl);
+                    li.find('a').attr('href', albumLink);
                     li.find('a').attr('target', '_blank');
                     li.find('span').append('<br><b>' + artist + '</b><br>' + album + '</b><br>' + releaseDate);
                     li.appendTo(ul);
@@ -146,16 +138,12 @@ $(document).ready(function () {
                 var releaseDate = items.release_date;
                 var imageLink = items.images[1].url;
 
-                // Napster search link for album
-                var albumLink = napsterUrl + artist + "+" + album;
-                var encodedUrl = encodeURI(albumLink);
-
                 // Small art icons
                 if (global_ArtIconSize == "small") {
                     $(ul).attr('class', 'albumDisplay');
                     var li = $('<li><a><img class="' + global_ArtIconShape + '"><span></span></a></li>');
                     li.find('img').attr('src', imageLink);
-                    li.find('a').attr('href', encodedUrl);
+                    li.find('a').attr('href', albumLink);
                     li.find('a').attr('target', '_blank');
                     li.find('span').append('<br><b>' + artist + '</b><br>' + album + '</b><br>' + releaseDate);
                     li.appendTo(ul);
@@ -166,7 +154,7 @@ $(document).ready(function () {
                     $(ul).attr('class', 'albumDisplayLarge');
                     var li = $('<li><a><img class="' + global_ArtIconShape + '"><div class="' + overlay + '"><div class="textAlbum"><span></span></div></div></a></li>');
                     li.find('img').attr('src', imageLink);
-                    li.find('a').attr('href', encodedUrl);
+                    li.find('a').attr('href', albumLink);
                     li.find('a').attr('target', '_blank');
                     li.find('span').append('<br><b>' + artist + '</b><br>' + album + '</b><br>' + releaseDate);
                     li.appendTo(ul);
@@ -180,16 +168,12 @@ $(document).ready(function () {
                     var releaseDate = items.release_date;
                     var imageLink = items.images[1].url;
 
-                    // Napster search link for album
-                    var albumLink = napsterUrl + artist + "+" + album;
-                    var encodedUrl = encodeURI(albumLink);
-
                     // Small art icons
                     if (global_ArtIconSize == "small") {
                         $(ul).attr('class', 'albumDisplay');
                         var li = $('<li><a><img class="' + global_ArtIconShape + '"><span></span></a></li>');
                         li.find('img').attr('src', imageLink);
-                        li.find('a').attr('href', encodedUrl);
+                        li.find('a').attr('href', albumLink);
                         li.find('a').attr('target', '_blank');
                         li.find('span').append('<br><b>' + artist + '</b><br>' + album + '</b><br>' + releaseDate);
                         li.appendTo(ul);
@@ -200,7 +184,7 @@ $(document).ready(function () {
                         $(ul).attr('class', 'albumDisplayLarge');
                         var li = $('<li><a><img class="' + global_ArtIconShape + '"><div class="' + overlay + '"><div class="textAlbum"><span></span></div></div></a></li>');
                         li.find('img').attr('src', imageLink);
-                        li.find('a').attr('href', encodedUrl);
+                        li.find('a').attr('href', albumLink);
                         li.find('a').attr('target', '_blank');
                         li.find('span').append('<br><b>' + artist + '</b><br>' + album + '</b><br>' + releaseDate);
                         li.appendTo(ul);
@@ -221,22 +205,19 @@ $(document).ready(function () {
         $.each(spotifyResponse[0].albums.items, function (i, items) {
             var albumType = items.album_type;
             var artist = items.artists[0].name;
+            var albumLink = items.external_urls.spotify;
             if (albumType == "album") {
                 if (selection == "all") {
                     var album = items.name;
                     var releaseDate = items.release_date;
                     var imageLink = items.images[1].url;
 
-                    // Napster search link for album
-                    var albumLink = napsterUrl + artist + "+" + album;
-                    var encodedUrl = encodeURI(albumLink);
-                    
                     // Small art icons
                     if (global_ArtIconSize == "small") {
                         $(ul).attr('class', 'albumDisplay');
                         var li = $('<li><a><img class="' + global_ArtIconShape + '"><span></span></a></li>');
                         li.find('img').attr('src', imageLink);
-                        li.find('a').attr('href', encodedUrl);
+                        li.find('a').attr('href', albumLink);
                         li.find('a').attr('target', '_blank');
                         li.find('span').append('<br><b>' + artist + '</b><br>' + album + '</b><br>' + releaseDate);
                         li.appendTo(ul);
@@ -247,7 +228,7 @@ $(document).ready(function () {
                         $(ul).attr('class', 'albumDisplayLarge');
                         var li = $('<li><a><img class="' + global_ArtIconShape + '"><div class="' + overlay + '"><div class="textAlbum"><span></span></div></div></a></li>');
                         li.find('img').attr('src', imageLink);
-                        li.find('a').attr('href', encodedUrl);
+                        li.find('a').attr('href', albumLink);
                         li.find('a').attr('target', '_blank');
                         li.find('span').append('<br><b>' + artist + '</b><br>' + album + '</b><br>' + releaseDate);
                         li.appendTo(ul);
@@ -259,16 +240,12 @@ $(document).ready(function () {
                     var releaseDate = items.release_date;
                     var imageLink = items.images[1].url;
 
-                    // Napster search link for album
-                    var albumLink = napsterUrl + artist + "+" + album;
-                    var encodedUrl = encodeURI(albumLink);
-
                     // Small art icons
                     if (global_ArtIconSize == "small") {
                         $(ul).attr('class', 'albumDisplay');
                         var li = $('<li><a><img class="' + global_ArtIconShape + '"><span></span></a></li>');
                         li.find('img').attr('src', imageLink);
-                        li.find('a').attr('href', encodedUrl);
+                        li.find('a').attr('href', albumLink);
                         li.find('a').attr('target', '_blank');
                         li.find('span').append('<br><b>' + artist + '</b><br>' + album + '</b><br>' + releaseDate);
                         li.appendTo(ul);
@@ -279,7 +256,7 @@ $(document).ready(function () {
                         $(ul).attr('class', 'albumDisplayLarge');
                         var li = $('<li><a><img class="' + global_ArtIconShape + '"><div class="' + overlay + '"><div class="textAlbum"><span></span></div></div></a></li>');
                         li.find('img').attr('src', imageLink);
-                        li.find('a').attr('href', encodedUrl);
+                        li.find('a').attr('href', albumLink);
                         li.find('a').attr('target', '_blank');
                         li.find('span').append('<br><b>' + artist + '</b><br>' + album + '</b><br>' + releaseDate);
                         li.appendTo(ul);
@@ -293,16 +270,12 @@ $(document).ready(function () {
                         var releaseDate = items.release_date;
                         var imageLink = items.images[1].url;
 
-                        // Napster search link for album
-                        var albumLink = napsterUrl + artist + "+" + album;
-                        var encodedUrl = encodeURI(albumLink);
-
                         // Small art icons
                         if (global_ArtIconSize == "small") {
                             $(ul).attr('class', 'albumDisplay');
                             var li = $('<li><a><img class="' + global_ArtIconShape + '"><span></span></a></li>');
                             li.find('img').attr('src', imageLink);
-                            li.find('a').attr('href', encodedUrl);
+                            li.find('a').attr('href', albumLink);
                             li.find('a').attr('target', '_blank');
                             li.find('span').append('<br><b>' + artist + '</b><br>' + album + '</b><br>' + releaseDate);
                             li.appendTo(ul);
@@ -313,7 +286,7 @@ $(document).ready(function () {
                             $(ul).attr('class', 'albumDisplayLarge');
                             var li = $('<li><a><img class="' + global_ArtIconShape + '"><div class="' + overlay + '"><div class="textAlbum"><span></span></div></div></a></li>');
                             li.find('img').attr('src', imageLink);
-                            li.find('a').attr('href', encodedUrl);
+                            li.find('a').attr('href', albumLink);
                             li.find('a').attr('target', '_blank');
                             li.find('span').append('<br><b>' + artist + '</b><br>' + album + '</b><br>' + releaseDate);
                             li.appendTo(ul);
@@ -336,22 +309,19 @@ $(document).ready(function () {
         $.each(spotifyResponse[0].albums.items, function (i, items) {
             var albumType = items.album_type;
             var artist = items.artists[0].name;
+            var albumLink = items.external_urls.spotify;
             if (albumType == "single") {
                 if (selection == "all") {
                     var album = items.name;
                     var releaseDate = items.release_date;
                     var imageLink = items.images[1].url;
 
-                    // Napster search link for album
-                    var albumLink = napsterUrl + artist + "+" + album;
-                    var encodedUrl = encodeURI(albumLink);
-
                     // Small art icons
                     if (global_ArtIconSize == "small") {
                         $(ul).attr('class', 'albumDisplay');
                         var li = $('<li><a><img class="' + global_ArtIconShape + '"><span></span></a></li>');
                         li.find('img').attr('src', imageLink);
-                        li.find('a').attr('href', encodedUrl);
+                        li.find('a').attr('href', albumLink);
                         li.find('a').attr('target', '_blank');
                         li.find('span').append('<br><b>' + artist + '</b><br>' + album + '</b><br>' + releaseDate);
                         li.appendTo(ul);
@@ -362,7 +332,7 @@ $(document).ready(function () {
                         $(ul).attr('class', 'albumDisplayLarge');
                         var li = $('<li><a><img class="' + global_ArtIconShape + '"><div class="' + overlay + '"><div class="textAlbum"><span></span></div></div></a></li>');
                         li.find('img').attr('src', imageLink);
-                        li.find('a').attr('href', encodedUrl);
+                        li.find('a').attr('href', albumLink);
                         li.find('a').attr('target', '_blank');
                         li.find('span').append('<br><b>' + artist + '</b><br>' + album + '</b><br>' + releaseDate);
                         li.appendTo(ul);
@@ -374,16 +344,12 @@ $(document).ready(function () {
                     var releaseDate = items.release_date;
                     var imageLink = items.images[1].url;
 
-                    // Napster search link for album
-                    var albumLink = napsterUrl + artist + "+" + album;
-                    var encodedUrl = encodeURI(albumLink);
-
                     // Small art icons
                     if (global_ArtIconSize == "small") {
                         $(ul).attr('class', 'albumDisplay');
                         var li = $('<li><a><img class="' + global_ArtIconShape + '"><span></span></a></li>');
                         li.find('img').attr('src', imageLink);
-                        li.find('a').attr('href', encodedUrl);
+                        li.find('a').attr('href', albumLink);
                         li.find('a').attr('target', '_blank');
                         li.find('span').append('<br><b>' + artist + '</b><br>' + album + '</b><br>' + releaseDate);
                         li.appendTo(ul);
@@ -394,7 +360,7 @@ $(document).ready(function () {
                         $(ul).attr('class', 'albumDisplayLarge');
                         var li = $('<li><a><img class="' + global_ArtIconShape + '"><div class="' + overlay + '"><div class="textAlbum"><span></span></div></div></a></li>');
                         li.find('img').attr('src', imageLink);
-                        li.find('a').attr('href', encodedUrl);
+                        li.find('a').attr('href', albumLink);
                         li.find('a').attr('target', '_blank');
                         li.find('span').append('<br><b>' + artist + '</b><br>' + album + '</b><br>' + releaseDate);
                         li.appendTo(ul);
@@ -408,16 +374,12 @@ $(document).ready(function () {
                         var releaseDate = items.release_date;
                         var imageLink = items.images[1].url;
 
-                        // Napster search link for album
-                        var albumLink = napsterUrl + artist + "+" + album;
-                        var encodedUrl = encodeURI(albumLink);
-
                         // Small art icons
                         if (global_ArtIconSize == "small") {
                             $(ul).attr('class', 'albumDisplay');
                             var li = $('<li><a><img class="' + global_ArtIconShape + '"><span></span></a></li>');
                             li.find('img').attr('src', imageLink);
-                            li.find('a').attr('href', encodedUrl);
+                            li.find('a').attr('href', albumLink);
                             li.find('a').attr('target', '_blank');
                             li.find('span').append('<br><b>' + artist + '</b><br>' + album + '</b><br>' + releaseDate);
                             li.appendTo(ul);
@@ -428,7 +390,7 @@ $(document).ready(function () {
                             $(ul).attr('class', 'albumDisplayLarge');
                             var li = $('<li><a><img class="' + global_ArtIconShape + '"><div class="' + overlay + '"><div class="textAlbum"><span></span></div></div></a></li>');
                             li.find('img').attr('src', imageLink);
-                            li.find('a').attr('href', encodedUrl);
+                            li.find('a').attr('href', albumLink);
                             li.find('a').attr('target', '_blank');
                             li.find('span').append('<br><b>' + artist + '</b><br>' + album + '</b><br>' + releaseDate);
                             li.appendTo(ul);

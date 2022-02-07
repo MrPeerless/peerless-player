@@ -300,6 +300,7 @@ ipcRenderer.on("from_album", (event, data) => {
     var artist = spotifyResponse.artists[0].name;
     var title = spotifyResponse.name;
     var imageLink = spotifyResponse.images[1].url;
+    var albumLink = spotifyResponse.external_urls.spotify;
     var check = false;
     // Get number of recommendations found
     var numberRecommendations = Number($("#recommendsCount").text());
@@ -322,18 +323,20 @@ ipcRenderer.on("from_album", (event, data) => {
         check = true;
     }
 
+    // Don't display Various Artist albums
+    if (lcTitle == "various artists") {
+        check = true;
+    }
+
     // Display album is not by artist in database or previoulsy listed
     if (numberRecommendations < 12 & check == false) {
-        // Napster search link for album
-        var albumLink = napsterUrl + artist + "+" + title;
-        var encodedUrl = encodeURI(albumLink);
         $("#hiddenRecommendList").append(lcTitle + ",");
 
         if (global_ArtIconSize == "small") {
             $(ul).attr('class', 'albumDisplay');
             var li = $('<li><a><img class="' + global_ArtIconShape + '"><span></span></a></li>');
             li.find('img').attr('src', imageLink);
-            li.find('a').attr('href', encodedUrl);
+            li.find('a').attr('href', albumLink);
             li.find('a').attr('target', '_blank');
             li.find('span').append('<br><b>' + artist + '</b><br>' + title);
             li.appendTo(ul);
@@ -344,7 +347,7 @@ ipcRenderer.on("from_album", (event, data) => {
             $(ul).attr('class', 'albumDisplayLarge');
             var li = $('<li><a><img class="' + global_ArtIconShape + '"><div class="' + overlay + '"><div class="textAlbum"><span></span></div></div></a></li>');
             li.find('img').attr('src', imageLink);
-            li.find('a').attr('href', encodedUrl);
+            li.find('a').attr('href', albumLink);
             li.find('a').attr('target', '_blank');
             li.find('span').append('<br><b>' + artist + '</b><br>' + title);
             li.appendTo(ul);
@@ -354,6 +357,36 @@ ipcRenderer.on("from_album", (event, data) => {
         $("#recommendsCount").empty();
         $("#recommendsCount").append(numberRecommendations);
     }
+});
+
+ipcRenderer.on("spotify_error", (event, data) => {
+    var error = data[0];
+    var from = data[1];
+
+    // Display modal information box
+    $('#okModal').css('display', 'block');
+    $('.modalHeader').empty();
+    $('#okModalText').empty();
+    $(".modalFooter").empty();
+    $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
+    $('#okModalText').append("<div class='modalIcon'><img src='./graphics/warning.png'></div><p><b>Error accessing Spotify server.</b><br>See error code below for more details.<br><b>" + error + "</b><br>&nbsp<br></p>");
+    var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
+    $('.modalFooter').append(buttons);
+    $("#btnOkModal").focus();
+    $("#btnSync").prop("disabled", false);
+    $('.background').css('filter', 'blur(5px)');
+
+    if (from == "releases") {
+        // Load home page
+        $("#divContent").load("./html/home.html");
+    }
+    else {
+        // Hide divTrackListing
+        $("#divTrackListing").css("display", "none");
+        $("#divContent").css("width", "auto");
+    }
+    window.history.back();
+    return false;
 });
 
 // ---------------------------------------

@@ -486,6 +486,8 @@ function nextTrack(p) {
         $("button#btnPlay").css("background", "url(./graphics/play1.png) no-repeat");
         $(".defaultPlaying").css("display", "block");
         $(".nowPlaying").css("display", "none");
+        $('#appName').empty();
+        $('#appName').append(global_AppName);
     }
     else {
         // Else load and play the next track
@@ -556,6 +558,8 @@ function playTrack() {
         // Hide and show defaultPlaying and nowPlaying DIV classes in player.html
         $(".defaultPlaying").css("display", "block");
         $(".nowPlaying").css("display", "none");
+        $('#appName').empty();
+        $('#appName').append(global_AppName);
     }
 };
 
@@ -589,9 +593,11 @@ async function displayTrack(position) {
         var count = row.count
 
         // Display track details
-        var trackDetails = "Now Playing:<br><h1>" + row.artistName + "</h1><h2>" + row.albumName + "</h2><br><p>" + row.trackName + "</p>";
+        var trackDetails = "<h1>" + row.artistName + "</h1><h2>" + row.albumName + "</h2><br><p>" + row.trackName + "</p>";
         $('#trackDetails').empty();
         $('#trackDetails').append(trackDetails);
+        $('#appName').empty();
+        $('#appName').append("Now Playing:");
 
         // Display notification of next track to play
         if (global_notifications != 0) {
@@ -639,6 +645,8 @@ async function displayTrack(position) {
         // Hide and show defaultPlaying and nowPlaying DIV classes in player.html
         $(".defaultPlaying").css("display", "block");
         $(".nowPlaying").css("display", "none");
+        $('#appName').empty();
+        $('#appName').append(global_AppName);
 
         // Display modal box error message
         $('#okModal').css('display', 'block');

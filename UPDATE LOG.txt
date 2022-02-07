@@ -82,7 +82,7 @@
 1. Music recommendations added to artist page.
 2. New music releases function added to player menu.
 3. Back To Top button added to all pages once scrolled.
-4. Error handling added to ajax server requests.
+4. Error handling added to ajax remote server requests.
 5. Smooth srcolling added to A - Z menu.
 6. Various minor bug fixes.
 

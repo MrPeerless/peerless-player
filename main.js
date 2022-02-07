@@ -20,6 +20,7 @@ var resources = JSON.parse(readFileSync('./resources/data.json'));
 var client_id = resources.clientID;
 var client_secret = resources.client_secret;
 
+//#######################
 // CREATE RENDERER WINDOW
 //------------------------
 // Global reference of the window object
@@ -71,6 +72,7 @@ function createWindow() {
     require('./app/js/mainmenu.js') 
 }
 
+//##############
 // APP FUNCTIONS
 //---------------
 // Once electron has initialised create browser window
@@ -116,9 +118,9 @@ process.on('uncaughtException', function (error) {
     win.webContents.send("from_main_error", error);
 });
 
+//################
 // OTHER FUNCTIONS
 //-----------------
-
 // Function to open dialog box to select directory
 function openFolderDialog(message) {
     // Data to return message to renderer
@@ -156,6 +158,7 @@ function openFileDialog(message) {
     });
 } 
 
+//###################################
 // RECEIVE IPC MESSAGES FROM RENDERER
 //------------------------------------
 // Open external websites in default browser
@@ -183,7 +186,9 @@ ipcMain.on('app_version', (event) => {
     event.sender.send('app_version', { version: app.getVersion() });
 });
 
+//########################
 // IPC DIRECTORY FUNCTIONS
+//------------------------
 // Read files from album directory
 ipcMain.on('read_album_directory', (event, message) => {
     var sender = message[0];
@@ -207,7 +212,9 @@ ipcMain.on('read_album_directory', (event, message) => {
     win.webContents.send("files_album_directory", [sender, fnames, artist, album]);
 });
 
+//#######################
 // IPC RENAME DIRECTORIES
+//-----------------------
 ipcMain.on('rename_directory', (event, data) => {
     var musicPath = data[0];
     var originalArtistName = data[1];
@@ -267,7 +274,9 @@ ipcMain.on('rename_directory', (event, data) => {
     }
 });
 
+//#######################
 // IPC PLAYLIST FUNCTIONS
+//-----------------------
 // Check if directory exists, if not create directory
 ipcMain.on('check_playlists', (event, data) => {
     var dir = data[0] + data[1];
@@ -315,7 +324,9 @@ ipcMain.on('get_playlists', (event, data) => {
     win.webContents.send("from_get_playlists", directoryPlaylists);
 }); 
 
+//####################
 // IPC IMAGE FUNCTIONS
+//--------------------
 // Save temp album artwork from add to database
 ipcMain.on('save_temp_artwork', (event, message) => {
     var artFilePath = message[0];
@@ -427,7 +438,9 @@ ipcMain.on('save_folder_file', (event, message) => {
     }
 });
 
+//##########################
 // IPC NEW MUSIC IN DATABASE
+//--------------------------
 // Create array of all artists/albums in music directory
 ipcMain.on('dir_artists', (event, data) => {
     // Read all artists from MUSIC_PATH directory
@@ -498,7 +511,9 @@ ipcMain.on('check_backcover', (event, data) => {
     }
 });
 
-// IPC SYNC DIRECTORY 
+//###################
+// IPC SYNC DIRECTORY
+//-------------------
 // Sync directory
 ipcMain.on('sync_external_directory', (event, message) => {
     var musicDir = message[0]
@@ -583,7 +598,9 @@ ipcMain.on('sync_external_directory', (event, message) => {
     }
 });
 
+//####################
 // IPC SYNC TO SD CARD
+//--------------------
 // Create array of all artists/albums in music directory
 ipcMain.on('sync_external', (event, data) => {
     // Read all artists from MUSIC_PATH directory
@@ -654,7 +671,9 @@ ipcMain.on('sync_external', (event, data) => {
     win.webContents.send("from_sync_external", [directoryAlbums, playlistsBirthtime, externalBirthtime, databaseAlbums]);
 });
 
+//###############
 // IPC AUTOUPDATE
+//---------------
 // Add autoUpdate event listeners
 autoUpdater.on('update-available', () => {
     win.webContents.send('update_available');
@@ -663,7 +682,9 @@ autoUpdater.on('update-downloaded', () => {
     win.webContents.send('update_downloaded');
 });
 
+//#############
 // SPOTIFY CODE
+//-------------
 // Authorisation request to get api token
 var authOptions = {
     url: 'https://accounts.spotify.com/api/token',
@@ -705,13 +726,34 @@ ipcMain.on('spotify_search', (event, data) => {
             };
             request.get(options, function (error, response, body) {
                 if (sourceFunction == "add") {
-                    win.webContents.send("from_spotify_search_add", [body, album, artist]);
+                    // If successful
+                    if (!error && response.statusCode === 200) {
+                        win.webContents.send("from_spotify_search_add", [body, album, artist]);
+                    }
+                    // On error
+                    else {
+                        win.webContents.send("spotify_error", error);
+                    }   
                 }
                 if (sourceFunction == "artwork") {
-                    win.webContents.send("from_spotify_search_artwork", [body, album, artist]);
+                    // If successful
+                    if (!error && response.statusCode === 200) {
+                        win.webContents.send("from_spotify_search_artwork", [body, album, artist]);
+                    }
+                    // On error
+                    else {
+                        win.webContents.send("spotify_error", error);
+                    }  
                 }
                 if (sourceFunction == "edit") {
-                    win.webContents.send("from_spotify_search_edit", [body, album, artist]);
+                    // If successful
+                    if (!error && response.statusCode === 200) {
+                        win.webContents.send("from_spotify_search_edit", [body, album, artist]);
+                    }
+                    // On error
+                    else {
+                        win.webContents.send("spotify_error", error);
+                    }     
                 }
             });
         }
@@ -737,7 +779,14 @@ ipcMain.on('spotify_getTracks', (event, data) => {
                 json: true
             };
             request.get(options, function (error, response, body) {
-                win.webContents.send("from_getTracks", [body]);
+                // If successful
+                if (!error && response.statusCode === 200) {
+                    win.webContents.send("from_getTracks", [body]);
+                }
+                // On error
+                else {
+                    win.webContents.send("spotify_error", error);
+                }   
             });
         }
     });
@@ -763,7 +812,14 @@ ipcMain.on('spotify_getAudioFeatures', (event, data) => {
                 json: true
             };
             request.get(options, function (error, response, body) {
-                win.webContents.send("from_getAudioFeatures", [body]);
+                // If successful
+                if (!error && response.statusCode === 200) {
+                    win.webContents.send("from_getAudioFeatures", [body]);
+                }
+                // On error
+                else {
+                    win.webContents.send("spotify_error", error);
+                } 
             });
         }
     });
@@ -788,7 +844,14 @@ ipcMain.on('spotify_getArtistID', (event, data) => {
                 json: true
             };
             request.get(options, function (error, response, body) {
-                win.webContents.send("from_getArtistID", [body, artist]);
+                // If successful
+                if (!error && response.statusCode === 200) {
+                    win.webContents.send("from_getArtistID", [body, artist]);
+                }
+                // On error
+                else {
+                    win.webContents.send("spotify_error", error);
+                }                
             });
         }
     });
@@ -813,7 +876,14 @@ ipcMain.on('spotify_recommendations', (event, data) => {
                 json: true
             };
             request.get(options, function (error, response, body) {
-                win.webContents.send("from_recommendations", [body]);
+                // If successful
+                if (!error && response.statusCode === 200) {
+                    win.webContents.send("from_recommendations", [body]);
+                }
+                // On error
+                else {
+                    win.webContents.send("spotify_error", error);
+                }
             });
         }
     });
@@ -838,7 +908,14 @@ ipcMain.on('spotify_album', (event, data) => {
                 json: true
             };
             request.get(options, function (error, response, body) {
-                win.webContents.send("from_album", [body]);
+                // If successful
+                if (!error && response.statusCode === 200) {
+                    win.webContents.send("from_album", [body]);
+                }
+                // On error
+                else {
+                    win.webContents.send("spotify_error", error);
+                }
             });
         }
     });
@@ -861,13 +938,22 @@ ipcMain.on('spotify_getNewReleases', (event) => {
                 json: true
             };
             request.get(options, function (error, response, body) {
-                win.webContents.send("from_getNewReleases", [body]);
+                // If successful
+                if (!error && response.statusCode === 200) {
+                    win.webContents.send("from_getNewReleases", [body]);
+                }
+                // On error
+                else {
+                    win.webContents.send("spotify_error", [error, "releases"]);
+                }
             });
         }
     });
 });
 
-
+//#########################
+// READ AUDIO FILE METADATA
+//-------------------------
 // Get Audio Features of tracks from album
 ipcMain.on('read_ID3tags', (event, data) => {
     var audioFile = data[0];
