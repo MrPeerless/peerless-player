@@ -461,7 +461,7 @@ $(document).on('click', '#btnClose', function (event) {
 });
 
 // Close button on display album info
-$(document).on('click', '#btnInfoAlbumBack', function (event) {
+$(document).on('click', '#btnInfoAlbumTracks', function (event) {
     event.preventDefault();
     // Display album track listing
     $("body").css("background", global_Background);

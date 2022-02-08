@@ -20,7 +20,7 @@ function btnCreateClicked() {
     }
     $("#divPlaylist").css("top", divHeight);
     $('#divPlaylist').load("./html/playlistcreate.html");
-    $("#divPlaylist").show("slow");
+    $("#divPlaylist").fadeIn();
 }
 
 // Edit playlists
@@ -34,7 +34,7 @@ $(document).on('click', '#btnEdit', function (event) {
         var divHeight = 110;
     }
     // Display edit playlist
-    $("#divPlaylist").show("slow");
+    $("#divPlaylist").fadeIn();
     $("#divPlaylist").css("top", divHeight);
     $('#divPlaylist').load("./html/playlistedit.html");
 });
@@ -42,13 +42,13 @@ $(document).on('click', '#btnEdit', function (event) {
 // Close Create playlists
 $(document).on('click', '#btnClosePlaylist', function () {
     if ($("#divPlaylist").is(":visible")) {
-        $("#divPlaylist").hide("slow");
+        $("#divPlaylist").fadeOut();
     }
 });
 
 // Menu click
 ipcRenderer.on('Close Without Saving', (event) => {
-    $("#divPlaylist").hide("slow");
+    $("#divPlaylist").fadeOut();
 });
 
 // Add track to playlist
@@ -172,7 +172,7 @@ async function playlistAdd() {
         var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
         $('.modalFooter').append(buttons);
         $("#btnOkModal").focus();
-        $("#divPlaylist").hide("slow");
+        $("#divPlaylist").fadeOut();
         $('.background').css('filter', 'blur(5px)');
     }
     else {
@@ -223,7 +223,7 @@ async function playlistUpdate() {
         $('.modalFooter').append(buttons);
         $("#btnOkModal").focus();
         $('.background').css('filter', 'blur(5px)');
-        $("#divPlaylist").hide("slow");
+        $("#divPlaylist").fadeOut();
     }
     else {
         // Show modal to display error
@@ -480,6 +480,7 @@ function btnQueueAlbumClicked() {
 // Function to clear queued music
 function btnClearQueuedClicked() {
     global_Tracks = [];
+    global_TrackSelected = "";
     // Reset index
     $('#nowPlayingTrackIndex').text("-1");
     // Update Queued Playlist

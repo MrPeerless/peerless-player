@@ -17,39 +17,12 @@ $(document).ready(function () {
         var numberYears = numberWithCommas(rows.length);
         $("#yearTitle").text(numberYears + " Years");
 
-        /*
-        // Sort a-z and group by first letter.
-        $('#spnAtoZmenu').empty();
-        // Call groupBy function to group albums by first letter
-        //var albumsGroups = albums.groupBy(albums)
-
-        // Create A to Z menu
-        var yearRange = "20 19 18 17 16 15 14 13 12 11 10 09 08 07 06 05 04 03 02 01 00 99 98 97 96 ";
-        var menu = "";
-        
-        // Create A to Z menu
-        for (var i = 0; i < alphabet.length; i++) {
-            if ((alphabet.charAt(i)) in albumsGroups) {
-                menu = menu + '<span style="margin-right: 1em;"><b><a href="#' + alphabet.charAt(i) + '"> ' + alphabet.charAt(i) + ' </a></b></span>';
-            }
-            else {
-                menu = menu + '<span style="margin-right: 1em;">' + alphabet.charAt(i) + '</b></span>';
-            }
-        }
-        
-        // Display A = Z index and sort select
-        //$('#spnAtoZmenu').append(menu);
-        $('#spnAtoZmenu').append("<b>" + yearRange + "<b>");
-        */
-
-
-
         rows.forEach((row) => {
             // Set variables
             var ul = $('#ulAllYears');
             var yearLink = "./html/yearalbums.html?year=" + row.releaseDate;
             var yearText;
-            console.log("release date = " + row.releaseDate)
+
             // Get folder.jpg file path
             var artworkSource = MUSIC_PATH + row.artistName + "/" + row.albumName + "/folder.jpg";
 

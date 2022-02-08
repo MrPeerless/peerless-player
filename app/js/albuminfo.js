@@ -234,6 +234,4 @@ $(document).ready(function () {
     }
 
     backgroundChange();
-
-    
 });
