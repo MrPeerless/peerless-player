@@ -19,7 +19,7 @@
 <body>
     <!-- ###### BANNER ####### -->
     <div id="banner">
-        <img class="centre" src="./graphics/logo.jpg" />
+        <img class="centre" src="./graphics/logo_strapline.png" />
     </div>
 
     <!-- ###### MENU ######### -->
@@ -114,7 +114,35 @@
             </p>
         </div>
     </div>
+    <!-- ###### BACK TO TOP ####### -->
+    <div class="divBackToTop" id="backToTop"><button class="btnMenu3" id="btnBackToTop">Back To Top</button></div>
 
+    <!-- Link to page's Javascript file-->
+    <script>
+        // Smooth scrolling when # anchor clicked
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (event) {
+                event.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+        // Scroll back to top when button clicked
+        document.getElementById("btnBackToTop").onclick = function (event) {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+
+        // Show Back To Top link when scrolling
+        window.document.body.onscroll = function () {
+            if (window.pageYOffset == 0) {
+                document.getElementById("backToTop").style.display = "none"
+            }
+            else {
+                document.getElementById("backToTop").style.display = "block"
+            }
+        };
+    </script>
 </body>
 
 </html>

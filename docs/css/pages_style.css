@@ -130,6 +130,33 @@ hr {
     margin-bottom: 2px;
 }
 
+.btnMenu3 {
+    font-family: 'Calibri', 'Arial', 'sans-serif';
+    border: 0;
+    border-radius: 4px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 1em;
+    cursor: pointer;
+    margin-top: 2px;
+    margin-bottom: 2px;
+    width: 100px;
+    outline: none;
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Chrome/Opera */
+}
+
+.btnMenu3 {
+    background-image: linear-gradient(to top, #444444 50%, #888888 75%);
+    color: white;
+}
+
+    .btnMenu3:hover {
+        background-image: linear-gradient(to top, #03396c 25%, #005b96 50%);
+        color: #F0F0F0;
+    }
+
 /*#################
     DIVS STYLE
 #################*/
@@ -217,7 +244,15 @@ hr {
     vertical-align: top;
 }
 
-/*###################     display: table-cell;        padding: 20px;    width: calc(100% / 3);
+#backToTop {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    width: 100px;
+    display: none;
+}
+
+/*###################
     Centre content
 #####################*/
 .centre {
