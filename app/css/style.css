@@ -1681,6 +1681,7 @@ button#btnMoodExpand {
     background-color: rgb(0,0,0); /* Fallback color */
     background-color: rgba(0,0,0,0.6); /* Black w/ opacity */
     z-index: 9999;
+    animation: fadein 0.5s;
 }
 
 /* Modal Content */
@@ -1732,8 +1733,8 @@ button#btnMoodExpand {
 
 /*Display large artwork modal pop up*/
 /* The Modal (background) */
-.artModal {
-    display: none; /* Hidden by default */
+#artModal {
+    display: none; /*Hidden by default */
     position: fixed; /* Stay in place */
     z-index: 1; /* Sit on top */
     padding-top: 80px; /* Location of the box */
@@ -1745,10 +1746,21 @@ button#btnMoodExpand {
     background-color: rgb(0,0,0); /* Fallback color */
     background-color: rgba(0,0,0,0.6); /* Black w/ opacity */
     z-index: 9999;
+    animation: fadein 1s;
+}
+
+@keyframes fadein {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
 
 /* Modal Content */
-.artModalContent {
+#artModalContent {
     background: #000000;
     position: relative;
     margin: auto;
@@ -1759,7 +1771,7 @@ button#btnMoodExpand {
     border-radius: 5px;
 }
 
-.artModalBody {
+#artModalBody {
     position: relative;
     top: 0;
     left: 0;
@@ -1771,6 +1783,7 @@ button#btnMoodExpand {
     left: 4px;
     width: 600px;
     height: 600px;
+    animation: fadein 1s;
 }
 
 #backcoverImage {
@@ -1778,9 +1791,9 @@ button#btnMoodExpand {
     top: 4px;
     left: 4px;
     width: 600px;
-    /*height: 600px;*/
     display: none;
     cursor: pointer;
+    animation: fadein 1s;
 }
 
 .artModalClose {
@@ -1816,6 +1829,7 @@ button#btnMoodExpand {
     background-color: rgb(0,0,0); /* Fallback color */
     background-color: rgba(0,0,0,0.6); /* Black w/ opacity */
     z-index: 9999;
+    animation: fadein 1s;
 }
 
 /* Modal Content */

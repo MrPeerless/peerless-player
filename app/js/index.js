@@ -2,6 +2,9 @@
 // App variables
 var global_AppName;
 var global_SrnWidth;
+var global_SrnHeight;
+var global_playingHeight;
+var global_playingDivClicked;
 
 // Expand/Collapse DIVs
 var global_AddedExpand = false;
@@ -508,6 +511,92 @@ function shuffleArray(rows) {
         global_ShuffleTracks.push(row.trackID)
     });
     return;
+}
+
+// Function to calculate height of playing div
+function playingHeight() {
+    global_SrnHeight = $(window).height();
+    var totalHeight = 60;
+    var moodHeight = 0;
+    var genreHeight = 0;
+    var playerHeight = 0;
+    var databaseHeight = 0;
+    var appMainHeadingHeight = $('.appMainHeading').height();
+
+    totalHeight += appMainHeadingHeight;
+
+    // Calculate height of all Playing Divs
+    $('.divDefaultPlayingText').each(function () {
+        var $this = $(this);
+        var divDefaultPlayingText = $this.height();
+        totalHeight += divDefaultPlayingText
+    });
+
+    $('.divPlayingText').each(function () {
+        var $this = $(this);
+        var divHeight = $this.height();
+        totalHeight += divHeight;
+    });
+
+    // height difference between screen height and total of Playing Divs
+    var heightDiff = global_SrnHeight - totalHeight;
+
+    // If difference is less than 0 close all other playing divs
+    if (heightDiff < 0) {
+        if (global_playingDivClicked === "btnMoodExpand") {
+            $("button#btnGenreExpand").css("background", "url(./graphics/expand.png) no-repeat");
+            $("#divGenreSelect").hide();
+            global_GenreExpand = false; 
+
+            $("button#btnPlayerExpand").css("background", "url(./graphics/expand.png) no-repeat");
+            $("#divPlayerFunctions").hide();
+            global_PlayerExpand = false;
+
+            $("button#btnDatabaseExpand").css("background", "url(./graphics/expand.png) no-repeat");
+            $("#divDatabaseFunctions").hide();
+            global_DatabaseExpand = false; 
+        }
+
+        else if (global_playingDivClicked === "btnGenreExpand") {
+            $("button#btnMoodExpand").css("background", "url(./graphics/expand.png) no-repeat");
+            $("#divMoodSelect").hide();
+            global_MoodExpand = false;
+
+            $("button#btnPlayerExpand").css("background", "url(./graphics/expand.png) no-repeat");
+            $("#divPlayerFunctions").hide();
+            global_PlayerExpand = false;
+
+            $("button#btnDatabaseExpand").css("background", "url(./graphics/expand.png) no-repeat");
+            $("#divDatabaseFunctions").hide();
+            global_DatabaseExpand = false; 
+        }
+        else if (global_playingDivClicked === "btnPlayerExpand") {
+            $("button#btnMoodExpand").css("background", "url(./graphics/expand.png) no-repeat");
+            $("#divMoodSelect").hide();
+            global_MoodExpand = false;
+
+            $("button#btnGenreExpand").css("background", "url(./graphics/expand.png) no-repeat");
+            $("#divGenreSelect").hide();
+            global_GenreExpand = false; 
+
+            $("button#btnDatabaseExpand").css("background", "url(./graphics/expand.png) no-repeat");
+            $("#divDatabaseFunctions").hide();
+            global_DatabaseExpand = false; 
+        }
+        else if (global_playingDivClicked === "btnDatabaseExpand") {
+            $("button#btnMoodExpand").css("background", "url(./graphics/expand.png) no-repeat");
+            $("#divMoodSelect").hide();
+            global_MoodExpand = false;
+
+            $("button#btnGenreExpand").css("background", "url(./graphics/expand.png) no-repeat");
+            $("#divGenreSelect").hide();
+            global_GenreExpand = false; 
+
+            $("button#btnPlayerExpand").css("background", "url(./graphics/expand.png) no-repeat");
+            $("#divPlayerFunctions").hide();
+            global_PlayerExpand = false;
+        }
+    }
 }
 
 //######################
@@ -1260,12 +1349,14 @@ $(document).ready(function () {
             // Find artModalTop = screen height - 600 (artModal height) - 14 (menu bar height) / 2
             var screenHeight = $(window).height();
             var artModalTop = (screenHeight - 614) / 2;
-            $('.artModal').css('padding-top', artModalTop + 'px');
+            $('#artModal').css('padding-top', artModalTop + 'px');
+            $('#artModalContent').css('height', 608);
             $('.background').css('filter', 'blur(5px)');
-            $('.artModal').css('display', 'block');
-            
-            $("#artModalImage").attr('src', artworkSource);            
-            $('.artModal').css('background-color', domColour);
+            $("#artModalImage").attr('src', artworkSource);
+            $('#artModal').css('display', 'block');
+            $('#artModalImage').css('display', 'block');
+            $('#backcoverImage').css('display', 'none');
+            $('#artModal').css('background-color', domColour);
         };
     });
 
@@ -1285,7 +1376,20 @@ $(document).ready(function () {
             $('#artModalImage').css('display', 'none');
             $('#backcoverImage').css('display', 'block');
             var backcoverHeight = $('#backcoverImage').height();
-            $('.artModalContent').css('height', backcoverHeight + 8);
+            $('#artModalContent').css('height', backcoverHeight + 8);
+            var backcoverSource = $('#backcoverImage').attr('src');
+
+            colour()
+
+            async function colour() {
+                const { canvas, context } = await drawImage(backcoverSource);
+                const result = await calculateResult(canvas, context);
+                var domColour = result
+
+                domColour = domColour.slice(0, -1)
+                domColour = domColour + ",0.75)";
+                $('#artModal').css('background-color', domColour);
+            };
         }
     });
 
@@ -1294,7 +1398,20 @@ $(document).ready(function () {
         if (global_Backcover == true) {
             $('#artModalImage').css('display', 'block');
             $('#backcoverImage').css('display', 'none');
-            $('.artModalContent').css('height', 608);
+            $('#artModalContent').css('height', 608);
+            var artworkSource = $('#artModalImage').attr('src');
+
+            colour()
+
+            async function colour() {
+                const { canvas, context } = await drawImage(artworkSource);
+                const result = await calculateResult(canvas, context);
+                var domColour = result
+
+                domColour = domColour.slice(0, -1)
+                domColour = domColour + ",0.75)";
+                $('#artModal').css('background-color', domColour);
+            };
         }
     });
 
@@ -1307,20 +1424,25 @@ $(document).ready(function () {
         }
         else {
             // Close art modal box
-            $('#artModal').css('display', 'none');
+            $("#artModal").fadeOut("slow", function () {
+                // Animation complete.
+                $('#backcoverImage').css('display', 'none');
+                $('#artModalImage').css('display', 'none');
+            });
             $('.background').css('filter', 'blur(0px)');
-            $('#artModalImage').css('display', 'block');
-            $('#backcoverImage').css('display', 'none');
             $("#artModalImage").css('cursor', 'default');
-            $('.artModalContent').css('height', 608);
             global_Backcover = false;
         }
     });
    
-    // Wiki Biography Image
+    // Close when clicked Wiki Biography Image
     $(document).on('click', '#bioArtModal', function (event) {
         if (event.target.id != "bioArtModalImage") {
-            $('#bioArtModal').css('display', 'none');
+            // Close wiki bio art modal box
+            $("#bioArtModal").fadeOut("slow", function () {
+                // Animation complete.
+                $('#bioArtModal').css('display', 'none');
+            });
             $('.background').css('filter', 'blur(0px)');
         }
     });
@@ -1374,9 +1496,9 @@ $(document).ready(function () {
             }
             
             // Display large artwork modal box
-            $('.background').css('filter', 'blur(5px)');
-            $('.bioArtModal').css('display', 'block');
+            $('.background').css('filter', 'blur(5px)');            
             $("#bioArtModalImage").attr('src', artworkSource);
+            $('.bioArtModal').css('display', 'block');
             $('.bioArtModal').css('background-color', domColour);
         };
     });
@@ -1386,71 +1508,100 @@ $(document).ready(function () {
     //##################
     // Library display
     $(document).on('click', '#btnLibraryExpand', function () {
+        global_playingDivClicked = "btnLibraryExpand";
         if (global_LibraryExpand == false) {
             $("button#btnLibraryExpand").css("background", "url(./graphics/collapse.png) no-repeat");
-            $("#divMusicLibrary").slideToggle("slow");
+            $("#divMusicLibrary").slideToggle(500);
             global_LibraryExpand = true;
+            // Call playingHeight function after div slide animation complete
+            const timeOut = setTimeout(playingHeight, 600);
         }
         else {
             $("button#btnLibraryExpand").css("background", "url(./graphics/expand.png) no-repeat");
-            $("#divMusicLibrary").slideToggle("slow");
-            global_LibraryExpand = false;
+            $("#divMusicLibrary").slideToggle(500);
+            global_LibraryExpand = false;           
+            // Call playingHeight function after div slide animation complete
+            const timeOut = setTimeout(playingHeight, 600);
         }
     });
+
     // Mood Select
     $(document).on('click', '#btnMoodExpand', function () {
         event.preventDefault();
+        global_playingDivClicked = "btnMoodExpand";
         if (global_MoodExpand == false) {
             $("button#btnMoodExpand").css("background", "url(./graphics/collapse.png) no-repeat");
-            $("#divMoodSelect").slideToggle("slow");
+            $("#divMoodSelect").slideToggle(500);
             global_MoodExpand = true;
+            // Call playingHeight function after div slide animation complete
+            const timeOut = setTimeout(playingHeight, 600);
         }
-        else {
+        else {           
             $("button#btnMoodExpand").css("background", "url(./graphics/expand.png) no-repeat");
-            $("#divMoodSelect").slideToggle("slow");
-            global_MoodExpand = false;
+            $("#divMoodSelect").slideToggle(500);
+            global_MoodExpand = false;           
+            // Call playingHeight function after div slide animation complete
+            const timeOut = setTimeout(playingHeight, 600);
         }
     });
 
     // Genre Select
     $(document).on('click', '#btnGenreExpand', function () {
+        event.preventDefault();
+        global_playingDivClicked = "btnGenreExpand";
         if (global_GenreExpand == false) {
             $("button#btnGenreExpand").css("background", "url(./graphics/collapse.png) no-repeat");
-            $("#divGenreSelect").slideToggle("slow");
+            $("#divGenreSelect").slideToggle(500);
             global_GenreExpand = true;
+            // Call playingHeight function after div slide animation complete
+            const timeOut = setTimeout(playingHeight, 600);
         }
-        else {
+        else {           
             $("button#btnGenreExpand").css("background", "url(./graphics/expand.png) no-repeat");
-            $("#divGenreSelect").slideToggle("slow");
-            global_GenreExpand = false;
-        }
-    });
-
-    // Database Functions
-    $(document).on('click', '#btnDatabaseExpand', function () {
-        if (global_DatabaseExpand == false) {
-            $("button#btnDatabaseExpand").css("background", "url(./graphics/collapse.png) no-repeat");
-            $("#divDatabaseFunctions").slideToggle("slow");
-            global_DatabaseExpand = true;
-        }
-        else {
-            $("button#btnDatabaseExpand").css("background", "url(./graphics/expand.png) no-repeat");
-            $("#divDatabaseFunctions").slideToggle("slow");
-            global_DatabaseExpand = false;
+            $("#divGenreSelect").slideToggle(500);
+            global_GenreExpand = false;            
+            // Call playingHeight function after div slide animation complete
+            const timeOut = setTimeout(playingHeight, 600);
         }
     });
 
     // Player Functions
     $(document).on('click', '#btnPlayerExpand', function () {
+        event.preventDefault();
+        global_playingDivClicked = "btnPlayerExpand";
         if (global_PlayerExpand == false) {
             $("button#btnPlayerExpand").css("background", "url(./graphics/collapse.png) no-repeat");
-            $("#divPlayerFunctions").slideToggle("slow");
+            $("#divPlayerFunctions").slideToggle(500);
             global_PlayerExpand = true;
+            // Call playingHeight function after div slide animation complete
+            const timeOut = setTimeout(playingHeight, 600);
         }
         else {
             $("button#btnPlayerExpand").css("background", "url(./graphics/expand.png) no-repeat");
-            $("#divPlayerFunctions").slideToggle("slow");
+            $("#divPlayerFunctions").slideToggle(500);
             global_PlayerExpand = false;
+            // Call playingHeight function after div slide animation complete
+            const timeOut = setTimeout(playingHeight, 600);
+        }
+    });
+
+    // Database Functions
+    $(document).on('click', '#btnDatabaseExpand', function () {
+        event.preventDefault();
+        global_playingDivClicked = "btnDatabaseExpand";
+        if (global_DatabaseExpand == false) {
+            $("button#btnDatabaseExpand").css("background", "url(./graphics/collapse.png) no-repeat");
+            $("#divDatabaseFunctions").slideToggle(500);
+            global_DatabaseExpand = true;
+            // Call playingHeight function after div slide animation complete
+            const timeOut = setTimeout(playingHeight, 600);
+        }
+        else {            
+            $("button#btnDatabaseExpand").css("background", "url(./graphics/expand.png) no-repeat");
+            $("#divDatabaseFunctions").slideToggle(500);
+            global_DatabaseExpand = false;           
+            // Call playingHeight function after div slide animation complete
+            const timeOut = setTimeout(playingHeight, 600);
         }
     });
 
@@ -1593,28 +1744,23 @@ $(document).ready(function () {
         $('#okModal').css('display', 'none');
         $('.background').css('filter', 'blur(0px)');       
     })
-    /*
-    $(document).on('click', '#artModalImage', function () {
-        $('#artModal').css('display', 'none');
-        $('.background').css('filter', 'blur(0px)');
-    })
-    */
+
     $(document).on('click', '#artModalClose', function () {
-        $('#artModal').css('display', 'none');
+        $("#artModal").fadeOut("slow", function () {
+            // Animation complete.
+            $('#artModalImage').css('display', 'none');
+            $('#backcoverImage').css('display', 'none');
+        });
         $('.background').css('filter', 'blur(0px)');
         global_Backcover = false;
-        $('#artModalImage').css('display', 'block');
-        $('#backcoverImage').css('display', 'none');
         $("#artModalImage").css('cursor', 'default');
     })
-    /*
-    $(document).on('click', '#bioArtModalImage', function () {
-        $('#bioArtModal').css('display', 'none');
-        $('.background').css('filter', 'blur(0px)');
-    })
-    */
+
     $(document).on('click', '#bioArtModalClose', function () {
-        $('#bioArtModal').css('display', 'none');
+        $("#bioArtModal").fadeOut("slow", function () {
+            // Animation complete.
+            $('#bioArtModal').css('display', 'none');
+        });
         $('.background').css('filter', 'blur(0px)');
     })
 
