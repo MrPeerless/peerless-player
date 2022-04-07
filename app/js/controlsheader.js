@@ -270,6 +270,7 @@ $(document).on('click', '#menuHome', function (event) {
     $("#btnSync").prop("disabled", false);
     // Load home page
     $("#divContent").load(link);
+    $.getScript("./js/home.js")
     $(document).ajaxComplete(function () {
         $(document).scrollTop(0);
         global_TrackListing = false;
@@ -284,6 +285,7 @@ $(document).on('click', '#menuArtists', function (event) {
     $('#spnAtoZmenu').css('display', 'inline')
     var link = $(this).attr('href');
     $('#divContent').load(link);
+    $.getScript("./js/artists.js")
     // Enable btnSync
     $("#btnSync").prop("disabled", false);
     $(document).ajaxComplete(function () {
@@ -300,6 +302,7 @@ $(document).on('click', '#menuAlbums', function (event) {
     $('#spnAtoZmenu').css('display', 'inline')
     var link = $(this).attr('href');
     $('#divContent').load(link);
+    $.getScript("./js/albums.js")
     // Enable btnSync
     $("#btnSync").prop("disabled", false);
     $(document).ajaxComplete(function () {
@@ -319,6 +322,7 @@ $(document).on('click', '#menuGenres', function (event) {
     $('#spnAtoZmenu').css('display', 'inline')
     var link = $(this).attr('href');
     $('#divContent').load(link);
+    $.getScript("./js/genres.js")
     // Enable btnSync
     $("#btnSync").prop("disabled", false);
     $(document).ajaxComplete(function () {
@@ -339,6 +343,7 @@ $(document).on('click', '#menuYears', function (event) {
     $('#spnAtoZmenu').css('display', 'inline')
     var link = $(this).attr('href');
     $('#divContent').load(link);
+    $.getScript("./js/years.js")
     // Enable btnSync
     $("#btnSync").prop("disabled", false);
     $(document).ajaxComplete(function () {
@@ -357,6 +362,7 @@ $(document).on('click', '#menuSongs', function (event) {
     $('#spnAtoZmenu').css('display', 'inline')
     $(".divLayout").css("height", "auto");
     $('#divContent').load($(this).attr('href'));
+    $.getScript("./js/songs.js")
     // Enable btnSync
     $("#btnSync").prop("disabled", false);
     $(document).ajaxComplete(function () {
@@ -374,6 +380,7 @@ $(document).on('click', '#menuPlaylists', function (event) {
     $("#divContent").css("width", width);
     $('#spnAtoZmenu').css('display', 'inline')
     $('#divContent').load($(this).attr('href'));
+    $.getScript("./js/playlists.js")
     // Enable btnSync
     $("#btnSync").prop("disabled", false);
     $(document).ajaxComplete(function () {
@@ -447,6 +454,7 @@ $(document).on('change', "#sltTrackSort", function (event) {
     $(".divLayout").css("height", "auto");
     var link = "./html/songs.html";
     $('#divContent').load(link);
+    $.getScript("./js/songs.js");
     // Enable btnSync
     $("#btnSync").prop("disabled", false);
     $(document).ajaxComplete(function () {

@@ -423,6 +423,10 @@ function getMetadata() {
                                 $("#genreTags").html('<img width="15" height="15" src="./graphics/tick.png"/>');
                                 $("#genreTags").append(genreTags)
                             }
+                            else {
+                                // Send IPC to search Spotify for artist to get genres
+                                ipcRenderer.send("spotify_getArtist", [artist + '&type=artist', artist])
+                            }
                         }
                         return false;
                     }
@@ -440,6 +444,47 @@ function getMetadata() {
     var query = 'album:' + album + ' artist:' + artist + '&type=album';
     ipcRenderer.send("spotify_search", [query, album, artist, "edit"])
 }
+
+// Receive IPC search response Spotify for album and artist
+ipcRenderer.on("from_spotify_getArtist", (event, data) => {
+    console.log(JSON.stringify(data, null, 4));
+
+    var spotifyResponse = data[0];
+    var artist = data[1];
+    var genres;
+
+    // Find Spotify artist genre list
+    $.each(spotifyResponse.artists.items, function (i, items) {
+        var spotifyName = items.name.toLowerCase();
+        // Remove following punctuation from spotifyName and album to check for a match
+        var spotifyNameCheck = spotifyName.replace(/[.,;:?()'\-\[\]\/]/g, ' ')
+        // Remove any multiple spaces
+        spotifyNameCheck = spotifyNameCheck.replace(/  +/g, ' ')
+        // Remove any spaces at start and end
+        spotifyNameCheck = spotifyNameCheck.trim();
+        spotifyNameCheck = spotifyNameCheck.trimEnd();
+
+        var artistCheck = artist.replace(/[.,;:?()'\-\[\]\/]/g, ' ')
+        // Remove any multiple spaces
+        artistCheck = artistCheck.replace(/  +/g, ' ')
+        // Remove any spaces at start and end
+        artistCheck = artistCheck.trim();
+        artistCheck = artistCheck.trimEnd();
+        artistCheck = artistCheck.toLowerCase();
+
+        if (spotifyNameCheck.startsWith(artistCheck)) {
+            var tags = "";
+            genres = items.genres;
+            // Display list of genres found
+            $("#genreTags").html('<img width="15" height="15" src="./graphics/tick.png"/>');
+            $.each(genres, function (i, items) {
+                tags += ", " + items;
+            });
+            var genreTags = tags.substring(1);
+            $("#genreTags").append(genreTags)
+        }
+    });
+});
 
 // Receive IPC search response Spotify for album and artist
 ipcRenderer.on("from_spotify_search_edit", (event, data) => {
@@ -743,6 +788,7 @@ $(document).on('click', '#btnDeleteAlbum', function (event) {
     $('#okModalText').append("<div class='modalIcon'><img src='./graphics/question.png'></div><p>&nbsp<br>Are you sure you want to delete this album from " + global_AppName + "?<br>&nbsp</p >");
     var buttons = $("<button class='btnContent' id='btnDeleteOkAlbum'>Yes</button> <button class='btnContent' id='btnCancelModal'>No</button>");
     $('.modalFooter').append(buttons);
+    $('.background').css('filter', 'blur(5px)');
 });
 
 $(document).on('click', '#btnDeleteOkAlbum', async function (event) {
@@ -753,6 +799,49 @@ $(document).on('click', '#btnDeleteOkAlbum', async function (event) {
         var sql = "SELECT COUNT(*) AS COUNT FROM album WHERE artistID=?";
         var row = await dBase.get(sql, global_ArtistID);
         var numberAlbums = row.COUNT;
+
+        // Get all trackIDs from album to be deleted
+        var sql = "SELECT trackID FROM track WHERE albumID=?";
+        var rows = await dBase.all(sql, global_AlbumID);
+        rows.forEach((row) => {
+            deleteTrack(row.trackID)
+        });
+
+        // Remove track from playlist
+        async function deleteTrack(trackID) {
+            var sql = "SELECT playlistID, playlistName, trackList FROM playlists";
+            var rows = await dBase.all(sql);
+            rows.forEach((row) => {
+                var amended = false;
+                if (row.playlistName != "Favourites") {
+                    var trackList = row.trackList;
+                    // Split tracks into array
+                    var tracks = trackList.split(",");
+                    // Loop through tracks and remove track from trackList
+                    tracks.forEach((track) => {
+                        if (track == trackID) {
+                            const index = tracks.indexOf(track);
+                            if (index > -1) {
+                                tracks.splice(index, 1);   
+                            }
+                            amended = true;
+                        }
+                    });
+                    if (amended == true) {
+                        // Create amended trackList
+                        var amendedTrackList = tracks.join(',');
+                        updatePlaytlist(amendedTrackList, row.playlistID);
+                    }
+                }
+            });
+        }
+
+        // Update trackList if track deleted
+        async function updatePlaytlist(amendedTrackList, playlistID) {
+            // Create sql variable to update
+            var sql = "UPDATE playlists SET trackList='" + amendedTrackList + "' WHERE playlistID=" + playlistID;
+            var update = await dBase.run(sql);
+        }
 
         // Delete tracks from track table for album
         var sql = "DELETE FROM track WHERE albumID=" + global_AlbumID;

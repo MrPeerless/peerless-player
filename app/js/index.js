@@ -159,10 +159,14 @@ async function openDatabase(query) {
 
     // If app is starting load content into divs
     if (option == "start") {
-        // Load pages into divs
+        // Load pages and scripts into divs
+        // Scripts are loaded here instead from the html page because this is an async function and loading scripts from html page is a synchronous XMLHttpRequest, which throws a deprecation warning in the console.
         $("#divControlsHeader").load("./html/controlsheader.html");
+        $.getScript("./js/controlsheader.js")
         $("#divPlaying").load("./html/playing.html");
+        $.getScript("./js/playing.js")
         $("#divContent").load("./html/home.html");
+        $.getScript("./js/home.js")
     }
 
     // Send message to main to check for playlists directory in music folder
@@ -298,7 +302,7 @@ ipcRenderer.on('Help Release', (event) => {
     $('#okModalText').empty();
     $(".modalFooter").empty();
     $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>Release Notes Version: ' + global_Version + '</h2>');
-    $('#okModalText').append("<div class='modalIcon'><img src='./graphics/peerless_player_thumb.png'></div><p>1. Improvements to api search queries to fetch album metadata.<br>2. Search both Spotify and Musicbrainz servers for album artwork.<br>3. Bug fixes to minor page layout issues.<br><br> &nbsp</p >");
+    $('#okModalText').append("<div class='modalIcon'><img src='./graphics/peerless_player_thumb.png'></div><p>1. Music recommendations added to artist page.<br>2. New music releases function added to player menu.<br>3. Back To Top button added to all pages once scrolled.<br>4. Error handling added to ajax remote server requests.<br>5. Smooth srcolling added to A - Z menu.<br>6. Animation added when displaying large album artwork.<br>7. Minor bug fixes in playlist and search functions.<br></p >");//<br> &nbsp
     var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
     $('.modalFooter').append(buttons);
     $("#btnOkModal").focus();
@@ -416,7 +420,6 @@ function backgroundChange() {
     var contentHeight = 0;
     trackHeight = parseInt($("#divTrackListing").css("height"));
     contentHeight = parseInt($("#divContent").css("height"));
-
     var winHeight = $(window).height();
     var height = (winHeight - 60);
     var margin = 0;
@@ -719,6 +722,7 @@ async function fav(favourite, trackID) {
 $(document).on('click', '#btnSettingsClose', function (event) {
     event.preventDefault();
     $("#divContent").load("./html/home.html");
+    $.getScript("./js/home.js")
 });
 
 // Click event for settimgs browse button
@@ -798,6 +802,7 @@ $(document).on('click', '#btnSettingsSave', function (event) {
             // Reload home page
             $("body").css("background", global_Background);
             $("#divContent").load("./html/home.html");
+            $.getScript("./js/home.js")
         }
         catch (err){
             console.log(err)
@@ -1349,14 +1354,13 @@ $(document).ready(function () {
             // Find artModalTop = screen height - 600 (artModal height) - 14 (menu bar height) / 2
             var screenHeight = $(window).height();
             var artModalTop = (screenHeight - 614) / 2;
-            $('#artModal').css('padding-top', artModalTop + 'px');
-            $('#artModalContent').css('height', 608);
+            $('#frontArtModal').css('padding-top', artModalTop + 'px');
+            $('#artFrontModalContent').css('height', 608);
             $('.background').css('filter', 'blur(5px)');
             $("#artModalImage").attr('src', artworkSource);
-            $('#artModal').css('display', 'block');
+            $('#frontArtModal').css('display', 'block');
             $('#artModalImage').css('display', 'block');
-            $('#backcoverImage').css('display', 'none');
-            $('#artModal').css('background-color', domColour);
+            $('#frontArtModal').css('background-color', domColour);
         };
     });
 
@@ -1373,10 +1377,7 @@ $(document).ready(function () {
     // Switch from front to back cover when image clicked
     $(document).on('click', '#artModalImage', function () {
         if (global_Backcover == true) {
-            $('#artModalImage').css('display', 'none');
             $('#backcoverImage').css('display', 'block');
-            var backcoverHeight = $('#backcoverImage').height();
-            $('#artModalContent').css('height', backcoverHeight + 8);
             var backcoverSource = $('#backcoverImage').attr('src');
 
             colour()
@@ -1388,7 +1389,15 @@ $(document).ready(function () {
 
                 domColour = domColour.slice(0, -1)
                 domColour = domColour + ",0.75)";
-                $('#artModal').css('background-color', domColour);
+
+                var screenHeight = $(window).height();
+                var artModalTop = (screenHeight - 614) / 2;
+                $('#backArtModal').css('padding-top', artModalTop + 'px');
+                $('#backArtModal').css('background-color', domColour);
+                $("#frontArtModal").fadeOut('slow');
+                $("#backArtModal").fadeIn('slow');
+                var backcoverHeight = $('#backcoverImage').height();
+                $('#artBackModalContent').css('height', backcoverHeight + 8);
             };
         }
     });
@@ -1396,9 +1405,6 @@ $(document).ready(function () {
     // Switch from back to front cover when image clicked
     $(document).on('click', '#backcoverImage', function () {
         if (global_Backcover == true) {
-            $('#artModalImage').css('display', 'block');
-            $('#backcoverImage').css('display', 'none');
-            $('#artModalContent').css('height', 608);
             var artworkSource = $('#artModalImage').attr('src');
 
             colour()
@@ -1410,25 +1416,23 @@ $(document).ready(function () {
 
                 domColour = domColour.slice(0, -1)
                 domColour = domColour + ",0.75)";
-                $('#artModal').css('background-color', domColour);
+                $('#frontArtModal').css('background-color', domColour);
+                $("#frontArtModal").fadeIn('slow');
+                $("#backArtModal").fadeOut('slow');
             };
         }
     });
 
     // Close when clicked outside art modal boxes
     // Album Art
-    $(document).on('click', '#artModal', function (event) {
+    $(document).on('click', '.artModal', function (event) {
         // Ignore if images are clicked
         if (event.target.id == "artModalImage" || event.target.id == "backcoverImage") {
             return false;
         }
         else {
             // Close art modal box
-            $("#artModal").fadeOut("slow", function () {
-                // Animation complete.
-                $('#backcoverImage').css('display', 'none');
-                $('#artModalImage').css('display', 'none');
-            });
+            $(".artModal").fadeOut("slow")
             $('.background').css('filter', 'blur(0px)');
             $("#artModalImage").css('cursor', 'default');
             global_Backcover = false;
@@ -1724,6 +1728,7 @@ $(document).ready(function () {
         $('#okModal').css('display', 'none');
         // Load home page
         $("#divContent").load("./html/home.html");
+        $.getScript("./js/home.js")
         // Update library stats in playing div
         libraryStats()
         $('.background').css('filter', 'blur(0px)');
@@ -1746,11 +1751,7 @@ $(document).ready(function () {
     })
 
     $(document).on('click', '#artModalClose', function () {
-        $("#artModal").fadeOut("slow", function () {
-            // Animation complete.
-            $('#artModalImage').css('display', 'none');
-            $('#backcoverImage').css('display', 'none');
-        });
+        $("#artModal").fadeOut("slow");
         $('.background').css('filter', 'blur(0px)');
         global_Backcover = false;
         $("#artModalImage").css('cursor', 'default');

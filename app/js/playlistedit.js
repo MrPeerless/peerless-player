@@ -9,6 +9,7 @@ $(document).ready(function () {
         var tracks = row.trackList.split(",");
 
         $('#inpPlaylistName').val(row.playlistName);
+        $('#inpEditPlaylistID').val(global_PlaylistID);
 
         for (i = 0; i < tracks.length; i++) {
             var sql = "SELECT trackName FROM track WHERE trackID=?";
@@ -19,8 +20,5 @@ $(document).ready(function () {
                 text: row.trackName
             })); 
         }
-
-        $('#inpEditPlaylistID').val(global_PlaylistID);
-
     }
 });

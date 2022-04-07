@@ -4,6 +4,8 @@ $(document).ready(function () {
 
     // Regex to only allow alphanumeric characters and punctuation in searchTerm input
     searchTerm = searchTerm.replace(/[^a-z0-9'!()=+&]+/gi, " ");
+    // Remove any ' as they escape the SQL query
+    safeSearchTerm = searchTerm.replace(/'/g, " ");
 
     // And clear search term
     $('#ipnSearch').val("");
@@ -23,7 +25,7 @@ $(document).ready(function () {
         var insert = await dBase.run(insertSql);
 
         // Preform search:
-        var selectSql = "SELECT highlight(search, 1, '<b>', '</b>') artistName, highlight(search, 2, '<b>', '</b>') albumName, highlight(search, 3, '<b>', '</b>') trackName, highlight(search, 4, '<b>', '</b>') releaseDate, highlight(search, 5, '<b>', '</b>') origin, favourite, trackID FROM search WHERE search MATCH '" + searchTerm + "' ORDER BY rank";
+        var selectSql = "SELECT highlight(search, 1, '<b>', '</b>') artistName, highlight(search, 2, '<b>', '</b>') albumName, highlight(search, 3, '<b>', '</b>') trackName, highlight(search, 4, '<b>', '</b>') releaseDate, highlight(search, 5, '<b>', '</b>') origin, favourite, trackID FROM search WHERE search MATCH '" + safeSearchTerm + "' ORDER BY rank";
         var rows = await dBase.all(selectSql);
 
         // Drop virtual table:

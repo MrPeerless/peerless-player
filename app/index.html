@@ -28,12 +28,22 @@
         </div>
     </div>
 
-    <!--Modal box to display large artwork-->
-    <div id="artModal">
-        <!-- Modal content -->
-        <div id="artModalContent">
-            <div id="artModalBody">
+    <!--Modal box to display front large artwork-->
+    <div class="artModal" id="frontArtModal">
+        <!-- Modal Content Front Image-->
+        <div id="artFrontModalContent">
+            <div class="artModalBody" id="artFrontImage">
                 <img id="artModalImage" alt="Album Cover Artwork" />
+                <img id="artModalClose" class="artModalClose" src="./graphics/close_icon.png" />
+            </div>
+        </div>
+    </div>
+
+    <!--Modal box to display back large artwork-->
+    <div class="artModal" id="backArtModal">
+        <!-- Modal Content Back Image-->
+        <div id="artBackModalContent">
+            <div class="artModalBody" id="artBackImage">
                 <img id="backcoverImage" title="Click for Front Cover" alt="Album Backcover Artwork" />
                 <img id="artModalClose" class="artModalClose" src="./graphics/close_icon.png" />
             </div>

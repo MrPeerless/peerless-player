@@ -174,6 +174,10 @@ async function playlistAdd() {
         $("#btnOkModal").focus();
         $("#divPlaylist").fadeOut();
         $('.background').css('filter', 'blur(5px)');
+        $('#divContent').load("./html/playlists.html");
+        $.getScript("./js/playlists.js");
+        $("#divTrackListing").css("display", "none");
+        $("#divContent").css("width", "auto");
     }
     else {
         // Show modal to display
@@ -224,6 +228,10 @@ async function playlistUpdate() {
         $("#btnOkModal").focus();
         $('.background').css('filter', 'blur(5px)');
         $("#divPlaylist").fadeOut();
+        $('#divContent').load("./html/playlists.html");
+        $.getScript("./js/playlists.js");
+        $("#divTrackListing").css("display", "none");
+        $("#divContent").css("width", "auto");
     }
     else {
         // Show modal to display error
@@ -404,6 +412,7 @@ $(document).on('click', '#btnDeleteOkPlaylist', function (event) {
         $("#divTrackListing").css("display", "none");
         $("#divContent").css("width", "auto");
         $("#divContent").load("./html/playlists.html")
+        $.getScript("./js/playlists.js")
         $("#divPlaylist").css('display', 'none');
         $('.background').css('filter', 'blur(0px)');
     }

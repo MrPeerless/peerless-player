@@ -84,7 +84,9 @@
 3. Back To Top button added to all pages once scrolled.
 4. Error handling added to ajax remote server requests.
 5. Smooth srcolling added to A - Z menu.
-6. Various minor bug fixes.
+6. Animation added when displaying large album artwork.
+7. Minor bug fixes in playlist and search functions.
+
 
 
 

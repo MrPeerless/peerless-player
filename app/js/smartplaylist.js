@@ -190,6 +190,7 @@ async function btnSmartClicked() {
     $("#divContent").css("width", "475px");
     $('#spnAtoZmenu').css('display', 'none')
     $('#divContent').load('./html/playlists.html');
+    $.getScript("./js/playlists.js");
     // Enable btnSync
     $("#btnSync").prop("disabled", false);
 

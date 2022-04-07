@@ -551,6 +551,11 @@ ipcRenderer.on("from_spotify_search_add", (event, data) => {
                                     $("#genreTags").html('<img width="15" height="15" src="./graphics/tick.png"/>');
                                     $("#genreTags").append(genreTags)
                                 }
+                                else {
+                                    // Send IPC to search Spotify for artist to get genres
+                                    ipcRenderer.send("spotify_getArtist", [artist + '&type=artist', artist])
+                                    // Reply, from_spotify_getArtist, in databaseedit.js file
+                                }
                             }
                             return false;
                         }
@@ -1461,7 +1466,7 @@ $(document).on('change', '#sltGenre1', function () {
                 }
                 break;
             case "Indie":
-                var fixedGenre2 = ['Indie Rock', 'Indie Pop'];
+                var fixedGenre2 = ['Indie Pop', 'Indie Rock'];
                 // Combine and remove duplicates from fixedGenre2 and database genre2 into 1 array
                 var genre2 = fixedGenre2.concat(dbGenre2.filter((item) => fixedGenre2.indexOf(item) < 0))
                 // Populate inpubox list
@@ -2224,7 +2229,7 @@ $(document).on('change', '#inpGenre2', function () {
                 }
                 break;   
             case "Western Hip-Hop/Rap":
-                var fixedGenre3 = ['European Hip-Hop/Rap', 'European Hip-Hop/Rap'];
+                var fixedGenre3 = ['European Hip-Hop/Rap'];
                 // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
                 var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
                 // Populate inputbox list
@@ -2269,7 +2274,7 @@ $(document).on('change', '#inpGenre2', function () {
                 }
                 break;
             case "Other Traditions":
-                var fixedGenre3 = ['Central Asian', 'Eastern European', 'General World', ' Middle East/Arabic', 'Native American', 'Zydeco/Cajun'];
+                var fixedGenre3 = ['Central Asian', 'Eastern European', 'General World', 'Middle East/Arabic', 'Native American', 'Zydeco/Cajun'];
                 // Combine and remove duplicates from fixedGenre3 and database genre3 into 1 array
                 var genre3 = fixedGenre3.concat(dbGenre3.filter((item) => fixedGenre3.indexOf(item) < 0))
                 // Populate inputbox list
@@ -2546,6 +2551,7 @@ $(document).on('click', '#btnImportCancel', function (event) {
     event.preventDefault();
     $("#frmAdd").empty();
     $("#divContent").load("./html/home.html");
+    $.getScript("./js/home.js")
 
     // Enable btnSync
     $("#btnSync").prop("disabled", false);

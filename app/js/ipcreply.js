@@ -85,6 +85,7 @@ ipcRenderer.on("from_sync_external", (event, data) => {
         $("#divTrackListing").css("display", "none");
         $("#divContent").css("width", "auto");
         $("#divContent").load("./html/home.html");
+        $.getScript("./js/home.js")
         $('.background').css('filter', 'blur(5px)');
         return
     }
@@ -379,6 +380,7 @@ ipcRenderer.on("spotify_error", (event, data) => {
     if (from == "releases") {
         // Load home page
         $("#divContent").load("./html/home.html");
+        $.getScript("./js/home.js")
     }
     else {
         // Hide divTrackListing

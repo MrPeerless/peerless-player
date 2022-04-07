@@ -760,6 +760,39 @@ ipcMain.on('spotify_search', (event, data) => {
     });
 });
 
+// Get artist details in order to get artist genres
+ipcMain.on('spotify_getArtist', (event, data) => {
+    var query = data[0];
+    var artist = data[1];
+
+    request.post(authOptions, function (error, response, body) {
+        if (!error && response.statusCode === 200) {
+            // Encode URL
+            var url = 'https://api.spotify.com/v1/search?q=' + query;
+            var encodedUrl = encodeURI(url);
+            // Use the access token to access the Spotify Web API
+            var token = body.access_token;
+            var options = {
+                url: encodedUrl,
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                },
+                json: true
+            };
+            request.get(options, function (error, response, body) {
+                // If successful
+                if (!error && response.statusCode === 200) {
+                    win.webContents.send("from_spotify_getArtist", [body, artist]);
+                }
+                // On error
+                else {
+                    win.webContents.send("spotify_error", error);
+                }
+            });
+        }
+    });
+});
+
 // Get tracks from album
 ipcMain.on('spotify_getTracks', (event, data) => {
     var query = data[0];
@@ -927,7 +960,7 @@ ipcMain.on('spotify_getNewReleases', (event) => {
     request.post(authOptions, function (error, response, body) {
         if (!error && response.statusCode === 200) {
             // Encode URL
-            var url = 'https://api.spotify.com/v1/browse/new-releases?country=GB&limit=36';
+            var url = 'https://api.spotify.com/v1/browse/new-releases?country=GB&limit=48';
             // Use the access token to access the Spotify Web API
             var token = body.access_token;
             var options = {
