@@ -1,6 +1,6 @@
 {
   "name": "peerless-player",
-  "version": "0.3.3",
+  "version": "0.4.0",
   "description": "Peerless Player - listen, discover, explore music",
   "main": "main.js",
   "scripts": {
