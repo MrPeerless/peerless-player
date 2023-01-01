@@ -1,10 +1,12 @@
-﻿
+﻿<div background-color: blue; color: white>
+# Peerless Player
+</div>
 <img src="app/graphics/peerless_player.png" width =75>
 
-# Peerless Player
+
 ## Listen & Explore Music
 
-A desktop app to organise and listen to your music collection. Available as a free Windows download. Currently in the testing phase and due to start community testing soon.
+A desktop app to organise and listen to your offline music collection, read bigraphies and discographies of your artists and explore new music and recoomendations. Available as a free Windows download.
 
 <img src="docs/images/screenshot_01.png">
 
