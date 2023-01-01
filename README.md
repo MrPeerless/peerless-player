@@ -1,9 +1,7 @@
-﻿<div background-color: blue; color: white>
+﻿
+<img src="docs/graphics/logo_strapline.png" width =75>
+
 # Peerless Player
-</div>
-<img src="app/graphics/peerless_player.png" width =75>
-
-
 ## Listen & Explore Music
 
 A desktop app to organise and listen to your offline music collection, read bigraphies and discographies of your artists and explore new music and recoomendations. Available as a free Windows download.
@@ -40,6 +38,8 @@ A desktop app to organise and listen to your offline music collection, read bigr
 - Links to artist's social media.
 - View latest music releases.
 
+<img src="docs/images/screenshot_07.png">
+
 ### Getting Started
 Once downloaded, for help with using Peerless Player, on the menu bar click on <b>Help</b> and then <b>User Guide</b>. Follow the <b>Getting Started</b> section, copied below.
 - On the menu bar click on <b>File</b> and then <b>Settings.</b> This will take you to the Settings page where you can customise the app.
@@ -48,6 +48,6 @@ Once downloaded, for help with using Peerless Player, on the menu bar click on <
 - Please note that the app can only read music files from one directory. It is therefore recommended to keep all your downloaded music in one directory. This will aid syncing your music directory to external storage for your phone, car or yacht.
 - Once you have set your music directory, you can start adding music to your database by following point 5 in the User Guide.
 
-
+<img src="docs/images/screenshot_09.png">
 
 
