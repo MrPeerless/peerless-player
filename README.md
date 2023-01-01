@@ -1,10 +1,11 @@
 ﻿
 <img src="docs/graphics/logo_strapline.png">
 
-# Peerless Player
-## Listen & Explore Music
+# Listen & Explore Music with Peerless Player
+## About
+Peerless Player is a desktop app which plays music files in mp3, m4a, flac and wav formats and is available as a free Windows download. Use this desktop app to organise and listen to your offline music collection, read bigraphies and discographies of your artists and explore new music and recoomendations.
 
-A desktop app to organise and listen to your offline music collection, read bigraphies and discographies of your artists and explore new music and recoomendations. Available as a free Windows download.
+For more information visit the website here: <a href="https://www.peerlessplayer.rocks">www.peerlessplayer.rocks</a>
 
 <img src="docs/images/screenshot_01.png">
 
