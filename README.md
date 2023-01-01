@@ -1,5 +1,5 @@
 ﻿
-<img src="docs/graphics/logo_strapline.png" width =75>
+<img src="docs/graphics/logo_strapline.png">
 
 # Peerless Player
 ## Listen & Explore Music
