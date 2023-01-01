@@ -6,6 +6,8 @@
 
 A desktop app to organise and listen to your music collection. Available as a free Windows download. Currently in the testing phase and due to start community testing soon.
 
+<img src="docs/images/screenshot_01.png">
+
 ### Main Features
 **Listening to music**
 
@@ -34,6 +36,7 @@ A desktop app to organise and listen to your music collection. Available as a fr
 - View artist biographies.
 - View artist recommendations.
 - Links to artist's social media.
+- View latest music releases.
 
 ### Getting Started
 Once downloaded, for help with using Peerless Player, on the menu bar click on <b>Help</b> and then <b>User Guide</b>. Follow the <b>Getting Started</b> section, copied below.
