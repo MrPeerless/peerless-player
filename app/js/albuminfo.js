@@ -145,10 +145,18 @@ $(document).ready(function () {
         function processWikiAlbumText(xml) {
             // Get summary extract from xml
             var wikiSummaryRaw = $(xml).find('extract').text();
+
             // Check if correct page found by checing first word in wiki extract matches first word in album title
             // Get first word of wiki extract
             var splitExtract1 = wikiSummaryRaw.split("</b>");
             var splitExtract2 = splitExtract1[0].split("<b>");
+
+            // If array is empty than album info not found and escape.
+            if (!splitExtract2[1]) {
+                noResult();
+                return;
+            }
+
             var splitExtract3 = splitExtract2[1].split(" ");
 
             // If text contains <span>, remove
@@ -169,6 +177,9 @@ $(document).ready(function () {
 
             // Check if first words match
             if (splitAlbum[0] == splitExtract3[0]) {
+                console.log("splitAlbum[0] = " + splitAlbum[0])
+                console.log("splitExtract3[0] = " + splitExtract3[0])
+
                 // Split at start of track listing
                 var splitExtract = wikiSummaryRaw.split('<h2><span id="Track_list');
                 // Split at start of accolades

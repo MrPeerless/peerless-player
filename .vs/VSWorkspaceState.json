@@ -1,8 +1,9 @@
 {
   "ExpandedNodes": [
     "",
-    "\\Local settings (.vs)\\Tunes\\v15"
+    "\\app",
+    "\\app\\js"
   ],
-  "SelectedNode": "\\app",
+  "SelectedNode": "\\app\\js\\albuminfo.js",
   "PreviewInSolutionExplorer": false
 }

@@ -463,6 +463,25 @@ $(document).on('change', "#sltTrackSort", function (event) {
     });
 });
 
+//#########################
+// Change Artist Track Sort 
+//#########################
+$(document).on('change', "#sltArtistTrackSort", function (event) {
+    event.preventDefault();
+    global_ArtistTrackSort = $("#sltArtistTrackSort option:selected").val();
+    $("#divTrackListing").empty();
+    // Load link 
+    $("#divContent").css("width", "475px");
+    $("#divTrackListing").css("display", "block");
+    $("#divTrackListing").load("./html/displaytracks.html");
+    // Enable btnSync
+    $("#btnSync").prop("disabled", false);
+    $(document).ajaxComplete(function () {
+        $(document).scrollTop(0);
+        global_TrackListing = false;
+    });
+});
+
 //########################################################
 // Function to perform when audio ended event is triggered
 //########################################################

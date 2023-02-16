@@ -41,6 +41,7 @@ var global_PlaylistID;
 var global_ShuffleTracks = [];
 var global_AlbumSort = "a2z";
 var global_TrackSort = "a2z";
+var global_ArtistTrackSort = "a2zTrack";
 var global_SubGenre = "";
 var global_TrackID;
 var global_TrackName;
@@ -1080,6 +1081,29 @@ $(document).ready(function () {
         }).get()
         playTrack()
     });
+
+
+    $(document).on('click', '#artistNumberSongs', function () {
+        event.preventDefault();
+        // Get window width
+        var winWidth = $(window).width();
+        // Get window height
+        var winHeight = $(window).height();
+        var height = (winHeight - 60);
+
+        // If screen is less than 1215px wide reset divTracklisting margin-left effectively hiding content div
+        if (winWidth < 1215) {
+            $("#divTrackListing").css("margin-left", "240px");
+        }
+        else {
+            $("#divTrackListing").css("margin-left", "715px");
+        }
+        // Load link 
+        $("#divContent").css("width", "475px");
+        $("#divTrackListing").css("display", "block");
+        $("#divTrackListing").load("./html/displaytracks.html");
+    });
+
 
     // Click event on Biography button
     $(document).on('click', '#btnBiography', function () {

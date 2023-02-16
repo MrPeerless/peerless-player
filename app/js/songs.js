@@ -72,7 +72,7 @@ $(document).ready(function () {
                     menu = menu + '<span style="margin-right: 1em;">' + alphabet.charAt(i) + '</b></span>';
                 }
             }
-            $('#spnAtoZmenu').append(menu + '<input type="text" id="songSearch" name="songSearch" placeholder="FIlter the song table.." title="Type in a term to filter">' + sort);
+            $('#spnAtoZmenu').append(menu + '<input type="text" id="songSearch" name="songSearch" placeholder="Filter the song table.." title="Type in a term to filter">' + sort);
 
             // Smooth scrolling when # anchor clicked
             document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -88,7 +88,7 @@ $(document).ready(function () {
         // If sort is not set to A - Z
         else {
             // Only display filter box and sort select
-            $('#spnAtoZmenu').append('<input type="text" id="songSearch" name="songSearch" placeholder="FIlter the song table.." title="Type in a term to filter">' + sort);
+            $('#spnAtoZmenu').append('<input type="text" id="songSearch" name="songSearch" placeholder="Filter the song table.." title="Type in a term to filter">' + sort);
         }
 
         // Highlight sort selected in dropdown box

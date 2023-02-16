@@ -87,7 +87,9 @@
 6. Animation added when displaying large album artwork.
 7. Minor bug fixes in playlist and search functions.
 
-
-
+**** VERSION 0.4.1 UPDATES ****
+1. Bug fix when fetching album info from wikidata.
+2. Database Edit Cancel button rerouted back to artist albums instead of homepage.
+3. Link added from artists album page to display all songs for an artist.
 
 

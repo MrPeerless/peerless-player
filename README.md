@@ -7,6 +7,7 @@ Peerless Player is a desktop app which plays music files in mp3, m4a, flac and w
 
 For more information visit the website here: <a href="https://www.peerlessplayer.rocks">www.peerlessplayer.rocks</a>
 
+Screenshot: Home page.
 <img src="docs/images/screenshot_01.png">
 
 ### Main Features
@@ -35,10 +36,13 @@ For more information visit the website here: <a href="https://www.peerlessplayer
 
 - View artist discographies.
 - View artist biographies.
+- View album information and reviews.
 - View artist recommendations.
 - Links to artist's social media.
+- View large album artwork and back covers.
 - View latest music releases.
 
+Screenshot: Display album.
 <img src="docs/images/screenshot_07.png">
 
 ### Getting Started
@@ -49,6 +53,7 @@ Once downloaded, for help with using Peerless Player, on the menu bar click on <
 - Please note that the app can only read music files from one directory. It is therefore recommended to keep all your downloaded music in one directory. This will aid syncing your music directory to external storage for your phone, car or yacht.
 - Once you have set your music directory, you can start adding music to your database by following point 5 in the User Guide.
 
+Screenshot. Artist discography.
 <img src="docs/images/screenshot_09.png">
 
 

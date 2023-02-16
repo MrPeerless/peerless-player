@@ -7,6 +7,9 @@ $(document).ready(function () {
 
     $("#divTrackListing").empty();
 
+    // Set modified date to now
+    var modifiedDate = Date().toLocaleString();
+
     // Set number of columns to display depending on screenwidth
     var totalList = 0;
     var totalFirstRow = 0;
@@ -31,8 +34,6 @@ $(document).ready(function () {
         // Adjust size of rows to number of columns
         rows.length = totalList;
         rows.forEach((row) => {
-            //var artworkSource = MUSIC_PATH + row.artistName + "/" + row.albumName + "/folder.jpg"
-            var modifiedDate = Date().toLocaleString();
             var artworkSource = MUSIC_PATH + row.artistName + "/" + row.albumName + "/folder.jpg?modified=" + modifiedDate;
 
             var albumLink = "./html/displayalbum.html?album=" + row.albumID + "&artist=" + row.artistID;
@@ -106,7 +107,7 @@ $(document).ready(function () {
         // Adjust size of rows to number of columns
         rows.length = totalList;
         rows.forEach((row) => {
-            var artworkSource = MUSIC_PATH + row.artistName + "/" + row.albumName + "/folder.jpg";
+            var artworkSource = MUSIC_PATH + row.artistName + "/" + row.albumName + "/folder.jpg?modified=" + modifiedDate;
 
             var albumLink = "./html/displayalbum.html?album=" + row.albumID + "&artist=" + row.artistID;
 
@@ -181,7 +182,7 @@ $(document).ready(function () {
         // Adjust size of rows to number of columns
         rows.length = totalList;
         rows.forEach((row) => {
-            var artworkSource = MUSIC_PATH + row.artistName + "/" + row.albumName + "/folder.jpg"
+            var artworkSource = MUSIC_PATH + row.artistName + "/" + row.albumName + "/folder.jpg?modified=" + modifiedDate;
 
             var albumLink = "./html/displayalbum.html?album=" + row.albumID + "&artist=" + row.artistID;
 

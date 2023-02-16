@@ -85,7 +85,9 @@ $(document).ready(function () {
             var hrs = mins / 60;
             var hours = parseInt(hrs % 24);
             // Calculate days
-            $("#artistNumberSongs").text(numberTracks + " Songs. Total Playing Time " + hours + " hrs " + minutes + " mins " + seconds + " secs");
+            $("#artistNumberSongs").text(numberTracks + " Songs. ");
+            $("#artistNumberSongs").wrap('<a/>')
+            $("#artistTimeSongs").text("Total Playing Time " + hours + " hrs " + minutes + " mins " + seconds + " secs");
         });
 
         $("#artistAlbumsName").text(albumText + " by " + artistName);

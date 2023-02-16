@@ -13,6 +13,16 @@ $(document).on('click', '#btnEditAlbum', function (event) {
     $("#btnSync").prop("disabled", true);
 });
 
+// Cancel button on edit album to database
+$(document).on('click', '#btnEditCancel', function (event) {
+    event.preventDefault();
+    $("#frmAdd").empty();
+    $("#divContent").load("./html/artistalbums.html");
+
+    // Enable btnSync
+    $("#btnSync").prop("disabled", false);
+});
+
 //#################
 //### ARTWORK   ###
 //#################
