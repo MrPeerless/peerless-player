@@ -3,6 +3,7 @@ $(document).ready(function () {
     populateSettings()
 
     $("body").css("background", global_Background);
+    $('#ulMenu a').css("textDecoration", "none");
 
     async function populateSettings() {
         var settingsID = 1;

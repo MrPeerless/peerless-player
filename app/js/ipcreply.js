@@ -84,6 +84,8 @@ ipcRenderer.on("from_sync_external", (event, data) => {
         // Load home page and return
         $("#divTrackListing").css("display", "none");
         $("#divContent").css("width", "auto");
+        $('#ulMenu a').css("textDecoration", "none");
+        $("#menuHome").css('textDecoration', 'underline');
         $("#divContent").load("./html/home.html");
         $.getScript("./js/home.js")
         $('.background').css('filter', 'blur(5px)');
@@ -379,6 +381,8 @@ ipcRenderer.on("spotify_error", (event, data) => {
 
     if (from == "releases") {
         // Load home page
+        $('#ulMenu a').css("textDecoration", "none");
+        $("#menuHome").css('textDecoration', 'underline');
         $("#divContent").load("./html/home.html");
         $.getScript("./js/home.js")
     }

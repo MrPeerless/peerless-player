@@ -1,4 +1,5 @@
 $(document).ready(function () {
+    $('#ulMenu a').css("textDecoration", "none");
     // Set variable for overlay class on album image
     var overlay = "overlay";
     if (global_ArtIconShape == "round") {
@@ -85,7 +86,7 @@ $(document).ready(function () {
             var hrs = mins / 60;
             var hours = parseInt(hrs % 24);
             // Calculate days
-            $("#artistNumberSongs").text(numberTracks + " Songs. ");
+            $("#artistNumberSongs").html("<b>" + numberTracks + " Songs.</b> ");
             $("#artistNumberSongs").wrap('<a/>')
             $("#artistTimeSongs").text("Total Playing Time " + hours + " hrs " + minutes + " mins " + seconds + " secs");
         });

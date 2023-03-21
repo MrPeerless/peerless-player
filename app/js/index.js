@@ -312,6 +312,7 @@ ipcRenderer.on('Help Release', (event) => {
 
 // Display Keyboard Shortcuts from Help menu
 ipcRenderer.on('Help Shortcuts', (event) => {
+    $('#ulMenu a').css("textDecoration", "none");
     $("#divTrackListing").css("display", "none");
     $("#divContent").css("width", "auto");
     $('#divContent').load('./html/keyboardshortcuts.html');
@@ -722,6 +723,8 @@ async function fav(favourite, trackID) {
 // Click event for settings close button
 $(document).on('click', '#btnSettingsClose', function (event) {
     event.preventDefault();
+    $('#ulMenu a').css("textDecoration", "none");
+    $("#menuHome").css('textDecoration', 'underline');
     $("#divContent").load("./html/home.html");
     $.getScript("./js/home.js")
 });
@@ -802,6 +805,8 @@ $(document).on('click', '#btnSettingsSave', function (event) {
             
             // Reload home page
             $("body").css("background", global_Background);
+            $('#ulMenu a').css("textDecoration", "none");
+            $("#menuHome").css('textDecoration', 'underline');
             $("#divContent").load("./html/home.html");
             $.getScript("./js/home.js")
         }
@@ -974,6 +979,7 @@ $(document).ready(function () {
         $("#divContent").empty();
         $('#spnAtoZmenu').css('display', 'none')
         $("#divContent").css("width", "475px");
+        $('#ulMenu a').css("textDecoration", "none");
         $("#divContent").load("./html/artistalbums.html");
         $("#divTrackListing").css("display", "block");
         //$("#divTrackListing").css("min-height", height);
@@ -1751,6 +1757,8 @@ $(document).ready(function () {
     $(document).on('click', '#btnOkImport', function () {
         $('#okModal').css('display', 'none');
         // Load home page
+        $('#ulMenu a').css("textDecoration", "none");
+        $("#menuHome").css('textDecoration', 'underline');
         $("#divContent").load("./html/home.html");
         $.getScript("./js/home.js")
         // Update library stats in playing div
@@ -1762,6 +1770,8 @@ $(document).ready(function () {
     $(document).on('click', '#btnOkEdit', function () {
         $('#okModal').css('display', 'none');
         // Load artist page
+        $('#ulMenu a').css("textDecoration", "none");
+        $("#menuHome").css('textDecoration', 'underline');
         $("#divContent").load("./html/artistalbums.html?artist=" + global_ArtistID);
         // Update library stats in playing div
         libraryStats()

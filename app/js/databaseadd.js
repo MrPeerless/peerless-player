@@ -100,6 +100,7 @@ $(document).on('click', '#btnImport', function (event) {
             // Set url
             var url = ("./html/importtodatabase.html");
             // Load Add to Database page
+            $('#ulMenu a').css("textDecoration", "none");
             $("#divContent").load(url);
         }
         else {
@@ -2550,6 +2551,7 @@ $(document).on('change', '.sltTempo1', function () {
 $(document).on('click', '#btnImportCancel', function (event) {
     event.preventDefault();
     $("#frmAdd").empty();
+    $("#menuHome").css('textDecoration', 'underline');
     $("#divContent").load("./html/home.html");
     $.getScript("./js/home.js")
 

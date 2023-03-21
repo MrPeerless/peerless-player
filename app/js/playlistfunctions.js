@@ -411,6 +411,8 @@ $(document).on('click', '#btnDeleteOkPlaylist', function (event) {
         $('#okModal').css('display', 'none');
         $("#divTrackListing").css("display", "none");
         $("#divContent").css("width", "auto");
+        $('#ulMenu a').css("textDecoration", "none");
+        $("#menuPlaylists").css('textDecoration', 'underline');
         $("#divContent").load("./html/playlists.html")
         $.getScript("./js/playlists.js")
         $("#divPlaylist").css('display', 'none');

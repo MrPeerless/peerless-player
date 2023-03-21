@@ -1,3 +1,6 @@
+// Underline Home in menu on startup
+$("#menuHome").css('textDecoration', 'underline');
+
 //#######################################
 // Click events from menu in main process
 //#######################################
@@ -173,6 +176,7 @@ function btnNewReleases() {
     // Check if online
     var connection = navigator.onLine;
     if (connection) {
+        $('#ulMenu a').css("textDecoration", "none");
         $("#divTrackListing").css("display", "none");
         $("#divContent").css("width", "auto");
         $('#spnAtoZmenu').css('display', 'inline')
@@ -230,6 +234,8 @@ $(document).on('click', '#btnGenre', function () {
     var width = (srnWidth - 240);
     $("#divContent").css("width", width);
     $('#spnAtoZmenu').css('display', 'inline')
+    $('#ulMenu a').css("textDecoration", "none");
+    $("#menuAlbums").css('textDecoration', 'underline');
     $('#divContent').load("./html/subgenrealbums.html");
     // Enable btnSync
     $("#btnSync").prop("disabled", false);
@@ -254,6 +260,10 @@ $(document).on('click', '#favouriteSongs', function () {
 //Home  
 $(document).on('click', '#menuHome', function (event) {
     event.preventDefault();
+
+    $('#ulMenu a').css("textDecoration", "none");
+    $(this).css('textDecoration', 'underline');
+
     $("#divTrackListing").css("display", "none");
     $("#divContent").css("width", "auto");
     $('#spnAtoZmenu').css('display', 'inline')
@@ -280,6 +290,10 @@ $(document).on('click', '#menuHome', function (event) {
 //Artists
 $(document).on('click', '#menuArtists', function (event) {
     event.preventDefault();
+
+    $('#ulMenu a').css("textDecoration", "none");
+    $(this).css('textDecoration', 'underline');
+
     $("#divTrackListing").css("display", "none");
     $("#divContent").css("width", "auto");
     $('#spnAtoZmenu').css('display', 'inline')
@@ -297,6 +311,10 @@ $(document).on('click', '#menuArtists', function (event) {
 //Albums
 $(document).on('click', '#menuAlbums', function (event) {
     event.preventDefault();
+
+    $('#ulMenu a').css("textDecoration", "none");
+    $(this).css('textDecoration', 'underline');
+
     $("#divTrackListing").css("display", "none");
     $("#divContent").css("width", "auto");
     $('#spnAtoZmenu').css('display', 'inline')
@@ -314,6 +332,10 @@ $(document).on('click', '#menuAlbums', function (event) {
 //Genres
 $(document).on('click', '#menuGenres', function (event) {
     event.preventDefault();
+
+    $('#ulMenu a').css("textDecoration", "none");
+    $(this).css('textDecoration', 'underline');
+
     // Reset global_SubGenre and global_YearID for favourite songs 
     global_SubGenre = "";
     global_YearID = "";
@@ -334,6 +356,10 @@ $(document).on('click', '#menuGenres', function (event) {
 //Years
 $(document).on('click', '#menuYears', function (event) {
     event.preventDefault();
+
+    $('#ulMenu a').css("textDecoration", "none");
+    $(this).css('textDecoration', 'underline');
+
     // Reset global_SubGenre and global_GenreID for favourite songs 
     global_SubGenre = "";
 
@@ -355,6 +381,10 @@ $(document).on('click', '#menuYears', function (event) {
 //Songs
 $(document).on('click', '#menuSongs', function (event) {
     event.preventDefault();
+
+    $('#ulMenu a').css("textDecoration", "none");
+    $(this).css('textDecoration', 'underline');
+
     $("#divTrackListing").css("display", "none");
     var srnWidth = $(window).width();
     var width = (srnWidth - 240);
@@ -374,6 +404,10 @@ $(document).on('click', '#menuSongs', function (event) {
 //Playlists
 $(document).on('click', '#menuPlaylists', function (event) {
     event.preventDefault();
+
+    $('#ulMenu a').css("textDecoration", "none");
+    $(this).css('textDecoration', 'underline');
+
     $("#divTrackListing").css("display", "none");
     var srnWidth = $(window).width();
     var width = (srnWidth - 240);

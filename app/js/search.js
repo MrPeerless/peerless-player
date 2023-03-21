@@ -1,4 +1,5 @@
 $(document).ready(function () {
+    $('#ulMenu a').css("textDecoration", "none");
     // Get search term from input box
     var searchTerm = $('#ipnSearch').val();
 
