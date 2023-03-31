@@ -549,6 +549,9 @@ function nextTrack(p) {
         $(".nowPlaying").css("display", "none");
         $('#appName').empty();
         $('#appName').append(global_AppName);
+        // Send message to main.js to SSH with large PPlogo artworkfile
+        var artworkLarge = "./graphics/peerless_player.png";
+        ipcRenderer.send("ssh_artworkfile", [artworkLarge]);
     }
     else {
         // Else load and play the next track
@@ -594,6 +597,8 @@ function playTrack() {
         $('#nowPlayingTrackID').text(global_TrackSelected);
         var position = global_Tracks.findIndex(i => i == global_TrackSelected);
         $('#nowPlayingTrackIndex').text(position);
+
+
     }
     else {
         // If a track is playing then stop
@@ -621,6 +626,10 @@ function playTrack() {
         $(".nowPlaying").css("display", "none");
         $('#appName').empty();
         $('#appName').append(global_AppName);
+
+        // Send message to main.js to SSH with large PPlogo artworkfile
+        var artworkLarge = "./graphics/peerless_player.png";
+        ipcRenderer.send("ssh_artworkfile", [artworkLarge]);
     }
 };
 
@@ -659,6 +668,12 @@ async function displayTrack(position) {
         $('#trackDetails').append(trackDetails);
         $('#appName').empty();
         $('#appName').append("Now Playing:");
+
+        // Send message to main.js to SSH with large artworkfile
+        var artworkLarge = MUSIC_PATH + row.artistName + "/" + row.albumName + "/AlbumArtXLarge.jpg";
+        var artworkFolder = MUSIC_PATH + row.artistName + "/" + row.albumName + "/folder.jpg";
+        ipcRenderer.send("ssh_artworkfile", [artworkLarge, artworkFolder, row.artistName, row.albumName, row.trackName]);
+
 
         // Display notification of next track to play
         if (global_notifications != 0) {
@@ -720,6 +735,10 @@ async function displayTrack(position) {
         $('.modalFooter').append(buttons);
         $('.background').css('filter', 'blur(5px)');
         $("#btnOkModal").focus();
+
+        // Send message to main.js to SSH with large PPlogo artworkfile
+        var artworkLarge = "./graphics/peerless_player.png";
+        ipcRenderer.send("ssh_artworkfile", [artworkLarge]);
 
         // Function to remove highlighted track playing
         stopPlaying();

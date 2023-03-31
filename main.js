@@ -11,6 +11,7 @@ const { readFileSync } = require('fs'); // To read json files
 //var request = require('request'); // Used for saving images
 var request = require('request').defaults({ strictSSL: false }); // defaults as downloading art images throws 'certificate expired' error message
 
+
 var Jimp = require('jimp');// Require Jimp for resizing images
 var jsmediatags = require("jsmediatags"); // To read ID3 tages in audio files
 
@@ -1000,5 +1001,70 @@ ipcMain.on('read_ID3tags', (event, data) => {
         onError: function (error) {
             console.log('Error: ', error.type, error.info);
         }
+    });
+});
+
+//#########################
+// CODE TO CONNECT WITH PI PLAYER VIA SSH
+//-------------------------
+// Send current playing artfile to remote server
+ipcMain.on('ssh_artworkfile', (event, data) => {
+    var artworkLarge = data[0];   
+    var artworkFolder = data[1]; 
+    var artworkFile;
+
+    // Get absolute path of PP logo
+    if (artworkLarge == './graphics/peerless_player.png') {
+        artworkLarge = (path.join(__dirname, "./app/graphics/peerless_player.png"));
+    }
+
+    console.log(artworkLarge)
+
+    // Check if large artwork file exists, if not use folder file
+    if (fs.existsSync(artworkLarge)) {
+        console.log('Large artFile exists')
+        artworkFile = artworkLarge;
+    } else {
+        console.log('Large artfile MISSING')
+        artworkFile = artworkFolder;
+    }
+
+    // Connect to remote server using SSH
+    const { Client } = require('ssh2');
+    const conn = new Client();
+
+    // Connection error handling
+    conn.on('error', function (e) {
+        console.log("ERROR connecting");
+    });
+
+    // Connection successful
+    conn.on('ready', () => {
+        console.log('Client :: ready');
+        conn.sftp(function (err, sftp) {
+            if (err) throw err;
+            // Local directory path
+            var readStream = fs.createReadStream(artworkFile);
+            // Remote directory location; include the file name
+            var writeStream = sftp.createWriteStream("/Users/geoff/Documents/folder.jpg");
+            
+            writeStream.on('close', function () {
+                console.log("- file transferred succesfully");
+            });
+
+            writeStream.on('end', function () {
+                console.log("sftp connection closed");
+                conn.close();
+            });
+
+            // initiate transfer of file
+            readStream.pipe(writeStream);
+        });
+    }).connect({
+        host: '192.168.1.91',
+        port: 22,
+        username: 'geoff',
+        //password: '****'
+        //privateKey: readFileSync('C:/Users/geoff/.ssh')
     });
 });
