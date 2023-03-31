@@ -17,6 +17,17 @@
 </head>
 
 <body>
+    <!-- ###### MODAL BOX #######-->
+    <div id="screenshotModal">
+        <!-- Modal content -->
+        <div class="screenshotModalContent">
+            <div class="screenshotModalBody">
+                <img id="screenshotModalImage" onclick="closeImage()" title="Click to close" alt="Screenshot">
+                <img id="screenshotModalClose" class="screenshotModalClose" onclick="closeImage()" src="./graphics/close_icon.png" />
+            </div>
+        </div>
+    </div>
+
     <!-- ###### BANNER ####### -->
     <div id="banner">
         <img class="centre" src="./graphics/logo_strapline.png" />
@@ -54,6 +65,22 @@
             <p>
                 In 2018 I discovered Electron and started this, the third evolution of this app. Electron is a framework using a Chronium browser and Node.js to create native desktop applications using web technologies. Once more I began redesigning the app switching languages from C# to Javascript. It is now a downloadable Windows app, with automatic updates using the power of Javascript, HTML5 and CSS3 on the front end and Node.js on the back end.
             </p>
+
+            <div>
+                <h3>Python Version 1 Screenshots from 2013</h3>
+                <ul class="ulScreenshot">
+                    <li>
+                        <img id="geoffs_jukebox02" alt="Screenshot" src="./images/geoffs_jukebox02.png">
+                        <br />Idle Page
+                    </li>
+                    <li>
+                        <img id="geoffs_jukebox01" alt="Screenshot" src="./images/geoffs_jukebox01.png">
+                        <br />Playing Page
+                    </li>
+                </ul>
+            </div>
+
+
         </div>
         <br />
         <br />
@@ -117,6 +144,7 @@
     <div class="divBackToTop" id="backToTop"><button class="btnMenu3" id="btnBackToTop">Back To Top</button></div>
 
     <!-- Link to page's Javascript file-->
+
     <script>
         // Smooth scrolling when # anchor clicked
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
