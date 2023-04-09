@@ -1011,22 +1011,34 @@ ipcMain.on('read_ID3tags', (event, data) => {
 ipcMain.on('ssh_artworkfile', (event, data) => {
     var artworkLarge = data[0];   
     var artworkFolder = data[1]; 
+    var artist = data[2];
+    var album = data[3];
+    var track = data[4];
+    var playTime = data[5];
+    var favourite = data[6];
     var artworkFile;
+    const filesToSend = [];
+    // Location of files on remote server
+    const filesToRecieve = ["/Users/geoff/Documents/Tunes/standard/data/pi_data.json", "/Users/geoff/Documents/Tunes/standard/graphics/folder.jpg"];
+
+    // Write track data to pi_json data file to send to remote server
+    var jsonData = '{"artist":"' + artist + '", "album":"' + album + '", "track":"' + track + '", "playTime":"' + playTime + '", "favourite":" ' + favourite + '"}';
+    fs.writeFileSync("./app/data/pi_data.json", jsonData)
+    // Add file path to array to send to remote server
+    filesToSend[0] = (path.join(__dirname, "./app/data/pi_data.json"));
 
     // Get absolute path of PP logo
-    if (artworkLarge == './graphics/peerless_player.png') {
-        artworkLarge = (path.join(__dirname, "./app/graphics/peerless_player.png"));
+    if (artworkLarge == './graphics/peerless_player_blue.jpg') {
+        artworkLarge = (path.join(__dirname, "./app/graphics/peerless_player_blue.jpg"));
     }
-
-    console.log(artworkLarge)
 
     // Check if large artwork file exists, if not use folder file
     if (fs.existsSync(artworkLarge)) {
-        console.log('Large artFile exists')
         artworkFile = artworkLarge;
+        filesToSend[1] = artworkFile;
     } else {
-        console.log('Large artfile MISSING')
         artworkFile = artworkFolder;
+        filesToSend[1] = artworkFile;
     }
 
     // Connect to remote server using SSH
@@ -1040,31 +1052,37 @@ ipcMain.on('ssh_artworkfile', (event, data) => {
 
     // Connection successful
     conn.on('ready', () => {
-        console.log('Client :: ready');
         conn.sftp(function (err, sftp) {
             if (err) throw err;
-            // Local directory path
-            var readStream = fs.createReadStream(artworkFile);
-            // Remote directory location; include the file name
-            var writeStream = sftp.createWriteStream("/Users/geoff/Documents/folder.jpg");
-            
-            writeStream.on('close', function () {
-                console.log("- file transferred succesfully");
-            });
+            // Get length of array of files to send
+            let filesToSendLength = filesToSend.length;
 
-            writeStream.on('end', function () {
-                console.log("sftp connection closed");
-                conn.close();
-            });
+            // Loop through files to send to remote server
+            for (let i = 0; i < filesToSendLength; i++) {
+                //text += "<li>" + fruits[i] + "</li>";
+                // Local directory path
+                var readStream = fs.createReadStream(filesToSend[i]);
+                // Remote directory location; include the file name
+                var writeStream = sftp.createWriteStream(filesToRecieve[i]);
 
-            // initiate transfer of file
-            readStream.pipe(writeStream);
+                writeStream.on('close', function () {
+                    console.log("- file transferred succesfully");
+                });
+
+                writeStream.on('end', function () {
+                    console.log("sftp connection closed");
+                    conn.close();
+                });
+
+                // Initiate transfer of file
+                readStream.pipe(writeStream);
+            }
         });
+    // Connection details of remote server
     }).connect({
         host: '192.168.1.91',
         port: 22,
         username: 'geoff',
-        //password: '****'
-        //privateKey: readFileSync('C:/Users/geoff/.ssh')
+        password: 'sw@n@ge'
     });
 });

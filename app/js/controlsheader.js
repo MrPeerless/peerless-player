@@ -550,8 +550,8 @@ function nextTrack(p) {
         $('#appName').empty();
         $('#appName').append(global_AppName);
         // Send message to main.js to SSH with large PPlogo artworkfile
-        var artworkLarge = "./graphics/peerless_player.png";
-        ipcRenderer.send("ssh_artworkfile", [artworkLarge]);
+        var artworkLarge = "./graphics/peerless_player_blue.jpg";
+        ipcRenderer.send("ssh_artworkfile", [artworkLarge, "", "Peerless-Pi-Player", "It's Music To Your Ears", "", "", ""]);
     }
     else {
         // Else load and play the next track
@@ -628,8 +628,8 @@ function playTrack() {
         $('#appName').append(global_AppName);
 
         // Send message to main.js to SSH with large PPlogo artworkfile
-        var artworkLarge = "./graphics/peerless_player.png";
-        ipcRenderer.send("ssh_artworkfile", [artworkLarge]);
+        var artworkLarge = "./graphics/peerless_player_blue.jpg";
+        ipcRenderer.send("ssh_artworkfile", [artworkLarge, "", "Peerless-Pi-Player", "It's Music To Your Ears", "", "", ""]);
     }
 };
 
@@ -638,7 +638,7 @@ async function displayTrack(position) {
     var tempScrollTop = $(window).scrollTop();
 
     // Query database for track details
-    var sql = "SELECT track.artistID, track.albumID, track.trackName, track.fileName, track.playTime, track.count, artist.artistName, album.albumName FROM track INNER JOIN artist ON track.artistID=artist.artistID INNER JOIN album ON track.albumID=album.albumID WHERE track.trackID=?";
+    var sql = "SELECT track.artistID, track.albumID, track.trackName, track.fileName, track.playTime, track.count, track.favourite, artist.artistName, album.albumName FROM track INNER JOIN artist ON track.artistID=artist.artistID INNER JOIN album ON track.albumID=album.albumID WHERE track.trackID=?";
     var row = await dBase.get(sql, global_TrackSelected);
 
     // Create link to audio file
@@ -672,7 +672,7 @@ async function displayTrack(position) {
         // Send message to main.js to SSH with large artworkfile
         var artworkLarge = MUSIC_PATH + row.artistName + "/" + row.albumName + "/AlbumArtXLarge.jpg";
         var artworkFolder = MUSIC_PATH + row.artistName + "/" + row.albumName + "/folder.jpg";
-        ipcRenderer.send("ssh_artworkfile", [artworkLarge, artworkFolder, row.artistName, row.albumName, row.trackName]);
+        ipcRenderer.send("ssh_artworkfile", [artworkLarge, artworkFolder, row.artistName, row.albumName, row.trackName, row.playTime, row.favourite]);
 
 
         // Display notification of next track to play
@@ -737,8 +737,8 @@ async function displayTrack(position) {
         $("#btnOkModal").focus();
 
         // Send message to main.js to SSH with large PPlogo artworkfile
-        var artworkLarge = "./graphics/peerless_player.png";
-        ipcRenderer.send("ssh_artworkfile", [artworkLarge]);
+        var artworkLarge = "./graphics/peerless_player_blue.jpg";
+        ipcRenderer.send("ssh_artworkfile", [artworkLarge, "", "Peerless-Pi-Player", "It's Music To Your Ears", "", "", ""]);
 
         // Function to remove highlighted track playing
         stopPlaying();
