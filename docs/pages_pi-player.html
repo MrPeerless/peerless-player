@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-JRQW8QHW8J"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-JRQW8QHW8J');
+    </script>
+
+    <title>Peerless Player</title>
+    <link rel="shortcut icon" type="image/x-icon" href="./graphics/icon.ico" />
+    <link href="./css/pages_style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+    <!-- ###### BANNER ####### -->
+    <div id="banner">
+        <img class="centre" src="./graphics/logo_strapline.png" />
+    </div>
+
+    <!-- ###### MENU ######### -->
+    <div id="menu">
+        <ul id="ulMenu">
+            <li><a id="menuHome" href="index.html">Home</a></li>
+            <li><a id="menuNews" href="pages_news.html">News</a></li>
+            <li><a id="menuScreenshots" href="pages_screenshots.html">Screenshots</a></li>
+            <li><a id="menuPiPlayer" href="pages_pi-player.html"><u>Pi-Player</u></a></li>
+            <li><a id="menuUserguide" href="pages_userguide.html">User Guide</a></li>
+            <li><a id="menuHistory" href="pages_history.html">History</a></li>
+        </ul>
+    </div>
+
+    <!-- ###### MAIN CONTENT ####### -->
+    <div class="centre" id="mainText">
+        <h1>Peerless-Pi-Player</h1>
+        <br />
+        <h2>View Album Art on a Remote Screen</h2>
+        <h3>About Peerless-Pi-Player</h3>
+        <div class="divSingle">
+            <p>
+                Peerless-Pi-Player enables you to view album art and track details of the current playing song in Peerless Player on a remote screen, such as your flat-screen TV or remote monitor. There are two versions available, standard and mini. The standard version will run on any flat-screen TV or remote monitor. The mini version is specifically designed to run on a HyperPixel 4.0 Square Hi-Res Display.
+            </p>
+            <br />
+            <p>
+                The software for the Pi-Player runs on a Raspberry Pi, which connects to your remote screen with an HDMI cable. The Raspberry Pi is connected by Wi-Fi to your home network and works as a minion to Peerless Player. When a song plays on Peerless Player it sends by SFTP the album artwork jpg file and a json file with the song data to the Pi-Player, which then displays them in a full screen Chromium browser on the remote screen.
+            </p>
+            <br />
+            <p>
+                The Chromium browser is set up in kiosk mode on the Raspberry Pi and automatically starts when booted up, so all you have to do is plug in the HDMI and power to the Raspberry Pi and then press play in Peerless Player to get Art To Your Eyes.
+            </p>
+            <br />
+            <h3>Peerless-Pi-Player Screenshots</h3>
+            <ul class="ulScreenshot">
+                <li>
+                    <img id="geoffs_jukebox02" alt="Screenshot" src="./images/idle.jpg">
+                    <br />Idle Page
+                </li>
+                <li>
+                    <img id="geoffs_jukebox01" alt="Screenshot" src="./images/playing.jpg">
+                    <br />Playing Page
+                </li>
+            </ul>
+        </div>
+
+
+        <h3>Build and Installation Instructions</h3>
+        <div class="divSingle">
+            <p>
+                Hardware config and software download instructions to follow.
+            </p>
+            <br />
+            <br />
+            <br />
+
+        </div>
+
+
+
+        <br />
+        <br />
+        <br />
+
+        <!-- ###### FOOTER ####### -->
+        <div class="footer">
+            <p id="footer">
+                <hr />
+                <img src="./graphics/pp_icon.png" width="35" height="35" /><br />
+                www.peerlessplayer.rocks<br />
+                contact&#64peerlessplayer&#46rocks<br />
+                &#169 Geoff Peerless
+                <script>document.write(new Date().getFullYear())</script>
+                <br />
+                <a style="color:#214FDD" href="pages_privacy.html">Privacy Notice</a>
+            </p>
+        </div>
+    </div>
+    <!-- ###### BACK TO TOP ####### -->
+    <div class="divBackToTop" id="backToTop"><button class="btnMenu3" id="btnBackToTop">Back To Top</button></div>
+
+    <script>
+        // Smooth scrolling when # anchor clicked
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (event) {
+                event.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+        // Scroll back to top when button clicked
+        document.getElementById("btnBackToTop").onclick = function (event) {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+
+        // Show Back To Top link when scrolling
+        window.document.body.onscroll = function () {
+            if (window.pageYOffset == 0) {
+                document.getElementById("backToTop").style.display = "none"
+            }
+            else {
+                document.getElementById("backToTop").style.display = "block"
+            }
+        };
+    </script>
+
+</body>
+
+</html>

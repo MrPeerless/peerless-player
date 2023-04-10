@@ -204,21 +204,21 @@ hr {
     background: #fff;
     padding: 25px;
     display: table-cell;
-    width: 250px;
+    width: 300px;
 }
 
 .divMiddle {
     background: #fff;
     padding: 25px;
     display: table-cell;
-    width: 250px;
+    width: 300px;
 }
 
 .divRight {
     background: #fff;
     padding: 25px;
     display: table-cell;
-    width: 250px;
+    width: 300px;
 }
 
 .divSingle {
@@ -331,6 +331,18 @@ hr {
     border-radius: 0%;
 }
 
+#geoffs_jukebox01 {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+}
+
+#geoffs_jukebox02 {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+}
+
 /*######################
     VIDEO PLAYER
 ########################*/
@@ -340,6 +352,8 @@ hr {
     max-width: 100%;
     height: auto;
 }
+
+
 
 /*######################
     MODAL BOX
