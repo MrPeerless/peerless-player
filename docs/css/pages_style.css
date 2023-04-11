@@ -36,6 +36,11 @@ p {
     margin: 0;
     padding: 0;
     color: black;
+    text-align: justify;
+}
+
+ol {
+    text-align: justify;
 }
 
 a:link {
@@ -329,6 +334,12 @@ hr {
     margin-bottom: 5px;
     border: 1px solid #000000;
     border-radius: 0%;
+}
+
+.inlineImage {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
 }
 
 #geoffs_jukebox01 {
