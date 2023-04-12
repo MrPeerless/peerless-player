@@ -1019,7 +1019,10 @@ ipcMain.on('ssh_artworkfile', (event, data) => {
     var artworkFile;
     const filesToSend = [];
     // Location of files on remote server
-    const filesToRecieve = ["/Users/geoff/Documents/Tunes/standard/data/pi_data.json", "/Users/geoff/Documents/Tunes/standard/graphics/folder.jpg"];
+    //const filesToRecieve = ["/Users/geoff/Documents/Tunes/standard/data/pi_data.json", "/Users/geoff/Documents/Tunes/standard/graphics/folder.jpg"];
+
+    const filesToRecieve = ["/home/geoff/Documents/standard/data/pi_data.json", "/home/geoff/Documents/standard/graphics/folder.jpg"];
+
 
     // Write track data to pi_json data file to send to remote server
     var jsonData = '{"artist":"' + artist + '", "album":"' + album + '", "track":"' + track + '", "playTime":"' + playTime + '", "favourite":" ' + favourite + '"}';
@@ -1047,7 +1050,7 @@ ipcMain.on('ssh_artworkfile', (event, data) => {
 
     // Connection error handling
     conn.on('error', function (e) {
-        console.log("ERROR connecting");
+        console.log("ERROR connecting :: " + e);
     });
 
     // Connection successful
@@ -1080,9 +1083,10 @@ ipcMain.on('ssh_artworkfile', (event, data) => {
         });
     // Connection details of remote server
     }).connect({
-        host: '192.168.1.91',
+        host: '192.168.1.109',
         port: 22,
-        username: 'geoff',
-        password: 'sw@n@ge'
+        username: '****',
+        password: '****'
+
     });
 });

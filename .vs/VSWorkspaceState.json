@@ -2,11 +2,9 @@
   "ExpandedNodes": [
     "",
     "\\app",
-    "\\app\\data",
-    "\\docs",
     "\\docs\\css",
-    "\\docs\\images"
+    "\\docs\\images\\Archive\\24.05.2021"
   ],
-  "SelectedNode": "\\docs\\pages_userguide.html",
+  "SelectedNode": "\\main.js",
   "PreviewInSolutionExplorer": false
 }
