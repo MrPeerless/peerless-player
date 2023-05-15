@@ -26,6 +26,11 @@ var global_notifications;
 var global_Background;
 var global_Version;
 
+// Pi-Player Settings
+var global_piIpAddress;
+var global_piUserName;
+var global_piPassword;
+
 // Player variables
 var global_Playing = false;
 var global_Paused = false;
@@ -109,6 +114,8 @@ async function openDatabase(query) {
         // Track table
         var trackTable = "CREATE TABLE IF NOT EXISTS track (trackID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, genreID INTEGER NOT NULL, artistID INTEGER NOT NULL, albumID INTEGER NOT NULL, trackName TEXT NOT NULL, fileName TEXT NOT NULL, playTime TEXT, count INTEGER, mood1 TEXT, mood2 TEXT, tempo1 TEXT, tempo2 TEXT, genre2 TEXT, genre3 TEXT, favourite BIT, lastPlay DATETIME, vector TEXT, magnitude NUMERIC);"
         var create = await dBase.run(trackTable);
+        var piSettingsTable = "CREATE TABLE IF NOT EXISTS piSettings (piSettingsID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, ipAddress TEXT, userName TEXT, password TEXT);"
+        var create = await dBase.run(piSettingsTable);
 
         // Check if settings table is empty therefore just created
         var sql = "SELECT settingsID FROM settings";
@@ -118,6 +125,17 @@ async function openDatabase(query) {
         if (rows.length == 0) {
             var entry = `"${'Peerless'}","${'large'}","${'square'}","${'1'}","${'1'}","${'skinlight'}"`;
             var sql = "INSERT INTO settings (appName, artSize, artShape, zoom, notifications, theme) " + "VALUES (" + entry + ")";
+            var insert = await dBase.run(sql);
+        }
+
+        // Check if pi settings table is empty therefore just created
+        var sql = "SELECT piSettingsID FROM piSettings";
+        var rows = await dBase.all(sql)
+
+        // If pi settings table is empty insert blank settings values
+        if (rows.length == 0) {
+            var entry = `"${''}","${''}","${''}"`;
+            var sql = "INSERT INTO piSettings (ipAddress, userName, password) " + "VALUES (" + entry + ")";
             var insert = await dBase.run(sql);
         }
     }
@@ -169,6 +187,16 @@ async function openDatabase(query) {
         $("#divContent").load("./html/home.html");
         $.getScript("./js/home.js")
     }
+
+    // Get piSettings
+    //piSettingsID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, ipAddress TEXT, userName TEXT, password TEXT
+    var piSettingsID = 1;
+    var sql = "SELECT * FROM piSettings WHERE piSettingsID=?";
+    var piRow = await dBase.get(sql, piSettingsID)
+
+    global_piIpAddress = piRow.ipAddress;
+    global_piUserName = piRow.userName;
+    global_piPassword = piRow.password;
 
     // Send message to main to check for playlists directory in music folder
     ipcRenderer.send("check_playlists", [MUSIC_PATH, "Playlists/"])
@@ -269,7 +297,7 @@ ipcRenderer.on('Help About', (event) => {
     var currentDate = new Date();
     var currentYear = currentDate.getFullYear();
     $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>About Peerless Player</h2>');
-    $('#okModalText').append("<div class='modalIcon'><img src='./graphics/peerless_player_thumb.png'></div><p><b>Author:</b> Geoff Peerless &copy " + currentYear + "<br><b>Version:</b> " + global_Version + "<br><b>URL:</b><a id='githubLink' href='https://peerlessplayer.rocks' target='_blank'> peerlessplayer.rocks</a><br><b>Email:</b> contact@peerlessplayer.rocks<br><b>License:</b> ISC&nbsp<br>&nbsp</p >");
+    $('#okModalText').append("<div class='modalIcon'><img src='./graphics/peerless_player_thumb.png'></div><p><b>Author:</b> Geoff Peerless &copy " + currentYear + "<br><b>Version:</b> " + global_Version + "<br><b>URL:</b><a id='openLink' href='https://peerlessplayer.rocks' target='_blank'> peerlessplayer.rocks</a><br><b>Email:</b> contact@peerlessplayer.rocks<br><b>License:</b> ISC&nbsp<br>&nbsp</p >");
     var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
     $('.modalFooter').append(buttons);
     $("#btnOkModal").focus();
@@ -389,7 +417,7 @@ function convertDate(d) {
     return null;
 }
 
-// groupBy custom function to split artists into groups by first letter
+// GroupBy custom function to split artists into groups by first letter
 Array.prototype.groupBy = function (prop) {
     return this.reduce(function (groups, item) {
         var char = item.charAt(0)
@@ -747,6 +775,9 @@ $(document).on('click', '#btnSettingsSave', function (event) {
     var theme = $("input[name='theme']:checked").val();
     var global_ZoomFactor = $('#sltZoom').val();
     var notifications = $("input[name='notifications']:checked").val();
+    var ipAddress = $("#ipnPiIp").val();
+    var userName = $("#ipnPiUser").val();
+    var password = $("#ipnPiPassword").val();
 
     // Regex to only allow alphanumeric characters and apostrophe in appName input
     appName = appName.replace(/[^a-z0-9']+/gi, "");
@@ -758,6 +789,9 @@ $(document).on('click', '#btnSettingsSave', function (event) {
             // Update settings table
             var sql = 'UPDATE settings SET appName="' + appName + '", musicDirectory="' + musicDirectory + '", artSize="' + artSize + '", artShape="' + artShape + '", zoom="' + global_ZoomFactor + '", notifications="' + notifications + '", theme="' + theme + '" WHERE settingsID=' + settingsID;
             var update = await dBase.run(sql);
+
+            var piSql = 'UPDATE piSettings SET ipAddress="' + ipAddress + '", userName="' + userName + '", password="' + password + '"';
+            var update = await dBase.run(piSql);
 
             // Reload CSS file for theme
             $('#skin').replaceWith('<link id="skin" rel="stylesheet" type="text/css" href="./css/' + theme + '.css"/>')
@@ -780,6 +814,9 @@ $(document).on('click', '#btnSettingsSave', function (event) {
             global_ArtIconShape = artShape;
             global_notifications = notifications;
             MUSIC_PATH = musicDirectory;
+            global_piIpAddress = ipAddress;
+            global_piUserName = userName;
+            global_piPassword = password;
 
             // Show modal box confirmation
             $('#okModal').css('display', 'block');
@@ -1276,7 +1313,7 @@ $(document).ready(function () {
     });
 
     // Open external github link from about modal
-    $(document).on('click', '#githubLink', function () {
+    $(document).on('click', '#openLink', function () {
         ipcRenderer.send('open_external', this.href)
     });
 

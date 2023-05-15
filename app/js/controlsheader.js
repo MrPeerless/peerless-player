@@ -36,6 +36,127 @@ ipcRenderer.on('New Music Releases', (event) => {
     btnNewReleases()
 });
 
+// Pi-Player Menu
+ipcRenderer.on('Pi-Player Settings', (event) => {
+    $("#divTrackListing").css("display", "none");
+    $("#divContent").css("width", "auto");
+    $('#divContent').load('./html/settings.html#piPlayerSettings', function () {
+        $('html, body').animate({ scrollTop: $("#piPlayerSettings").offset().top - 70 }, "slow");
+    });
+});
+
+//global_piIpAddress
+//global_piUserName
+//global_piPassword
+
+// Reboot Pi-Player
+ipcRenderer.on('Reboot Pi-Player', (event) => {
+    // Display modal box; reboot yes, no?
+    $('#okModal').css('display', 'block');
+    $('.modalHeader').empty();
+    $('#okModalText').empty();
+    $(".modalFooter").empty();
+    $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
+    $('#okModalText').append("<div class='modalIcon'><img src='./graphics/question.png'></div><p>&nbsp<br>Are you sure you want to reboot your Raspberry Pi?<br>&nbsp<br>&nbsp</p >");
+    var buttons = $("<button class='btnContent' id='btnRebootPi'>Yes</button> <button class='btnContent' id='btnCancelModal'>No</button>");
+    $('.modalFooter').append(buttons);
+    $("#btnRebootPi").focus();
+    $('.background').css('filter', 'blur(5px)');
+});
+
+$(document).on('click', '#btnRebootPi', function () {
+    $('#okModal').css('display', 'none');
+    $('.background').css('filter', 'blur(0px)');
+    ipcRenderer.send("shell_command", ['sudo reboot\n', global_piIpAddress, global_piUserName, global_piPassword]);
+})
+
+// Shutdown Pi-Player
+ipcRenderer.on('Shutdown Pi-Player', (event) => {
+    // Display modal box; shutdown yes, no?
+    $('#okModal').css('display', 'block');
+    $('.modalHeader').empty();
+    $('#okModalText').empty();
+    $(".modalFooter").empty();
+    $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
+    $('#okModalText').append("<div class='modalIcon'><img src='./graphics/question.png'></div><p>&nbsp<br>Are you sure you want to shutdown your Raspberry Pi?<br>&nbsp<br>&nbsp</p >");
+    var buttons = $("<button class='btnContent' id='btnShutdownPi'>Yes</button> <button class='btnContent' id='btnCancelModal'>No</button>");
+    $('.modalFooter').append(buttons);
+    $("#btnShutdownPi").focus();
+    $('.background').css('filter', 'blur(5px)');
+});
+
+$(document).on('click', '#btnShutdownPi', function () {
+    $('#okModal').css('display', 'none');
+    $('.background').css('filter', 'blur(0px)');
+    ipcRenderer.send("shell_command", ['sudo shutdown now\n', global_piIpAddress, global_piUserName, global_piPassword]);
+})
+
+// Open Pi-Player
+ipcRenderer.on('Open Pi-Player', (event) => {
+    $('#okModal').css('display', 'block');
+    $(".modalFooter").empty();
+    $('.modalHeader').empty();
+    $('#okModalText').empty();
+    $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
+    $('#okModalText').append("<div class='modalIcon'><img src='./graphics/information.png'></div><p>&nbsp<br>Opening Peerless-Pi-Player<br>&nbsp<br>&nbsp</p >");
+    var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
+    $('.modalFooter').append(buttons);
+    $("#btnOkModal").focus();
+    $('.background').css('filter', 'blur(5px)');
+
+    ipcRenderer.send("shell_command", ['DISPLAY=:0 chromium-browser -start-fullscreen --app=http://localhost:8000/\n', global_piIpAddress, global_piUserName, global_piPassword]);
+
+});
+
+// Re-Send Track Data to Pi-Player
+ipcRenderer.on('Re-Send Pi-Player', (event) => {
+    $('#okModal').css('display', 'block');
+    $(".modalFooter").empty();
+    $('.modalHeader').empty();
+    $('#okModalText').empty();
+    $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
+    $('#okModalText').append("<div class='modalIcon'><img src='./graphics/information.png'></div><p>&nbsp<br>Sending track data to Peerless-Pi-Player<br>&nbsp<br>&nbsp</p >");
+    var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
+    $('.modalFooter').append(buttons);
+    $("#btnOkModal").focus();
+    $('.background').css('filter', 'blur(5px)');
+
+    resendData();
+});
+
+async function resendData() {
+    // Query database for track details
+    var sql = "SELECT track.artistID, track.albumID, track.trackName, track.fileName, track.playTime, track.count, track.favourite, artist.artistName, album.albumName FROM track INNER JOIN artist ON track.artistID=artist.artistID INNER JOIN album ON track.albumID=album.albumID WHERE track.trackID=?";
+    var row = await dBase.get(sql, global_TrackSelected);
+
+    // Send message to main.js to SSH with large artworkfile
+    var artworkLarge = MUSIC_PATH + row.artistName + "/" + row.albumName + "/AlbumArtXLarge.jpg";
+    var artworkFolder = MUSIC_PATH + row.artistName + "/" + row.albumName + "/folder.jpg";
+    ipcRenderer.send("ssh_artworkfile", [artworkLarge, artworkFolder, row.artistName, row.albumName, row.trackName, row.playTime, row.favourite, global_piIpAddress, global_piUserName, global_piPassword]);
+};
+
+
+// Close Pi-Player
+ipcRenderer.on('Close Pi-Player', (event) => {
+    // Display modal box; shutdown yes, no?
+    $('#okModal').css('display', 'block');
+    $('.modalHeader').empty();
+    $('#okModalText').empty();
+    $(".modalFooter").empty();
+    $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
+    $('#okModalText').append("<div class='modalIcon'><img src='./graphics/question.png'></div><p>&nbsp<br>Are you sure you want to close Peerless-Pi-Player?<br>&nbsp<br>&nbsp</p >");
+    var buttons = $("<button class='btnContent' id='btnClosePi'>Yes</button> <button class='btnContent' id='btnCancelModal'>No</button>");
+    $('.modalFooter').append(buttons);
+    $("#btnClosePi").focus();
+    $('.background').css('filter', 'blur(5px)');
+});
+
+$(document).on('click', '#btnClosePi', function () {
+    $('#okModal').css('display', 'none');
+    $('.background').css('filter', 'blur(0px)');
+    ipcRenderer.send("shell_command", ['pkill chromium\n', global_piIpAddress, global_piUserName, global_piPassword]);
+})
+
 //######################
 //Player button controls
 //######################
@@ -551,7 +672,7 @@ function nextTrack(p) {
         $('#appName').append(global_AppName);
         // Send message to main.js to SSH with large PPlogo artworkfile
         var artworkLarge = "./graphics/peerless_player_blue.jpg";
-        ipcRenderer.send("ssh_artworkfile", [artworkLarge, "", "Peerless-Pi-Player", "It's Music To Your Ears", "", "", ""]);
+        ipcRenderer.send("ssh_artworkfile", [artworkLarge, "", "Peerless-Pi-Player", "It's Music To Your Ears", "", "", "", global_piIpAddress, global_piUserName, global_piPassword]);
     }
     else {
         // Else load and play the next track
@@ -629,7 +750,7 @@ function playTrack() {
 
         // Send message to main.js to SSH with large PPlogo artworkfile
         var artworkLarge = "./graphics/peerless_player_blue.jpg";
-        ipcRenderer.send("ssh_artworkfile", [artworkLarge, "", "Peerless-Pi-Player", "It's Music To Your Ears", "", "", ""]);
+        ipcRenderer.send("ssh_artworkfile", [artworkLarge, "", "Peerless-Pi-Player", "It's Music To Your Ears", "", "", "", global_piIpAddress, global_piUserName, global_piPassword]);
     }
 };
 
@@ -672,7 +793,7 @@ async function displayTrack(position) {
         // Send message to main.js to SSH with large artworkfile
         var artworkLarge = MUSIC_PATH + row.artistName + "/" + row.albumName + "/AlbumArtXLarge.jpg";
         var artworkFolder = MUSIC_PATH + row.artistName + "/" + row.albumName + "/folder.jpg";
-        ipcRenderer.send("ssh_artworkfile", [artworkLarge, artworkFolder, row.artistName, row.albumName, row.trackName, row.playTime, row.favourite]);
+        ipcRenderer.send("ssh_artworkfile", [artworkLarge, artworkFolder, row.artistName, row.albumName, row.trackName, row.playTime, row.favourite, global_piIpAddress, global_piUserName, global_piPassword]);
 
 
         // Display notification of next track to play
@@ -738,7 +859,7 @@ async function displayTrack(position) {
 
         // Send message to main.js to SSH with large PPlogo artworkfile
         var artworkLarge = "./graphics/peerless_player_blue.jpg";
-        ipcRenderer.send("ssh_artworkfile", [artworkLarge, "", "Peerless-Pi-Player", "It's Music To Your Ears", "", "", ""]);
+        ipcRenderer.send("ssh_artworkfile", [artworkLarge, "", "Peerless-Pi-Player", "It's Music To Your Ears", "", "", "", global_piIpAddress, global_piUserName, global_piPassword]);
 
         // Function to remove highlighted track playing
         stopPlaying();

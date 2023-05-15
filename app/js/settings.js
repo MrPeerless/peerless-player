@@ -35,4 +35,21 @@ $(document).ready(function () {
         var notificationsRadioButton = "radioNotifications" + row.notifications;
         $("#" + notificationsRadioButton).prop("checked", true);
     }
+
+    populatePiSettings()
+
+    async function populatePiSettings() {
+        var piSettingsID = 1;
+        var sql = "SELECT * FROM piSettings WHERE piSettingsID=?";
+        var row = await dBase.get(sql, piSettingsID)
+
+        // Add placeholder to ipAdress input box
+        $("#ipnPiIp").val(row.ipAddress);
+
+        // Add placeholder to piUserName input box
+        $("#ipnPiUser").val(row.userName);
+
+        // Add placeholder to ipAdress input box
+        $("#ipnPiPassword").val(row.password);
+    }
 });

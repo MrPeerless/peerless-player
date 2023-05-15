@@ -497,7 +497,7 @@ ipcRenderer.on("from_spotify_search_add", (event, data) => {
                                         // Back cover art
                                         if (back == "true" && backFound == false) {
                                             backFound = true;
-                                            var backArt = "https://coverartarchive.org/release/" + releaseID + "/back-500"
+                                            var backArt = "https://coverartarchive.org/release/" + releaseID + "/back-1200"
                                             $("#inpBackArtURL").val(backArt);
                                             $("#backArtwork").html('<img width="15" height="15" src="./graphics/tick.png"/>');
                                         }
@@ -505,7 +505,7 @@ ipcRenderer.on("from_spotify_search_add", (event, data) => {
                                         if (front == "true" && frontFound == false) {
                                             // Front cover art
                                             frontFound = true;
-                                            var coverArt = "https://coverartarchive.org/release/" + releaseID + "/front-500"
+                                            var coverArt = "https://coverartarchive.org/release/" + releaseID + "/front-1200"
 
                                             $("#imgCoverArt").attr('src', coverArt);
                                             $("#inpCoverArtURL").val(coverArt);

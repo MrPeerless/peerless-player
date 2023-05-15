@@ -39,18 +39,20 @@
         <h1>Peerless-Pi-Player</h1>
         <br />
         <h2>View Album Art on a Remote Screen</h2>
-        <h3>About Peerless-Pi-Player</h3>
+        <br />
         <div class="divSingle">
+            <h3>About Peerless-Pi-Player</h3>
+            <br />
             <p>
-                Peerless-Pi-Player enables you to view album art and track details of the current playing song in Peerless Player on a remote screen, such as your flat-screen TV or remote monitor. There are two versions available, standard and mini. The standard version will run on any flat-screen TV or remote monitor. The mini version is specifically designed to run on a HyperPixel 4.0 Square Hi-Res Display.
+                Peerless-Pi-Player enables you to view album art and track details of the current playing song in Peerless Player on a remote screen, such as your flat-screen TV or remote monitor using a Raspberry Pi. It will be compatible to run on any Raspberry Pi display with a height resolution greater than 700 pixels.
             </p>
             <br />
             <p>
-                The software for the Pi-Player runs on a Raspberry Pi, which connects to your remote screen with an HDMI cable. The Raspberry Pi is connected by Wi-Fi to your home network and works as a minion to Peerless Player. When a song plays on Peerless Player it sends by SFTP the album artwork jpg file and a json file with the song data to the Pi-Player, which then displays them in a full screen Chromium browser on the remote screen.
+                The software for the Pi-Player runs on a Raspberry Pi, which connects to your remote screen with an HDMI cable or directly to a Raspberry Pi using the 40 pin connector or a DSI cable. The Raspberry Pi is connected by Wi-Fi to your home network and works as a minion to Peerless Player. When a song plays on Peerless Player it sends by SFTP the album artwork jpg file and a json file with the song data to the Pi-Player, which then displays them in a full screen Chromium browser on the remote screen.
             </p>
             <br />
             <p>
-                The Chromium browser is set up in kiosk mode on the Raspberry Pi and automatically starts when booted up, so all you have to do is plug in the HDMI and power to the Raspberry Pi and then press play in Peerless Player to get Art To Your Eyes.
+                The Raspberry Pi is controlled from a menu in Peerless Player. So all you have to do is plug in the HDMI and power to the Raspberry Pi and once it has booted up, click on Open Pi-Player from the menu.
             </p>
             <br />
             <h3>Peerless-Pi-Player Screenshots</h3>
@@ -65,23 +67,272 @@
                 </li>
             </ul>
         </div>
+        <br />
+        <br />
 
-
-        <h3>Build and Installation Instructions</h3>
+        <h2>Build and Set Up Instructions</h2>
+        <br />
         <div class="divSingle">
+            <h3>Hardware</h3>
+            <br />
             <p>
-                Hardware config and software download instructions to follow.
+                You will need a basic Raspberry Pi starter kit. I am using a Raspberry Pi 3 Model A+.
             </p>
-            <br />
-            <br />
-            <br />
-
+            <ul class="note">
+                <li>Raspberry Pi 3 or above.</li>
+                <li>Official Raspberry Pi Power Supply.</li>
+                <li>16gb Micro SD Card or above.</li>
+                <li>A case of your choice. I have used the Pibow 3 A+ Coupé.</li>
+                <li>HDMI cable.</li>
+            </ul>
         </div>
-
-
-
         <br />
         <br />
+        <div class="divSingle">
+            <h3>Set up the Raspberry Pi</h3>
+            <br />
+            <p>
+                To complete the set up you will need a USB mouse and keyboard. Follow these instructions at the link below to get your Pi up and running.
+                <br />
+                <br />
+                <a href="https://projects.raspberrypi.org/en/projects/raspberry-pi-setting-up/0" target="_blank">Raspberry Pi Foundation - Setting up your Raspberry Pi</a>
+                <br />
+                <br />
+                If you do not have a USB mouse and keyboard it is possible, but more technical, to complete the set up following the below instructions.
+                <br />
+                <br />
+                <a href="https://www.hackster.io/mark-hank/super-simple-headless-raspberry-pi-setup-5382d6" target="_blank">Hackster.io - Simple Headless Raspberry Pi Setup</a>
+            </p>
+        </div>
+        <br />
+        <br />
+        <div class="divSingle">
+            <h3>Download Peerless-Pi-Player Code</h3>
+            <ol>
+                <li class="space">Go to the Peerless-Pi-Player Github page from the following link: <a href="https://github.com/MrPeerless/peerless-pi-player" target="_blank">Github.com peerless-pi-player</a></li>
+                <li class="space">
+                    Click on the green Code button and select Download ZIP from the dropdown menu.
+                    <br />
+                    <br />
+                    <img class="inlineImage" src="./images/screenshot_github_download.png">
+                </li>
+
+                <li class="space">Extract the files from the compressed folder in your Downloads folder.</li>
+                <li class="space">In File Explorer, navigate to the <b>pi-player</b> folder and copy this and it's contents to your Raspberry Pi folder <b>USER/Documents</b> replacing USER with your Pi user name. </li>
+                <li class="space"><b><i>IMPORTANT NOTE!</i></b> The file path for the Peerless-Pi-Player code is hard coded into Peerless Player. If you change this filepath (apart from your User Name) the code will not work. The filepath should look like this: <b>/Home/USER/Documents/pi-player</b>
+            </ol>
+        </div>
+        <br />
+        <br />
+        <div class="divSingle">
+            <h3>Set up Peerless-Pi-Player</h3>
+            <ol>
+                <li class="space">
+                    Allow the Raspberry Pi to be controlled remotely over your home network.
+                    <ul class="note">
+                        <li>Go to Raspberry Pi Configuration - Interfaces</li>
+                        <li>Enable SSH</li>
+                        <li>Create public/private key pair to be used as authentication, instead of a password, between your Windows machine and the Raspberry Pi. Follow instructions at the link below to create a key pair:</li>
+                        <li><a href="https://endjin.com/blog/2019/09/passwordless-ssh-from-windows-10-to-raspberry-pi" target="_blank">Passwordless SSH from Windows 10 to Raspberry Pi</a></li>
+                    </ul>
+                </li>
+                <li class="space">
+                    Automatically disconnect idle SSH sessions. Peerless Player sends an SFTP and BASH command to the Raspberry Pi whenever a new track is played. If these SSH sessions are not disconnected the Raspberry Pi will eventually slow down.
+                    <ul class="note">
+                        <li>
+                            In the terminal type the following command to edit the <b>sshd_config</b> file.<br />
+                            <div class="divCodeBlock">
+                                <code>$ sudo nano /etc/ssh/sshd_config</code>
+                            </div>
+                        </li>
+                        <li>
+                            At the end of the file add the below 2 lines. The first line is the time interval, in seconds, to keep idle sessions alive.<br />
+                            <div class="divCodeBlock">
+                                <code>
+                                    ClientAliveInterval 600<br />
+                                    ClientAliveCountMax 0
+                                </code>
+                            </div>
+                        </li>
+                        <li>
+                            Save the file by pressing <b>Ctrl X, Y, Enter</b>
+                        </li>
+                        <li>
+                            <b>Note:</b> If you are working remotely via SSH on your Raspberry Pi you can comment out these lines to prevent your session being unexpectedly terminated.
+                        </li>
+                    </ul>
+                    <br />
+                    <img class="inlineImage" src="./images/screenshot_sshd_config.png">
+                </li>
+                <li class="space">
+                    Stop your Raspberry Pi from going to sleep.
+                    <ul class="note">
+                        <li>Go to Raspberry Pi Configuration - Display</li>
+                        <li>Disable screen blanking</li>
+                    </ul>
+                </li>
+                <li class="space">
+                    Turn off Bluetooth
+                    <ul class="note">
+                        <li>At the top of the desktop screen, click on the bluetooth icon to turn off.</li>
+                    </ul>
+                </li>
+                <li class="space">
+                    Turn off  below Chromium settings to increase performance.
+                    <ul class="note">
+                        <li>Chromium - Settings - System</li>
+                        <li>Turn off - Continue running background apps when Chromium is closed</li>
+                        <li>Turn off - Use hardware acceleration when available</li>
+                    </ul>
+                    <ul class="note">
+                        <li>Chromium - Settings - Extensions</li>
+                        <li>Turn off all extensions</li>
+                    </ul>
+                    <ul class="note">
+                        <li>Chromium - More Tools - Developer Tools</li>
+                        <li>On Network tab select the Disable Cache tick box</li>
+                    </ul>
+                </li>
+                <li class="space">
+                    To hide the mouse cursor from the screen install the program <b>unclutter</b>
+                    <ul class="note">
+                        <li>
+                            In the terminal type in the following command to install<br />
+                            <div class="divCodeBlock">
+                                <code>$ sudo apt install unclutter sed</code>
+                            </div>     
+                        </li>
+                    </ul>
+                </li>
+                <li class="space">
+                    Amend the USER name in the <b>start_server.sh</b> file.
+                    <ul class="note">
+                        <li>
+                            In the terminal type the following command to edit the <b>start_server.sh</b> file.<br />
+                            <div class="divCodeBlock">
+                                <code>$ sudo nano Documents/pi-player/start_server.sh</code>
+                            </div>
+                        </li>
+                        <li>
+                            Amend the second line by replacing USER with your Pi user name.
+                        </li>
+                        <li>
+                            Depending on which version of Python your Pi is running, amend the third line. The file by default is set up for Python2, to change to Python3 amend line 3 with the below code:<br />
+                            <div class="divCodeBlock">
+                                <code>python -m http.server &</code>
+                            </div>
+                        </li>
+                        <li>
+                            Save the file by pressing <b>Ctrl X, Y, Enter</b>
+                        </li>
+
+                    </ul>
+                    <br />
+                    <img class="inlineImage" src="./images/screenshot_start_server.png">
+                </li>
+                <li class="space">
+                    Convert the <b>start_server.sh</b> file from DOS to UNIX. (The file was written on Windows and saved as DOS but needs to run on Linux and saved as Unix)
+                    <ul class="note">
+                        <li>
+                            In the terminal type the following commands to convert the file.<br />
+                            <div class="divCodeBlock">
+                                <code>$ cd Documents/pi-player</code><br />
+                                <code>$ dos2unix start_server.sh</code>
+                            </div>
+                        </li>
+                        <li>
+                            <b>Note.</b> If this command does not work you will need to install dos2unix on your pi using this command:<br />
+                            <div class="divCodeBlock">
+                                <code>sudo apt install dos2unix</code>
+                            </div>
+                        </li>
+                    </ul>
+                </li>
+                <li class="space">
+                    The <b>start_server.sh</b> file needs to run when the Raspberry Pi boots up to automatically start the Python Server and run the Unclutter program.
+                    <ul class="note">
+                        <li>
+                            In the terminal type the following command to edit the <b>rc.local</b> file<br />
+                            <div class="divCodeBlock">
+                                <code>$ sudo nano /etc/rc.local</code><br />
+                            </div>
+                        </li>
+                        <li>
+                            Scroll down to the line above <b>exit 0</b> and type in the following line, replacing USER with your Pi user name:<br />
+                            <div class="divCodeBlock">
+                                <code>sh /home/USER/Documents/pi-player/start_server.sh &</code><br />
+                            </div>
+                        </li>
+                        <li>
+                            Save the file by pressing <b>Ctrl X, Y, Enter</b>
+                        </li>
+                    </ul>
+                    <br />
+                    <img class="inlineImage" src="./images/screenshot_rc.local.png">
+                </li>
+                <li class="space">
+                    Reboot your Raspberry Pi with the below command and you are all set up and ready to go.<br />
+                    <div class="divCodeBlock">
+                        <code>$ sudo reboot</code>
+                    </div>
+                </li>
+            </ol>
+        </div>
+        <br />
+        <br />
+
+        <div class="divSingle">
+            <h3>Setting Up and Using Peerless-Pi-Player</h3>
+            <ol>
+                <li class="space">
+                    Find and make a note of your Raspberry Pi's IP address. This can be found by either logging into your home router and looking at Your Devices or type the below command into the Raspberry Pi terminal. The IP address is the first string of numbers<br />
+                    <div class="divCodeBlock">
+                        <code>$ hostname -I </code>
+                    </div>
+                </li>
+
+                <li class="space">
+                    In Peerless Player on the top menu bar, click on Pi-Player and from the drop down box select <b>Pi-Player Settings</b>
+                </li>
+
+                <li class="space">
+                    In the settings page enter your Raspberry Pi's IP address, your User Name and Password into the respective input boxes and click on Save.
+                </li>
+                <li class="space">
+                    Connect the HDMI cable from your remote screen to your Raspberry Pi and plug in the power cable, which will automatically start the boot up process.
+                </li>
+                <li class="space">
+                    Once the Raspberry Pi has booted up, from the Pi-Player option on the top menu bar of Peerless Player, click on <b>Open Pi-Player</b>
+                </li>
+                <li class="space">
+                    Start playing your music and now enjoy seeing the album artwork and track details on your remote screen.
+                </li>
+                <li class="space">
+                    The Raspberry Pi can be controlled from the Pi-Player menu in Peerless Player. You can resend the track data, close Pi-Player and reboot or shutdown the Raspberry Pi.
+                </li>
+                <li class="space">
+                    <b>Note.</b> If you find the reboot and shutdown functions do not operate from Peerless Player, this is because your Pi requires a password to carry out these operations. To fix this, in the Raspberry Pi terminal edit the following file with the command:<br />
+                    <div class="divCodeBlock">
+                        <code>$ sudo nano /etc/sudoers</code><br />
+                    </div>
+                        At the end of the file add the following 3 lines of code, replacing <i>userName</i> in line 3 with your Pi user name:<br />
+                        <div class="divCodeBlock">
+                            <code>
+                                # Allow members of group sudo to execute any command<br />
+                                %sudo   ALL=(ALL:ALL) ALL<br />
+                                userName ALL=(ALL) NOPASSWD: ALL
+                            </code>
+                        </div>
+                        <br />
+                        <img class="inlineImage" src="./images/screenshot_sudoers.png">
+                </li>
+            </ol>
+        </div>
+        <br />
+        <br />
+
+
+
         <br />
 
         <!-- ###### FOOTER ####### -->

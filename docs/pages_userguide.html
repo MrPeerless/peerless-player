@@ -37,10 +37,34 @@
     <!-- ###### MAIN CONTENT ####### -->
     <div class="centre" id="mainText">
         <h1>Peerless Player User Guide</h1>
-        <br /><br />
-        <h2>Manual Track Metadata Finder</h2>
-        <h3>Search Here For Missing Metadata</h3>
+        <br />
+        <br />
+        <h2>User Guide </h2>
+        <br />
         <div class="divSingle">
+            <h3>Quick Menu</h3>
+            <ol type="1">
+                <li><a href="#started">Getting Started</a></li>
+                <li><a href="#basic">Basic Functions</a></li>
+                <li><a href="#advanced">Advanced Functions</a></li>
+                <li><a href="#playlists">Playlists</a></li>
+                <li><a href="#adding">Adding Music to Peerless Player</a></li>
+                <li><a href="#editing">Editing Music in the Database</a></li>
+                <li><a href="#deleting">Deleting Music from the Database</a></li>
+                <li><a href="#settings">App Settings</a></li>
+                <li><a href="#sync">Syncing External Music Directory</a></li>
+                <li><a href="#explore">Exploring Music</a></li>
+                <li><a href="#pi-player">Peerless-Pi-Player</a></li>
+            </ol>
+        </div>
+        <br />
+        <br />
+
+        <h2>Manual Track Metadata Finder</h2>
+        <br />
+        <div class="divSingle">
+            <h3>Search Here For Missing Metadata</h3>
+            <br />
             <p>
                 Go to <a href="https://www.chosic.com/music-genre-finder/" target="_blank">chosic.com</a>  and search for a track by name.<br />
                 From the results found, type in the values in the below input boxes and click on the SUBMIT button.
@@ -54,7 +78,7 @@
             <button class="btnMetadata" id="btnSubmit" onclick="displayMetadata()">Submit</button>
             <button class="btnMetadata" id="btnClear" onclick="clearMetadata()">Clear</button>
             <br />
-            <h3>Metadata Results</h3>
+            <h4>Metadata Results</h4>
             <b>Tempo1 : </b><span id="spanTempo1"></span>
             <br />
             <b>Tempo2 : </b><span id="spanTempo2"></span>
@@ -66,30 +90,14 @@
         </div>
         <br />
         <br />
-        <h2>User Guide </h2>
-        <h3>Quick Menu</h3>
-        <div class="divSingle">
-            <ol type="1">
-                <li><a href="#started">Getting Started</a></li>
-                <li><a href="#basic">Basic Functions</a></li>
-                <li><a href="#advanced">Advanced Functions</a></li>
-                <li><a href="#playlists">Playlists</a></li>
-                <li><a href="#adding">Adding Music to Peerless Player</a></li>
-                <li><a href="#editing">Editing Music in the Database</a></li>
-                <li><a href="#deleting">Deleting Music from the Database</a></li>
-                <li><a href="#settings">App Settings</a></li>
-                <li><a href="#sync">Syncing External Music Directory</a></li>
-                <li><a href="#explore">Exploring Music</a></li>
-            </ol>
-        </div>
-        <br />
-        <br />
+
 
         <span class="anchor" id="started"></span>
         <h2>1. Getting Started</h2>
         <br />
         <div class="help">
             <div class="divSingle">
+                <h3>1.1 First Things First</h3>
                 <ol type="1">
                     <li>
                         On the menu bar click on <b>File</b> and then <b>Settings.</b> This will take you to the Settings page where you can customise the app.
@@ -114,8 +122,9 @@
         <span class="anchor" id="basic"></span>
         <h2>2. Basic Functions</h2>
         <div class="help">
-            <h3>2.1 Finding Music</h3>
+            <br />
             <div class="divSingle">
+                <h3>2.1 Finding Music</h3>
                 <ol type="1">
                     <li>
                         The main navigation menu for Peerless Player is along the top of the screen.
@@ -146,9 +155,10 @@
                     </li>
                 </ol>
             </div>
-
-            <h3>2.2 Playing Music</h3>
+            <br />
+            <br />
             <div class="divSingle">
+                <h3>2.2 Playing Music</h3>
                 <ol type="1">
                     <li>
                         The main controls for playing music are at the top left corner of the screen.
@@ -175,8 +185,9 @@
         <span class="anchor" id="advanced"></span>
         <h2>3. Advanced Functions</h2>
         <div class="help">
-            <h3>3.1 Shuffle Music</h3>
+            <br />
             <div class="divSingle">
+                <h3>3.1 Shuffle Music</h3>
                 <ol type="1">
                     <li>
                         To shuffle songs from the entire music library, from the <b>Artists, Albums, Genres or Years</b> page, click on the shuffle button.
@@ -192,9 +203,11 @@
                     </li>
                 </ol>
             </div>
+            <br />
+            <br />
 
-            <h3>3.2 Create Mood Music</h3>
             <div class="divSingle">
+                <h3>3.2 Create Mood Music</h3>
                 <ol type="1">
                     <li>
                         From the <b>Function</b> menu on the left of the screen, click on the <button style="width:20px;height:10px;background:url(./graphics/expand.png) no-repeat;border:none;vertical-align: middle;"></button> button next to <b>Creat Mood Music</b> to display the mood music drop down box. Select your desired mood and click on the <b>Play</b> button.
@@ -204,9 +217,11 @@
                     </li>
                 </ol>
             </div>
+            <br />
+            <br />
 
-            <h3>3.3 Explore Sub Genres</h3>
             <div class="divSingle">
+                <h3>3.3 Explore Sub Genres</h3>
                 <ol type="1">
                     <li>
                         From the <b>Function</b> menu on the left of the screen, click on the <button style="width:20px;height:10px;background:url(./graphics/expand.png) no-repeat;border:none;vertical-align: middle;"></button> button next to <b>Explore Sub Genres</b> to display the genre music drop down box. Select your desired genre and click on the <b>Show</b> button.
@@ -216,9 +231,11 @@
                     </li>
                 </ol>
             </div>
+            <br />
+            <br />
 
-            <h3>3.4 Queue Track</h3>
             <div class="divSingle">
+                <h3>3.4 Queue Track</h3>
                 <ol type="1">
                     <li>
                         While playing music you can create an on the go playlist by using the <b>Queue</b> button in the <b>Player Functions</b> on the left of the screen.
@@ -240,9 +257,11 @@
                     </li>
                 </ol>
             </div>
+            <br />
+            <br />
 
-            <h3>3.5 Queue Album</h3>
             <div class="divSingle">
+                <h3>3.5 Queue Album</h3>
                 <ol type="1">
                     <li>
                         To queue an album to play when the current queued music has finished playing, from the <b>Display Album</b> page click on the <b>Queue</b> button.
@@ -258,9 +277,11 @@
                     </li>
                 </ol>
             </div>
+            <br />
+            <br />
 
-            <h3>3.6 Favourites</h3>
             <div class="divSingle">
+                <h3>3.6 Favourites</h3>
                 <ol type="1">
                     <li>
                         To tag a song as a favourite, from the track display click on the black heart image<img class="favourite" src="./graphics/favourite_black.png" alt="N"> which will change the heart image to <img class="favourite" src="./graphics/favourite_red.png" alt="Y">
@@ -270,9 +291,11 @@
                     </li>
                 </ol>
             </div>
+            <br />
+            <br />
 
-            <h3>3.7 View Album Artwork</h3>
             <div class="divSingle">
+                <h3>3.7 View Album Artwork</h3>
                 <ol type="1">
                     <li>
                         To view a large image of the album artwork, click on the artwork image while displaying the album details.
@@ -291,8 +314,9 @@
         <span class="anchor" id="playlists"></span>
         <h2>4. Playlists</h2>
         <div class="help">
-            <h3>4.1 View Playlists</h3>
+            <br />
             <div class="divSingle">
+                <h3>4.1 View Playlists</h3>
                 <ol type="1">
                     <li>
                         To view your playlists, on the main navigation menu at the top of the screen, click on <b>Playlists</b>. This will display all your playlists in alphabetical order.
@@ -305,9 +329,11 @@
                     </li>
                 </ol>
             </div>
+            <br />
+            <br />
 
-            <h3>4.2 Create a Playlist</h3>
             <div class="divSingle">
+                <h3>4.2 Create a Playlist</h3>
                 <ol type="1">
                     <li>
                         From the <b>Function</b> menu on the left of the screen, click on the <button style="width:20px;height:10px;background:url(./graphics/expand.png) no-repeat;border:none;vertical-align: middle;"></button> button next to <b>Player Functions</b>. Click on the <b>New</b> button to open the Create a New Playlist function.<br />
@@ -336,9 +362,11 @@
                     </li>
                 </ol>
             </div>
+            <br />
+            <br />
 
-            <h3>4.3 Edit a Playlist</h3>
             <div class="divSingle">
+                <h3>4.3 Edit a Playlist</h3>
                 <ol type="1">
                     <li>
                         To edit a playlist, click on the desired playlist to display it and click on the <b>Edit</b> button next to the playlist. This will display the Edit playlist function.
@@ -364,9 +392,11 @@
                     </li>
                 </ol>
             </div>
+            <br />
+            <br />
 
-            <h3>4.4 Export a Playlist</h3>
             <div class="divSingle">
+                <h3>4.4 Export a Playlist</h3>
                 <ol type="1">
                     <li>
                         A playlist can be exported as an .m3u file in the directory format /music/artist/album/track.
@@ -382,9 +412,11 @@
                     </li>
                 </ol>
             </div>
+            <br />
+            <br />
 
-            <h3>4.5 View Exported Playlists</h3>
             <div class="divSingle">
+                <h3>4.5 View Exported Playlists</h3>
                 <ol type="1">
                     <li>
                         From the <b>Playlists</b> menu click on View Exported Playlists or under <b>Player Functions</b> click on the <b>View</b> Exported Playlists button.
@@ -403,9 +435,11 @@
                     </li>
                 </ol>
             </div>
+            <br />
+            <br />
 
-            <h3>4.6 Delete a Playlist</h3>
             <div class="divSingle">
+                <h3>4.6 Delete a Playlist</h3>
                 <ol type="1">
                     <li>
                         To delete a playlist, first select the desired playlist to be deleted and click on the <b>Delete</b> button.
@@ -418,9 +452,11 @@
                     </li>
                 </ol>
             </div>
+            <br />
+            <br />
 
-            <h3>4.7 Smart Playlist</h3>
             <div class="divSingle">
+                <h3>4.7 Smart Playlist</h3>
                 <ol type="1">
                     <li>
                         Peerless Player can create a Smart Playlist of 20 songs based on a seed track.
@@ -441,6 +477,7 @@
         <br />
         <div class="help">
             <div class="divSingle">
+                <h3>5.1 How to Add Music</h3>
                 <ol type="1">
                     <li>
                         Add a ripped CD or music download to your Music directory with music files in .mp3 .m4a .flac or (.wav not recommended) format. If the artist is new to your music collection, add the artist folder containing the album folder or if the artist already exists, add the album folder to the existing artist folder in your music directory.
@@ -488,6 +525,7 @@
         <br />
         <div class="help">
             <div class="divSingle">
+                <h3>6.1 How to Edit Music</h3>
                 <ol type="1">
                     <li>
                         To edit an album in the database, display the album and click on the <b>Edit</b> button next to the album artwork.
@@ -520,6 +558,7 @@
         <br />
         <div class="help">
             <div class="divSingle">
+                <h3>7.1 How to Delete Music</h3>
                 <ol type="1">
                     <li>
                         To delete an album from the database, display the album and click on the <b>Edit</b> button next to the album artwork.
@@ -549,6 +588,7 @@
         <br />
         <div class="help">
             <div class="divSingle">
+                <h3>8.1 Personalise Your Player</h3>
                 <ol type="1">
                     <li>
                         From the <b>File</b> menu, click on <b>Settings</b>, to display the App Settings page. From here you can change the below settings.
@@ -570,6 +610,7 @@
         <br />
         <div class="help">
             <div class="divSingle">
+                <h3>9.1 Sync Your Music</h3>
                 <ol type="1">
                     <li>
                         Insert your SD card/USB drive and from the <b>File</b> menu or <b>Database Functions</b> click on <b>Sync External Directory</b>.
@@ -601,9 +642,9 @@
         <h2>10. Exploring Music</h2>
         <br />
         <div class="help">
-            <p>Music recommendations and new music releases can be listened to in full on the Spotify web player with a free Spotify account by clicking through on the displayed album.</p>
-            <h3>10.1 Artist Biography</h3>
+
             <div class="divSingle">
+                <h3>10.1 Artist Biography</h3>
                 <ol type="1">
                     <li>
                         An artists biography can be displayed from the artist's album page.
@@ -619,9 +660,11 @@
                     </li>
                 </ol>
             </div>
+            <br />
+            <br />
 
-            <h3>10.2 Artist Discography</h3>
             <div class="divSingle">
+                <h3>10.2 Artist Discography</h3>
                 <ol type="1">
                     <li>
                         An artists discography can be displayed from the artists album page.
@@ -640,9 +683,14 @@
                     </li>
                 </ol>
             </div>
+            <br />
+            <br />
 
-            <h3>10.3 Artist Recommendations</h3>
             <div class="divSingle">
+                <h3>10.3 Artist Recommendations</h3>
+                <br />
+                <p>Music recommendations can be listened to in full on the Spotify web player with a free Spotify account by clicking through on the displayed album.</p>
+
                 <ol type="1">
                     <li>
                         Recommendations based on an artist can be displayed from the artists album page.
@@ -658,9 +706,11 @@
                     </li>
                 </ol>
             </div>
+            <br />
+            <br />
 
-            <h3>10.4 Artist Links</h3>
             <div class="divSingle">
+                <h3>10.4 Artist Links</h3>
                 <ol type="1">
                     <li>
                         At the bottom of both the artist's biography and discography page are links to the artist's social media accounts and other music sites.
@@ -670,9 +720,11 @@
                     </li>
                 </ol>
             </div>
+            <br />
+            <br />
 
-            <h3>10.5 Album Information</h3>
             <div class="divSingle">
+                <h3>10.5 Album Information</h3>
                 <ol type="1">
                     <li>
                         To find out more information about an album, from the display album page, click on the <b>Info</b> button.
@@ -682,9 +734,13 @@
                     </li>
                 </ol>
             </div>
+            <br />
+            <br />
 
-            <h3>10.6 New Music Releases</h3>
             <div class="divSingle">
+                <h3>10.6 New Music Releases</h3>
+                <br />
+                <p>New Music Releases can be listened to in full on the Spotify web player with a free Spotify account by clicking through on the displayed album.</p>
                 <ol type="1">
                     <li>
                         To see the latest popular new music releases, from the <b>Player</b> menu or <b>Player Functions</b>, click on the <b>Show</b> New releases button.
@@ -697,6 +753,54 @@
                     </li>
                 </ol>
             </div>
+        </div>
+
+        <br />
+        <span class="anchor" id="pi-player"></span>
+        <h2>11. Peerless-Pi-Player</h2>
+        <br />
+        <div class="help">
+
+            <div class="divSingle">
+                <h3>11.1 General Information</h3>
+                <ol type="1">
+                    <li>
+                        For information about Peerless-Pi-Player and how to build and install, please refer to this page on the Peerless Player website:
+                        <a href="https://peerlessplayer.rocks/pages_pi-player.html" target="_blank">Peerless-Pi-Player</a>
+                    </li>
+                    <li>
+                        All actions to control the Pi-Player can be found on the top menu bar and selected from the drop down box, so there is no need to access the Raspberry Pi directly.
+                    </li>
+                </ol>
+            </div>
+            <br />
+            <br />
+
+            <div class="divSingle">
+                <h3>11.2 Menu Options</h3>
+                <ol type="1">
+                    <li>
+                        Pi-Player Settings. Update your Raspberry Pi credentials; IP address on your network, user name and password.
+                    </li>
+                    <li>
+                        Open Pi-Player. Click to open the Pi-Player in a full screen Chromium browser on your remote screen.
+                    </li>
+                    <li>
+                        Re-Send Track data. Click if you need to resend data from Peerless player to the Pi-Player. For example if you open Pi-Player while a song is playing, it won’t update until the next song is played.
+                    </li>
+                    <li>
+                        Close Pi-Player. Click to close the Pi-Player.
+                    </li>
+                    <li>
+                        Reboot Raspberry-Pi. Click if for any reason you need to reboot the Raspberry Pi.
+                    </li>
+                    <li>
+                        Shutdown Raspberry-Pi. Click to shutdown the Raspberry Pi when you have finished playing music.
+                    </li>
+                </ol>
+            </div>
+            <br />
+            <br />
         </div>
         <br />
         <br />

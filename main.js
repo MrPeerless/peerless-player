@@ -1016,19 +1016,17 @@ ipcMain.on('ssh_artworkfile', (event, data) => {
     var track = data[4];
     var playTime = data[5];
     var favourite = data[6];
+    var ipAddress = data[7];
+    var userName = data[8];
+    var password = data[9];
     var artworkFile;
-    const filesToSend = [];
-    // Location of files on remote server
-    //const filesToRecieve = ["/Users/geoff/Documents/Tunes/standard/data/pi_data.json", "/Users/geoff/Documents/Tunes/standard/graphics/folder.jpg"];
+    var newDate = Date().toLocaleString();
 
-    const filesToRecieve = ["/home/geoff/Documents/standard/data/pi_data.json", "/home/geoff/Documents/standard/graphics/folder.jpg"];
+    // Location of file on HP Desktop
+    //const fileToReceive = "/Users/geoff/Documents/Tunes/pi-player/graphics/folder.jpg"
 
-
-    // Write track data to pi_json data file to send to remote server
-    var jsonData = '{"artist":"' + artist + '", "album":"' + album + '", "track":"' + track + '", "playTime":"' + playTime + '", "favourite":" ' + favourite + '"}';
-    fs.writeFileSync("./app/data/pi_data.json", jsonData)
-    // Add file path to array to send to remote server
-    filesToSend[0] = (path.join(__dirname, "./app/data/pi_data.json"));
+    // Location of file on pi-player
+    const fileToReceive = "/home/" + userName + "/Documents/pi-player/graphics/tempFolder.jpg"
 
     // Get absolute path of PP logo
     if (artworkLarge == './graphics/peerless_player_blue.jpg') {
@@ -1038,12 +1036,26 @@ ipcMain.on('ssh_artworkfile', (event, data) => {
     // Check if large artwork file exists, if not use folder file
     if (fs.existsSync(artworkLarge)) {
         artworkFile = artworkLarge;
-        filesToSend[1] = artworkFile;
+        fileToSend = artworkFile;
     } else {
         artworkFile = artworkFolder;
-        filesToSend[1] = artworkFile;
+        fileToSend = artworkFile;
     }
+    // Write track data to pi_json data file to send to remote server
+    var jsonData = '{"artist":"' + artist + '", "album":"' + album + '", "track":"' + track + '", "playTime":"' + playTime + '", "favourite":" ' + favourite + '", "timeStamp":"' + newDate + '"}';
+    fs.writeFileSync("./app/data/pi_data.json", jsonData)
 
+    // Send art file first
+    sendFile([fileToSend, fileToReceive, ipAddress, userName, password])
+});
+
+// Function to send files by sftp to pi-player
+function sendFile(data) {
+    var fileToSend = data[0];
+    var fileToReceive = data[1]
+    var ipAddress = data[2];
+    var userName = data[3];
+    var password = data[4];
     // Connect to remote server using SSH
     const { Client } = require('ssh2');
     const conn = new Client();
@@ -1057,19 +1069,124 @@ ipcMain.on('ssh_artworkfile', (event, data) => {
     conn.on('ready', () => {
         conn.sftp(function (err, sftp) {
             if (err) throw err;
-            // Get length of array of files to send
-            let filesToSendLength = filesToSend.length;
+            // Local directory path
+            var readStream = fs.createReadStream(fileToSend);
+            // Remote directory location; include the file name
+            var writeStream = sftp.createWriteStream(fileToReceive);
 
-            // Loop through files to send to remote server
-            for (let i = 0; i < filesToSendLength; i++) {
-                //text += "<li>" + fruits[i] + "</li>";
+            writeStream.on('close', function () {
+                if (fileToReceive == "/home/" + userName + "/Documents/pi-player/graphics/tempFolder.jpg") {
+                    console.log("Transfer folder.jpg complete")
+                    shellCommand(['mv /home/' + userName + '/Documents/pi-player/graphics/tempFolder.jpg /home/' + userName + '/Documents/pi-player/graphics/folder.jpg\n', ipAddress, userName, password])
+                    conn.end();
+                }
+            });
+
+            writeStream.on('end', function () {
+                console.log("sftp connection closed");
+                conn.close();
+            });
+
+            // Initiate transfer of file
+            readStream.pipe(writeStream);
+        });
+
+        // Connection details of remote server
+    }).connect({
+        host: ipAddress,
+        port: 22,
+        username: userName,
+        password: password
+    });
+}
+
+// Receive Shell Commands from client
+ipcMain.on('shell_command', (event, data) => {
+    // Call function to send command
+    shellCommand(data)
+});
+
+// Function to send Shell Commands to pi-player
+function shellCommand(data) { 
+    var command = data[0];
+    var ipAddress = data[1];
+    var userName = data[2];
+    var password = data[3];
+    // Connect to remote server using SSH
+    const { Client } = require('ssh2');
+    const conn = new Client();
+
+    // Connection error handling
+    conn.on('error', function (e) {
+        console.log("ERROR connecting :: " + e);
+    });
+
+    // Connection successful
+    conn.on('ready', () => {
+        console.log('Shell Client Stream :: ready');
+        conn.shell(false, { pty: true }, function (err, stream) {
+            if (err) throw err;
+            stream.on('close', function () {
+                console.log('Stream shell :: close');
+                conn.end();
+            }).on('data', function (data) {
+                console.log('SHELL STDOUT: ' + data);
+                if (command == 'mv /home/' + userName + '/Documents/pi-player/graphics/tempFolder.jpg /home/' + userName + '/Documents/pi-player/graphics/folder.jpg\n') {
+                    var fileToSend = (path.join(__dirname, "./app/data/pi_data.json"));
+                    var fileToReceive = "/home/" + userName + "/Documents/pi-player/data/pi_data.json"
+                    sendFile([fileToSend, fileToReceive, ipAddress, userName, password]); 
+                }
+            }).stderr.on('data', function (data) {
+                console.log('STDERR: ' + data);
+            });
+
+            stream.write(command)
+        })
+
+        // Connection details of remote server
+    }).connect({
+        host: ipAddress,
+        port: 22,
+        username: userName,
+        password: password
+    });
+};
+
+
+
+
+/*
+// Connect to remote server using SSH
+const { Client } = require('ssh2');
+const conn = new Client();
+
+// Connection error handling
+conn.on('error', function (e) {
+    console.log("ERROR connecting :: " + e);
+});
+
+// Connection successful
+conn.on('ready', () => {
+    conn.sftp(function (err, sftp) {
+        if (err) throw err;
+        // Get length of array of files to send
+        let filesToSendLength = filesToSend.length;
+
+        var i = 0; 
+        function sendFiles() {
+            setTimeout(function () {
+
                 // Local directory path
                 var readStream = fs.createReadStream(filesToSend[i]);
                 // Remote directory location; include the file name
                 var writeStream = sftp.createWriteStream(filesToRecieve[i]);
 
                 writeStream.on('close', function () {
-                    console.log("- file transferred succesfully");
+                    console.log("- file transferred succesfully")
+                    if (filesToRecieve[i - 1] == "/home/geoff/Documents/pi-player/graphics/tempFolder.jpg") {
+                        console.log("Transfer folder.jpg complete")
+                        shellCommand(['mv /home/geoff/Documents/pi-player/graphics/tempFolder.jpg /home/geoff/Documents/pi-player/graphics/folder.jpg\n', ipAddress, userName, password])
+                    }
                 });
 
                 writeStream.on('end', function () {
@@ -1079,14 +1196,42 @@ ipcMain.on('ssh_artworkfile', (event, data) => {
 
                 // Initiate transfer of file
                 readStream.pipe(writeStream);
-            }
-        });
-    // Connection details of remote server
-    }).connect({
-        host: '192.168.1.109',
-        port: 22,
-        username: '****',
-        password: '****'
 
+                i++;
+                if (i < filesToSendLength) {
+                    sendFiles()
+                }
+            }, 600)
+        }
+        sendFiles()
+
+        
+        // Loop through files to send to remote server
+        for (let i = 0; i < filesToSendLength; i++) {
+            // Local directory path
+            var readStream = fs.createReadStream(filesToSend[i]);
+            // Remote directory location; include the file name
+            var writeStream = sftp.createWriteStream(filesToRecieve[i]);
+
+            writeStream.on('close', function () {
+                console.log("- file transferred succesfully");
+            });
+
+            writeStream.on('end', function () {
+                console.log("sftp connection closed");
+                conn.close();
+            });
+
+            // Initiate transfer of file
+            readStream.pipe(writeStream);
+        }
+        
     });
+// Connection details of remote server
+}).connect({
+    host: ipAddress,
+    port: 22,
+    username: userName,
+    password: password
 });
+*/

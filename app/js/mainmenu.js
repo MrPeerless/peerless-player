@@ -72,6 +72,52 @@ const template = [
     },
 
     {
+        label: 'Pi-Player',
+        submenu: [
+            {
+                label: 'Pi-Player Settings',
+                click: function (menuItem, currentWindow) {
+                    currentWindow.webContents.send('Pi-Player Settings');
+                }
+            },
+
+            {
+                label: 'Open Pi-Player',
+                click: function (menuItem, currentWindow) {
+                    currentWindow.webContents.send('Open Pi-Player');
+                }
+            },
+            {
+                label: 'Re-Send Track Data',
+                click: function (menuItem, currentWindow) {
+                    currentWindow.webContents.send('Re-Send Pi-Player');
+                }
+            },
+            {
+                label: 'Close Pi-Player',
+                click: function (menuItem, currentWindow) {
+                    currentWindow.webContents.send('Close Pi-Player');
+                }
+            },
+            {
+                type: 'separator'
+            },
+            {
+                label: 'Reboot Raspberry-Pi',
+                click: function (menuItem, currentWindow) {
+                    currentWindow.webContents.send('Reboot Pi-Player');
+                }
+            },
+            {
+                label: 'Shutdown Raspberry-Pi',
+                click: function (menuItem, currentWindow) {
+                    currentWindow.webContents.send('Shutdown Pi-Player');
+                }
+            },
+        ]
+    },
+
+    {
         label: 'Player',
         submenu: [
             {
