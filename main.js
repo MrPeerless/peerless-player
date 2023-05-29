@@ -1022,9 +1022,6 @@ ipcMain.on('ssh_artworkfile', (event, data) => {
     var artworkFile;
     var newDate = Date().toLocaleString();
 
-    // Location of file on HP Desktop
-    //const fileToReceive = "/Users/geoff/Documents/Tunes/pi-player/graphics/folder.jpg"
-
     // Location of file on pi-player
     const fileToReceive = "/home/" + userName + "/Documents/pi-player/graphics/tempFolder.jpg"
 
@@ -1046,7 +1043,9 @@ ipcMain.on('ssh_artworkfile', (event, data) => {
     fs.writeFileSync("./app/data/pi_data.json", jsonData)
 
     // Send art file first
-    sendFile([fileToSend, fileToReceive, ipAddress, userName, password])
+    if (ipAddress) {
+        sendFile([fileToSend, fileToReceive, ipAddress, userName, password])
+    }  
 });
 
 // Function to send files by sftp to pi-player
@@ -1076,7 +1075,6 @@ function sendFile(data) {
 
             writeStream.on('close', function () {
                 if (fileToReceive == "/home/" + userName + "/Documents/pi-player/graphics/tempFolder.jpg") {
-                    console.log("Transfer folder.jpg complete")
                     shellCommand(['mv /home/' + userName + '/Documents/pi-player/graphics/tempFolder.jpg /home/' + userName + '/Documents/pi-player/graphics/folder.jpg\n', ipAddress, userName, password])
                     conn.end();
                 }
@@ -1123,7 +1121,6 @@ function shellCommand(data) {
 
     // Connection successful
     conn.on('ready', () => {
-        console.log('Shell Client Stream :: ready');
         conn.shell(false, { pty: true }, function (err, stream) {
             if (err) throw err;
             stream.on('close', function () {
@@ -1151,87 +1148,3 @@ function shellCommand(data) {
         password: password
     });
 };
-
-
-
-
-/*
-// Connect to remote server using SSH
-const { Client } = require('ssh2');
-const conn = new Client();
-
-// Connection error handling
-conn.on('error', function (e) {
-    console.log("ERROR connecting :: " + e);
-});
-
-// Connection successful
-conn.on('ready', () => {
-    conn.sftp(function (err, sftp) {
-        if (err) throw err;
-        // Get length of array of files to send
-        let filesToSendLength = filesToSend.length;
-
-        var i = 0; 
-        function sendFiles() {
-            setTimeout(function () {
-
-                // Local directory path
-                var readStream = fs.createReadStream(filesToSend[i]);
-                // Remote directory location; include the file name
-                var writeStream = sftp.createWriteStream(filesToRecieve[i]);
-
-                writeStream.on('close', function () {
-                    console.log("- file transferred succesfully")
-                    if (filesToRecieve[i - 1] == "/home/geoff/Documents/pi-player/graphics/tempFolder.jpg") {
-                        console.log("Transfer folder.jpg complete")
-                        shellCommand(['mv /home/geoff/Documents/pi-player/graphics/tempFolder.jpg /home/geoff/Documents/pi-player/graphics/folder.jpg\n', ipAddress, userName, password])
-                    }
-                });
-
-                writeStream.on('end', function () {
-                    console.log("sftp connection closed");
-                    conn.close();
-                });
-
-                // Initiate transfer of file
-                readStream.pipe(writeStream);
-
-                i++;
-                if (i < filesToSendLength) {
-                    sendFiles()
-                }
-            }, 600)
-        }
-        sendFiles()
-
-        
-        // Loop through files to send to remote server
-        for (let i = 0; i < filesToSendLength; i++) {
-            // Local directory path
-            var readStream = fs.createReadStream(filesToSend[i]);
-            // Remote directory location; include the file name
-            var writeStream = sftp.createWriteStream(filesToRecieve[i]);
-
-            writeStream.on('close', function () {
-                console.log("- file transferred succesfully");
-            });
-
-            writeStream.on('end', function () {
-                console.log("sftp connection closed");
-                conn.close();
-            });
-
-            // Initiate transfer of file
-            readStream.pipe(writeStream);
-        }
-        
-    });
-// Connection details of remote server
-}).connect({
-    host: ipAddress,
-    port: 22,
-    username: userName,
-    password: password
-});
-*/

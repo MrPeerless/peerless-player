@@ -3,10 +3,10 @@
     "",
     "\\app",
     "\\app\\data",
+    "\\app\\html",
     "\\app\\js",
-    "\\docs",
-    "\\docs\\css"
+    "\\docs"
   ],
-  "SelectedNode": "\\app\\js\\index.js",
+  "SelectedNode": "\\docs\\index.html",
   "PreviewInSolutionExplorer": false
 }

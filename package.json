@@ -1,6 +1,6 @@
 {
   "name": "peerless-player",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Peerless Player - listen, discover, explore music",
   "main": "main.js",
   "scripts": {
@@ -28,7 +28,7 @@
   },
   "devDependencies": {
     "electron": "^22.0.0",
-    "electron-builder": "^24.1.2",
+    "electron-builder": "^23.6.0",
     "electron-rebuild": "^3.2.5"
   },
   "repository": {

@@ -331,7 +331,7 @@ ipcRenderer.on('Help Release', (event) => {
     $('#okModalText').empty();
     $(".modalFooter").empty();
     $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>Release Notes Version: ' + global_Version + '</h2>');
-    $('#okModalText').append("<div class='modalIcon'><img src='./graphics/peerless_player_thumb.png'></div><p>1. Music recommendations added to artist page.<br>2. New music releases function added to player menu.<br>3. Back To Top button added to all pages once scrolled.<br>4. Error handling added to ajax remote server requests.<br>5. Smooth srcolling added to A - Z menu.<br>6. Animation added when displaying large album artwork.<br>7. Minor bug fixes in playlist and search functions.<br></p >");//<br> &nbsp
+    $('#okModalText').append("<div class='modalIcon'><img src='./graphics/peerless_player_thumb.png'></div><p>1. Bug fix when fetching album info from wikidata.<br>2. Database Edit Cancel button rerouted back to artist albums instead of homepage.<br>3. Link added from artists album page to display all songs for an artist.<br>4. Small redsign of the main menu.<br>5. Pi-Player functions added to the top menu bar. See the website for full details about the new Peerless-Pi-Player.<br></p >");//<br> &nbsp
     var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
     $('.modalFooter').append(buttons);
     $("#btnOkModal").focus();
