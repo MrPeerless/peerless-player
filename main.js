@@ -11,6 +11,9 @@ const { readFileSync } = require('fs'); // To read json files
 //var request = require('request'); // Used for saving images
 var request = require('request').defaults({ strictSSL: false }); // defaults as downloading art images throws 'certificate expired' error message
 
+// Get local app data path
+var data_path = app.getPath('userData')
+//console.log("userData :: " + app.getPath('userData'));
 
 var Jimp = require('jimp');// Require Jimp for resizing images
 var jsmediatags = require("jsmediatags"); // To read ID3 tages in audio files
@@ -20,6 +23,10 @@ var resources = JSON.parse(readFileSync('./resources/data.json'));
 // Get spotify api keys
 var client_id = resources.clientID;
 var client_secret = resources.client_secret;
+
+// Create pi_json data file in userData path
+var jsonData = '{"artist":"Peerless-Pi-Player", "album":"It\'s Music To Your Ears", "track":"Version 0.1.0", "playTime":"", "favourite":"", "timeStamp":"1"}';
+fs.writeFileSync(data_path + "/pi_data.json", jsonData)
 
 //#######################
 // CREATE RENDERER WINDOW
@@ -47,8 +54,6 @@ function createWindow() {
 
     // Maximise window once created
     win.maximize()
-    // Get app path
-    var data_path = app.getPath('userData')
     // Get path to sqlite script
     var data_base = path.resolve(__dirname + "/app/js/sqlite_async")
     // Load index.html into window with app path in query string
@@ -709,7 +714,6 @@ ipcMain.on('spotify_search', (event, data) => {
     query = query.replace(/[']/g, "")
     query = query.replace(" &", "")
     query = query + "&type=album";
-
     request.post(authOptions, function (error, response, body) {
         if (!error && response.statusCode === 200) {
             // Encode URL
@@ -765,7 +769,6 @@ ipcMain.on('spotify_search', (event, data) => {
 ipcMain.on('spotify_getArtist', (event, data) => {
     var query = data[0];
     var artist = data[1];
-
     request.post(authOptions, function (error, response, body) {
         if (!error && response.statusCode === 200) {
             // Encode URL
@@ -797,7 +800,6 @@ ipcMain.on('spotify_getArtist', (event, data) => {
 // Get tracks from album
 ipcMain.on('spotify_getTracks', (event, data) => {
     var query = data[0];
-
     request.post(authOptions, function (error, response, body) {
         if (!error && response.statusCode === 200) {
             // Encode URL
@@ -829,7 +831,6 @@ ipcMain.on('spotify_getTracks', (event, data) => {
 // Get Audio Features of tracks from album
 ipcMain.on('spotify_getAudioFeatures', (event, data) => {
     var query = data[0];
-
     request.post(authOptions, function (error, response, body) {
         if (!error && response.statusCode === 200) {
             // Encode URL
@@ -894,7 +895,6 @@ ipcMain.on('spotify_getArtistID', (event, data) => {
 // Get recommendations based on spotify artist ID
 ipcMain.on('spotify_recommendations', (event, data) => {
     var query = data[0];
-
     request.post(authOptions, function (error, response, body) {
         if (!error && response.statusCode === 200) {
             // Encode URL
@@ -926,7 +926,6 @@ ipcMain.on('spotify_recommendations', (event, data) => {
 // Get spotify album details
 ipcMain.on('spotify_album', (event, data) => {
     var query = data[0];
-
     request.post(authOptions, function (error, response, body) {
         if (!error && response.statusCode === 200) {
             // Encode URL
@@ -957,7 +956,6 @@ ipcMain.on('spotify_album', (event, data) => {
 
 // Get new releases
 ipcMain.on('spotify_getNewReleases', (event) => {
-
     request.post(authOptions, function (error, response, body) {
         if (!error && response.statusCode === 200) {
             // Encode URL
@@ -1040,7 +1038,7 @@ ipcMain.on('ssh_artworkfile', (event, data) => {
     }
     // Write track data to pi_json data file to send to remote server
     var jsonData = '{"artist":"' + artist + '", "album":"' + album + '", "track":"' + track + '", "playTime":"' + playTime + '", "favourite":" ' + favourite + '", "timeStamp":"' + newDate + '"}';
-    fs.writeFileSync("./app/data/pi_data.json", jsonData)
+    fs.writeFileSync(data_path + "/pi_data.json", jsonData)
 
     // Send art file first
     if (ipAddress) {
@@ -1072,14 +1070,12 @@ function sendFile(data) {
             var readStream = fs.createReadStream(fileToSend);
             // Remote directory location; include the file name
             var writeStream = sftp.createWriteStream(fileToReceive);
-
             writeStream.on('close', function () {
                 if (fileToReceive == "/home/" + userName + "/Documents/pi-player/graphics/tempFolder.jpg") {
                     shellCommand(['mv /home/' + userName + '/Documents/pi-player/graphics/tempFolder.jpg /home/' + userName + '/Documents/pi-player/graphics/folder.jpg\n', ipAddress, userName, password])
                     conn.end();
                 }
             });
-
             writeStream.on('end', function () {
                 console.log("sftp connection closed");
                 conn.close();
@@ -1129,7 +1125,7 @@ function shellCommand(data) {
             }).on('data', function (data) {
                 console.log('SHELL STDOUT: ' + data);
                 if (command == 'mv /home/' + userName + '/Documents/pi-player/graphics/tempFolder.jpg /home/' + userName + '/Documents/pi-player/graphics/folder.jpg\n') {
-                    var fileToSend = (path.join(__dirname, "./app/data/pi_data.json"));
+                    var fileToSend = data_path + "/pi_data.json"
                     var fileToReceive = "/home/" + userName + "/Documents/pi-player/data/pi_data.json"
                     sendFile([fileToSend, fileToReceive, ipAddress, userName, password]); 
                 }

@@ -45,10 +45,6 @@ ipcRenderer.on('Pi-Player Settings', (event) => {
     });
 });
 
-//global_piIpAddress
-//global_piUserName
-//global_piPassword
-
 // Reboot Pi-Player
 ipcRenderer.on('Reboot Pi-Player', (event) => {
     // Display modal box; reboot yes, no?
