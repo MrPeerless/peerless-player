@@ -28,7 +28,7 @@
     "y18n": "^4.0.1"
   },
   "devDependencies": {
-    "electron": "^16.2.8",
+    "electron": "^22.3.21",
     "electron-builder": "^22.14.13",
     "electron-rebuild": "^3.2.5"
   },
