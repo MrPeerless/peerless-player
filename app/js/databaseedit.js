@@ -452,6 +452,7 @@ function getMetadata() {
 
     // Send IPC to search Spotify for album and artist
     var query = 'album:' + album + ' artist:' + artist + '&type=album';
+    console.log("send ipc query ")
     ipcRenderer.send("spotify_search", [query, album, artist, "edit"])
 }
 

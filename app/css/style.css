@@ -186,6 +186,12 @@ select {
     width: 281px;
     border: 1px solid #000000;
 }
+
+.spotifyLogo {
+    width: 100px;
+    height: 30px;
+}
+
 /* PAGE BUTTON STYLES
 ###########################*/
 .btnMenu {
@@ -281,6 +287,7 @@ button[disabled] {
         cursor: not-allowed;
     }
 
+
 /*Generic styling for all input boxes*/
 input[type=text] {
     -webkit-appearance: button;
@@ -347,6 +354,18 @@ textarea {
     display: none;
 }
 
+#divSideMenu {
+    display: none;
+    position: fixed;
+    width: 35px;
+    top: 60px;
+    bottom: 0;
+    padding: 0;
+    float: left;
+    height: auto;
+    margin: 0;
+}
+
 .container {
     display: flex;
 }
@@ -373,16 +392,17 @@ textarea {
     width: auto;
     float: left;
     left: 0px;
-    padding: 15px;
+
+    padding: 15px 0px 15px 15px;
     height: auto;
 }
 
-.divRecommends {
+.divSpotifyAlbumList {
     position: relative;
     width: auto;
     float: left;
     left: 0px;
-    padding-top: 15px;
+    padding-top: 10px;
     height: auto;
 }
 
@@ -411,6 +431,10 @@ textarea {
 }
 .nowPlaying {
     display: none;
+}
+
+#divHeading{
+    padding-bottom: 10px;
 }
 
 /*SETTINGS FORM
@@ -672,7 +696,7 @@ textarea {
 #ipnSearch {
     float: right;
     width: 125px;
-    height: 20px;
+    height: 21px;
     margin-top: 20px;
     float: left;
     outline: none;
@@ -700,6 +724,18 @@ button#btnSearch {
     outline: none;
 }
 
+    button#btnSearch:hover {
+        width: 25px;
+        height: 25px;
+        background: url(../graphics/search_highlight.png) no-repeat;
+        margin-top: 20px;
+        margin-left: 2px;
+        border: none;
+        cursor: pointer;
+        float: right;
+        outline: none;
+    }
+
 #imgCoverArt {
     opacity: 1;
     width: 195px;
@@ -717,79 +753,203 @@ button#btnSearch {
     float: left;
     margin: auto;
     width: 240px;
-    padding: 0 0 0 17px;
+    padding: 0 0 0 10px;
 }
+
 
 button#btnPrevious {
-    width: 32px;
-    height: 32px;
-    background: url(../graphics/skip_previous1.png) no-repeat;
+    width: 34px;
+    height: 34px;
+    background: url(../graphics/skip_previous.png) no-repeat;
     float: left;
-    margin-top: 16px;
-    margin-right: 2px;
+    margin-top: 15px;
+    margin-right: 3px;
     border: none;
     cursor: pointer;
     outline: none;
 }
 
-button#btnPlay {
-    width: 32px;
-    height: 32px;
-    background: url(../graphics/play1.png) no-repeat;
+    button#btnPrevious:hover {
+        width: 34px;
+        height: 34px;
+        background: url(../graphics/skip_previous_highlight.png) no-repeat;
+        float: left;
+        margin-top: 15px;
+        margin-right: 3px;
+        border: none;
+        cursor: pointer;
+        outline: none;
+    }
+
+button#btnPlay.playStop {
+    width: 34px;
+    height: 34px;
+    background: url(../graphics/play.png) no-repeat;
     float: left;
-    margin-top: 16px;
-    margin-right: 2px;
+    margin-top: 15px;
+    margin-right: 3px;
     border: none;
     cursor: pointer;
     outline: none;
 }
+
+    button#btnPlay.playStop:hover {
+        width: 34px;
+        height: 34px;
+        background: url(../graphics/play_highlight.png) no-repeat;
+        float: left;
+        margin-top: 15px;
+        margin-right: 3px;
+        border: none;
+        cursor: pointer;
+        outline: none;
+    }
+
+button#btnStop.playStop {
+    width: 34px;
+    height: 34px;
+    background: url(../graphics/stop.png) no-repeat;
+    float: left;
+    margin-top: 15px;
+    margin-right: 3px;
+    border: none;
+    cursor: pointer;
+    outline: none;
+    display: none;
+}
+
+    button#btnStop.playStop:hover {
+        width: 34px;
+        height: 34px;
+        background: url(../graphics/stop_highlight.png) no-repeat;
+        float: left;
+        margin-top: 15px;
+        margin-right: 3px;
+        border: none;
+        cursor: pointer;
+        outline: none;
+    }
 
 button#btnPause {
-    width: 32px;
-    height: 32px;
-    background: url(../graphics/pause1.png) no-repeat;
+    width: 34px;
+    height: 34px;
+    background: url(../graphics/pause.png) no-repeat;
     float: left;
-    margin-top: 16px;
-    margin-right: 2px;
+    margin-top: 15px;
+    margin-right: 3px;
     border: none;
     cursor: pointer;
     outline: none;
 }
+
+    button#btnPause:hover {
+        width: 34px;
+        height: 34px;
+        background: url(../graphics/pause_highlight.png) no-repeat;
+        float: left;
+        margin-top: 15px;
+        margin-right: 3px;
+        border: none;
+        cursor: pointer;
+        outline: none;
+    }
 
 button#btnNext {
-    width: 32px;
-    height: 32px;
-    background: url(../graphics/skip_next1.png) no-repeat;
+    width: 34px;
+    height: 34px;
+    background: url(../graphics/skip_next.png) no-repeat;
     float: left;
-    margin-top: 16px;
-    margin-right: 2px;
+    margin-top: 15px;
+    margin-right: 3px;
     border: none;
     cursor: pointer;
     outline: none;
 }
 
+    button#btnNext:hover {
+        width: 34px;
+        height: 34px;
+        background: url(../graphics/skip_next_highlight.png) no-repeat;
+        float: left;
+        margin-top: 15px;
+        margin-right: 3px;
+        border: none;
+        cursor: pointer;
+        outline: none;
+    }
+
 button#btnShuffle {
-    width: 32px;
-    height: 32px;
-    background: url(../graphics/shuffle1.png) no-repeat;
+    width: 34px;
+    height: 34px;
+    background: url(../graphics/shuffle.png) no-repeat;
     float: left;
-    margin-top: 16px;
-    margin-right: 2px;
+    margin-top: 15px;
+    margin-right: 3px;
     border: none;
     cursor: pointer;
     outline: none;
 }
-button#btnMute {
-    width: 32px;
-    height: 32px;
+
+    button#btnShuffle:hover {
+        width: 34px;
+        height: 34px;
+        background: url(../graphics/shuffle_highlight.png) no-repeat;
+        float: left;
+        margin-top: 15px;
+        margin-right: 3px;
+        border: none;
+        cursor: pointer;
+        outline: none;
+    }
+
+button#btnMuteOff.mute {
+    width: 34px;
+    height: 34px;
     background: url(../graphics/mute_off.png) no-repeat;
     float: left;
-    margin-top: 16px;
-    margin-right: 2px;
+    margin-top: 15px;
+    margin-right: 3px;
     border: none;
     cursor: pointer;
     outline: none;
 }
+
+    button#btnMuteOff.mute:hover {
+        width: 34px;
+        height: 34px;
+        background: url(../graphics/mute_off_highlight.png) no-repeat;
+        float: left;
+        margin-top: 15px;
+        margin-right: 3px;
+        border: none;
+        cursor: pointer;
+        outline: none;
+    }
+
+button#btnMuteOn.mute {
+    width: 34px;
+    height: 34px;
+    background: url(../graphics/mute_on.png) no-repeat;
+    float: left;
+    margin-top: 15px;
+    margin-right: 3px;
+    border: none;
+    cursor: pointer;
+    outline: none;
+    display: none;
+}
+
+    button#btnMuteOn.mute:hover {
+        width: 34px;
+        height: 34px;
+        background: url(../graphics/mute_on_highlight.png) no-repeat;
+        float: left;
+        margin-top: 15px;
+        margin-right: 3px;
+        border: none;
+        cursor: pointer;
+        outline: none;
+    }
 
 button#btnRewind {
     width: 20px;
@@ -886,7 +1046,7 @@ button#btnLibraryExpand {
     cursor: pointer;
     vertical-align: middle;
     outline: none;
-} 
+}
 
 #divMusicLibrary{
     display: block;
@@ -905,22 +1065,6 @@ button#btnPlayerExpand {
 } 
 
 #divPlayerFunctions{
-    display: none;
-}
-
-button#btnDatabaseExpand {
-    width: 20px;
-    height: 10px;
-    background: url(../graphics/expand.png) no-repeat;
-    margin-top: -2px;
-    margin-left: 1px;
-    border: none;
-    cursor: pointer;
-    vertical-align: middle;
-    outline: none;
-} 
-
-#divDatabaseFunctions{
     display: none;
 }
 
@@ -1167,7 +1311,7 @@ button#btnMoodExpand {
 }
 
 .divLinks li {
-    width: 80px;
+    width: 78px;
     height: 50px;
     margin: 0px;
     float: left;
@@ -1523,42 +1667,6 @@ button#btnMoodExpand {
         #tblSearch td:nth-child(7) {
             display: none;
         }
-
-/*Discog table*/
-#tblDiscog {
-    left: 0px;
-    font-family: 'Calibri', 'Arial', 'sans-serif';
-    border-collapse: collapse;
-    width: 95%;
-    margin: 15px;
-    animation: fadein 0s;
-    table-layout: fixed;
-}
-
-    #tblDiscog td, th {
-        text-align: left;
-        padding-left: 5px;
-        padding-top: 5px;
-        padding-bottom: 5px; 
-    }
-
-    #tblDiscog th {
-        font-size: 1.15em;
-        border: none;
-        outline: none;
-    }
-
-.rowDiscogTitle{
-    width: 60%;
-}
-
-.rowDiscogReleased{
-    width: 20%
-}
-
-.rowDiscogType{
-    width: 20%
-}
 
 /*Import Music table*/
 #tblImportMusic {

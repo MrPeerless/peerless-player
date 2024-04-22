@@ -69,7 +69,5 @@ $(document).ready(function () {
         var tracks = await dBase.all(sql);
         shuffleArray(tracks)
     }
-
     backgroundChange();
-
 });

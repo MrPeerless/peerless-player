@@ -295,20 +295,6 @@ button#btnFastForward {
         background: #F4F4FF;
     }
 
-/*Discog Table*/
-#tblDiscog {
-    background: #F4F4FF;
-}
-
-    #tblDiscog th {
-        background: #7576F9;
-        color: white;
-    }
-
-    #tblDiscog tr:nth-child(odd) {
-        background: white;
-    }
-
 /*Import Music table*/
 #tblImportMusic th {
     background: #7576F9;

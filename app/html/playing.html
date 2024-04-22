@@ -1,3 +1,4 @@
+<span class="btnX" id="btnXMenu">&times;</span>
 <div class="appMainHeading">
     <h1 id="appName"></h1>
 </div>
@@ -46,7 +47,6 @@
             <!--Selection dropdown list for mood1-->
             <select id="sltMood"></select>
             <button class="btnMenu" id="btnMood">Play</button>
-
             <p> </p><br>
         </div>
     </div>
@@ -61,7 +61,6 @@
             <!--Selection dropdown list for genre1-->
             <select id="sltGenre"></select>
             <button class="btnMenu" id="btnGenre">Show</button>
-
             <p> </p><br>
         </div>
     </div>
@@ -74,30 +73,16 @@
 
         <div id="divPlayerFunctions" class="divInnerPlayingText">
             <select id='sltAlbumSort'><option value='a2z'>A - Z</option><option value='artist'>Artist</option><option value='added'>Date Added</option><option value='played'>Last Played</option><option value='most'>Most Played</option><option value='release'>Release Date</option></select> Album Sort<br />
-            <button class="btnMenu2" id="btnNewReleases">Show</button> New Releases<br />
-            <button class="btnMenu2" id="btnCreate">New</button> Playlist<br />
-            <button class="btnMenu2" id="btnSmart">Smart</button> Playlist<br />
-            <button class="btnMenu2" id="btnExportedPlaylists">View</button> Exported Playlists<br />
+            <button class="btnMenu2" id="btnSync">Add</button> New Music<br />
             <button class="btnMenu2" id="btnClearQueued">Clear</button> Queued Music<br />
+            <button class="btnMenu2" id="btnCreate">New</button> Playlist<br />
             <div class="nowPlaying">
                 <button class="btnMenu2" id="btnQueue">Queue</button> Track<br />
             </div>
-            <p> </p><br>
-        </div>
-
-    </div>
-</div>
-
-<div class="allPlaying">
-    <div class="divPlayingText" id="divDatabase">
-        <!--Database functions-->
-        <h2><button id="btnDatabaseExpand"></button> Database Functions</h2>
-        <div id="divDatabaseFunctions" class="divInnerPlayingText">
-
-            <button class="btnMenu2" id="btnSync">Sync</button> Music Database<br />
-            <button class="btnMenu2" id="btnUpdateMeta">Update</button> Smart Results<br />
+            <button class="btnMenu2" id="btnNewReleases">Show</button> New Releases<br />
+            <button class="btnMenu2" id="btnSmart">Smart</button> Playlist<br />
             <button class="btnMenu2" id="btnSyncDir">Sync</button> External Directory<br />
-
+            <button class="btnMenu2" id="btnExportedPlaylists">View</button> Exported Playlists<br />
             <p> </p><br>
         </div>
     </div>
@@ -109,5 +94,3 @@
 
 <p class="hidden" id="nowPlayingTrackID">0</p>
 <p class="hidden" id="nowPlayingTrackIndex">0</p>
-
-<!-- Javascript file loaded using jquery in index.js-->

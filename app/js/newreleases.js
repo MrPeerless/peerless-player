@@ -22,6 +22,14 @@ $(document).ready(function () {
         overlay = "overlayRound";
     }
 
+    // Display Spotify logo depending on which skin is selected
+    if (global_Background == "#eeeeee") {
+        $(".spotifyLogo").attr('src', './graphics/spotify_black.png');
+    }
+    else {
+        $(".spotifyLogo").attr('src', './graphics/spotify_white.png');
+    }
+
     // Release type radio button default value
     $("#radioAllRelease").prop("checked", true);
 
@@ -101,6 +109,9 @@ $(document).ready(function () {
         ul.empty()
         var counter = 0;
         $("#headingNewReleases").text("All New Releases.")
+
+        console.log(spotifyResponse)
+
         // Get each spotify albumID
         $.each(spotifyResponse[0].albums.items, function (i, items) {
             var artist = items.artists[0].name;
@@ -108,7 +119,7 @@ $(document).ready(function () {
             if (selection == "all") {
                 var album = items.name;
                 var releaseDate = items.release_date;
-                var imageLink = items.images[1].url;
+                var imageLink = items.images[0].url;
 
                 // Small art icons
                 if (global_ArtIconSize == "small") {
@@ -136,7 +147,7 @@ $(document).ready(function () {
             else if (selection == "yours" && artists.includes(artist)) {
                 var album = items.name;
                 var releaseDate = items.release_date;
-                var imageLink = items.images[1].url;
+                var imageLink = items.images[0].url;
 
                 // Small art icons
                 if (global_ArtIconSize == "small") {
@@ -166,7 +177,7 @@ $(document).ready(function () {
                 if (check == false) {
                     var album = items.name;
                     var releaseDate = items.release_date;
-                    var imageLink = items.images[1].url;
+                    var imageLink = items.images[0].url;
 
                     // Small art icons
                     if (global_ArtIconSize == "small") {
@@ -210,7 +221,7 @@ $(document).ready(function () {
                 if (selection == "all") {
                     var album = items.name;
                     var releaseDate = items.release_date;
-                    var imageLink = items.images[1].url;
+                    var imageLink = items.images[0].url;
 
                     // Small art icons
                     if (global_ArtIconSize == "small") {
@@ -238,7 +249,7 @@ $(document).ready(function () {
                 else if (selection == "yours" && artists.includes(artist)) {
                     var album = items.name;
                     var releaseDate = items.release_date;
-                    var imageLink = items.images[1].url;
+                    var imageLink = items.images[0].url;
 
                     // Small art icons
                     if (global_ArtIconSize == "small") {
@@ -268,7 +279,7 @@ $(document).ready(function () {
                     if (check == false) {
                         var album = items.name;
                         var releaseDate = items.release_date;
-                        var imageLink = items.images[1].url;
+                        var imageLink = items.images[0].url;
 
                         // Small art icons
                         if (global_ArtIconSize == "small") {
@@ -314,7 +325,7 @@ $(document).ready(function () {
                 if (selection == "all") {
                     var album = items.name;
                     var releaseDate = items.release_date;
-                    var imageLink = items.images[1].url;
+                    var imageLink = items.images[0].url;
 
                     // Small art icons
                     if (global_ArtIconSize == "small") {
@@ -342,7 +353,7 @@ $(document).ready(function () {
                 else if (selection == "yours" && artists.includes(artist)) {
                     var album = items.name;
                     var releaseDate = items.release_date;
-                    var imageLink = items.images[1].url;
+                    var imageLink = items.images[0].url;
 
                     // Small art icons
                     if (global_ArtIconSize == "small") {
@@ -372,7 +383,7 @@ $(document).ready(function () {
                     if (check == false) {
                         var album = items.name;
                         var releaseDate = items.release_date;
-                        var imageLink = items.images[1].url;
+                        var imageLink = items.images[0].url;
 
                         // Small art icons
                         if (global_ArtIconSize == "small") {

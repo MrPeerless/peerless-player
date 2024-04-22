@@ -131,6 +131,52 @@ async function resendData() {
     ipcRenderer.send("ssh_artworkfile", [artworkLarge, artworkFolder, row.artistName, row.albumName, row.trackName, row.playTime, row.favourite, global_piIpAddress, global_piUserName, global_piPassword]);
 };
 
+// Check Connection
+ipcRenderer.on('Check Connection', (event) => {
+    $('#okModal').css('display', 'block');
+    $(".modalFooter").empty();
+    $('.modalHeader').empty();
+    $('#okModalText').empty();
+    $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
+    $('#okModalText').append("<div class='modalIcon'><img src='./graphics/record.gif'></div><p>&nbsp<br>Checking network connection to Peerless-Pi-Player.<br>Please Wait...&nbsp<br>&nbsp</p >");
+    var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
+    $('.modalFooter').append(buttons);
+    $("#btnOkModal").focus();
+    $('.background').css('filter', 'blur(5px)');
+
+    checkConnection();
+});
+
+function checkConnection() {
+    ipcRenderer.send("check_connection", [global_piIpAddress, global_piUserName, global_piPassword]);
+}
+
+ipcRenderer.on("from_check_connection_error", (event, data) => {
+    var errorMsg = data[0];
+    $('#okModal').css('display', 'block');
+    $(".modalFooter").empty();
+    $('.modalHeader').empty();
+    $('#okModalText').empty();
+    $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
+    $('#okModalText').append("<div class='modalIcon'><img src='./graphics/warning.png'></div><p>&nbsp<br>No Connection.<br> " + errorMsg + "<br>&nbsp<br>&nbsp</p >");
+    var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
+    $('.modalFooter').append(buttons);
+    $("#btnOkModal").focus();
+    $('.background').css('filter', 'blur(5px)');
+});
+
+ipcRenderer.on("from_check_connection_success", (event) => {
+    $('#okModal').css('display', 'block');
+    $(".modalFooter").empty();
+    $('.modalHeader').empty();
+    $('#okModalText').empty();
+    $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
+    $('#okModalText').append("<div class='modalIcon'><img src='./graphics/information.png'></div><p>&nbsp<br>Successfully connected to Peerless-Pi-Player.<br><br>&nbsp<br>&nbsp</p >");
+    var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
+    $('.modalFooter').append(buttons);
+    $("#btnOkModal").focus();
+    $('.background').css('filter', 'blur(5px)');
+});
 
 // Close Pi-Player
 ipcRenderer.on('Close Pi-Player', (event) => {
@@ -176,7 +222,7 @@ function btnPreviousClick() {
 }
 
 // Play track selected when play button is clicked
-$(document).on('click', '#btnPlay', function (event) {
+$(document).on('click', '.playStop', function (event) {
     event.preventDefault();
     btnPlayClick()
 });
@@ -258,14 +304,16 @@ function btnShuffleClick() {
 }
 
 // Mute button
-$(document).on('click', '#btnMute', function () {
+$(document).on('click', '.mute', function () {
     $("#audio1").prop("muted", !$("#audio1").prop("muted"));
     // Toggle button image
     if ($("#audio1").prop("muted")) {
-        $("button#btnMute").css("background", "url(./graphics/mute_on.png) no-repeat");
+        $("button#btnMuteOff").css("display", "none");
+        $("button#btnMuteOn").css("display", "block");
     }
     else {
-        $("button#btnMute").css("background", "url(./graphics/mute_off.png) no-repeat");
+        $("button#btnMuteOn").css("display", "none");
+        $("button#btnMuteOff").css("display", "block");
     }
 });
 
@@ -362,9 +410,21 @@ $(document).on('click', '#btnGenre', function () {
 $(document).on('click', '#favouriteSongs', function () {
     event.preventDefault();
     // Load link
-    $("#divContent").css("width", "475px");
+    var srnWidth = $(window).width();
+    if ($('#divSideMenu').is(":visible") && srnWidth > 1215) {
+        $("#divContent").css("width", "700px");
+        $("#divTrackListing").css("margin-left", "715px");
+    } else if ($('#divSideMenu').is(":visible") && srnWidth < 1215) {
+        $("#divTrackListing").css("margin-left", "35px");
+    } else if ($('#divPlaying').is(":visible") && srnWidth < 1215) {
+        $("#divTrackListing").css("margin-left", "240px");
+    } else {
+        $("#divContent").css("width", "475px");
+        $("#divTrackListing").css("margin-left", "715px");
+    }
     $("#divTrackListing").css("display", "block");
     $("#divTrackListing").load($(this).attr("href"));
+
     $(document).ajaxComplete(function () {
         $(document).scrollTop(0);
         global_TrackListing = true;
@@ -407,10 +467,8 @@ $(document).on('click', '#menuHome', function (event) {
 //Artists
 $(document).on('click', '#menuArtists', function (event) {
     event.preventDefault();
-
     $('#ulMenu a').css("textDecoration", "none");
     $(this).css('textDecoration', 'underline');
-
     $("#divTrackListing").css("display", "none");
     $("#divContent").css("width", "auto");
     $('#spnAtoZmenu').css('display', 'inline')
@@ -428,10 +486,8 @@ $(document).on('click', '#menuArtists', function (event) {
 //Albums
 $(document).on('click', '#menuAlbums', function (event) {
     event.preventDefault();
-
     $('#ulMenu a').css("textDecoration", "none");
     $(this).css('textDecoration', 'underline');
-
     $("#divTrackListing").css("display", "none");
     $("#divContent").css("width", "auto");
     $('#spnAtoZmenu').css('display', 'inline')
@@ -449,10 +505,8 @@ $(document).on('click', '#menuAlbums', function (event) {
 //Genres
 $(document).on('click', '#menuGenres', function (event) {
     event.preventDefault();
-
     $('#ulMenu a').css("textDecoration", "none");
     $(this).css('textDecoration', 'underline');
-
     // Reset global_SubGenre and global_YearID for favourite songs 
     global_SubGenre = "";
     global_YearID = "";
@@ -473,13 +527,10 @@ $(document).on('click', '#menuGenres', function (event) {
 //Years
 $(document).on('click', '#menuYears', function (event) {
     event.preventDefault();
-
     $('#ulMenu a').css("textDecoration", "none");
     $(this).css('textDecoration', 'underline');
-
     // Reset global_SubGenre and global_GenreID for favourite songs 
     global_SubGenre = "";
-
     global_GenreID = "";
     $("#divTrackListing").css("display", "none");
     $("#divContent").css("width", "auto");
@@ -498,10 +549,8 @@ $(document).on('click', '#menuYears', function (event) {
 //Songs
 $(document).on('click', '#menuSongs', function (event) {
     event.preventDefault();
-
     $('#ulMenu a').css("textDecoration", "none");
     $(this).css('textDecoration', 'underline');
-
     $("#divTrackListing").css("display", "none");
     var srnWidth = $(window).width();
     var width = (srnWidth - 240);
@@ -521,14 +570,10 @@ $(document).on('click', '#menuSongs', function (event) {
 //Playlists
 $(document).on('click', '#menuPlaylists', function (event) {
     event.preventDefault();
-
     $('#ulMenu a').css("textDecoration", "none");
     $(this).css('textDecoration', 'underline');
-
     $("#divTrackListing").css("display", "none");
-    var srnWidth = $(window).width();
-    var width = (srnWidth - 240);
-    $("#divContent").css("width", width);
+    $("#divContent").css("width", "auto");
     $('#spnAtoZmenu').css('display', 'inline')
     $('#divContent').load($(this).attr('href'));
     $.getScript("./js/playlists.js")
@@ -661,7 +706,7 @@ function nextTrack(p) {
         stopPlaying();
         $("#audio1").trigger('pause');
         $("#audio1").prop('currentTime', 0);
-        $("button#btnPlay").css("background", "url(./graphics/play1.png) no-repeat");
+        $("button#btnPlay").css("background", "url(./graphics/play.png) no-repeat");
         $(".defaultPlaying").css("display", "block");
         $(".nowPlaying").css("display", "none");
         $('#appName').empty();
@@ -683,7 +728,7 @@ function nextTrack(p) {
         // Stop current track playing
         $("#audio1").trigger('pause');
         $("#audio1").prop('currentTime', 0);
-        $("button#btnPlay").css("background", "url(./graphics/play1.png) no-repeat");
+        $("button#btnPlay").css("background", "url(./graphics/play.png) no-repeat");
         // Load next track to play
         displayTrack(position)
     }
@@ -714,8 +759,6 @@ function playTrack() {
         $('#nowPlayingTrackID').text(global_TrackSelected);
         var position = global_Tracks.findIndex(i => i == global_TrackSelected);
         $('#nowPlayingTrackIndex').text(position);
-
-
     }
     else {
         // If a track is playing then stop
@@ -737,7 +780,9 @@ function playTrack() {
         $("#audio1").trigger('pause');
         $("#audio1").prop('currentTime', 0);
         // Change stop button to play button
-        $("button#btnPlay").css("background", "url(./graphics/play1.png) no-repeat");
+        $("button#btnStop").css("display", "none");
+        $("button#btnPlay").css("display", "block");
+
         // Hide and show defaultPlaying and nowPlaying DIV classes in player.html
         $(".defaultPlaying").css("display", "block");
         $(".nowPlaying").css("display", "none");
@@ -791,7 +836,6 @@ async function displayTrack(position) {
         var artworkFolder = MUSIC_PATH + row.artistName + "/" + row.albumName + "/folder.jpg";
         ipcRenderer.send("ssh_artworkfile", [artworkLarge, artworkFolder, row.artistName, row.albumName, row.trackName, row.playTime, row.favourite, global_piIpAddress, global_piUserName, global_piPassword]);
 
-
         // Display notification of next track to play
         if (global_notifications != 0) {
             let myNotification = new Notification(row.artistName + "\r" + row.albumName, {
@@ -809,7 +853,8 @@ async function displayTrack(position) {
         $('#playTime').text(row.playTime);
 
         // Change play button to stop button
-        $("button#btnPlay").css("background", "url(./graphics/stop1.png) no-repeat");
+        $("button#btnStop").css("display", "block");
+        $("button#btnPlay").css("display", "none");
 
         // Call queue playlist function to update queue playlist in database
         queuePlaylist();

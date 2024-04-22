@@ -187,7 +187,20 @@ async function btnSmartClicked() {
 
     // Display smart playlist
     global_PlaylistID = playlistID
-    $("#divContent").css("width", "475px");
+
+    // Get window width
+    var srnWidth = $(window).width();
+    if ($('#divSideMenu').is(":visible") && srnWidth > 1215) {
+        $("#divContent").css("width", "700px");
+        $("#divTrackListing").css("margin-left", "715px");
+    } else if ($('#divSideMenu').is(":visible") && srnWidth < 1215) {
+        $("#divTrackListing").css("margin-left", "35px");
+    } else if ($('#divPlaying').is(":visible") && srnWidth < 1215) {
+        $("#divTrackListing").css("margin-left", "240px");
+    } else {
+        $("#divContent").css("width", "475px");
+        $("#divTrackListing").css("margin-left", "715px");
+    }
     $('#spnAtoZmenu').css('display', 'none')
     $('#divContent').load('./html/playlists.html');
     $.getScript("./js/playlists.js");

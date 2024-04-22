@@ -228,7 +228,7 @@ ipcRenderer.on("from_dir_artists", (event, data) => {
 // SENT FROM recommendations.
 //------------------------------------
 // Data received for recommendations.js from main to display recommended albums from spotify
-ipcRenderer.on("from_getArtistID", (event, data) => {
+ipcRenderer.on("from_getArtistID_recommendations", (event, data) => {
     var spotifyResponse = data[0];
     var artist = data[1];
     var artistFound = false;
@@ -296,6 +296,52 @@ ipcRenderer.on("from_recommendations", (event, data) => {
         window.history.back();
         return false;
     }
+
+    // Display Spotify logo depending on which skin is selected
+    if (global_Background == "#eeeeee") {
+        $(".spotifyLogo").attr('src', './graphics/spotify_black.png');
+    }
+    else {
+        $(".spotifyLogo").attr('src', './graphics/spotify_white.png');
+    }
+});
+
+// Data received for discography.js from main to display artist discography from spotify
+ipcRenderer.on("from_getArtistID_discography", (event, data) => {
+    var spotifyResponse = data[0];
+    var artist = data[1];
+    var artistFound = false;
+    var numberArtists = spotifyResponse.artists.items.length;
+
+    for (var i = 0; i < numberArtists; i++) {
+        var name = spotifyResponse.artists.items[i].name;
+        if (artist == name) {
+            var spotifyID = spotifyResponse.artists.items[i].id;
+            ipcRenderer.send("spotify_discography", [spotifyID]);
+            artistFound = true;
+            break;
+        }
+    }
+
+    if (artistFound == false) {
+        // Display modal information box
+        $('#okModal').css('display', 'block');
+        $('.modalHeader').empty();
+        $('#okModalText').empty();
+        $(".modalFooter").empty();
+        $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
+        $('#okModalText').append("<div class='modalIcon'><img src='./graphics/information.png'></div><p>&nbsp<br><b>No discography data could be found.</b><br><br>&nbsp</p >");
+        var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
+        $('.modalFooter').append(buttons);
+        $("#btnOkModal").focus();
+        $("#btnSync").prop("disabled", false);
+        $('.background').css('filter', 'blur(5px)');
+        // Hide recommendations page and go back
+        $("#divTrackListing").css("display", "none");
+        $("#divContent").css("width", "auto");
+        window.history.back();
+        return false;
+    }
 });
 
 ipcRenderer.on("from_album", (event, data) => {
@@ -332,7 +378,7 @@ ipcRenderer.on("from_album", (event, data) => {
     }
 
     // Display album is not by artist in database or previoulsy listed
-    if (numberRecommendations < 12 & check == false) {
+    if (numberRecommendations < 18 & check == false) {
         $("#hiddenRecommendList").append(lcTitle + ",");
 
         if (global_ArtIconSize == "small") {

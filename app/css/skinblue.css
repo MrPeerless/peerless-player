@@ -107,6 +107,57 @@ button[disabled] {
         color: darkgray;
     }
 
+/* The close X button in side menu*/
+.btnX {
+    margin-top: -10px;
+    margin-right: 5px;
+    color: white;
+    float: right;
+    font-size: 35px;
+    font-weight: bold;
+}
+
+    .btnX:hover,
+    .btnX:focus {
+        color: #9E0000;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+/* The close hamburger menu button in side menu*/
+button#btnHamburgerMenu {
+    width: 30px;
+    height: 30px;
+    background: url(../graphics/hamburger_menu_white.png) no-repeat;
+    margin-top: 20px;
+    margin-left: 5px;
+    border: none;
+    cursor: pointer;
+    vertical-align: middle;
+    outline: none;
+}
+
+#btnHamburgerMenu:hover,
+#btnHamburgerMenu:focus {
+    cursor: pointer;
+}
+
+/* The close X button in display tracks*/
+#btnXDisplayTracks {
+    margin-top: -10px;
+    margin-right: 5px;
+    color: white;
+    float: right;
+    font-size: 35px;
+    font-weight: bold;
+}
+
+    #btnXDisplayTracks:hover,
+    #btnXDisplayTracks:focus {
+        color: #9E0000;
+        text-decoration: none;
+        cursor: pointer;
+    }
 
 /*PAGE DIVS CODE
 #######################*/
@@ -294,25 +345,6 @@ button#btnFastForward {
     #tblSearch tr:nth-child(odd) {
         background: #0c4586;
     }
-
-/*Discog Table*/
-#tblDiscog {
-    background: #427290;
-}
-
-    #tblDiscog th {
-        background: #00A532;
-        color: white;
-    }
-
-    #tblDiscog tr:nth-child(odd) {
-        background: #0c4586;
-    }
-
-.trDiscog {
-    background: yellow;
-    color: grey;
-}
 
 /*Import Music table*/
 #tblImportMusic th {

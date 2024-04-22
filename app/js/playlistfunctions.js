@@ -317,7 +317,23 @@ function btnExportedPlaylistsClick() {
     $("#tblSongs th:nth-child(2)").css("display", "none");
     $("#tblSongs td:nth-child(3)").css("display", "none");
     $("#tblSongs th:nth-child(3)").css("display", "none");
-    // Show and load newmusic.html file
+
+    // Load link
+    // Get window width
+    var srnWidth = $(window).width();
+    if ($('#divSideMenu').is(":visible") && srnWidth > 1215) {
+        $("#divContent").css("width", "700px");
+        $("#divTrackListing").css("margin-left", "715px");
+    } else if ($('#divSideMenu').is(":visible") && srnWidth < 1215) {
+        $("#divTrackListing").css("margin-left", "35px");
+    } else if ($('#divPlaying').is(":visible") && srnWidth < 1215) {
+        $("#divTrackListing").css("margin-left", "240px");
+    } else {
+        $("#divContent").css("width", "475px");
+        $("#divTrackListing").css("margin-left", "715px");
+    }
+
+    // Show and load playlistsexported.html file
     $("#divTrackListing").css("display", "block");
     $('#divTrackListing').load("./html/playlistsexported.html");
     // Enable btnSync

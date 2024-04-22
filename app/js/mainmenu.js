@@ -13,7 +13,7 @@ const template = [
                 }
             },
             {
-                label: 'Sync Database',
+                label: 'Add New Music to Database',
                 click: function (menuItem, currentWindow) {
                     currentWindow.webContents.send('Sync Database');
                 } 
@@ -91,6 +91,12 @@ const template = [
                 label: 'Re-Send Track Data',
                 click: function (menuItem, currentWindow) {
                     currentWindow.webContents.send('Re-Send Pi-Player');
+                }
+            },
+            {
+                label: 'Check Network Connection',
+                click: function (menuItem, currentWindow) {
+                    currentWindow.webContents.send('Check Connection');
                 }
             },
             {

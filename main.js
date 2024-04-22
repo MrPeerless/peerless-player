@@ -769,6 +769,8 @@ ipcMain.on('spotify_search', (event, data) => {
 ipcMain.on('spotify_getArtist', (event, data) => {
     var query = data[0];
     var artist = data[1];
+    console.log("query: " + query)
+    console.log("artist: " + artist)
     request.post(authOptions, function (error, response, body) {
         if (!error && response.statusCode === 200) {
             // Encode URL
@@ -800,6 +802,7 @@ ipcMain.on('spotify_getArtist', (event, data) => {
 // Get tracks from album
 ipcMain.on('spotify_getTracks', (event, data) => {
     var query = data[0];
+    console.log("get tracks")
     request.post(authOptions, function (error, response, body) {
         if (!error && response.statusCode === 200) {
             // Encode URL
@@ -863,6 +866,7 @@ ipcMain.on('spotify_getAudioFeatures', (event, data) => {
 // Get artist ID
 ipcMain.on('spotify_getArtistID', (event, data) => {
     var artist = data[0];
+    var referrer = data[1];
     var query = artist + '&type=artist';
     request.post(authOptions, function (error, response, body) {
         if (!error && response.statusCode === 200) {
@@ -881,7 +885,12 @@ ipcMain.on('spotify_getArtistID', (event, data) => {
             request.get(options, function (error, response, body) {
                 // If successful
                 if (!error && response.statusCode === 200) {
-                    win.webContents.send("from_getArtistID", [body, artist]);
+                    if (referrer == "recommendations") {
+                        win.webContents.send("from_getArtistID_recommendations", [body, artist]);
+                    }
+                    if (referrer == "discography") {
+                        win.webContents.send("from_getArtistID_discography", [body, artist]);
+                    }
                 }
                 // On error
                 else {
@@ -983,6 +992,37 @@ ipcMain.on('spotify_getNewReleases', (event) => {
     });
 });
 
+ipcMain.on('spotify_discography', (event, data) => {
+    var query = data[0];
+    request.post(authOptions, function (error, response, body) {
+        if (!error && response.statusCode === 200) {
+            // Encode URL
+
+            var url = 'https://api.spotify.com/v1/artists/' + query + '/albums?include_groups=album&limit=50'
+            var encodedUrl = encodeURI(url);
+            // Use the access token to access the Spotify Web API
+            var token = body.access_token;
+            var options = {
+                url: encodedUrl,
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                },
+                json: true
+            };
+            request.get(options, function (error, response, body) {
+                // If successful
+                if (!error && response.statusCode === 200) {
+                    win.webContents.send("from_discography", [body]);
+                }
+                // On error
+                else {
+                    win.webContents.send("spotify_error", error);
+                }
+            });
+        }
+    });
+});
+
 //#########################
 // READ AUDIO FILE METADATA
 //-------------------------
@@ -1005,6 +1045,35 @@ ipcMain.on('read_ID3tags', (event, data) => {
 //#########################
 // CODE TO CONNECT WITH PI PLAYER VIA SSH
 //-------------------------
+// Check network connection
+ipcMain.on('check_connection', (event, data) => {
+    var ipAddress = data[0];
+    var userName = data[1];
+    var password = data[2];
+
+    // Connect to remote server using SSH
+    const { Client } = require('ssh2');
+    const conn = new Client();
+
+    // Connection error handling
+    conn.on('error', function (e) {
+        console.log("Check Connection :: " + e);
+        win.webContents.send("from_check_connection_error", [e]);
+    });
+
+    // Connection successful
+    conn.on('ready', () => {
+        console.log("Check Connection :: Connected")
+        win.webContents.send("from_check_connection_success");
+        // Connection details of remote server
+    }).connect({
+        host: ipAddress,
+        port: 22,
+        username: userName,
+        password: password
+    });
+});
+
 // Send current playing artfile to remote server
 ipcMain.on('ssh_artworkfile', (event, data) => {
     var artworkLarge = data[0];   
@@ -1059,7 +1128,7 @@ function sendFile(data) {
 
     // Connection error handling
     conn.on('error', function (e) {
-        console.log("ERROR connecting :: " + e);
+        console.log("Connection ERROR :: " + e);
     });
 
     // Connection successful

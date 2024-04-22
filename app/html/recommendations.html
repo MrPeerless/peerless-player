@@ -1,12 +1,17 @@
-<div class="divRecommends">
-    <div style="margin-left: 1em;">
+<span class="btnX" id="btnClose">&times;</span>
+<div class="divSpotifyAlbumList">
+
+    <div id="divHeading" style="margin-left: 1em;">
         <h1 style="margin-right: 1em;" id="recommendsArtistName"></h1>
 
         <h2 style="margin-right: 1em;" id="recommendsDetails"></h2>
-        <p><span id="recommendsCount"></span> Recommendations Found</p>
-        <button class="btnMenu2" id="btnClose">Close</button>   
+        <p><span id="recommendsCount"></span> Recommendations Found. Click on an album to listen in Spotify web-player.</p>
+        
         <p class="hidden" id="hiddenRecommendList"></p>
     </div>
+</div>
+
+<div class="divSpotifyAlbumList">
     <div>
         <div class="divAlbums">
             <ul id="ulRecommends"></ul>
@@ -15,8 +20,9 @@
 </div>
 
 <div class="divCredits">
-    <p><i>Data supplied by spotify.com</i></p>
+    <p><i>Data supplied by:</i></p>
     <br />
+    <img class="spotifyLogo" alt="Spotify Logo" />
     <br />
 </div>
 

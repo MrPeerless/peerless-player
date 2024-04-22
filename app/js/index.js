@@ -8,7 +8,7 @@ var global_playingDivClicked;
 
 // Expand/Collapse DIVs
 var global_AddedExpand = false;
-var global_DatabaseExpand = false;
+//var global_DatabaseExpand = false;
 var global_GenreExpand = false;
 var global_LibraryExpand = true;
 var global_MostPlayedExpand = false;
@@ -57,7 +57,6 @@ var global_YearID;
 // URLs
 var musicbrainzUrl = "https://musicbrainz.org/ws/2/";
 var wikiQueryUrl = "https://en.wikipedia.org/w/api.php?"
-var napsterUrl = "https://us.napster.com/search?query="
 var googleUrl = "https://www.google.co.uk/search?q="
 
 // CONSTANT VARIABLES
@@ -479,11 +478,19 @@ function backgroundChange() {
 // Close button on display album tracks
 $(document).on('click', '#btnClose', function (event) {
     event.preventDefault();
+    var width;
     $("body").css("background", global_Background);
     $("#divTrackListing").css("display", "none");
     global_TrackListing = false;
+   
+    // Check if side menu is open or not and set width accordingly
     var srnWidth = $(window).width();
-    var width = (srnWidth - 240);
+    if ($('#divSideMenu').is(":visible")) {
+        width = (srnWidth - 35);
+    } else {
+        width = (srnWidth - 240);
+    }
+
     $("#divContent").css("width", width);
     // Show A to Z menu
     $('#spnAtoZmenu').css('display', 'inline')
@@ -584,10 +591,6 @@ function playingHeight() {
             $("button#btnPlayerExpand").css("background", "url(./graphics/expand.png) no-repeat");
             $("#divPlayerFunctions").hide();
             global_PlayerExpand = false;
-
-            $("button#btnDatabaseExpand").css("background", "url(./graphics/expand.png) no-repeat");
-            $("#divDatabaseFunctions").hide();
-            global_DatabaseExpand = false; 
         }
 
         else if (global_playingDivClicked === "btnGenreExpand") {
@@ -598,10 +601,6 @@ function playingHeight() {
             $("button#btnPlayerExpand").css("background", "url(./graphics/expand.png) no-repeat");
             $("#divPlayerFunctions").hide();
             global_PlayerExpand = false;
-
-            $("button#btnDatabaseExpand").css("background", "url(./graphics/expand.png) no-repeat");
-            $("#divDatabaseFunctions").hide();
-            global_DatabaseExpand = false; 
         }
         else if (global_playingDivClicked === "btnPlayerExpand") {
             $("button#btnMoodExpand").css("background", "url(./graphics/expand.png) no-repeat");
@@ -611,23 +610,6 @@ function playingHeight() {
             $("button#btnGenreExpand").css("background", "url(./graphics/expand.png) no-repeat");
             $("#divGenreSelect").hide();
             global_GenreExpand = false; 
-
-            $("button#btnDatabaseExpand").css("background", "url(./graphics/expand.png) no-repeat");
-            $("#divDatabaseFunctions").hide();
-            global_DatabaseExpand = false; 
-        }
-        else if (global_playingDivClicked === "btnDatabaseExpand") {
-            $("button#btnMoodExpand").css("background", "url(./graphics/expand.png) no-repeat");
-            $("#divMoodSelect").hide();
-            global_MoodExpand = false;
-
-            $("button#btnGenreExpand").css("background", "url(./graphics/expand.png) no-repeat");
-            $("#divGenreSelect").hide();
-            global_GenreExpand = false; 
-
-            $("button#btnPlayerExpand").css("background", "url(./graphics/expand.png) no-repeat");
-            $("#divPlayerFunctions").hide();
-            global_PlayerExpand = false;
         }
     }
 }
@@ -997,30 +979,54 @@ $(document).ready(function () {
         global_ArtistID = queryArtist;
         var queryAlbum = parseQuery(link)["album"];
         global_AlbumID = queryAlbum;
-        // Get window width
-        var winWidth = $(window).width();
-        // Get window height
-        //var winHeight = $(window).height();
-        //var height = (winHeight - 60);
-        //var body = document.body;
-        //var html = document.documentElement;
 
+        // Get window width
+        var srnWidth = $(window).width();
         // If screen is less than 1215px wide reset divTracklisting margin-left effectively hiding content div
-        if (winWidth < 1215) {
-            $("#divTrackListing").css("margin-left", "240px");
+        /*
+        if (srnWidth < 1215) {
+            if ($('#divSideMenu').is(":visible")) {
+                $("#divTrackListing").css("margin-left", "35px");
+            } else {
+                $("#divTrackListing").css("margin-left", "240px");
+            }
         }
         else {
-            $("#divTrackListing").css("margin-left", "715px");
+            if ($('#divSideMenu').is(":visible")) {
+                $("#divTrackListing").css("margin-left", "275px");
+            } else {
+                $("#divTrackListing").css("margin-left", "715px");
+            }
         }
+        */
+
+        if ($('#divSideMenu').is(":visible") && srnWidth > 1215) {
+            $("#divContent").css("width", "700px");
+            $("#divTrackListing").css("margin-left", "715px");
+        } else if ($('#divSideMenu').is(":visible") && srnWidth < 1215) {
+            $("#divTrackListing").css("margin-left", "35px");
+            //$("#divTrackListing").css("margin-left", "715px");
+        } else {
+            var width = (srnWidth - 240);
+            $("#divContent").css("width", width);
+            $("#divTrackListing").css("margin-left", "715px");  
+        }
+
+
         // Load link 
         $("#divContent").empty();
         $('#spnAtoZmenu').css('display', 'none')
-        $("#divContent").css("width", "475px");
         $('#ulMenu a').css("textDecoration", "none");
         $("#divContent").load("./html/artistalbums.html");
         $("#divTrackListing").css("display", "block");
-        //$("#divTrackListing").css("min-height", height);
         $("#divTrackListing").load($(this).attr("href"));
+
+        if ($('#divSideMenu').is(":visible")) {
+            $("#divContent").css("width", "700px");
+        } else {
+            $("#divContent").css("width", "475px");
+        }
+
         $(document).ajaxComplete(function () {
             $(document).scrollTop(0);
             global_TrackListing = true;
@@ -1065,10 +1071,21 @@ $(document).ready(function () {
         var queryPlaylist = parseQuery(link)["playlist"];
         global_PlaylistID = queryPlaylist;
         // Load link
-        $("#divContent").css("width", "475px");
-        $('#spnAtoZmenu').css('display', 'none')
+        // Get window width
+        var srnWidth = $(window).width();
+        if ($('#divSideMenu').is(":visible") && srnWidth > 1215) {
+            $("#divContent").css("width", "700px");
+            $("#divTrackListing").css("margin-left", "715px");
+        } else if ($('#divSideMenu').is(":visible") && srnWidth < 1215) {
+            $("#divTrackListing").css("margin-left", "35px");
+        } else if ($('#divPlaying').is(":visible") && srnWidth < 1215) {
+            $("#divTrackListing").css("margin-left", "240px");
+        } else {
+            $("#divContent").css("width", "475px");
+            $("#divTrackListing").css("margin-left", "715px");
+        }
+        $('#spnAtoZmenu').css('display', 'none');
         $("#divTrackListing").css("display", "block");
-        //$("#divTrackListing").css("visibility", "visible");
         $("#divTrackListing").load($(this).attr("href"));
         $(document).ajaxComplete(function () {
             $(document).scrollTop(0);
@@ -1125,24 +1142,22 @@ $(document).ready(function () {
         playTrack()
     });
 
-
     $(document).on('click', '#artistNumberSongs', function () {
         event.preventDefault();
+        // Load link
         // Get window width
-        var winWidth = $(window).width();
-        // Get window height
-        var winHeight = $(window).height();
-        var height = (winHeight - 60);
-
-        // If screen is less than 1215px wide reset divTracklisting margin-left effectively hiding content div
-        if (winWidth < 1215) {
+        var srnWidth = $(window).width();
+        if ($('#divSideMenu').is(":visible") && srnWidth > 1215) {
+            $("#divContent").css("width", "700px");
+            $("#divTrackListing").css("margin-left", "715px");
+        } else if ($('#divSideMenu').is(":visible") && srnWidth < 1215) {
+            $("#divTrackListing").css("margin-left", "35px");
+        } else if ($('#divPlaying').is(":visible") && srnWidth < 1215) {
             $("#divTrackListing").css("margin-left", "240px");
-        }
-        else {
+        } else {
+            $("#divContent").css("width", "475px");
             $("#divTrackListing").css("margin-left", "715px");
         }
-        // Load link 
-        $("#divContent").css("width", "475px");
         $("#divTrackListing").css("display", "block");
         $("#divTrackListing").load("./html/displaytracks.html");
     });
@@ -1155,23 +1170,23 @@ $(document).ready(function () {
         var connection = navigator.onLine;
         // If connected to internet
         if (connection) {
+            // Load link
             // Get window width
-            var winWidth = $(window).width();
-            // Get window height
-            var winHeight = $(window).height();
-            var height = (winHeight - 60);
-
-            // If screen is less than 1215px wide reset divTracklisting margin-left effectively hiding content div
-            if (winWidth < 1215) {
+            var srnWidth = $(window).width();
+            if ($('#divSideMenu').is(":visible") && srnWidth > 1215) {
+                $("#divContent").css("width", "700px");
+                $("#divTrackListing").css("margin-left", "715px");
+            } else if ($('#divSideMenu').is(":visible") && srnWidth < 1215) {
+                $("#divTrackListing").css("margin-left", "35px");
+            } else if ($('#divPlaying').is(":visible") && srnWidth < 1215) {
                 $("#divTrackListing").css("margin-left", "240px");
-            }
-            else {
+            } else {
+                $("#divContent").css("width", "475px");
                 $("#divTrackListing").css("margin-left", "715px");
             }
-            // Load link 
-            $("#divContent").css("width", "475px");
             $("#divTrackListing").css("display", "block");
             $("#divTrackListing").load("./html/biography.html");
+
         }
         else {
             // If not connected display modal box warning
@@ -1196,21 +1211,20 @@ $(document).ready(function () {
         var connection = navigator.onLine;
         // If connected to internet
         if (connection) {
+            // Load link
             // Get window width
-            var winWidth = $(window).width();
-            // Get window height
-            var winHeight = $(window).height();
-            var height = (winHeight - 60);
-
-            // If screen is less than 1215px wide reset divTracklisting margin-left effectively hiding content div
-            if (winWidth < 1215) {
+            var srnWidth = $(window).width();
+            if ($('#divSideMenu').is(":visible") && srnWidth > 1215) {
+                $("#divContent").css("width", "700px");
+                $("#divTrackListing").css("margin-left", "715px");
+            } else if ($('#divSideMenu').is(":visible") && srnWidth < 1215) {
+                $("#divTrackListing").css("margin-left", "35px");
+            } else if ($('#divPlaying').is(":visible") && srnWidth < 1215) {
                 $("#divTrackListing").css("margin-left", "240px");
-            }
-            else {
+            } else {
+                $("#divContent").css("width", "475px");
                 $("#divTrackListing").css("margin-left", "715px");
             }
-            // Load link 
-            $("#divContent").css("width", "475px");
             $("#divTrackListing").css("display", "block");
             $("#divTrackListing").load("./html/discography.html");
         }
@@ -1236,21 +1250,20 @@ $(document).ready(function () {
         // Check if online
         var connection = navigator.onLine;
         if (connection) {
+            // Load link
             // Get window width
-            var winWidth = $(window).width();
-            // Get window height
-            var winHeight = $(window).height();
-            var height = (winHeight - 60);
-
-            // If screen is less than 1215px wide reset divTracklisting margin-left effectively hiding content div
-            if (winWidth < 1215) {
+            var srnWidth = $(window).width();
+            if ($('#divSideMenu').is(":visible") && srnWidth > 1215) {
+                $("#divContent").css("width", "700px");
+                $("#divTrackListing").css("margin-left", "715px");
+            } else if ($('#divSideMenu').is(":visible") && srnWidth < 1215) {
+                $("#divTrackListing").css("margin-left", "35px");
+            } else if ($('#divPlaying').is(":visible") && srnWidth < 1215) {
                 $("#divTrackListing").css("margin-left", "240px");
-            }
-            else {
+            } else {
+                $("#divContent").css("width", "475px");
                 $("#divTrackListing").css("margin-left", "715px");
             }
-            // Load link 
-            $("#divContent").css("width", "475px");
             $("#divTrackListing").css("display", "block");
             $("#divTrackListing").load("./html/recommendations.html");
         }
@@ -1298,17 +1311,7 @@ $(document).ready(function () {
     });
 
     // Open external web link from recommendations page
-    $(document).on('click', '.divRecommends a', function (event) {
-        ipcRenderer.send('open_external', this.href)
-    });
-
-    // Open external web link from new releases page
-    $(document).on('click', '.divNewReleases a', function (event) {
-        ipcRenderer.send('open_external', this.href)
-    });
-
-    // Open external web link from discography page
-    $(document).on('click', '#tblDiscog tr a', function (event) {
+    $(document).on('click', '.divSpotifyAlbumList a', function (event) {
         ipcRenderer.send('open_external', this.href)
     });
 
@@ -1656,26 +1659,6 @@ $(document).ready(function () {
         }
     });
 
-    // Database Functions
-    $(document).on('click', '#btnDatabaseExpand', function () {
-        event.preventDefault();
-        global_playingDivClicked = "btnDatabaseExpand";
-        if (global_DatabaseExpand == false) {
-            $("button#btnDatabaseExpand").css("background", "url(./graphics/collapse.png) no-repeat");
-            $("#divDatabaseFunctions").slideToggle(500);
-            global_DatabaseExpand = true;
-            // Call playingHeight function after div slide animation complete
-            const timeOut = setTimeout(playingHeight, 600);
-        }
-        else {            
-            $("button#btnDatabaseExpand").css("background", "url(./graphics/expand.png) no-repeat");
-            $("#divDatabaseFunctions").slideToggle(500);
-            global_DatabaseExpand = false;           
-            // Call playingHeight function after div slide animation complete
-            const timeOut = setTimeout(playingHeight, 600);
-        }
-    });
-
     //#################################
     // Home page buttons show more/less
     //#################################
@@ -1841,6 +1824,67 @@ $(document).ready(function () {
         $('#okModal').css('display', 'none');
         $('.background').css('filter', 'blur(0px)');
     })
+
+    // Button click on btnXMenu to close side menu
+    $(document).on('click', '#btnXMenu', function () {
+        $('#divPlaying').css('display', 'none');
+        $('#divPlaying').css('visibility', 'hidden');
+        $('#divSideMenu').css('display', 'block');
+        $('#divContent').css('margin-left', '35px');
+        var srnWidth = $(window).width();
+        // If Home Page displayed adjust width
+        if ($('#homePage').length) {
+
+            if ($('#divTrackListing').is(":visible") && srnWidth > 1215) {
+                $("#divContent").css("width", "700px");
+                $("#divTrackListing").css("margin-left", "715px");
+                // Load home page
+                $("#divContent").load('./html/home.html');
+                $.getScript("./js/home.js")
+            } else {
+                // Load home page
+                $("#divContent").load('./html/home.html');
+                $.getScript("./js/home.js")
+            }
+        }
+        
+        // Adjust content width depending if track listing is displayed
+        if ($('#divTrackListing').is(":visible") && srnWidth > 1215) {
+            $("#divContent").css("width", "700px");
+            $("#divTrackListing").css("margin-left", "715px");
+        } else if ($('#divTrackListing').is(":visible") && srnWidth < 1215) {
+            $("#divTrackListing").css("margin-left", "35px");
+            //$("#divTrackListing").css("margin-left", "715px");
+        } else {
+            var width = (srnWidth - 35);
+            $("#divContent").css("width", width);
+        }
+    });
+
+    // Button click on btnHamburgerMenu to open side menu
+    $(document).on('click', '#btnHamburgerMenu', function () {
+        $('#divSideMenu').css('display', 'none');
+        $('#divPlaying').css('display', 'block');
+        $('#divPlaying').css('visibility', 'visible');
+        $('#divContent').css('margin-left', '240px')
+        var srnWidth = $(window).width();
+        // If Home Page displayed adjust width
+        if ($('#homePage').length) {
+            // Load home page
+            $("#divContent").load('./html/home.html');
+            $.getScript("./js/home.js")
+        }
+
+        // Adjust content width depending if track listing is displayed
+        if ($('#divTrackListing').is(":visible") && srnWidth > 1215) {
+            $("#divContent").css("width", "680px");
+        } else if ($('#divTrackListing').is(":visible") && srnWidth < 1215) {
+            $("#divTrackListing").css("margin-left", "240px");
+        } else {
+            var width = (srnWidth - 240);
+            $("#divContent").css("width", width);
+        }
+    });
 });
 
 

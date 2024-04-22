@@ -192,8 +192,5 @@ $(document).ready(function () {
         var tracks = await dBase.all(sql, global_ArtistID);
         shuffleArray(tracks)
     }
-
-
-
     backgroundChange();
 });
