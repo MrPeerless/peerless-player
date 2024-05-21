@@ -290,12 +290,6 @@ async function exportPlaylist() {
 }
 
 // View Exported Playlists
-// Click event for Player Functions View Exported Playlists
-$(document).on('click', '#btnExportedPlaylists', function (event) {
-    event.preventDefault();
-    btnExportedPlaylistsClick()
-});
-
 // Cancel button on view exported playlists
 $(document).on('click', '#btnExportedClose', function (event) {
     event.preventDefault();

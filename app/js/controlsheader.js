@@ -373,7 +373,6 @@ async function moodShuffle() {
     var rows = await dBase.all(sql, mood);
     rows.forEach((row) => {
         global_Tracks.push(row.trackID)
-        console.log(row.mood1)
     });
 
     // Shuffle globalTracks array
@@ -706,7 +705,8 @@ function nextTrack(p) {
         stopPlaying();
         $("#audio1").trigger('pause');
         $("#audio1").prop('currentTime', 0);
-        $("button#btnPlay").css("background", "url(./graphics/play.png) no-repeat");
+        $("button#btnStop").css("display", "none");
+        $("button#btnPlay").css("display", "block");
         $(".defaultPlaying").css("display", "block");
         $(".nowPlaying").css("display", "none");
         $('#appName').empty();
@@ -728,7 +728,6 @@ function nextTrack(p) {
         // Stop current track playing
         $("#audio1").trigger('pause');
         $("#audio1").prop('currentTime', 0);
-        $("button#btnPlay").css("background", "url(./graphics/play.png) no-repeat");
         // Load next track to play
         displayTrack(position)
     }

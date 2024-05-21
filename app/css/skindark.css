@@ -179,7 +179,7 @@ button#btnHamburgerMenu {
 }
 
 #divContent {
-    background: #111111;
+    background: #222222;
     color: #F0F0F0;
 }
 
@@ -188,13 +188,18 @@ button#btnHamburgerMenu {
     color: #F0F0F0;
 }
 
+#divSideMenu {
+    background: #000000;
+    color: white;
+}
+
 .divLayout {
-    background: #111111;
+    background: #222222;
     color: white;
 }
 
 .container {
-    background: #111111;
+    background: #222222;
 }
 
 /*ADD TO DATABASE FORM

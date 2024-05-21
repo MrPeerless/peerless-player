@@ -2,8 +2,8 @@
   "ExpandedNodes": [
     "",
     "\\app",
-    "\\app\\css",
-    "\\docs\\graphics"
+    "\\app\\js"
   ],
+  "SelectedNode": "\\app\\js\\playlists.js",
   "PreviewInSolutionExplorer": false
 }

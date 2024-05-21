@@ -187,6 +187,11 @@ button#btnHamburgerMenu {
     color: #F0F0F0;
 }
 
+#divSideMenu {
+    background: #192e5b;
+    color: white;
+}
+
 .divLayout {
     background: #0c4586;
     color: white;

@@ -247,6 +247,12 @@ $(document).ready(function () {
                 if (global_ArtIconSize == "large") {
                     row.playlistName = "";
                 }
+            }           
+            else if (name == "Recommended") {
+                artworkSource = "./graphics/recommended.png";
+                if (global_ArtIconSize == "large") {
+                    row.playlistName = "";
+                }
             }
             else {
                 artworkSource = "./graphics/playlist_background.png";
@@ -265,7 +271,7 @@ $(document).ready(function () {
             // Large art icons
             else {
                 $(ul).attr('class', 'albumDisplayLarge');
-                var li = $('<li><a><img class="' + global_ArtIconShape + '"><span class="textAlbum" id="title"></span><div class="' + overlay + '"><div class="textAlbum" id="details"></div></div></a></li>');
+                var li = $('<li><a><img class="' + global_ArtIconShape + '"><span class="playlistTextAlbum" id="title"></span><div class="' + overlay + '"><div class="textAlbum" id="details"></div></div></a></li>');
                 li.find('img').attr('src', artworkSource);
                 li.find('a').attr('href', playlistLink);
                 li.find('#title').append('<br><b>' + row.playlistName + '</b>');

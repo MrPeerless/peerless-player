@@ -386,20 +386,18 @@ textarea {
     flex: 1;
 }
 
-
 .divLayout {
     position: relative;
     width: auto;
     float: left;
     left: 0px;
-
     padding: 15px 0px 15px 15px;
     height: auto;
 }
 
 .divSpotifyAlbumList {
+    clear: left;
     position: relative;
-    width: auto;
     float: left;
     left: 0px;
     padding-top: 10px;
@@ -439,7 +437,6 @@ textarea {
 
 /*SETTINGS FORM
 ###################################*/
-
 #ipnAppName {
     display: inline-block;
     width: 100px;
@@ -1144,19 +1141,19 @@ button#btnMoodExpand {
     flex-wrap: wrap;
     align-items: stretch;
     width: auto;
-    padding: 0px 5px 5px 5px;
+    padding: 0px 0px 5px 5px;
     animation: fadein 0s;
     list-style: none;
 }
 
 .albumDisplay li {
     width: 195px;
-    height: 175px;
+    height: 195px;
     margin: 0px;
     float: left;
     display: block;
     position: relative;
-    padding: 10px;
+    padding: 10px 0px 10px 20px;
     text-align: center;
 }
 
@@ -1199,7 +1196,7 @@ button#btnMoodExpand {
 .albumDisplayLarge ul {
     width: auto;
     float: left;
-    padding: 5px;
+    padding: 0px 0px 5px 5px;
     animation: fadein 0s;
     list-style: none;
 }
@@ -1211,7 +1208,7 @@ button#btnMoodExpand {
     float: left;
     display: block;
     position: relative;
-    padding: 10px;
+    padding: 10px 0px 10px 20px;
     text-align: center;
 }
     .albumDisplayLarge li.addedHidden {
@@ -1246,7 +1243,7 @@ button#btnMoodExpand {
     position: absolute;
     top: 10px;
     bottom: 0;
-    left: 10px;
+    left: 20px;
     right: 0;
     padding: 10px;
     height: 180px;
@@ -1260,7 +1257,7 @@ button#btnMoodExpand {
     position: absolute;
     top: 10px;
     bottom: 0;
-    left: 10px;
+    left: 20px;
     right: 0;
     padding: 10px;
     height: 180px;
@@ -1272,6 +1269,7 @@ button#btnMoodExpand {
 
 .textAlbum {
     width: 195px;
+    height: 195px;
     font-size: 1.25em;
     position: absolute;
     top: 50%;
@@ -1280,15 +1278,28 @@ button#btnMoodExpand {
     -ms-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%);
     text-align: center;
-    height: 195px;
+}
 
+.playlistTextAlbum {
+    width: 195px;
+    height: 195px;
+    font-size: 1.25em;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    text-align: center;
+    padding-left: 25px;
+    color: white;
 }
 
     .textAlbum:before {
         content: '';
         display: inline-block;
         vertical-align: middle;
-        height: 25%;
+        height: 25%;       
     }
 
 #imgNowPlaying {

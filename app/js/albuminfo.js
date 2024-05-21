@@ -177,9 +177,6 @@ $(document).ready(function () {
 
             // Check if first words match
             if (splitAlbum[0] == splitExtract3[0]) {
-                console.log("splitAlbum[0] = " + splitAlbum[0])
-                console.log("splitExtract3[0] = " + splitExtract3[0])
-
                 // Split at start of track listing
                 var splitExtract = wikiSummaryRaw.split('<h2><span id="Track_list');
                 // Split at start of accolades

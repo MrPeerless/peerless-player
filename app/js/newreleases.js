@@ -110,8 +110,6 @@ $(document).ready(function () {
         var counter = 0;
         $("#headingNewReleases").text("All New Releases.")
 
-        console.log(spotifyResponse)
-
         // Get each spotify albumID
         $.each(spotifyResponse[0].albums.items, function (i, items) {
             var artist = items.artists[0].name;

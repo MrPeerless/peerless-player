@@ -74,9 +74,14 @@ $(document).ready(function () {
                 }
                 // Details if no type
                 else {
-                    discographyDetails = "";
+                    discographyDetails = " * ";
                 }
                 $("#discographyDetails").append(discographyDetails);
+            }
+            // No information found on Musicbrainz
+            else {
+                console.log("No information found on Musicbrainz")
+                $("#discographyDetails").append(" * ");
             }
         }
     }
@@ -153,6 +158,19 @@ $(document).ready(function () {
             window.history.back();
             return false;
         }
+        // Calculate width of divSpotifyAlbumList so that it fills screen width
+        var winWidth = $(window).width();
+        var divContentWidth = $("#divContent").width();
+        var divSidemenu;
+
+        if ($("#divSideMenu").is(":visible")) {
+            divSidemenu = 0;
+        }
+        else {
+            divSidemenu = 240;
+        }
+        // Set width for divSpotifyAlbumList
+        $(".divSpotifyAlbumList").css("width", winWidth - (divSidemenu + divContentWidth));
     });
 
     function noResult() {
@@ -170,7 +188,6 @@ $(document).ready(function () {
 
         // If tracklisting is true display current album tracklisting page
         if (global_TrackListing == true) {
-            console.log("load display album")
             $("#divTrackListing").load("./html/displayalbum.html?artist=" + global_ArtistID + "&album=" + global_AlbumID);
         }
         else {

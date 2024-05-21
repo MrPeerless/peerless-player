@@ -7,7 +7,7 @@ $(document).ready(function () {
     album = album.replace(/&amp;/g, '&');
 
     // Update headings
-    $("#addToDatabaseDetails").text("Syncing " + album + " by " + artist);
+    $("#addToDatabaseDetails").text("Adding " + album + " by " + artist);
     $("#addToDatabaseInfo").append("Blank metadata fields can be changed or completed later when editing the album.<br>The only required fields are Release Date and Genre.<br>Genre tags found are listed in the Album Details.<br>Once completed, click on the IMPORT button to add the album to " + global_AppName + " database.<br />")
 
     // Add artist and album to form input

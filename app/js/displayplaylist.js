@@ -36,6 +36,10 @@ $(document).ready(function () {
             artworkSource = "./graphics/new.png";
             row.playlistName = "";
         }
+        else if (name == "Recommended") {
+            artworkSource = "./graphics/recommended.png";
+            row.playlistName = "";
+        }
         else {
             artworkSource = "./graphics/playlist_background.png";
         }

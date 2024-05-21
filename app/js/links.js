@@ -8,7 +8,6 @@ $(document).on('click', '#btnLinks', function () {
     var connection = navigator.onLine;
     if (connection) {
         artist = $("#hiddenArtistName").text();
-        console.log("artist :: " + artist)
         // Call ajax function artistIDQuery
         artistIDQuery(artist).done(processDataArtistID);
     }
@@ -31,7 +30,6 @@ $(document).on('click', '#btnLinks', function () {
 // Function to send ajax xml query to Musicbrainz server
 function artistIDQuery(query) {
     var queryArtist = query;
-    console.log("queryArtist :: " + queryArtist)
     // Artist search url
     var url = musicbrainzUrl + "artist/?query=artist:" + queryArtist;
     // Encode url

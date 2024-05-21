@@ -296,7 +296,7 @@ ipcRenderer.on('Help About', (event) => {
     var currentDate = new Date();
     var currentYear = currentDate.getFullYear();
     $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>About Peerless Player</h2>');
-    $('#okModalText').append("<div class='modalIcon'><img src='./graphics/peerless_player_thumb.png'></div><p><b>Author:</b> Geoff Peerless &copy " + currentYear + "<br><b>Version:</b> " + global_Version + "<br><b>URL:</b><a id='openLink' href='https://peerlessplayer.rocks' target='_blank'> peerlessplayer.rocks</a><br><b>Email:</b> contact@peerlessplayer.rocks<br><b>License:</b> ISC&nbsp<br>&nbsp</p >");
+    $('#okModalText').append("<div class='modalIcon'><img src='./graphics/peerless_player_thumb.png'></div><p><b>Author:</b> Geoff Peerless &copy " + currentYear + "<br><b>Version:</b> " + global_Version + "<br><b>URL:</b><a id='openLink' href='https://peerlessplayer.rocks' target='_blank'> peerlessplayer.rocks</a><br><b>Email:</b> geoffpeerless@hotmail.com<br><b>License:</b> ISC&nbsp<br>&nbsp</p >");
     var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
     $('.modalFooter').append(buttons);
     $("#btnOkModal").focus();
@@ -450,7 +450,7 @@ function backgroundChange() {
     trackHeight = parseInt($("#divTrackListing").css("height"));
     contentHeight = parseInt($("#divContent").css("height"));
     var winHeight = $(window).height();
-    var height = (winHeight - 60);
+    var height = (winHeight - 61);
     var margin = 0;
 
     $("#divContent").css("min-height", height);
@@ -472,6 +472,7 @@ function backgroundChange() {
     else {
         $("#divTrackListing").css("padding-bottom", 0);
     }
+
     return;
 }
 
@@ -1877,7 +1878,7 @@ $(document).ready(function () {
 
         // Adjust content width depending if track listing is displayed
         if ($('#divTrackListing').is(":visible") && srnWidth > 1215) {
-            $("#divContent").css("width", "680px");
+            $("#divContent").css("width", "480px");
         } else if ($('#divTrackListing').is(":visible") && srnWidth < 1215) {
             $("#divTrackListing").css("margin-left", "240px");
         } else {

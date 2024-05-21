@@ -31,7 +31,7 @@ $(document).ready(function () {
         $("#inpEditAlbumTime").val(albumTime);
 
         // Header details
-        $("#editAlbumDetails").text("Editing " + album + " by " + artist);
+        $("#editAlbumDetails").text("Editing: " + album + " by " + artist);
         $("#editAlbumInfo").empty();
         $("#editAlbumInfo").append("Click on <b>GET</b> to update track and album metadata.<br>Click on <b>ARTWORK</b> to update album cover art.<br>Click on <b>Album Artwork</b> to select an image file manually.<br>Click on <b>DELETE</b> to delete the album from the database.");
 

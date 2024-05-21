@@ -17,9 +17,9 @@ $(document).ready(function () {
 
     // Calculate how many albums to display per row 
     if ($('#divSideMenu').is(":visible")) {
-        totalFirstRow = parseInt((global_SrnWidth - 35) * global_Zoom / (219 * global_Zoom));
+        totalFirstRow = parseInt((global_SrnWidth - 35) * global_Zoom / (214 * global_Zoom));
     } else {
-        totalFirstRow = parseInt((global_SrnWidth - 240) * global_Zoom / (219 * global_Zoom));
+        totalFirstRow = parseInt((global_SrnWidth - 240) * global_Zoom / (214 * global_Zoom));
     }
     totalList = totalFirstRow * 10;
 
