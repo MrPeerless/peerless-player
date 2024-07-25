@@ -2,8 +2,9 @@
   "ExpandedNodes": [
     "",
     "\\app",
+    "\\app\\css",
     "\\app\\js"
   ],
-  "SelectedNode": "\\app\\js\\playlists.js",
+  "SelectedNode": "\\app\\css\\skinlight.css",
   "PreviewInSolutionExplorer": false
 }

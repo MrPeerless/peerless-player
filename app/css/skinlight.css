@@ -110,7 +110,7 @@ button[disabled] {
 /* The close X button in side menu*/
 .btnX {
     margin-top: -10px;
-    margin-right: 5px;
+    margin-right: 10px;
     color: black;
     float: right;
     font-size: 35px;

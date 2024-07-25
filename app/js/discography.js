@@ -30,7 +30,7 @@ $(document).ready(function () {
     }
 
     // Function to process data from received xml file searching for artistID
-    // This function gets start and end date of artist and artis type
+    // This function gets start and end date of artist and artist type
     function processDataArtistID(xml) {
         var discographyDetails = "";
         var $artist = $(this);
