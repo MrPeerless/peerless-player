@@ -839,7 +839,7 @@ $(document).on('click', '#btnSettingsSave', function (event) {
 //###################
 // SYNC DIRECTORY
 //###################
-// Click event for Database Functions Sync Directory button
+// Click event for Player Functions Sync Directory button
 $(document).on('click', '#btnSyncDir', function (event) {
     event.preventDefault();
     btnSyncDirClick()
