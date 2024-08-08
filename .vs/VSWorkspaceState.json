@@ -3,8 +3,8 @@
     "",
     "\\app",
     "\\app\\css",
-    "\\app\\js"
+    "\\app\\html"
   ],
-  "SelectedNode": "\\app\\css\\skinlight.css",
+  "SelectedNode": "\\app\\html\\playing.html",
   "PreviewInSolutionExplorer": false
 }

@@ -229,6 +229,7 @@ button#btnFastForward {
 
 /*MENU CODE
 ############################*/
+
 #ulMenu a {
     color: white;
 }
@@ -296,6 +297,10 @@ button#btnFastForward {
 
 .divBioHeader img {
     border: 2px solid black;
+}
+
+#bioTextHidden {
+    background: white;
 }
 
 /*TABLE STYLES

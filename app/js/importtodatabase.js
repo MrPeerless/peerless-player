@@ -8,7 +8,7 @@ $(document).ready(function () {
 
     // Update headings
     $("#addToDatabaseDetails").text("Adding " + album + " by " + artist);
-    $("#addToDatabaseInfo").append("Blank metadata fields can be changed or completed later when editing the album.<br>The only required fields are Release Date and Genre.<br>Genre tags found are listed in the Album Details.<br>Once completed, click on the IMPORT button to add the album to " + global_AppName + " database.<br />")
+    $("#addToDatabaseInfo").append("Blank metadata fields can also be changed or completed later when editing the album.<br>The only required fields are Release Date and Genre.<br>Genre tags found are listed in the Metadata Results.<br>Once completed, click on the IMPORT button to add the album to " + global_AppName + " database.<br />")
 
     // Add artist and album to form input
     $("#inpArtistName").val(artist);

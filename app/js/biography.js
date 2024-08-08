@@ -188,7 +188,6 @@ $(document).ready(function () {
                         // Get summary extract from xml
                         var wikiSummary = $(xml).find('extract').text();
                         var wikiPageid = $(xml).find('page').attr('pageid');
-
                         var wikiTitle = $(xml).find('page').attr('title');
                         // Populate title and add href to wiki link
                         $("#bioArtistName").append("Biography for " + wikiTitle);
@@ -200,15 +199,14 @@ $(document).ready(function () {
                         }
 
                         // Split the text at end of summmary
-                        var splitExtract1 = wikiSummary.substr(0, wikiSummary.indexOf('<h2>'));
-                        var splitExtract2 = wikiSummary.substr(wikiSummary.indexOf('<h2>'));
+                        var splitExtract1 = wikiSummary.substr(0, wikiSummary.indexOf('<h2'));
+                        var splitExtract2 = wikiSummary.substr(wikiSummary.indexOf('<h2'));
                         // Split off from Discography
-                        var splitExtractHidden = splitExtract2.split('<h2><span id="Discography');
+                        var splitExtractHidden = splitExtract2.split('<h2 id="Discography');
                         // If the second half of the split is empty try looking for the H3 tag instead
                         if (splitExtractHidden[1] == "") {
-                            splitExtractHidden = splitExtract2.split('<h3><span id="Discography');
+                            splitExtractHidden = splitExtract2.split('<h3 id="Discography');
                         }
-
                         $("#bioText").append(splitExtract1);
                         // If no hidden text hide the Read More button
                         if (splitExtractHidden[0] == "") {

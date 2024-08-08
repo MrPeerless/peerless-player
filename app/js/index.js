@@ -330,7 +330,7 @@ ipcRenderer.on('Help Release', (event) => {
     $('#okModalText').empty();
     $(".modalFooter").empty();
     $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>Release Notes Version: ' + global_Version + '</h2>');
-    $('#okModalText').append("<div class='modalIcon'><img src='./graphics/peerless_player_thumb.png'></div><p>1. Bug fix when fetching album info from wikidata.<br>2. Database Edit Cancel button rerouted back to artist albums instead of homepage.<br>3. Link added from artists album page to display all songs for an artist.<br>4. Small redsign of the main menu.<br>5. Pi-Player functions added to the top menu bar. See the website for full details about the new Peerless-Pi-Player.<br></p >");//<br> &nbsp
+    $('#okModalText').append("<div class='modalIcon'><img src='./graphics/peerless_player_thumb.png'></div><p>1. Function added to Pi-Player menu to check network connection.<br>2. Close button added to left menu bar to hide/show Now Playing/Menu Functions.<br>3. Close buttons replaced with X in top right corner.<br>4. Button to Add new music moved to Music Library.<br>5. Database Functions removed and functions moved to Player Functions.<br>6. Artist Discography now linked to Spotify.<br>7. New graphics for music genres, playlists and player control buttons.<br></p >");//<br> &nbsp
     var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
     $('.modalFooter').append(buttons);
     $("#btnOkModal").focus();
@@ -851,15 +851,6 @@ function btnSyncDirClick() {
     // Send message to main.js to open dialog box
     ipcRenderer.send("open_folder_dialog", ["sync_directory", "Select Music Directory to Sync to Database", "C:\\", "Select Folder", "openDirectory"]);
 }
-
-// Cancel button on sync directory page
-$(document).on('click', '#btnSyncCancel', function (event) {
-    event.preventDefault();
-    $("#divTrackListing").css("display", "none");
-    $('#spnAtoZmenu').css('display', 'inline');
-    $("#divContent").css("width", "auto");
-    window.history.back();
-});
 
 // Change event when syncDirCheckAll is checked
 $(document).on('click', '#cbxSyncDirAll', function () {

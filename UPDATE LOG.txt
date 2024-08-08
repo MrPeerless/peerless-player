@@ -94,7 +94,14 @@
 4. Small redsign of the main menu.
 5. Pi-Player functions added to the top menu bar. See the website for full details about the new Peerless-Pi-Player.
 
-**** VERSION 0.5.1 UPDATES ****
+**** VERSION 0.6.0 UPDATES ****
 1. Function added to Pi-Player menu to check network connection.
-2. Close button added to left menu bar to hide/show now playing/menu functions.
+2. Close button added to left menu bar to hide/show Now Playing/Menu Functions.
 3. Close buttons replaced with X in top right corner.
+4. Button to Add new music moved to Music Library.
+5. Database Functions removed and functions moved to Player Functions.
+6. Artist Discography now linked to Spotify.
+7. New graphics for music genres, playlists and player control buttons.
+
+
+
