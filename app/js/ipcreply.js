@@ -10,7 +10,7 @@ ipcRenderer.on("sync_directory", (event, data) => {
         // Replace backward slashes with forward slashes
         musicDir = musicDir.replace(/\\/g, "/") + "/";
         // Load Sync Directory Page
-        $("#divContent").css("width", "475px");
+        $("#divContent").css("width", "460px");
         // Hide A to Z menu
         $('#spnAtoZmenu').css('display', 'none');
         // Hide Artist and Album column of Song table
@@ -199,7 +199,7 @@ ipcRenderer.on("from_dir_artists", (event, data) => {
     }
     else {
         $('#displayNewMusicDetails').append(foundMusic.length + " new albums found in Directory<br>The below list of new albums have been found.")
-        $('#displayNewMusicInfo').append("First select either Album or Single from the radio buttons.<br>Then select an album to import from the table below.<br>Once the selected album is highlighted in the table, click on the IMPORT button.")
+        $('#displayNewMusicInfo').append("&#x2022 First select either Album or Single from the radio buttons.<br>&#x2022 Then select an album to import from the table below.<br>&#x2022 Once the selected album is highlighted in the table, click on the IMPORT button.")
 
         var table = $("#tblImportMusic")
         var tableHeader = $("<tr><th class='rowGraceArtist'>Artist</th><th class='rowGraceAlbum'>Album</th></tr>");

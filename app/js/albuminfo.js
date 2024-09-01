@@ -185,6 +185,13 @@ $(document).ready(function () {
                 // Hide modal box
                 $('#okModal').css('display', 'none');
                 $('.background').css('filter', 'blur(0px)');
+                // Display WikiData logo depending on which skin is selected
+                if (global_Background == "#eeeeee") {
+                    $(".wikiDataLogo").attr('src', './graphics/wikiData_black.png');
+                }
+                else {
+                    $(".wikiDataLogo").attr('src', './graphics/wikiData_white.png');
+                }
             }
             else {
                 noResult();

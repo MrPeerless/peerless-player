@@ -3,8 +3,9 @@
     "",
     "\\app",
     "\\app\\css",
-    "\\app\\html"
+    "\\app\\html",
+    "\\docs"
   ],
-  "SelectedNode": "\\app\\html\\playing.html",
+  "SelectedNode": "\\app\\css\\style.css",
   "PreviewInSolutionExplorer": false
 }

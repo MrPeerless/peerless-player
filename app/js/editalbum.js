@@ -33,7 +33,7 @@ $(document).ready(function () {
         // Header details
         $("#editAlbumDetails").text("Editing: " + album + " by " + artist);
         $("#editAlbumInfo").empty();
-        $("#editAlbumInfo").append("Click on <b>GET</b> to update track and album metadata.<br>Click on <b>ARTWORK</b> to update album cover art.<br>Click on <b>Album Artwork</b> to select an image file manually.<br>Click on <b>DELETE</b> to delete the album from the database.");
+        $("#editAlbumInfo").append("&#x2022 Click on <b>GET</b> to update track and album metadata.<br>&#x2022 Click on <b>ARTWORK</b> to update album cover art.<br>&#x2022 Click on <b>Album Artwork</b> to select an image file manually.<br>&#x2022 Click on <b>DELETE</b> to delete the album from the database.");
 
         // Path to album artwork
         var modifiedDate = Date().toLocaleString();

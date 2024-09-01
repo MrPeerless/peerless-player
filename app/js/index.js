@@ -161,7 +161,7 @@ async function openDatabase(query) {
     // Set variable for global_Background
     switch (row.theme) {
         case "skindark":
-            global_Background = "#111111";
+            global_Background = "#222222";
             break;
         case "skinlight":
             global_Background = "#eeeeee";
@@ -975,35 +975,17 @@ $(document).ready(function () {
         // Get window width
         var srnWidth = $(window).width();
         // If screen is less than 1215px wide reset divTracklisting margin-left effectively hiding content div
-        /*
-        if (srnWidth < 1215) {
-            if ($('#divSideMenu').is(":visible")) {
-                $("#divTrackListing").css("margin-left", "35px");
-            } else {
-                $("#divTrackListing").css("margin-left", "240px");
-            }
-        }
-        else {
-            if ($('#divSideMenu').is(":visible")) {
-                $("#divTrackListing").css("margin-left", "275px");
-            } else {
-                $("#divTrackListing").css("margin-left", "715px");
-            }
-        }
-        */
-
         if ($('#divSideMenu').is(":visible") && srnWidth > 1215) {
             $("#divContent").css("width", "700px");
-            $("#divTrackListing").css("margin-left", "715px");
+            $("#divTrackListing").css("margin-left", "700px");
         } else if ($('#divSideMenu').is(":visible") && srnWidth < 1215) {
             $("#divTrackListing").css("margin-left", "35px");
             //$("#divTrackListing").css("margin-left", "715px");
         } else {
             var width = (srnWidth - 240);
             $("#divContent").css("width", width);
-            $("#divTrackListing").css("margin-left", "715px");  
+            $("#divTrackListing").css("margin-left", "700px");  
         }
-
 
         // Load link 
         $("#divContent").empty();
@@ -1016,7 +998,7 @@ $(document).ready(function () {
         if ($('#divSideMenu').is(":visible")) {
             $("#divContent").css("width", "700px");
         } else {
-            $("#divContent").css("width", "475px");
+            $("#divContent").css("width", "460px");
         }
 
         $(document).ajaxComplete(function () {
@@ -1067,14 +1049,14 @@ $(document).ready(function () {
         var srnWidth = $(window).width();
         if ($('#divSideMenu').is(":visible") && srnWidth > 1215) {
             $("#divContent").css("width", "700px");
-            $("#divTrackListing").css("margin-left", "715px");
+            $("#divTrackListing").css("margin-left", "700px");
         } else if ($('#divSideMenu').is(":visible") && srnWidth < 1215) {
             $("#divTrackListing").css("margin-left", "35px");
         } else if ($('#divPlaying').is(":visible") && srnWidth < 1215) {
             $("#divTrackListing").css("margin-left", "240px");
         } else {
-            $("#divContent").css("width", "475px");
-            $("#divTrackListing").css("margin-left", "715px");
+            $("#divContent").css("width", "460px");
+            $("#divTrackListing").css("margin-left", "700px");
         }
         $('#spnAtoZmenu').css('display', 'none');
         $("#divTrackListing").css("display", "block");
@@ -1141,14 +1123,14 @@ $(document).ready(function () {
         var srnWidth = $(window).width();
         if ($('#divSideMenu').is(":visible") && srnWidth > 1215) {
             $("#divContent").css("width", "700px");
-            $("#divTrackListing").css("margin-left", "715px");
+            $("#divTrackListing").css("margin-left", "700px");
         } else if ($('#divSideMenu').is(":visible") && srnWidth < 1215) {
             $("#divTrackListing").css("margin-left", "35px");
         } else if ($('#divPlaying').is(":visible") && srnWidth < 1215) {
             $("#divTrackListing").css("margin-left", "240px");
         } else {
-            $("#divContent").css("width", "475px");
-            $("#divTrackListing").css("margin-left", "715px");
+            $("#divContent").css("width", "460px");
+            $("#divTrackListing").css("margin-left", "700px");
         }
         $("#divTrackListing").css("display", "block");
         $("#divTrackListing").load("./html/displaytracks.html");
@@ -1167,14 +1149,14 @@ $(document).ready(function () {
             var srnWidth = $(window).width();
             if ($('#divSideMenu').is(":visible") && srnWidth > 1215) {
                 $("#divContent").css("width", "700px");
-                $("#divTrackListing").css("margin-left", "715px");
+                $("#divTrackListing").css("margin-left", "700px");
             } else if ($('#divSideMenu').is(":visible") && srnWidth < 1215) {
                 $("#divTrackListing").css("margin-left", "35px");
             } else if ($('#divPlaying').is(":visible") && srnWidth < 1215) {
                 $("#divTrackListing").css("margin-left", "240px");
             } else {
-                $("#divContent").css("width", "475px");
-                $("#divTrackListing").css("margin-left", "715px");
+                $("#divContent").css("width", "460px");
+                $("#divTrackListing").css("margin-left", "700px");
             }
             $("#divTrackListing").css("display", "block");
             $("#divTrackListing").load("./html/biography.html");
@@ -1207,15 +1189,15 @@ $(document).ready(function () {
             // Get window width
             var srnWidth = $(window).width();
             if ($('#divSideMenu').is(":visible") && srnWidth > 1215) {
-                $("#divContent").css("width", "700px");
-                $("#divTrackListing").css("margin-left", "715px");
+                $("#divContent").css("width", "685px");
+                $("#divTrackListing").css("margin-left", "700px");
             } else if ($('#divSideMenu').is(":visible") && srnWidth < 1215) {
                 $("#divTrackListing").css("margin-left", "35px");
             } else if ($('#divPlaying').is(":visible") && srnWidth < 1215) {
                 $("#divTrackListing").css("margin-left", "240px");
             } else {
-                $("#divContent").css("width", "475px");
-                $("#divTrackListing").css("margin-left", "715px");
+                $("#divContent").css("width", "460px");
+                $("#divTrackListing").css("margin-left", "700px");
             }
             $("#divTrackListing").css("display", "block");
             $("#divTrackListing").load("./html/discography.html");
@@ -1247,14 +1229,14 @@ $(document).ready(function () {
             var srnWidth = $(window).width();
             if ($('#divSideMenu').is(":visible") && srnWidth > 1215) {
                 $("#divContent").css("width", "700px");
-                $("#divTrackListing").css("margin-left", "715px");
+                $("#divTrackListing").css("margin-left", "700px");
             } else if ($('#divSideMenu').is(":visible") && srnWidth < 1215) {
                 $("#divTrackListing").css("margin-left", "35px");
             } else if ($('#divPlaying').is(":visible") && srnWidth < 1215) {
                 $("#divTrackListing").css("margin-left", "240px");
             } else {
-                $("#divContent").css("width", "475px");
-                $("#divTrackListing").css("margin-left", "715px");
+                $("#divContent").css("width", "460px");
+                $("#divTrackListing").css("margin-left", "700px");
             }
             $("#divTrackListing").css("display", "block");
             $("#divTrackListing").load("./html/recommendations.html");
@@ -1829,7 +1811,7 @@ $(document).ready(function () {
 
             if ($('#divTrackListing').is(":visible") && srnWidth > 1215) {
                 $("#divContent").css("width", "700px");
-                $("#divTrackListing").css("margin-left", "715px");
+                $("#divTrackListing").css("margin-left", "700px");
                 // Load home page
                 $("#divContent").load('./html/home.html');
                 $.getScript("./js/home.js")
@@ -1843,7 +1825,7 @@ $(document).ready(function () {
         // Adjust content width depending if track listing is displayed
         if ($('#divTrackListing').is(":visible") && srnWidth > 1215) {
             $("#divContent").css("width", "700px");
-            $("#divTrackListing").css("margin-left", "715px");
+            $("#divTrackListing").css("margin-left", "700px");
         } else if ($('#divTrackListing').is(":visible") && srnWidth < 1215) {
             $("#divTrackListing").css("margin-left", "35px");
             //$("#divTrackListing").css("margin-left", "715px");

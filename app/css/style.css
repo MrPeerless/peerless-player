@@ -192,6 +192,14 @@ select {
     height: 30px;
 }
 
+.wikiDataLogo {
+    width: 100px;
+}
+
+.musicBrainzLogo {
+    width: 150px;
+}
+
 /* PAGE BUTTON STYLES
 ###########################*/
 .btnMenu {
@@ -378,7 +386,7 @@ textarea {
 }
 
 #divTrackListing {
-    margin-left: 715px;
+    margin-left: 700px;
     top: 60px;
     padding: 0;
     position: absolute;
@@ -391,8 +399,12 @@ textarea {
     width: auto;
     float: left;
     left: 0px;
-    padding: 15px 0px 15px 15px;
+    padding: 15px 0px 15px 0px;
     height: auto;
+}
+
+#divMusicLibrary {
+    display: block;
 }
 
 .divSpotifyAlbumList {
@@ -400,7 +412,7 @@ textarea {
     position: relative;
     float: left;
     left: 0px;
-    padding-top: 10px;
+    padding-top: 15px;
     height: auto;
 }
 
@@ -435,12 +447,19 @@ textarea {
     padding-bottom: 10px;
 }
 
-/*SETTINGS FORM
-###################################*/
-#ipnAppName {
-    display: inline-block;
-    width: 100px;
+#divUserGuide {
+    padding-left: 15px;   
 }
+    #divUserGuide li {
+        font-size: 1.2em;
+    }
+
+    /*SETTINGS FORM
+###################################*/
+    #ipnAppName {
+        display: inline-block;
+        width: 100px;
+    }
 
 #ipnMusicDirectory {
     display: inline-block;
@@ -451,6 +470,7 @@ textarea {
 ###################################*/
 
 .frmDatabase {
+    margin-left: 15px;
     padding: 10px;
     border-radius: 8px;
     width: 925px;
@@ -990,7 +1010,7 @@ button#btnAddedShow {
     height: 15px;
     background: url(../graphics/expand_large.png) no-repeat;
     margin-top: -5px;
-    margin-left: 5px;
+    margin-left: 10px;
     border: none;
     cursor: pointer;
     vertical-align: middle;
@@ -1002,7 +1022,7 @@ button#btnPlayedShow {
     height: 15px;
     background: url(../graphics/expand_large.png) no-repeat;
     margin-top: -5px;
-    margin-left: 0px;
+    margin-left: 10px;
     border: none;
     cursor: pointer;
     vertical-align: middle;
@@ -1014,7 +1034,7 @@ button#btnMostPlayedShow {
     height: 15px;
     background: url(../graphics/expand_large.png) no-repeat;
     margin-top: -5px;
-    margin-left: 0px;
+    margin-left: 10px;
     border: none;
     cursor: pointer;
     vertical-align: middle;
@@ -1043,10 +1063,6 @@ button#btnLibraryExpand {
     cursor: pointer;
     vertical-align: middle;
     outline: none;
-}
-
-#divMusicLibrary{
-    display: block;
 }
 
 button#btnPlayerExpand {
@@ -1147,8 +1163,8 @@ button#btnMoodExpand {
 }
 
 .albumDisplay li {
-    width: 195px;
-    height: 195px;
+    width: 200px;
+    height: 175px;
     margin: 0px;
     float: left;
     display: block;
@@ -1202,13 +1218,13 @@ button#btnMoodExpand {
 }
 
 .albumDisplayLarge li {
-    width: 195px;
+    width: 200px;
     height: 195px;
     margin: 0px;
     float: left;
     display: block;
     position: relative;
-    padding: 10px 0px 10px 20px;
+    padding: 10px 0px 10px 15px;
     text-align: center;
 }
     .albumDisplayLarge li.addedHidden {
@@ -1243,7 +1259,7 @@ button#btnMoodExpand {
     position: absolute;
     top: 10px;
     bottom: 0;
-    left: 20px;
+    left: 15px;
     right: 0;
     padding: 10px;
     height: 180px;
@@ -1257,7 +1273,7 @@ button#btnMoodExpand {
     position: absolute;
     top: 10px;
     bottom: 0;
-    left: 20px;
+    left: 15px;
     right: 0;
     padding: 10px;
     height: 180px;
@@ -1430,6 +1446,7 @@ button#btnMoodExpand {
 .divCredits {
     clear: both;
     padding-left: 15px;
+    padding-bottom: 15px;
 }
 
 #playingtracks {
@@ -2078,4 +2095,20 @@ button#btnMoodExpand {
     100% {
         transform: translate(1px, -2px) rotate(-1deg);
     }
+}
+
+::-webkit-scrollbar {
+    height: 10px;
+    width: 10px;
+    background: #AAAAAA;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #444444;
+    -webkit-border-radius: 1ex;
+    -webkit-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.75);
+}
+
+::-webkit-scrollbar-corner {
+    background: #AAAAAA;
 }

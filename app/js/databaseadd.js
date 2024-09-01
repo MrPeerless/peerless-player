@@ -50,20 +50,20 @@ function btnSyncClick() {
     }
 
     // Display newmusic.html page
-    $("#divContent").css("width", "475px");
+    $("#divContent").css("width", "460px");
 
     // Get window width
     var srnWidth = $(window).width();
     if ($('#divSideMenu').is(":visible") && srnWidth > 1215) {
         $("#divContent").css("width", "700px");
-        $("#divTrackListing").css("margin-left", "715px");
+        $("#divTrackListing").css("margin-left", "700px");
     } else if ($('#divSideMenu').is(":visible") && srnWidth < 1215) {
         $("#divTrackListing").css("margin-left", "35px");
     } else if ($('#divPlaying').is(":visible") && srnWidth < 1215) {
         $("#divTrackListing").css("margin-left", "240px");
     } else {
-        $("#divContent").css("width", "475px");
-        $("#divTrackListing").css("margin-left", "715px");
+        $("#divContent").css("width", "460px");
+        $("#divTrackListing").css("margin-left", "700px");
     }
 
     // Hide A to Z menu

@@ -1,7 +1,7 @@
 /*MAIN SITE STYLE
 #################*/
 body {
-    background: #111111;
+    background: #222222;
 }
 
 h1 {
@@ -110,7 +110,7 @@ button[disabled] {
 /* The close X button in side menu*/
 .btnX {
     margin-top: -10px;
-    margin-right: 5px;
+    margin-right: 10px;
     color: white;
     float: right;
     font-size: 35px;
@@ -145,7 +145,7 @@ button#btnHamburgerMenu {
 /* The close X button in display tracks*/
 #btnXDisplayTracks {
     margin-top: -10px;
-    margin-right: 5px;
+    margin-right: 10px;
     color: white;
     float: right;
     font-size: 35px;
@@ -177,6 +177,11 @@ button#btnHamburgerMenu {
     color: white;
 }
 
+#divSideMenu {
+    background: #000000;
+    color: white;
+}
+
 #divContent {
     background: #222222;
     color: #F0F0F0;
@@ -187,11 +192,6 @@ button#btnHamburgerMenu {
     color: #F0F0F0;
 }
 
-#divSideMenu {
-    background: #000000;
-    color: white;
-}
-
 .divLayout {
     background: #222222;
     color: white;
@@ -199,6 +199,10 @@ button#btnHamburgerMenu {
 
 .container {
     background: #222222;
+}
+
+.wiki {
+    background: #333333;
 }
 
 /*ADD TO DATABASE FORM

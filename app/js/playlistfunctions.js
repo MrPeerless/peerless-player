@@ -37,6 +37,25 @@ $(document).on('click', '#btnEdit', function (event) {
     $("#divPlaylist").fadeIn();
     $("#divPlaylist").css("top", divHeight);
     $('#divPlaylist').load("./html/playlistedit.html");
+
+    var srnWidth = $(window).width();
+    // Display divPlaying if it has been collasped
+    $('#divSideMenu').css('display', 'none');
+    $('#divPlaying').css('display', 'block');
+    $('#divPlaying').css('visibility', 'visible');
+    $('#divContent').css('margin-left', '240px')
+
+    if ($('#divSideMenu').is(":visible") && srnWidth > 1215) {
+        $("#divContent").css("width", "700px");
+        $("#divTrackListing").css("margin-left", "700px");
+    } else if ($('#divSideMenu').is(":visible") && srnWidth < 1215) {
+        $("#divTrackListing").css("margin-left", "35px");
+    } else if ($('#divPlaying').is(":visible") && srnWidth < 1215) {
+        $("#divTrackListing").css("margin-left", "240px");
+    } else {
+        $("#divContent").css("width", "460px");
+        $("#divTrackListing").css("margin-left", "700px");
+    }
 });
 
 // Close Create playlists
@@ -303,7 +322,7 @@ $(document).on('click', '#btnExportedClose', function (event) {
 
 function btnExportedPlaylistsClick() {
     // Load playlists exported Page
-    $("#divContent").css("width", "475px");
+    $("#divContent").css("width", "460px");
     // Hide A to Z menu
     $('#spnAtoZmenu').css('display', 'none');
     // Hide Artist and Album column of Song table
@@ -317,14 +336,14 @@ function btnExportedPlaylistsClick() {
     var srnWidth = $(window).width();
     if ($('#divSideMenu').is(":visible") && srnWidth > 1215) {
         $("#divContent").css("width", "700px");
-        $("#divTrackListing").css("margin-left", "715px");
+        $("#divTrackListing").css("margin-left", "700px");
     } else if ($('#divSideMenu').is(":visible") && srnWidth < 1215) {
         $("#divTrackListing").css("margin-left", "35px");
     } else if ($('#divPlaying').is(":visible") && srnWidth < 1215) {
         $("#divTrackListing").css("margin-left", "240px");
     } else {
-        $("#divContent").css("width", "475px");
-        $("#divTrackListing").css("margin-left", "715px");
+        $("#divContent").css("width", "460px");
+        $("#divTrackListing").css("margin-left", "700px");
     }
 
     // Show and load playlistsexported.html file
@@ -570,7 +589,7 @@ ipcRenderer.on("from_get_playlists", (event, data) => {
         return;
     }
     // Populate page text
-    $('#exportedPlaylistsDetails').text(directoryPlaylists.length + " exported playlists found in your music directory.")
+    $('#exportedPlaylistsDetails').text(directoryPlaylists.length - 1 + " exported playlists found in your music directory.")
     var table = $("#tblExportedPlaylists")
     // Populate table header
     var tableHeader = $("<tr><th class='rowExportCheck'><input type='checkbox' id='cbxExportedPLaylistsAll'/></th><th class='rowExportName'>Playlist Name</th></tr>");
@@ -580,10 +599,12 @@ ipcRenderer.on("from_get_playlists", (event, data) => {
     directoryPlaylists.forEach((playlist) => {
         //Remove file extension from playlist filename
         playlist = playlist.substring(0, playlist.length - 4)
-        // Create table row for each Playlist
-        var tableRow = $("<tr class='tracks'><td><input type='checkbox' class='cbxExportedPLaylists'/></td><td>" + playlist + "</td><td></td></tr>");
-        // Append row to table
-        tableRow.appendTo(table);
+        if (playlist != "birthdates") {
+            // Create table row for each Playlist
+            var tableRow = $("<tr class='tracks'><td><input type='checkbox' class='cbxExportedPLaylists'/></td><td>" + playlist + "</td><td></td></tr>");
+            // Append row to table
+            tableRow.appendTo(table);
+        }
     });
 
     backgroundChange()

@@ -412,14 +412,14 @@ $(document).on('click', '#favouriteSongs', function () {
     var srnWidth = $(window).width();
     if ($('#divSideMenu').is(":visible") && srnWidth > 1215) {
         $("#divContent").css("width", "700px");
-        $("#divTrackListing").css("margin-left", "715px");
+        $("#divTrackListing").css("margin-left", "700px");
     } else if ($('#divSideMenu').is(":visible") && srnWidth < 1215) {
         $("#divTrackListing").css("margin-left", "35px");
     } else if ($('#divPlaying').is(":visible") && srnWidth < 1215) {
         $("#divTrackListing").css("margin-left", "240px");
     } else {
-        $("#divContent").css("width", "475px");
-        $("#divTrackListing").css("margin-left", "715px");
+        $("#divContent").css("width", "460px");
+        $("#divTrackListing").css("margin-left", "700px");
     }
     $("#divTrackListing").css("display", "block");
     $("#divTrackListing").load($(this).attr("href"));
@@ -666,7 +666,7 @@ $(document).on('change', "#sltArtistTrackSort", function (event) {
     global_ArtistTrackSort = $("#sltArtistTrackSort option:selected").val();
     $("#divTrackListing").empty();
     // Load link 
-    $("#divContent").css("width", "475px");
+    $("#divContent").css("width", "460px");
     $("#divTrackListing").css("display", "block");
     $("#divTrackListing").load("./html/displaytracks.html");
     // Enable btnSync

@@ -147,6 +147,7 @@ function processLinksQuery(xml) {
     $("#bioArtistLink").append(artist + " Links")
     $("#linksCredits").empty();
     $("#linksCredits").text("Data supplied by musicbrainz.org")
+    $(".musicBrainzLogo").attr('src', './graphics/metaBrainz_logo.png');
 
     // Loop through each relation in xml
     $(xml).find('relation').each(function () {
