@@ -163,7 +163,9 @@ button#btnHamburgerMenu {
 #######################*/
 
 #divControlsHeader {
-    background: #323251;
+    background-color: rgba(50, 50, 81, 0.85);
+    backdrop-filter: blur(6px);
+    /*background: #323251;*/
     color: #404040;
 }
 

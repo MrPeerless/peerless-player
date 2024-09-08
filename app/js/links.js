@@ -107,7 +107,7 @@ function processLinksQuery(xml) {
     // Set social media icons
     switch (global_Background) {
         // Skindark
-        case "#111111":
+        case "#222222":
             var homepageIcon = "./graphics/socialmedia/homepage_white.png";
             var bandcampIcon = "./graphics/socialmedia/bandcamp_white.png";
             var facebookIcon = "./graphics/socialmedia/facebook_blue.png";

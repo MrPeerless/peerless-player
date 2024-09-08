@@ -248,13 +248,13 @@ function btnPauseClick() {
         if (!global_Paused) {
             global_Paused = true;
             $("#audio1").trigger("pause");
-                // Grey out the album art cover
+            // Grey out the album art cover
             $("#imgNowPlaying").css({ opacity: 0.75, filter: "grayscale(100%)", '-moz-filter': "grayscale(100%)" });
         }
         else {
             global_Paused = false;
             $("#audio1").trigger("play");
-            // Change album art cover back from grey scale
+            // Change album art cover back from grey scale backdrop-filter: blur(6px);
             $("#imgNowPlaying").css({ opacity: 1, filter: "grayscale(0)", '-moz-filter': "grayscale(0)" });
         }
     }

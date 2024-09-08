@@ -136,8 +136,11 @@ $(document).ready(function () {
                     li.find('span').append('</b><br>' + album + '</b><br>' + releaseDate);
                     li.appendTo(ul);
                 }
-
             });
+
+            // Append X to close button here so that its position adjusts to scrollbars
+            //$("#btnClose").empty();
+            //$("#btnClose").append("&times;");
         }
         else {
             // Display modal information box
@@ -158,19 +161,20 @@ $(document).ready(function () {
             window.history.back();
             return false;
         }
+
         // Calculate width of divSpotifyAlbumList so that it fills screen width
         var winWidth = $(window).width();
         var divContentWidth = $("#divContent").width();
         var divSidemenu;
 
         if ($("#divSideMenu").is(":visible")) {
-            divSidemenu = 0;
+            divSidemenu = 35;
         }
         else {
             divSidemenu = 240;
         }
         // Set width for divSpotifyAlbumList
-        $(".divSpotifyAlbumList").css("width", winWidth - (divSidemenu + divContentWidth));
+        $("#divSpotifyDiscography").css("width", winWidth - (divSidemenu + divContentWidth));
     });
 
     function noResult() {

@@ -57,7 +57,6 @@ var global_YearID;
 // URLs
 var musicbrainzUrl = "https://musicbrainz.org/ws/2/";
 var wikiQueryUrl = "https://en.wikipedia.org/w/api.php?"
-var googleUrl = "https://www.google.co.uk/search?q="
 
 // CONSTANT VARIABLES
 // Path to users music directory
@@ -782,7 +781,7 @@ $(document).on('click', '#btnSettingsSave', function (event) {
             // Reset variable for global_Background
             switch (theme) {
                 case "skindark":
-                    global_Background = "#111111";
+                    global_Background = "#222222";
                     break;
                 case "skinlight":
                     global_Background = "#eeeeee";
@@ -1189,7 +1188,7 @@ $(document).ready(function () {
             // Get window width
             var srnWidth = $(window).width();
             if ($('#divSideMenu').is(":visible") && srnWidth > 1215) {
-                $("#divContent").css("width", "685px");
+                $("#divContent").css("width", "665px");
                 $("#divTrackListing").css("margin-left", "700px");
             } else if ($('#divSideMenu').is(":visible") && srnWidth < 1215) {
                 $("#divTrackListing").css("margin-left", "35px");

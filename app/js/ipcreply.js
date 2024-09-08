@@ -404,8 +404,11 @@ ipcRenderer.on("from_album", (event, data) => {
         // Count number of recommendations
         numberRecommendations += 1;
         $("#recommendsCount").empty();
-        $("#recommendsCount").append(numberRecommendations);
+        $("#recommendsCount").append(numberRecommendations);    
     }
+    // Append X to close button here so that its position adjusts to scrollbars
+    $("#btnClose").empty();
+    $("#btnClose").append("&times;");
 });
 
 ipcRenderer.on("spotify_error", (event, data) => {
