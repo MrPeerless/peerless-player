@@ -103,5 +103,8 @@
 6. Artist Discography now linked to Spotify.
 7. New graphics for music genres, playlists and player control buttons.
 
+**** VERSION 0.6.1 UPDATES ****
+1. Bug fixed in artist links query to check all names returned from Musicbrainz for a match.
+
 
 

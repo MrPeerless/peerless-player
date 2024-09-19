@@ -44,40 +44,30 @@ function artistIDQuery(query) {
 
 // Function to process data from received xml file searching for artistID
 function processDataArtistID(xml) {
-    var $artist = $(this);
+    $(xml).find('artist').each(function () {
+        var $artist = $(this);
+        var Name = $artist.find('name').eq(0).text();
+        var matchScore = Number ($artist.attr('ns2:score'))
+        if (matchScore >= "90") {
+            var artistName = $artist.find('name').eq(0).text();
+            artistID = $artist.attr("id");
 
-    // Get the first artist in xml and check it is match score = 100
-    var $artist = $(xml).find('artist').eq(0);
-    var matchScore = $artist.attr('ns2:score')
-    // Find the 100% artist match
-    if (matchScore == "100") {
+            // Check if artist name is in xml result
+            var checkArtist = artist.replace(/\W/g, '');
+            checkArtist = checkArtist.toLowerCase();
 
-        var artistName = $artist.find('name').eq(0).text();
-        artistID = $artist.attr("id");
-        //var type = $artist.attr('type')
-        //var begin = $artist.find('begin').text();
-        //var end = $artist.find('end').text();
+            var checkArtistName = artistName.replace(/\W/g, '');
+            checkArtistName = checkArtistName.toLowerCase();
 
-        // Check if artist name is in xml result
-        var checkArtist = artist.replace(/\W/g, '');
-        checkArtist = checkArtist.toLowerCase();
-        var checkArtistName = artistName.replace(/\W/g, '');
-        checkArtistName = checkArtistName.toLowerCase();
-
-        // Check if artist name appears in the xml artist name retrieved
-        var checkResult = checkArtistName.includes(checkArtist);
-        // If checkResult is false exit
-        if (checkResult == false) {
-            noResult();
-            return;
+            // Check if artist name appears in the xml artist name retrieved
+            var checkResult = checkArtistName.includes(checkArtist);
+            // If checkResult is false exit
+            if (checkResult == true) {
+                // Call ajax function artistLinksQuery
+                artistLinksQuery(artistID).done(processLinksQuery);
+            }
         }
-        if (artistID != "") {
-            // Call ajax function artistLinksQuery
-            artistLinksQuery(artistID).done(processLinksQuery);
-        }
-
-
-    }
+    });
 }
 
 // Function to send ajax xml query to Musicbrainz server to get URLs
