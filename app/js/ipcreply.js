@@ -231,11 +231,27 @@ ipcRenderer.on("from_dir_artists", (event, data) => {
 ipcRenderer.on("from_getArtistID_recommendations", (event, data) => {
     var spotifyResponse = data[0];
     var artist = data[1];
+    // Remove non alpha numeric characters
+    artist = artist.replace(/[.,;:?()'\-\[\]\/]/g, ' ')
+    // Remove any multiple spaces
+    artist = artist.replace(/  +/g, ' ')
+    // Remove any spaces at start and end
+    artist = artist.trim();
+    artist = artist.trimEnd();
+    artist = artist.toLowerCase();
     var artistFound = false;
     var numberArtists = spotifyResponse.artists.items.length;
 
     for (var i = 0; i < numberArtists; i++) {
         var name = spotifyResponse.artists.items[i].name;
+        // Remove non alpha numeric characters
+        name = name.replace(/[.,;:?()'\-\[\]\/]/g, ' ')
+        // Remove any multiple spaces
+        name = name.replace(/  +/g, ' ')
+        // Remove any spaces at start and end
+        name = name.trim();
+        name = name.trimEnd();
+        name = name.toLowerCase();
         if (artist == name) {
             var spotifyID = spotifyResponse.artists.items[i].id;
             ipcRenderer.send("spotify_recommendations", [spotifyID]);
@@ -310,11 +326,27 @@ ipcRenderer.on("from_recommendations", (event, data) => {
 ipcRenderer.on("from_getArtistID_discography", (event, data) => {
     var spotifyResponse = data[0];
     var artist = data[1];
+    // Remove non alpha numeric characters
+    artist = artist.replace(/[.,;:?()'\-\[\]\/]/g, ' ')
+    // Remove any multiple spaces
+    artist = artist.replace(/  +/g, ' ')
+    // Remove any spaces at start and end
+    artist = artist.trim();
+    artist = artist.trimEnd();
+    artist = artist.toLowerCase();
     var artistFound = false;
     var numberArtists = spotifyResponse.artists.items.length;
 
     for (var i = 0; i < numberArtists; i++) {
         var name = spotifyResponse.artists.items[i].name;
+        // Remove non alpha numeric characters
+        name = name.replace(/[.,;:?()'\-\[\]\/]/g, ' ')
+        // Remove any multiple spaces
+        name = name.replace(/  +/g, ' ')
+        // Remove any spaces at start and end
+        name = name.trim();
+        name = name.trimEnd();
+        name = name.toLowerCase();
         if (artist == name) {
             var spotifyID = spotifyResponse.artists.items[i].id;
             ipcRenderer.send("spotify_discography", [spotifyID]);

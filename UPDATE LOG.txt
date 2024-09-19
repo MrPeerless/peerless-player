@@ -105,6 +105,7 @@
 
 **** VERSION 0.6.1 UPDATES ****
 1. Bug fixed in artist links query to check all names returned from Musicbrainz for a match.
+2. Discography and recommendation searches of Spotify database improved by removing non alpha-numeric characters from search string.
 
 
 
