@@ -1,4 +1,5 @@
-$(document).ready(function () {
+//$(document).ready(function () {
+$(function () {
     // Get artist name from hidden field in artistalbums.html
     var artist = $("#hiddenArtistName").text();
     // Remove any apostrophes and replace with a space
@@ -29,7 +30,7 @@ $(document).ready(function () {
         $("#imgInfoArtwork").attr('src', artworkSource);
 
         // Create text for full genre list for album
-        var genreText = rows[0].genreName;
+        var genreText = "&#x2022 " + rows[0].genreName;
         if (rows[0].genreName != rows[0].genre2) {
             genreText = genreText + " - " + rows[0].genre2;
         }
@@ -47,7 +48,7 @@ $(document).ready(function () {
             lastPlayed = albumLastPlay;
         }
 
-        var albumDetails = " Released " + rows[0].releaseDate + "<br>Play time " + rows[0].albumTime + "<br>Last Played " + lastPlayed + "<br>";
+        var albumDetails = "&#x2022 Released " + rows[0].releaseDate + "<br>&#x2022 Play time " + rows[0].albumTime + "<br>&#x2022 Last Played " + lastPlayed + "<br>";
         $("#displayInfoAlbumName").append(rows[0].albumName + " <br>by " + rows[0].artistName);
         $("#displayInfoAlbumDetails").append(albumDetails + genreText);
     }
@@ -61,7 +62,7 @@ $(document).ready(function () {
     $('#okModalText').append("<div class='modalIcon'><img src='./graphics/record.gif'></div><p>&nbsp<br>Retrieving information from wikidata.org. Please wait.<br>&nbsp<br>&nbsp</p >");
     var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
     $('.modalFooter').append(buttons);
-    $("#btnOkModal").focus();
+    $("#btnOkModal")[0].focus();
     $('.background').css('filter', 'blur(5px)');
 
     // Search wikipedia for album page using artist name in text and album name in title
@@ -192,6 +193,24 @@ $(document).ready(function () {
                 else {
                     $(".wikiDataLogo").attr('src', './graphics/wikiData_white.png');
                 }
+
+                // Calculate width of divTrackListing so that it fills screen width
+                var winWidth = $(window).width();
+                var divContentWidth = $("#divContent").width();
+                var divSidemenu;
+
+                if ($("#divSideMenu").is(":visible")) {
+                    divSidemenu = 0;
+                }
+                else {
+                    divSidemenu = 240;
+                }
+                // Set width for divAlbumInfo
+                $("#divTrackListing").css("width", winWidth - (divSidemenu + divContentWidth));
+
+                // Append X to close button here so that its position adjusts to scrollbars
+                $("#btnClose").empty();
+                $("#btnClose").append("&times;");
             }
             else {
                 noResult();
@@ -213,7 +232,7 @@ $(document).ready(function () {
         $('#okModalText').append("<div class='modalIcon'><img src='./graphics/information.png'></div><p>&nbsp<br><b>" + album + "</b> not found in wikidata database.<br>&nbsp<br>&nbsp</p>");
         var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
         $('.modalFooter').append(buttons);
-        $("#btnOkModal").focus();
+        $("#btnOkModal")[0].focus();
         $('.background').css('filter', 'blur(5px)');
         // Go back to track listing page for album
         $('#divTrackListing').load("./html/displayalbum.html?artist=" + global_ArtistID + "&album=" + global_AlbumID);
@@ -233,7 +252,7 @@ $(document).ready(function () {
         $('#okModalText').append("<div class='modalIcon'><img src='./graphics/warning.png'></div><p><b>Could not connect to remote server.</b><br>" + url + "<br>The remote server may be currently unavailable. See error code below.<br><b>" + statusText + ": " + status + "</b><br>&nbsp<br></p>");
         var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
         $('.modalFooter').append(buttons);
-        $("#btnOkModal").focus();
+        $("#btnOkModal")[0].focus();
         $('.background').css('filter', 'blur(5px)');
         // If tracklisting is true display current album tracklisting page
         if (global_TrackListing == true) {

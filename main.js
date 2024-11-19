@@ -1,6 +1,7 @@
 //'use strict';
 // SET VARIABLES
 //---------------
+process.title = "Peerless Player"
 const { electron, app, BrowserWindow, ipcMain, dialog } = require('electron');// Require electron modules
 const { autoUpdater } = require('electron-updater');// Require electron-updater for auto updates
 const shell = require('electron').shell;// Require shell to open external websites in default browser
@@ -695,7 +696,7 @@ autoUpdater.on('update-downloaded', () => {
 var authOptions = {
     url: 'https://accounts.spotify.com/api/token',
     headers: {
-        'Authorization': 'Basic ' + (new Buffer(client_id + ':' + client_secret).toString('base64'))
+        'Authorization': 'Basic ' + (Buffer.from(client_id + ':' + client_secret).toString('base64'))
     },
     form: {
         grant_type: 'client_credentials'
@@ -994,11 +995,12 @@ ipcMain.on('spotify_getNewReleases', (event) => {
 
 ipcMain.on('spotify_discography', (event, data) => {
     var query = data[0];
+    console.log("spotify ID :: " + query)
     request.post(authOptions, function (error, response, body) {
         if (!error && response.statusCode === 200) {
             // Encode URL
 
-            var url = 'https://api.spotify.com/v1/artists/' + query + '/albums?include_groups=album&limit=50'
+            var url = 'https://api.spotify.com/v1/artists/' + query + '/albums?include_groups=album&market=gb&limit=50'
             var encodedUrl = encodeURI(url);
             // Use the access token to access the Spotify Web API
             var token = body.access_token;

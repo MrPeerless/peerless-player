@@ -1,6 +1,6 @@
-$(document).ready(function () {
+$(function () {
     // Artwork 404 handling
-    $("#imgArtwork").bind("error", function () {
+    $("#imgArtwork").on("error", function () {
         // Replace with default image
         $(this).attr("src", "./graphics/notFound.gif");
     });
@@ -27,7 +27,7 @@ $(document).ready(function () {
         $("#albumID").text(rows[0].albumID);
 
         // Create text for full genre list for album
-        var genreText = rows[0].genreName;
+        var genreText = "&#x2022 " + rows[0].genreName;
         if (rows[0].genreName != rows[0].genre2) {
             genreText = genreText + " - " + rows[0].genre2;
         }
@@ -46,7 +46,7 @@ $(document).ready(function () {
         }
 
         // Create text for album details
-        var albumDetails = " Released " + rows[0].releaseDate + "<br>Play time " + rows[0].albumTime + "<br>Last Played " + lastPlayed + "<br>";
+        var albumDetails = "&#x2022 Released " + rows[0].releaseDate + "<br>&#x2022 Play time " + rows[0].albumTime + "<br>&#x2022 Last Played " + lastPlayed + "<br>";
         $("#displayAlbumName").append(rows[0].albumName + " <br>by " + rows[0].artistName);
         $("#displayAlbumDetails").append(albumDetails + genreText);
 
@@ -89,6 +89,10 @@ $(document).ready(function () {
         });
         // Highlight track in table if it is currently playing
         nowPlaying()
+
+        // Append X to close button here so that its position adjusts to scrollbars
+        $("#btnClose").empty();
+        $("#btnClose").append("&times;");
 
         // Enable btnSync
         $("#btnSync").prop("disabled", false);

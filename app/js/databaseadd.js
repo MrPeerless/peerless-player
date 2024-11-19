@@ -44,7 +44,7 @@ function btnSyncClick() {
         $('#okModalText').append("<div class='modalIcon'><img src='./graphics/warning.png'></div><p>&nbsp<br><b>WARNING. No Music Path has been set.</b><br>Please go to Settings and set your Music Path.&nbsp</p >");
         var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
         $('.modalFooter').append(buttons);
-        $("#btnOkModal").focus();
+        $("#btnOkModal")[0].focus();
         $('.background').css('filter', 'blur(5px)');
         return
     }
@@ -132,7 +132,7 @@ $(document).on('click', '#btnImport', function (event) {
         $('#okModalText').append("<div class='modalIcon'><img src='./graphics/warning.png'></div><p>&nbsp<br><b>WARNING. No internet connection.</b><br>Please connect to the internet and try again.<br>&nbsp</p >");
         var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
         $('.modalFooter').append(buttons);
-        $("#btnOkModal").focus();
+        $("#btnOkModal")[0].focus();
         $('.background').css('filter', 'blur(5px)');
         return
     }
@@ -2566,6 +2566,14 @@ $(document).on('change', '.sltTempo1', function () {
 $(document).on('click', '#btnImportCancel', function (event) {
     event.preventDefault();
     $("#frmAdd").empty();
+    // Set screen width
+    var srnWidth = $(window).width();
+    if ($('#divSideMenu').is(":visible")) {
+        width = (srnWidth - 35);
+    } else {
+        width = (srnWidth - 240);
+    }
+    $("#divContent").css("width", width);
     $("#menuHome").css('textDecoration', 'underline');
     $("#divContent").load("./html/home.html");
     $.getScript("./js/home.js")
@@ -2726,7 +2734,7 @@ $(document).on('click', '#btnImportAlbum', function (event) {
                 $('#okModalText').append("<div class='modalIcon'><img src='./graphics/information.png'></div><p>&nbsp<br>Album has been successfully added to " + global_AppName + ".<br>&nbsp<br>&nbsp</p >");
                 var buttons = $("<button class='btnContent' id='btnOkImport'>OK</button>");
                 $('.modalFooter').append(buttons);
-                $("#btnOkImport").focus();
+                $("#btnOkImport")[0].focus();
                 $('.background').css('filter', 'blur(5px)');
                 // Enable btnSync
                 $("#btnSync").prop("disabled", false);
@@ -2743,7 +2751,7 @@ $(document).on('click', '#btnImportAlbum', function (event) {
                 $('#okModalText').append("<div class='modalIcon'><img src='./graphics/warning.png'></div><p>&nbsp<br><b>DATABASE ERROR</b> - album not added to " + global_AppName + ".<br>&nbsp<br>&nbsp</p >");
                 var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
                 $('.modalFooter').append(buttons);
-                $("#btnOkModal").focus();
+                $("#btnOkModal")[0].focus();
                 $('.background').css('filter', 'blur(5px)');
             }
         }
@@ -2783,7 +2791,7 @@ function ajaxErrorDA(statusText, status, url) {
     $('#okModalText').append("<div class='modalIcon'><img src='./graphics/warning.png'></div><p><b>Could not connect to remote server.</b><br>" + url + "<br>The remote server may be currently unavailable. See error code below.<br><b>" + statusText + ": " + status + "</b><br>&nbsp<br></p>");
     var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
     $('.modalFooter').append(buttons);
-    $("#btnOkModal").focus();
+    $("#btnOkModal")[0].focus();
     $('.background').css('filter', 'blur(5px)');
 }
 

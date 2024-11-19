@@ -56,7 +56,7 @@ ipcRenderer.on('Reboot Pi-Player', (event) => {
     $('#okModalText').append("<div class='modalIcon'><img src='./graphics/question.png'></div><p>&nbsp<br>Are you sure you want to reboot your Raspberry Pi?<br>&nbsp<br>&nbsp</p >");
     var buttons = $("<button class='btnContent' id='btnRebootPi'>Yes</button> <button class='btnContent' id='btnCancelModal'>No</button>");
     $('.modalFooter').append(buttons);
-    $("#btnRebootPi").focus();
+    $("#btnRebootPi")[0].focus();
     $('.background').css('filter', 'blur(5px)');
 });
 
@@ -77,7 +77,7 @@ ipcRenderer.on('Shutdown Pi-Player', (event) => {
     $('#okModalText').append("<div class='modalIcon'><img src='./graphics/question.png'></div><p>&nbsp<br>Are you sure you want to shutdown your Raspberry Pi?<br>&nbsp<br>&nbsp</p >");
     var buttons = $("<button class='btnContent' id='btnShutdownPi'>Yes</button> <button class='btnContent' id='btnCancelModal'>No</button>");
     $('.modalFooter').append(buttons);
-    $("#btnShutdownPi").focus();
+    $("#btnShutdownPi")[0].focus();
     $('.background').css('filter', 'blur(5px)');
 });
 
@@ -97,7 +97,7 @@ ipcRenderer.on('Open Pi-Player', (event) => {
     $('#okModalText').append("<div class='modalIcon'><img src='./graphics/information.png'></div><p>&nbsp<br>Opening Peerless-Pi-Player<br>&nbsp<br>&nbsp</p >");
     var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
     $('.modalFooter').append(buttons);
-    $("#btnOkModal").focus();
+    $("#btnOkModal")[0].focus();
     $('.background').css('filter', 'blur(5px)');
 
     ipcRenderer.send("shell_command", ['DISPLAY=:0 chromium-browser -start-fullscreen --app=http://localhost:8000/\n', global_piIpAddress, global_piUserName, global_piPassword]);
@@ -114,7 +114,7 @@ ipcRenderer.on('Re-Send Pi-Player', (event) => {
     $('#okModalText').append("<div class='modalIcon'><img src='./graphics/information.png'></div><p>&nbsp<br>Sending track data to Peerless-Pi-Player<br>&nbsp<br>&nbsp</p >");
     var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
     $('.modalFooter').append(buttons);
-    $("#btnOkModal").focus();
+    $("#btnOkModal")[0].focus();
     $('.background').css('filter', 'blur(5px)');
 
     resendData();
@@ -141,7 +141,7 @@ ipcRenderer.on('Check Connection', (event) => {
     $('#okModalText').append("<div class='modalIcon'><img src='./graphics/record.gif'></div><p>&nbsp<br>Checking network connection to Peerless-Pi-Player.<br>Please Wait...&nbsp<br>&nbsp</p >");
     var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
     $('.modalFooter').append(buttons);
-    $("#btnOkModal").focus();
+    $("#btnOkModal")[0].focus();
     $('.background').css('filter', 'blur(5px)');
 
     checkConnection();
@@ -161,7 +161,7 @@ ipcRenderer.on("from_check_connection_error", (event, data) => {
     $('#okModalText').append("<div class='modalIcon'><img src='./graphics/warning.png'></div><p>&nbsp<br>No Connection.<br> " + errorMsg + "<br>&nbsp<br>&nbsp</p >");
     var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
     $('.modalFooter').append(buttons);
-    $("#btnOkModal").focus();
+    $("#btnOkModal")[0].focus();
     $('.background').css('filter', 'blur(5px)');
 });
 
@@ -174,7 +174,7 @@ ipcRenderer.on("from_check_connection_success", (event) => {
     $('#okModalText').append("<div class='modalIcon'><img src='./graphics/information.png'></div><p>&nbsp<br>Successfully connected to Peerless-Pi-Player.<br><br>&nbsp<br>&nbsp</p >");
     var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
     $('.modalFooter').append(buttons);
-    $("#btnOkModal").focus();
+    $("#btnOkModal")[0].focus();
     $('.background').css('filter', 'blur(5px)');
 });
 
@@ -189,13 +189,16 @@ ipcRenderer.on('Close Pi-Player', (event) => {
     $('#okModalText').append("<div class='modalIcon'><img src='./graphics/question.png'></div><p>&nbsp<br>Are you sure you want to close Peerless-Pi-Player?<br>&nbsp<br>&nbsp</p >");
     var buttons = $("<button class='btnContent' id='btnClosePi'>Yes</button> <button class='btnContent' id='btnCancelModal'>No</button>");
     $('.modalFooter').append(buttons);
-    $("#btnClosePi").focus();
+    $("#btnClosePi")[0].focus();
     $('.background').css('filter', 'blur(5px)');
 });
 
 $(document).on('click', '#btnClosePi', function () {
     $('#okModal').css('display', 'none');
     $('.background').css('filter', 'blur(0px)');
+    // Send message to main.js to SSH with large PPlogo artworkfile
+    var artworkLarge = "./graphics/peerless_player_blue.jpg";
+    ipcRenderer.send("ssh_artworkfile", [artworkLarge, "", "Peerless-Pi-Player", "It's Music To Your Ears", "", "", "", global_piIpAddress, global_piUserName, global_piPassword]);
     ipcRenderer.send("shell_command", ['pkill chromium\n', global_piIpAddress, global_piUserName, global_piPassword]);
 })
 
@@ -360,7 +363,7 @@ function btnNewReleases() {
         $('#okModalText').append("<div class='modalIcon'><img src='./graphics/warning.png'></div><p>&nbsp<br><b>WARNING. No internet connection.</b><br>Please connect to the internet and try again.<br>&nbsp</p >");
         var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
         $('.modalFooter').append(buttons);
-        $("#btnOkModal").focus();
+        $("#btnOkModal")[0].focus();
         $('.background').css('filter', 'blur(5px)');
         return
     }
@@ -406,7 +409,7 @@ $(document).on('click', '#btnGenre', function () {
 });
 
 // Button click code to display favourite songs    
-$(document).on('click', '#favouriteSongs', function () {
+$(document).on('click', '#favouriteSongs', function (event) {
     event.preventDefault();
     // Load link
     var srnWidth = $(window).width();
@@ -895,7 +898,7 @@ async function displayTrack(position) {
         var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
         $('.modalFooter').append(buttons);
         $('.background').css('filter', 'blur(5px)');
-        $("#btnOkModal").focus();
+        $("#btnOkModal")[0].focus();
 
         // Send message to main.js to SSH with large PPlogo artworkfile
         var artworkLarge = "./graphics/peerless_player_blue.jpg";

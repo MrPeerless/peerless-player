@@ -1,4 +1,4 @@
-$(document).ready(function () {
+$(function () {
     // Set variable for overlay class on album image
     var overlay = "overlay";
     if (global_ArtIconShape == "round") {
@@ -27,10 +27,17 @@ $(document).ready(function () {
             // Get Top 2 Moods from View
             var selectMood = "SELECT mood1 FROM [Recent Played] GROUP BY mood1 ORDER BY COUNT(*) DESC LIMIT 2";
             var moods = await dBase.all(selectMood);
-
+            // If only 1 mood found duplicate 2nd mood with value of first
+            if (moods.length == 1) {
+                moods.push(moods[0])
+            }
             // Get Top 2 Genres from View
             var selectGenre = "SELECT genre2 FROM [Recent Played] GROUP BY genre2 ORDER BY COUNT(*) DESC LIMIT 2";
             var genres = await dBase.all(selectGenre);
+            // If only 1 genre found duplicate 2nd genre with value of first
+            if (genres.length == 1) {
+                genres.push(genres[0])
+            }
 
             // Get Recommended tracks from Track table
             var selectTracks = "SELECT trackID FROM track WHERE(mood1 = '" + moods[0].mood1 + "' AND genre2 = '" + genres[0].genre2 + "') OR(mood1 = '" + moods[0].mood1 + "' AND genre2 = '" + genres[1].genre2 + "') OR(mood1 = '" + moods[1].mood1 + "' AND genre2 = '" + genres[0].genre2 + "') OR(mood1 = '" + moods[1].mood1 + "' AND genre2 = '" + genres[1].genre2 + "') ORDER BY count DESC LIMIT 20";

@@ -1,4 +1,4 @@
-$(document).ready(function () {
+$(function () {
     // Set variable for overlay class on album image
     var overlay = "overlay";
     if (global_ArtIconShape == "round") {

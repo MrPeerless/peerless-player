@@ -80,7 +80,7 @@ ipcRenderer.on("from_sync_external", (event, data) => {
         $('#okModalText').append("<div class='modalIcon'><img src='./graphics/information.png'></div><p>&nbsp<br>The directory is up to date.<br>&nbsp</p >");
         var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
         $('.modalFooter').append(buttons);
-        $("#btnOkModal").focus();
+        $("#btnOkModal")[0].focus();
         // Load home page and return
         $("#divTrackListing").css("display", "none");
         $("#divContent").css("width", "auto");
@@ -172,7 +172,11 @@ ipcRenderer.on("from_dir_artists", (event, data) => {
         // Hide trackListing and show content
         $("#divTrackListing").css("display", "none");
         var srnWidth = $(window).width();
-        var width = (srnWidth - 240);
+        if ($('#divSideMenu').is(":visible")) {
+            width = (srnWidth - 35);
+        } else {
+            width = (srnWidth - 240);
+        }
         $("#divContent").css("width", width);
 
         // Show A to Z menu
@@ -192,7 +196,7 @@ ipcRenderer.on("from_dir_artists", (event, data) => {
         $('#okModalText').append("<div class='modalIcon'><img src='./graphics/information.png'></div><p>&nbsp<br>No new music found in directory.<br>The database is up to date.<br>&nbsp</p >");
         var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
         $('.modalFooter').append(buttons);
-        $("#btnOkModal").focus();
+        $("#btnOkModal")[0].focus();
         $("#btnSync").prop("disabled", false);
         $('.background').css('filter', 'blur(5px)');
         return
@@ -270,7 +274,7 @@ ipcRenderer.on("from_getArtistID_recommendations", (event, data) => {
         $('#okModalText').append("<div class='modalIcon'><img src='./graphics/information.png'></div><p>&nbsp<br><b>No recommendations could be found.</b><br><br>&nbsp</p >");
         var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
         $('.modalFooter').append(buttons);
-        $("#btnOkModal").focus();
+        $("#btnOkModal")[0].focus();
         $("#btnSync").prop("disabled", false);
         $('.background').css('filter', 'blur(5px)');
         // Hide recommendations page and go back
@@ -303,7 +307,7 @@ ipcRenderer.on("from_recommendations", (event, data) => {
         $('#okModalText').append("<div class='modalIcon'><img src='./graphics/information.png'></div><p>&nbsp<br><b>No recommendations could be found.</b><br><br>&nbsp</p >");
         var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
         $('.modalFooter').append(buttons);
-        $("#btnOkModal").focus();
+        $("#btnOkModal")[0].focus();
         $("#btnSync").prop("disabled", false);
         $('.background').css('filter', 'blur(5px)');
         // Hide recommendations page and go back
@@ -365,7 +369,7 @@ ipcRenderer.on("from_getArtistID_discography", (event, data) => {
         $('#okModalText').append("<div class='modalIcon'><img src='./graphics/information.png'></div><p>&nbsp<br><b>No discography data could be found.</b><br><br>&nbsp</p >");
         var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
         $('.modalFooter').append(buttons);
-        $("#btnOkModal").focus();
+        $("#btnOkModal")[0].focus();
         $("#btnSync").prop("disabled", false);
         $('.background').css('filter', 'blur(5px)');
         // Hide recommendations page and go back
@@ -436,8 +440,23 @@ ipcRenderer.on("from_album", (event, data) => {
         // Count number of recommendations
         numberRecommendations += 1;
         $("#recommendsCount").empty();
-        $("#recommendsCount").append(numberRecommendations);    
+        $("#recommendsCount").append(numberRecommendations);
+
+        // Calculate width of divSpotifyAlbumList so that it fills screen width
+        var winWidth = $(window).width();
+        var divContentWidth = $("#divContent").width();
+        var divSidemenu;
+
+        if ($("#divSideMenu").is(":visible")) {
+            divSidemenu = 35;
+        }
+        else {
+            divSidemenu = 240;
+        }
+        // Set width for divSpotifyAlbumList
+        $("#divSpotifyRecommendations").css("width", winWidth - (divSidemenu + divContentWidth));
     }
+
     // Append X to close button here so that its position adjusts to scrollbars
     $("#btnClose").empty();
     $("#btnClose").append("&times;");
@@ -456,7 +475,7 @@ ipcRenderer.on("spotify_error", (event, data) => {
     $('#okModalText').append("<div class='modalIcon'><img src='./graphics/warning.png'></div><p><b>Error accessing Spotify server.</b><br>See error code below for more details.<br><b>" + error + "</b><br>&nbsp<br></p>");
     var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
     $('.modalFooter').append(buttons);
-    $("#btnOkModal").focus();
+    $("#btnOkModal")[0].focus();
     $("#btnSync").prop("disabled", false);
     $('.background').css('filter', 'blur(5px)');
 
@@ -490,7 +509,7 @@ ipcRenderer.on("from_main_error", (event, data) => {
     $('#okModalText').append("<div class='modalIcon'><img src='./graphics/warning.png'></div><p>&nbsp<br><b>Uncaught Error in Main Process.</b><br>" + error + "<br>&nbsp</p >");
     var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
     $('.modalFooter').append(buttons);
-    $("#btnOkModal").focus();
+    $("#btnOkModal")[0].focus();
     $("#btnSync").prop("disabled", false);
     $('.background').css('filter', 'blur(5px)');
     return

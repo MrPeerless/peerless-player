@@ -1,4 +1,4 @@
-$(document).ready(function () {
+$(function () {
     // Display name of app
     $("#appName").text(global_AppName);
 

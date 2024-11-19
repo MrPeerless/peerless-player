@@ -58,7 +58,7 @@ $(document).on('click', '#btnArtworkAlbum', function (event) {
         $('#okModalText').append("<div class='modalIcon'><img src='./graphics/warning.png'></div><p>&nbsp<br><b>WARNING. No internet connection.</b><br>Please connect to the internet and try again.<br>&nbsp</p >");
         var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
         $('.modalFooter').append(buttons);
-        $("#btnOkModal").focus();
+        $("#btnOkModal")[0].focus();
         $('.background').css('filter', 'blur(5px)');
         return
     }
@@ -279,7 +279,7 @@ $(document).on('click', '#btnGetMetadata', function (event) {
         $('#okModalText').append("<div class='modalIcon'><img src='./graphics/warning.png'></div><p>&nbsp<br><b>WARNING. No internet connection.</b><br>Please connect to the internet and try again.<br>&nbsp</p >");
         var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
         $('.modalFooter').append(buttons);
-        $("#btnOkModal").focus();
+        $("#btnOkModal")[0].focus();
         $('.background').css('filter', 'blur(5px)');
         return
     }   
@@ -695,7 +695,7 @@ $(document).on('click', '#btnSaveAlbum', function (event) {
                 $('#okModalText').append("<div class='modalIcon'><img src='./graphics/information.png'></div><p>&nbsp<br>Album has been successfully updated in " + global_AppName + ".<br>&nbsp<br>&nbsp</p >");
                 var buttons = $("<button class='btnContent' id='btnOkEdit'>OK</button>");
                 $('.modalFooter').append(buttons);
-                $("#btnOkEdit").focus();
+                $("#btnOkEdit")[0].focus();
                 $('.background').css('filter', 'blur(5px)');
                 // Enable btnSync
                 $("#btnSync").prop("disabled", false);
@@ -711,7 +711,7 @@ $(document).on('click', '#btnSaveAlbum', function (event) {
                 $('#okModalText').append("<div class='modalIcon'><img src='./graphics/warning.png'></div><p>&nbsp<br><b>DATABASE ERROR</b> - album could not be updated in " + global_AppName + ".<br>&nbsp<br>&nbsp</p >");
                 var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
                 $('.modalFooter').append(buttons);
-                $("#btnOkModal").focus();
+                $("#btnOkModal")[0].focus();
                 $('.background').css('filter', 'blur(5px)');
                 // Enable btnSync
                 $("#btnSync").prop("disabled", false);
@@ -737,7 +737,7 @@ function ajaxErrorDE(statusText, status, url) {
     $('#okModalText').append("<div class='modalIcon'><img src='./graphics/warning.png'></div><p><b>Could not connect to remote server.</b><br>" + url + "<br>The remote server may be currently unavailable. See error code below.<br><b>" + statusText + ": " + status + "</b><br>&nbsp<br></p>");
     var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
     $('.modalFooter').append(buttons);
-    $("#btnOkModal").focus();
+    $("#btnOkModal")[0].focus();
     $('.background').css('filter', 'blur(5px)');
     // If tracklisting is true display current album tracklisting page
     if (global_TrackListing == true) {
@@ -875,7 +875,7 @@ $(document).on('click', '#btnDeleteOkAlbum', async function (event) {
         $('#okModalText').append("<div class='modalIcon'><img src='./graphics/information.png'></div><p>&nbsp<br>Album has been successfully deleted from " + global_AppName + ".<br>&nbsp<br>&nbsp</p >");
         var buttons = $("<button class='btnContent' id='btnOkImport'>OK</button>");
         $('.modalFooter').append(buttons);
-        $("#btnOkImport").focus();
+        $("#btnOkImport")[0].focus();
         $('.background').css('filter', 'blur(5px)');
         // Enable btnSync
         $("#btnSync").prop("disabled", false);
@@ -893,7 +893,7 @@ $(document).on('click', '#btnDeleteOkAlbum', async function (event) {
         $('#okModalText').append("<div class='modalIcon'><img src='./graphics/warning.png'></div><p>&nbsp<br><b>DATABASE ERROR</b> - album could not be deleted from " + global_AppName + ".<br>&nbsp<br>&nbsp</p >");
         var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
         $('.modalFooter').append(buttons);
-        $("#btnOkModal").focus();
+        $("#btnOkModal")[0].focus();
         $('.background').css('filter', 'blur(5px)');
     }
 });

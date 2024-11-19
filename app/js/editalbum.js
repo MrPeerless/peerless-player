@@ -1,4 +1,4 @@
-$(document).ready(function () {
+$(function () {
     // Album/Single radio button default value
     $("#radioAlbum").prop("checked", true);
 

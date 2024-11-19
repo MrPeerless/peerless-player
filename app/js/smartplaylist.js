@@ -42,7 +42,7 @@ async function btnSmartClicked() {
         var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
         $('.modalFooter').append(buttons);
         $('.background').css('filter', 'blur(5px)');
-        $("#btnOkModal").focus();
+        $("#btnOkModal")[0].focus();
         return
     }
     // Split seed vector into array
@@ -87,7 +87,7 @@ async function btnSmartClicked() {
         var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
         $('.modalFooter').append(buttons);
         $('.background').css('filter', 'blur(5px)');
-        $("#btnOkModal").focus();
+        $("#btnOkModal")[0].focus();
         return
     }
 
@@ -157,7 +157,7 @@ async function btnSmartClicked() {
             var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
             $('.modalFooter').append(buttons);
             $('.background').css('filter', 'blur(5px)');
-            $("#btnOkModal").focus();
+            $("#btnOkModal")[0].focus();
             return
         }
     }
@@ -180,7 +180,7 @@ async function btnSmartClicked() {
             var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
             $('.modalFooter').append(buttons);
             $('.background').css('filter', 'blur(5px)');
-            $("#btnOkModal").focus();
+            $("#btnOkModal")[0].focus();
             return
         }
     }
@@ -331,7 +331,7 @@ async function updateSmartData(query) {
             var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
             $('.modalFooter').append(buttons);
             $('.background').css('filter', 'blur(5px)');
-            $("#btnOkModal").focus();
+            $("#btnOkModal")[0].focus();
         }
     }
     catch{

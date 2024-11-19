@@ -1,4 +1,4 @@
-$(document).ready(function () {
+$(function () {
     // Varibale for new release data from spotify
     var spotifyResponse;
 
@@ -57,7 +57,7 @@ $(document).ready(function () {
             $('#okModalText').append("<div class='modalIcon'><img src='./graphics/information.png'></div><p>&nbsp<br><b>No new releases could be found.</b><br><br>&nbsp</p >");
             var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
             $('.modalFooter').append(buttons);
-            $("#btnOkModal").focus();
+            $("#btnOkModal")[0].focus();
             $("#btnSync").prop("disabled", false);
             $('.background').css('filter', 'blur(5px)');
             // Hide recommendations page and go back

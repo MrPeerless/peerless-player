@@ -1,7 +1,5 @@
-$(document).ready(function () {
-
+$(function () {
     displayPlaylist()
-
     async function displayPlaylist() {
         // Select the playlist details from the database
         var sql = "SELECT * FROM playlists WHERE playlistID=?";
@@ -121,7 +119,7 @@ $(document).ready(function () {
             playlistTime = hours + ":" + minutes + ":" + seconds;
         }
 
-        $("#displayPlaylistDetails").append("Created on " + created + "<br>Number of songs: " + numberTracks + "<br>Total play time: " + playlistTime + "<br>&nbsp<br>");
+        $("#displayPlaylistDetails").append("&#x2022 Created on " + created + "<br>&#x2022 Number of songs: " + numberTracks + "<br>&#x2022 Total play time: " + playlistTime + "<br>&nbsp<br>");
 
         //Get trackID of first track in album so that you can click PLAY button without selecting the first track
         if (!global_Playing) {
@@ -129,6 +127,9 @@ $(document).ready(function () {
         }
         // Highlight track in table if it is currently playing
         nowPlaying()
+
+        // Add X for close button once all data retrieved from database so adjusts position for scroll bar
+        $("#btnClose").html("&times;");
     }
 
     backgroundChange();

@@ -1,5 +1,4 @@
-$(document).ready(function () {
-
+$(function () {
     displayArtistTracks()
 
     async function displayArtistTracks() {
@@ -95,6 +94,10 @@ $(document).ready(function () {
             tableRow.appendTo(table);
         });
     }
+
+    // Append X to close button here so that its position adjusts to scrollbars
+    $("#btnClose").empty();
+    $("#btnClose").append("&times;");
 
     // Function for Song Table search box
     $(document).on('keyup', '#ArtistSongSearch', function () {

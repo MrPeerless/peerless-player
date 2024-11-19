@@ -1,4 +1,4 @@
-$(document).ready(function () {
+$(function () {
     // Query database for settings values
     populateSettings()
 

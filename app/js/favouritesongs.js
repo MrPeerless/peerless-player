@@ -1,5 +1,4 @@
-$(document).ready(function () {
-
+$(function () {
     displayGenre()
     // Hide A to Z menu
     $('#spnAtoZmenu').css('display', 'none')
@@ -41,7 +40,7 @@ $(document).ready(function () {
         var numberTracks = rows.length;
 
         // Create text for favourite details      
-        $("#displayFavouriteDetails").append("Number of songs: " + numberTracks + "<br>&nbsp<br>&nbsp<br>&nbsp<br>");
+        $("#displayFavouriteDetails").append("&#x2022 Number of songs: " + numberTracks + "<br>&nbsp<br>&nbsp<br>&nbsp<br>");
         $("#imgFavArtwork").attr('src', artworkSource);
         // Add tracks to each row of table
         var table = $("#tblTracks")

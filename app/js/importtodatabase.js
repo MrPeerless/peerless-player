@@ -1,4 +1,4 @@
-$(document).ready(function () {
+$(function () {
     // Get name of artist and album
     var artist = $("#selectedArtist").text();
     var album = $("#selectedAlbum").text();

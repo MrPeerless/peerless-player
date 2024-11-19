@@ -1,4 +1,4 @@
-$(document).ready(function () {
+$(function () {
     // Declare artist variable
     var artist;
 
@@ -32,67 +32,83 @@ $(document).ready(function () {
     // Function to process data from received xml file searching for artistID
     // This function gets start and end date of artist and artist type
     function processDataArtistID(xml) {
-        var discographyDetails = "";
-        var $artist = $(this);
+        $(xml).find('artist').each(function () {
+            var discographyDetails = "";
+            var $artist = $(this);
+            //var Name = $artist.find('name').eq(0).text();
+            var matchScore = Number($artist.attr('ns2:score'))
+            if (matchScore >= "90") {
+                var artistName = $artist.find('name').eq(0).text();
+                artistID = $artist.attr("id");
 
-        // Get the first artist in xml and check it is match score = 100
-        var $artist = $(xml).find('artist').eq(0);
-        var matchScore = $artist.attr('ns2:score')
+                // Check if artist name is in xml result
+                var checkArtist = artist.replace(/\W/g, '');
+                checkArtist = checkArtist.toLowerCase();
+                var checkArtistName = artistName.replace(/\W/g, '');
+                checkArtistName = checkArtistName.toLowerCase();
 
-        // Find the 100% artist match
-        if (matchScore == "100") {
-            global_TrackListing = false;
-            var artistName = $artist.find('name').eq(0).text();
-            artistID = $artist.attr("id");
-            var type = $artist.attr('type')
-            var begin = $artist.find('begin').text();
-            var end = $artist.find('end').text();
+                // Check if artist names match
+                if (checkArtistName == checkArtist) {
+                    global_TrackListing = false;
+                    var artistName = $artist.find('name').eq(0).text();
+                    artistID = $artist.attr("id");
+                    var type = $artist.attr('type')
+                    var begin = $artist.find('begin').text();
+                    var end = $artist.find('end').text();
 
-            // Display start and end date of artist
-            if (begin != "") {
-                if (end == "") {
-                    end = "present day"
-                }
-                // Calculate age if person
-                if (type == "Person") {
-                    // If person is alive
-                    if (end == "present day") {
-                        // Calculate age
-                        var age = new Date(new Date() - new Date(begin)).getFullYear() - 1970;
+                    // Display start and end date of artist
+                    if (artistID != "") {
+                        if (begin == "") {
+                            begin = "Not known"
+                        }
+                        if (end == "") {
+                            end = "present day"
+                        }
+                        // Calculate age if person
+                        if (type == "Person") {
+                            var age;
+                            // If person is alive
+                            if (end == "present day") {
+                                // Calculate age
+                                age = new Date(new Date() - new Date(begin)).getFullYear() - 1970;
+                            }
+                            // Else if person is dead
+                            else {
+                                // Calculate age
+                                age = new Date(new Date(end) - new Date(begin)).getFullYear() - 1970;
+                            }
+                            // 
+                            if (age) {
+                                discographyDetails = "Alive from " + begin + " to " + end + ". Aged " + age + ".";
+                            }
+                            else {
+                                discographyDetails = "Alive from " + begin + " to " + end + ".";
+                            }
+                        }
+                        // Details if type is group
+                        else if (type == "Group") {
+                            discographyDetails = "Recording from " + begin + " to " + end + ".";
+                        }
+                        // Details if no type
+                        else {
+                            discographyDetails = " * ";
+                        }
+                        $("#discographyDetails").empty();
+                        $("#discographyDetails").append(discographyDetails);
                     }
-                    // Else if person is dead
+                    // No information found on Musicbrainz
                     else {
-                        // Calculate age
-                        var age = new Date(new Date(end) - new Date(begin)).getFullYear() - 1970;
+                        $("#discographyDetails").append(" * ");
                     }
-                    // 
-                    discographyDetails = "Alive from " + begin + " to " + end + ". Aged " + age + ".";
                 }
-                // Details if type is group
-                else if (type == "Group") {
-                    discographyDetails = "Recording from " + begin + " to " + end + ".";
-                }
-                // Details if no type
-                else {
-                    discographyDetails = " * ";
-                }
-                $("#discographyDetails").append(discographyDetails);
             }
-            // No information found on Musicbrainz
-            else {
-                console.log("No information found on Musicbrainz")
-                $("#discographyDetails").append(" * ");
-            }
-        }
+        });
     }
 
     // Send IPC to search Spotify for album and artist
     ipcRenderer.send("spotify_getArtistID", [artist, "discography"])
 
-
-
     ipcRenderer.on("from_discography", (event, data) => {
-
         var spotifyResponse = data;
 
         // Set variable for overlay class on album image
@@ -137,10 +153,6 @@ $(document).ready(function () {
                     li.appendTo(ul);
                 }
             });
-
-            // Append X to close button here so that its position adjusts to scrollbars
-            //$("#btnClose").empty();
-            //$("#btnClose").append("&times;");
         }
         else {
             // Display modal information box
@@ -152,7 +164,7 @@ $(document).ready(function () {
             $('#okModalText').append("<div class='modalIcon'><img src='./graphics/information.png'></div><p>&nbsp<br><b>No albums could be found.</b><br><br>&nbsp</p >");
             var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
             $('.modalFooter').append(buttons);
-            $("#btnOkModal").focus();
+            $("#btnOkModal")[0].focus();
             $("#btnSync").prop("disabled", false);
             $('.background').css('filter', 'blur(5px)');
             // Hide discography page and go back
@@ -177,30 +189,6 @@ $(document).ready(function () {
         $("#divSpotifyDiscography").css("width", winWidth - (divSidemenu + divContentWidth));
     });
 
-    function noResult() {
-        // Display modal box if no artistID found in Musicbrainz database
-        $('#okModal').css('display', 'block');
-        $('.modalHeader').empty();
-        $('#okModalText').empty();
-        $(".modalFooter").empty();
-        $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
-        $('#okModalText').append("<div class='modalIcon'><img src='./graphics/information.png'></div><p>&nbsp<br><b>" + artist + "</b> not found in discography database.<br>&nbsp<br>&nbsp</p>");
-        var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
-        $('.modalFooter').append(buttons);
-        $("#btnOkModal").focus();
-        $('.background').css('filter', 'blur(5px)');
-
-        // If tracklisting is true display current album tracklisting page
-        if (global_TrackListing == true) {
-            $("#divTrackListing").load("./html/displayalbum.html?artist=" + global_ArtistID + "&album=" + global_AlbumID);
-        }
-        else {
-            // Hide biography page and go back
-            $("#divTrackListing").css("display", "none");
-            $("#divContent").css("width", "auto");
-        }  
-    }
-
     // Error handling for ajax errors
     function ajaxError(statusText, status, url) {
         // Hide modal box
@@ -215,7 +203,7 @@ $(document).ready(function () {
         $('#okModalText').append("<div class='modalIcon'><img src='./graphics/warning.png'></div><p><b>Could not connect to remote server.</b><br>" + url + "<br>The remote server may be currently unavailable. See error code below.<br><b>" + statusText + ": " + status + "</b><br>&nbsp<br></p>");
         var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
         $('.modalFooter').append(buttons);
-        $("#btnOkModal").focus();
+        $("#btnOkModal")[0].focus();
         $('.background').css('filter', 'blur(5px)');
         // If tracklisting is true display current album tracklisting page
         if (global_TrackListing == true) {
@@ -236,6 +224,10 @@ $(document).ready(function () {
     else {
         $(".spotifyLogo").attr('src', './graphics/spotify_white.png');
     }
+
+    // Append X to close button here so that its position adjusts to scrollbars
+    $("#btnClose").empty();
+    $("#btnClose").append("&times;");
 
     backgroundChange();
 });

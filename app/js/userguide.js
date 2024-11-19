@@ -1,4 +1,4 @@
-$(document).ready(function () {
+$(function () {
     $('#ulMenu a').css("textDecoration", "none");
     // Smooth scrolling when # anchor clicked
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {

@@ -1,4 +1,4 @@
-$(document).ready(function () {
+$(function () {
     // Arrays to store results
     var databaseAlbums = [];
 

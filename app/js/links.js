@@ -2,7 +2,7 @@
 var artist = "";
 var artistID = "";
 
-$(document).on('click', '#btnLinks', function () {
+$(document).on('click', '#btnLinks', function (event) {
     event.preventDefault();
     // Check if online
     var connection = navigator.onLine;
@@ -21,7 +21,7 @@ $(document).on('click', '#btnLinks', function () {
         $('#okModalText').append("<div class='modalIcon'><img src='./graphics/warning.png'></div><p>&nbsp<br><b>WARNING. No internet connection.</b><br>Please connect to the internet and try again.<br>&nbsp</p >");
         var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
         $('.modalFooter').append(buttons);
-        $("#btnOkModal").focus();
+        $("#btnOkModal")[0].focus();
         $('.background').css('filter', 'blur(5px)');
         return
     }
@@ -44,13 +44,12 @@ function artistIDQuery(query) {
 
 // Function to process data from received xml file searching for artistID
 function processDataArtistID(xml) {
+    var checkResult = false;
     $(xml).find('artist').each(function () {
         var $artist = $(this);
-        var Name = $artist.find('name').eq(0).text();
         var matchScore = Number ($artist.attr('ns2:score'))
         if (matchScore >= "90") {
-            var artistName = $artist.find('name').eq(0).text();
-            artistID = $artist.attr("id");
+            var artistName = $artist.find('name').eq(0).text();            
 
             // Check if artist name is in xml result
             var checkArtist = artist.replace(/\W/g, '');
@@ -60,14 +59,28 @@ function processDataArtistID(xml) {
             checkArtistName = checkArtistName.toLowerCase();
 
             // Check if artist name appears in the xml artist name retrieved
-            var checkResult = checkArtistName.includes(checkArtist);
+            checkResult = checkArtistName.includes(checkArtist);
             // If checkResult is false exit
             if (checkResult == true) {
+                artistID = $artist.attr("id");
                 // Call ajax function artistLinksQuery
                 artistLinksQuery(artistID).done(processLinksQuery);
             }
         }
     });
+    if (!checkResult) {
+        // Display modal box if no artistID found in Musicbrainz database
+        $('#okModal').css('display', 'block');
+        $('.modalHeader').empty();
+        $('#okModalText').empty();
+        $(".modalFooter").empty();
+        $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
+        $('#okModalText').append("<div class='modalIcon'><img src='./graphics/information.png'></div><p>&nbsp<br><b>" + artist + "</b> not found in links database.<br>&nbsp<br>&nbsp</p>");
+        var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
+        $('.modalFooter').append(buttons);
+        $("#btnOkModal")[0].focus();
+        $('.background').css('filter', 'blur(5px)');
+    }
 }
 
 // Function to send ajax xml query to Musicbrainz server to get URLs
@@ -236,7 +249,7 @@ function ajaxError(statusText, status, url) {
     $('#okModalText').append("<div class='modalIcon'><img src='./graphics/warning.png'></div><p><b>Could not connect to remote server.</b><br>" + url + "<br>The remote server may be currently unavailable. See error code below.<br><b>" + statusText + ": " + status + "</b><br>&nbsp<br></p>");
     var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
     $('.modalFooter').append(buttons);
-    $("#btnOkModal").focus();
+    $("#btnOkModal")[0].focus();
     $('.background').css('filter', 'blur(5px)');
     // If tracklisting is true display current album tracklisting page
     if (global_TrackListing == true) {

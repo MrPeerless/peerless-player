@@ -1,4 +1,4 @@
-$(document).ready(function () {
+$(function () {
     // Const for music directory to sync with
     const musicDir = $("#selectedDir").text();
 

@@ -91,7 +91,7 @@
 1. Bug fix when fetching album info from wikidata.
 2. Database Edit Cancel button rerouted back to artist albums instead of homepage.
 3. Link added from artists album page to display all songs for an artist.
-4. Small redsign of the main menu.
+4. Small redesign of the main menu.
 5. Pi-Player functions added to the top menu bar. See the website for full details about the new Peerless-Pi-Player.
 
 **** VERSION 0.6.0 UPDATES ****
@@ -104,8 +104,11 @@
 7. New graphics for music genres, playlists and player control buttons.
 
 **** VERSION 0.6.1 UPDATES ****
-1. Bug fixed in artist links query to check all names returned from Musicbrainz for a match.
+1. Bug fixed in artist links query to search all names returned from Musicbrainz for a match.
 2. Discography and recommendation searches of Spotify database improved by removing non alpha-numeric characters from search string.
+3. Bug fixed in Biography page to search all matches returned by Musicbrainz for a match.
+4. Recommended playlist bug fixed where if only 1 recent genre or mood found caused a database error.
+5. Deprecated jQuery functions updated.
 
 
 

@@ -1,4 +1,4 @@
-$(document).ready(function () {
+$(function () {
     // Get artist name from hidden field
     var artist = $("#hiddenArtistName").text();
     // Display heading with artist name

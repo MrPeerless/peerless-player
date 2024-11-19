@@ -8,7 +8,6 @@ var global_playingDivClicked;
 
 // Expand/Collapse DIVs
 var global_AddedExpand = false;
-//var global_DatabaseExpand = false;
 var global_GenreExpand = false;
 var global_LibraryExpand = true;
 var global_MostPlayedExpand = false;
@@ -228,7 +227,7 @@ ipcRenderer.on('update_available', () => {
     $('#okModalText').append("<div class='modalIcon'><img src='./graphics/update.png'></div><p>&nbsp<br>A new update is available. Downloading now....<br>&nbsp<br>&nbsp</p >");
     var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
     $('.modalFooter').append(buttons);
-    $("#btnOkModal").focus();
+    $("#btnOkModal")[0].focus();
     $('.background').css('filter', 'blur(5px)');
 });
 
@@ -244,7 +243,7 @@ ipcRenderer.on('update_downloaded', () => {
     $('#okModalText').append("<div class='modalIcon'><img src='./graphics/question.png'></div><p>&nbsp<br>Update Downloaded. It will be installed on restart. Do you want to restart now?<br>&nbsp</p >");
     var buttons = $("<button class='btnContent' id='btnRestartApp'>Yes</button> <button class='btnContent' id='btnCancelModal'>No</button>");
     $('.modalFooter').append(buttons);
-    $("#btnRestartApp").focus();
+    $("#btnRestartApp")[0].focus();
     $('.background').css('filter', 'blur(5px)');
 });
 
@@ -298,7 +297,7 @@ ipcRenderer.on('Help About', (event) => {
     $('#okModalText').append("<div class='modalIcon'><img src='./graphics/peerless_player_thumb.png'></div><p><b>Author:</b> Geoff Peerless &copy " + currentYear + "<br><b>Version:</b> " + global_Version + "<br><b>URL:</b><a id='openLink' href='https://peerlessplayer.rocks' target='_blank'> peerlessplayer.rocks</a><br><b>Email:</b> geoffpeerless@hotmail.com<br><b>License:</b> ISC&nbsp<br>&nbsp</p >");
     var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
     $('.modalFooter').append(buttons);
-    $("#btnOkModal").focus();
+    $("#btnOkModal")[0].focus();
     $('.background').css('filter', 'blur(5px)');
 });
 
@@ -316,7 +315,7 @@ ipcRenderer.on('License', (event) => {
     $('#okModalText').append("<div class='modalIcon'><img src='./graphics/peerless_player_thumb.png'></div><p><b>ISC License</b> Copywrite &copy " + currentYear + " Geoff Peerless<br><br>Permission to use, copy, modify, and/or distribute this software for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.<br><br>THE SOFTWARE IS PROVIDED 'AS IS' AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS.IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.</p >");
     var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
     $('.modalFooter').append(buttons);
-    $("#btnOkModal").focus();
+    $("#btnOkModal")[0].focus();
     $('.background').css('filter', 'blur(5px)');
 });
 
@@ -329,10 +328,10 @@ ipcRenderer.on('Help Release', (event) => {
     $('#okModalText').empty();
     $(".modalFooter").empty();
     $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>Release Notes Version: ' + global_Version + '</h2>');
-    $('#okModalText').append("<div class='modalIcon'><img src='./graphics/peerless_player_thumb.png'></div><p>1. Function added to Pi-Player menu to check network connection.<br>2. Close button added to left menu bar to hide/show Now Playing/Menu Functions.<br>3. Close buttons replaced with X in top right corner.<br>4. Button to Add new music moved to Music Library.<br>5. Database Functions removed and functions moved to Player Functions.<br>6. Artist Discography now linked to Spotify.<br>7. New graphics for music genres, playlists and player control buttons.<br></p >");//<br> &nbsp
+    $('#okModalText').append("<div class='modalIcon'><img src='./graphics/peerless_player_thumb.png'></div><p><b>Released 19.11.2024</b><br>1. Bug fixed in artist links query to search all names returned from Musicbrainz for a match.<br>2. Discography and recommendation searches of Spotify database improved by removing non alpha-numeric characters from search string.<br>3. Bug fixed in Biography page to search all matches returned by Musicbrainz for a match.<br>4. Recommended playlist bug fixed where if only 1 recent genre or mood found caused a database error.<br>5. Deprecated jQuery functions updated.<br></p >");//<br> &nbsp
     var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
     $('.modalFooter').append(buttons);
-    $("#btnOkModal").focus();
+    $("#btnOkModal")[0].focus();
     $('.background').css('filter', 'blur(5px)');
 });
 
@@ -356,7 +355,7 @@ ipcRenderer.on('Help Guide', (event) => {
 });
 
 // Show Back To Top link when scrolling
-$(window).scroll(function () {
+$(window).on('scroll', function () {
     if ($(this).scrollTop() == 0) {
         $('.divBackToTop').fadeOut();
     }
@@ -370,7 +369,6 @@ $(window).scroll(function () {
 $(document).on('click', '#btnBackToTop', function (event) {
     $('html, body').animate({ scrollTop: $(".divLayout").offset().top - 70 }, "slow");
 });
-
 
 //#########################
 // FUNCTIONS
@@ -809,7 +807,7 @@ $(document).on('click', '#btnSettingsSave', function (event) {
             $('#okModalText').append("<div class='modalIcon'><img src='./graphics/information.png'></div><p>&nbsp<br>Settings have been updated in the database.<br>&nbsp<br>&nbsp</p >");
             var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
             $('.modalFooter').append(buttons);
-            $("#btnOkModal").focus();
+            $("#btnOkModal")[0].focus();
             $('.background').css('filter', 'blur(5px)');
 
             // Update placeholder in search box
@@ -870,7 +868,7 @@ $(document).on('click', '#cbxSyncDirAll', function () {
 });
 
 // Click event for syncdirectory Sync button
-$(document).on('click', '#btnSyncChecked', function () {
+$(document).on('click', '#btnSyncChecked', function (event) {
     event.preventDefault();
 
     // Display modal box updating directory
@@ -882,7 +880,7 @@ $(document).on('click', '#btnSyncChecked', function () {
     $('#okModalText').append("<div class='modalIcon'><img src='./graphics/record.gif'></div><p>&nbsp<br>Updating external directory with selected albums.<br>&nbsp<br>&nbsp</p >");
     var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
     $('.modalFooter').append(buttons);
-    $("#btnOkModal").focus();
+    $("#btnOkModal")[0].focus();
     $('.background').css('filter', 'blur(5px)');
 
     // Sync functions
@@ -913,7 +911,7 @@ function syncDirectory() {
     $('#okModalText').append("<div class='modalIcon'><img src='./graphics/information.png'></div><p>&nbsp<br>Syncing directory.<br>&nbsp<br>&nbsp</p >");
     var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
     $('.modalFooter').append(buttons);
-    $("#btnOkModal").focus();
+    $("#btnOkModal")[0].focus();
     $('.background').css('filter', 'blur(5px)');
     // Load home page and return
     $("#divTrackListing").css("display", "none");
@@ -939,7 +937,7 @@ function urlExists(url, callback) {
 //##################
 // EVENT LOOP
 //##################
-$(document).ready(function () {
+$(function () {
     // Update smart data results
     updateSmartData("startup")
 
@@ -1115,7 +1113,7 @@ $(document).ready(function () {
         playTrack()
     });
 
-    $(document).on('click', '#artistNumberSongs', function () {
+    $(document).on('click', '#artistNumberSongs', function (event) {
         event.preventDefault();
         // Load link
         // Get window width
@@ -1137,7 +1135,7 @@ $(document).ready(function () {
 
 
     // Click event on Biography button
-    $(document).on('click', '#btnBiography', function () {
+    $(document).on('click', '#btnBiography', function (event) {
         event.preventDefault();
         // Check if online
         var connection = navigator.onLine;
@@ -1171,14 +1169,14 @@ $(document).ready(function () {
             $('#okModalText').append("<div class='modalIcon'><img src='./graphics/warning.png'></div><p>&nbsp<br><b>WARNING. No internet connection.</b><br>Please connect to the internet and try again.<br>&nbsp</p >");
             var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
             $('.modalFooter').append(buttons);
-            $("#btnOkModal").focus();
+            $("#btnOkModal")[0].focus();
             $('.background').css('filter', 'blur(5px)');
             return
         }
     });
 
     // Click event on Discography button
-    $(document).on('click', '#btnDiscography', function () {
+    $(document).on('click', '#btnDiscography', function (event) {
         event.preventDefault();
         // Check if online
         var connection = navigator.onLine;
@@ -1211,14 +1209,14 @@ $(document).ready(function () {
             $('#okModalText').append("<div class='modalIcon'><img src='./graphics/warning.png'></div><p>&nbsp<br><b>WARNING. No internet connection.</b><br>Please connect to the internet and try again.<br>&nbsp</p >");
             var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
             $('.modalFooter').append(buttons);
-            $("#btnOkModal").focus();
+            $("#btnOkModal")[0].focus();
             $('.background').css('filter', 'blur(5px)');
             return
         }
     });
 
     // Click event on Recommends button
-    $(document).on('click', '#btnRecommends', function () {
+    $(document).on('click', '#btnRecommends', function (event) {
         event.preventDefault();
         // Check if online
         var connection = navigator.onLine;
@@ -1250,7 +1248,7 @@ $(document).ready(function () {
             $('#okModalText').append("<div class='modalIcon'><img src='./graphics/warning.png'></div><p>&nbsp<br><b>WARNING. No internet connection.</b><br>Please connect to the internet and try again.<br>&nbsp</p >");
             var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
             $('.modalFooter').append(buttons);
-            $("#btnOkModal").focus();
+            $("#btnOkModal")[0].focus();
             $('.background').css('filter', 'blur(5px)');
             return
         }
@@ -1258,7 +1256,7 @@ $(document).ready(function () {
 
 
     // Click event for album info
-    $(document).on('click', '#btnInfoAlbum', function () {
+    $(document).on('click', '#btnInfoAlbum', function (event) {
         event.preventDefault();
         // Check if online
         var connection = navigator.onLine;
@@ -1277,7 +1275,7 @@ $(document).ready(function () {
             $('#okModalText').append("<div class='modalIcon'><img src='./graphics/warning.png'></div><p>&nbsp<br><b>WARNING. No internet connection.</b><br>Please connect to the internet and try again.<br>&nbsp</p >");
             var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
             $('.modalFooter').append(buttons);
-            $("#btnOkModal").focus();
+            $("#btnOkModal")[0].focus();
             $('.background').css('filter', 'blur(5px)');
             return
         }
@@ -1573,7 +1571,7 @@ $(document).ready(function () {
     });
 
     // Mood Select
-    $(document).on('click', '#btnMoodExpand', function () {
+    $(document).on('click', '#btnMoodExpand', function (event) {
         event.preventDefault();
         global_playingDivClicked = "btnMoodExpand";
         if (global_MoodExpand == false) {
@@ -1593,7 +1591,7 @@ $(document).ready(function () {
     });
 
     // Genre Select
-    $(document).on('click', '#btnGenreExpand', function () {
+    $(document).on('click', '#btnGenreExpand', function (event) {
         event.preventDefault();
         global_playingDivClicked = "btnGenreExpand";
         if (global_GenreExpand == false) {
@@ -1613,7 +1611,7 @@ $(document).ready(function () {
     });
 
     // Player Functions
-    $(document).on('click', '#btnPlayerExpand', function () {
+    $(document).on('click', '#btnPlayerExpand', function (event) {
         event.preventDefault();
         global_playingDivClicked = "btnPlayerExpand";
         if (global_PlayerExpand == false) {
@@ -1749,6 +1747,14 @@ $(document).ready(function () {
     // Button click to close modal box from import to database
     $(document).on('click', '#btnOkImport', function () {
         $('#okModal').css('display', 'none');
+        // Set screen width
+        var srnWidth = $(window).width();
+        if ($('#divSideMenu').is(":visible")) {
+            width = (srnWidth - 35);
+        } else {
+            width = (srnWidth - 240);
+        }
+        $("#divContent").css("width", width);
         // Load home page
         $('#ulMenu a').css("textDecoration", "none");
         $("#menuHome").css('textDecoration', 'underline');

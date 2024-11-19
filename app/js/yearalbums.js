@@ -1,4 +1,4 @@
-$(document).ready(function () {
+$(function () {
     // Set variable for overlay class on album image
     var overlay = "overlay";
     if (global_ArtIconShape == "round") {
@@ -209,7 +209,7 @@ $(document).ready(function () {
                 li.appendTo(ul);
             }
             // Artwork 404 handling
-            $("." + global_ArtIconShape).bind("error", function () {
+            $("." + global_ArtIconShape).on("error", function () {
                 // Replace with default image
                 $(this).attr("src", "./graphics/notFound.gif");
             });

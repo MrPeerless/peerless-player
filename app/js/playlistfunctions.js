@@ -148,7 +148,7 @@ async function playlistAdd() {
         $('#okModalText').append("<div class='modalIcon'><img src='./graphics/warning.png'></div><p>&nbsp<br><b>ERROR</b> - please enter a name for the playlist.<br>&nbsp<br>&nbsp</p >");
         var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
         $('.modalFooter').append(buttons);
-        $("#btnOkModal").focus();
+        $("#btnOkModal")[0].focus();
         $('.background').css('filter', 'blur(5px)');
         return
     }
@@ -169,7 +169,7 @@ async function playlistAdd() {
         $('#okModalText').append("<div class='modalIcon'><img src='./graphics/warning.png'></div><p>&nbsp<br><b>ERROR</b> - please add some tracks to the playlist.<br>&nbsp<br>&nbsp</p >");
         var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
         $('.modalFooter').append(buttons);
-        $("#btnOkModal").focus();
+        $("#btnOkModal")[0].focus();
         $('.background').css('filter', 'blur(5px)');
         return
     }
@@ -190,7 +190,7 @@ async function playlistAdd() {
         $('#okModalText').append("<div class='modalIcon'><img src='./graphics/information.png'></div><p>&nbsp<br>Playlist has been added to " + global_AppName + ".<br>&nbsp<br>&nbsp</p >");
         var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
         $('.modalFooter').append(buttons);
-        $("#btnOkModal").focus();
+        $("#btnOkModal")[0].focus();
         $("#divPlaylist").fadeOut();
         $('.background').css('filter', 'blur(5px)');
         $('#divContent').load("./html/playlists.html");
@@ -208,7 +208,7 @@ async function playlistAdd() {
         $('#okModalText').append("<div class='modalIcon'><img src='./graphics/warning.png'></div><p>&nbsp<br><b>DATABASE ERROR</b> - playlist not added to " + global_AppName + ".<br>&nbsp<br>&nbsp</p >");
         var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
         $('.modalFooter').append(buttons);
-        $("#btnOkModal").focus();
+        $("#btnOkModal")[0].focus();
         $('.background').css('filter', 'blur(5px)');
     }
 }
@@ -244,7 +244,7 @@ async function playlistUpdate() {
         $('#okModalText').append("<div class='modalIcon'><img src='./graphics/information.png'></div><p>&nbsp<br>Playlist has been updated in " + global_AppName + ".<br>&nbsp<br>&nbsp</p >");
         var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
         $('.modalFooter').append(buttons);
-        $("#btnOkModal").focus();
+        $("#btnOkModal")[0].focus();
         $('.background').css('filter', 'blur(5px)');
         $("#divPlaylist").fadeOut();
         $('#divContent').load("./html/playlists.html");
@@ -262,13 +262,13 @@ async function playlistUpdate() {
         $('#okModalText').append("<div class='modalIcon'><img src='./graphics/warning.png'></div><p>&nbsp<br><b>DATABASE ERROR</b> - playlist not updated in " + global_AppName + ".<br>&nbsp<br>&nbsp</p >");
         var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
         $('.modalFooter').append(buttons);
-        $("#btnOkModal").focus();
+        $("#btnOkModal")[0].focus();
         $('.background').css('filter', 'blur(5px)');
     }
 }
 
 // Export playlist
-$(document).on('click', '#btnExport', async function () {
+$(document).on('click', '#btnExport', async function (event) {
     event.preventDefault();
     exportPlaylist()
 });
@@ -304,7 +304,7 @@ async function exportPlaylist() {
     $('#okModalText').append("<div class='modalIcon'><img src='./graphics/information.png'></div><p>&nbsp<br><b>" + fileName + "</b> has been saved in Playlists folder of " + global_AppName + ".<br>&nbsp</p>");
     var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
     $('.modalFooter').append(buttons);
-    $("#btnOkModal").focus();
+    $("#btnOkModal")[0].focus();
     $('.background').css('filter', 'blur(5px)');
 }
 
@@ -376,7 +376,7 @@ $(document).on('click', '#cbxExportedPLaylistsAll', function () {
 });
 
 // Click event for exported playlists delete button
-$(document).on('click', '#btnExportedDelete', function () {
+$(document).on('click', '#btnExportedDelete', function (event) {
     event.preventDefault();
     // CHeck if any checkboxes have been clicked on
     var numberChecks = $("#tblExportedPlaylists input[type=checkbox]:checked").length;
@@ -403,7 +403,7 @@ $(document).on('click', '#btnExportedDelete', function () {
         $('#okModalText').append("<div class='modalIcon'><img src='./graphics/information.png'></div><p>&nbsp<br>Selected exported playlists have been deleted.<br>&nbsp<br>&nbsp</p >");
         var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
         $('.modalFooter').append(buttons);
-        $("#btnOkModal").focus();
+        $("#btnOkModal")[0].focus();
         $('.background').css('filter', 'blur(5px)');
         // Return to previous page
         $('#spnAtoZmenu').css('display', 'inline');
@@ -424,7 +424,7 @@ $(document).on('click', '#btnDeletePlaylist', function () {
     $('#okModalText').append("<div class='modalIcon'><img src='./graphics/question.png'></div><p>&nbsp<br>Are you sure you want to delete this playlist from " + global_AppName + "?<br>&nbsp</p >");
     var buttons = $("<button class='btnContent' id='btnDeleteOkPlaylist'>Yes</button> <button class='btnContent' id='btnCancelModal'>No</button>");
     $('.modalFooter').append(buttons);
-    $("#btnDeleteOkPlaylist").focus();
+    $("#btnDeleteOkPlaylist")[0].focus();
     $('.background').css('filter', 'blur(5px)');
 });
 
@@ -469,7 +469,7 @@ function btnQueueClicked() {
         $('#okModalText').append("<div class='modalIcon'><img src='./graphics/information.png'></div><p>&nbsp<br>Queued: " + global_TrackName + ".<br>&nbsp<br>&nbsp</p >");
         var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
         $('.modalFooter').append(buttons);
-        $("#btnOkModal").focus();
+        $("#btnOkModal")[0].focus();
         $('.background').css('filter', 'blur(5px)');
     }
     else {
@@ -484,7 +484,7 @@ function btnQueueClicked() {
         $('#okModalText').append("<div class='modalIcon'><img src='./graphics/information.png'></div><p>&nbsp<br>Queued: " + global_TrackName + ".<br>&nbsp<br>&nbsp</p >");
         var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
         $('.modalFooter').append(buttons);
-        $("#btnOkModal").focus();
+        $("#btnOkModal")[0].focus();
         $('.background').css('filter', 'blur(5px)');
     }
 }
@@ -513,7 +513,7 @@ function btnQueueAlbumClicked() {
     $('#okModalText').append("<div class='modalIcon'><img src='./graphics/information.png'></div><p>&nbsp<br>Queued Album: " + $('#displayAlbumName').text() + ".<br>&nbsp<br>&nbsp</p >");
     var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
     $('.modalFooter').append(buttons);
-    $("#btnOkModal").focus();
+    $("#btnOkModal")[0].focus();
     $('.background').css('filter', 'blur(5px)');
 }
 
@@ -534,7 +534,7 @@ function btnClearQueuedClicked() {
     $('#okModalText').append("<div class='modalIcon'><img src='./graphics/information.png'></div><p>&nbsp<br>Queued music has been cleared.<br>&nbsp<br>&nbsp</p >");
     var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
     $('.modalFooter').append(buttons);
-    $("#btnOkModal").focus();
+    $("#btnOkModal")[0].focus();
     $('.background').css('filter', 'blur(5px)');
 }
 
@@ -582,7 +582,7 @@ ipcRenderer.on("from_get_playlists", (event, data) => {
         $('#okModalText').append("<div class='modalIcon'><img src='./graphics/information.png'></div><p>&nbsp<br>No exported playlist files.<br>&nbsp<br>&nbsp</p >");
         var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
         $('.modalFooter').append(buttons);
-        $("#btnOkModal").focus();
+        $("#btnOkModal")[0].focus();
         $('.background').css('filter', 'blur(5px)');
         $("#divTrackListing").css("display", "none");
         $("#divContent").css("width", "auto");

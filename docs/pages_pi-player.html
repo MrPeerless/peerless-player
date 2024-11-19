@@ -200,7 +200,7 @@
                             In the terminal type in the following command to install<br />
                             <div class="divCodeBlock">
                                 <code>$ sudo apt install unclutter sed</code>
-                            </div>     
+                            </div>
                         </li>
                     </ul>
                 </li>
@@ -315,24 +315,61 @@
                     <div class="divCodeBlock">
                         <code>$ sudo nano /etc/sudoers</code><br />
                     </div>
-                        At the end of the file add the following 3 lines of code, replacing <i>userName</i> in line 3 with your Pi user name:<br />
-                        <div class="divCodeBlock">
-                            <code>
-                                # Allow members of group sudo to execute any command<br />
-                                %sudo   ALL=(ALL:ALL) ALL<br />
-                                userName ALL=(ALL) NOPASSWD: ALL
-                            </code>
-                        </div>
-                        <br />
-                        <img class="inlineImage" src="./images/screenshot_sudoers.png">
+                    At the end of the file add the following 3 lines of code, replacing <i>userName</i> in line 3 with your Pi user name:<br />
+                    <div class="divCodeBlock">
+                        <code>
+                            # Allow members of group sudo to execute any command<br />
+                            %sudo   ALL=(ALL:ALL) ALL<br />
+                            userName ALL=(ALL) NOPASSWD: ALL
+                        </code>
+                    </div>
+                    <br />
+                    <img class="inlineImage" src="./images/screenshot_sudoers.png">
                 </li>
             </ol>
         </div>
         <br />
         <br />
 
+        <div class="divSingle">
+            <h2>Updates</h2>
+            <h3>Version 0.1.1 Date 29.10.2024</h3>
+            <br />
+            Added online/offline graphic to screen to detect if Raspberry Pi loses network connection.
 
+            <h4>New Files Added:</h4>
+            <ul>
+                <li class="space">
+                    \graphics\offline.png
+                </li>
+                <li class="space">
+                    \graphics\offline_black.png
+                </li>
+                <li class="space">
+                    \graphics\online.png
+                </li>
+                <li class="space">
+                    \graphics\online_black.png
+                </li>
+            </ul>
 
+            <h4>Current Files Updated:</h4>
+            <ul>
+                <li class="space">
+                    \graphics\default.jpg
+                </li>
+                <li class="space">
+                    \css\style.css
+                </li>
+                <li class="space">
+                    \index.html
+                </li>
+                <li class="space">
+                    \js\index.js
+                </li>
+            </ul>
+        </div>
+        <br />
         <br />
 
         <!-- ###### FOOTER ####### -->

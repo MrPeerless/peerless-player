@@ -194,6 +194,10 @@ button#btnHamburgerMenu {
     color: black;
 }
 
+divAlbumInfo {
+    padding-right: 5px;
+}
+
 .divLayout {
     background: #eeeeee;
     color: black;
@@ -203,8 +207,9 @@ button#btnHamburgerMenu {
     background: #eeeeee;
 }
 
-.wiki{
+.wiki {
     background: white;
+    padding-right: 5px;
 }
 
 /*ADD TO DATABASE FORM
