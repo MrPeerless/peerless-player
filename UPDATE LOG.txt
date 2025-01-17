@@ -110,5 +110,8 @@
 4. Recommended playlist bug fixed where if only 1 recent genre or mood found caused a database error.
 5. Deprecated jQuery functions updated.
 
+**** VERSION 0.6.2 UPDATES ****
+
+
 
 

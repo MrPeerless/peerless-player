@@ -70,8 +70,8 @@ const app_path = splitString[1];
 const dBase = require(splitString[3]);
 
 // Path to database file
-//const DB_PATH = app_path + "/peerless-player-TEST.db";
-const DB_PATH = app_path + "/peerless-player-database.db";
+const DB_PATH = app_path + "/peerless-player-TEST.db";
+//const DB_PATH = app_path + "/peerless-player-database.db";
 
 // JQuery
 window.$ = window.jQuery = require('jquery')
