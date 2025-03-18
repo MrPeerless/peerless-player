@@ -21,9 +21,11 @@ var jsmediatags = require("jsmediatags"); // To read ID3 tages in audio files
 
 // Read variables from resources file in root dir.
 var resources = JSON.parse(readFileSync('./resources/data.json'));
-// Get spotify api keys
+// Get spotify API keys
 var client_id = resources.clientID;
 var client_secret = resources.client_secret;
+// Get SoundStat API Key
+var soundStatKey = resources.soundStatKey;
 
 // Create pi_json data file in userData path
 var jsonData = '{"artist":"Peerless-Pi-Player", "album":"It\'s Music To Your Ears", "track":"Version 0.1.0", "playTime":"", "favourite":"", "timeStamp":"1"}';
@@ -738,7 +740,7 @@ ipcMain.on('spotify_search', (event, data) => {
                     }
                     // On error
                     else {
-                        win.webContents.send("spotify_error", error);
+                        win.webContents.send("server_error", error);
                     }   
                 }
                 if (sourceFunction == "artwork") {
@@ -748,7 +750,7 @@ ipcMain.on('spotify_search', (event, data) => {
                     }
                     // On error
                     else {
-                        win.webContents.send("spotify_error", error);
+                        win.webContents.send("server_error", error);
                     }  
                 }
                 if (sourceFunction == "edit") {
@@ -758,7 +760,7 @@ ipcMain.on('spotify_search', (event, data) => {
                     }
                     // On error
                     else {
-                        win.webContents.send("spotify_error", error);
+                        win.webContents.send("server_error", error);
                     }     
                 }
             });
@@ -793,7 +795,7 @@ ipcMain.on('spotify_getArtist', (event, data) => {
                 }
                 // On error
                 else {
-                    win.webContents.send("spotify_error", error);
+                    win.webContents.send("server_error", error);
                 }
             });
         }
@@ -825,45 +827,13 @@ ipcMain.on('spotify_getTracks', (event, data) => {
                 }
                 // On error
                 else {
-                    win.webContents.send("spotify_error", error);
+                    win.webContents.send("server_error", error);
                 }   
             });
         }
     });
 });
-
-// Get Audio Features of tracks from album
-ipcMain.on('spotify_getAudioFeatures', (event, data) => {
-    var query = data[0];
-    request.post(authOptions, function (error, response, body) {
-        if (!error && response.statusCode === 200) {
-            // Encode URL
-            var url = 'https://api.spotify.com/v1/audio-features?ids=' + query;
-            var encodedUrl = encodeURI(url);
-
-            // Use the access token to access the Spotify Web API
-            var token = body.access_token;
-            var options = {
-                url: encodedUrl,
-                headers: {
-                    'Authorization': 'Bearer ' + token
-                },
-                json: true
-            };
-            request.get(options, function (error, response, body) {
-                // If successful
-                if (!error && response.statusCode === 200) {
-                    win.webContents.send("from_getAudioFeatures", [body]);
-                }
-                // On error
-                else {
-                    win.webContents.send("spotify_error", error);
-                } 
-            });
-        }
-    });
-});
-
+/*
 // Get artist ID
 ipcMain.on('spotify_getArtistID', (event, data) => {
     var artist = data[0];
@@ -895,13 +865,48 @@ ipcMain.on('spotify_getArtistID', (event, data) => {
                 }
                 // On error
                 else {
-                    win.webContents.send("spotify_error", error);
-                }                
+                    win.webContents.send("server_error", error);
+                }
             });
         }
     });
 });
+*/
+/*
+// Get Audio Features from Spotify of tracks from album
+ipcMain.on('spotify_getAudioFeatures', (event, data) => {
+    var query = data[0];
+    request.post(authOptions, function (error, response, body) {
+        if (!error && response.statusCode === 200) {
+            // Encode URL
+            var url = 'https://api.spotify.com/v1/audio-features?ids=' + query;
+            var encodedUrl = encodeURI(url);
 
+            // Use the access token to access the Spotify Web API
+            var token = body.access_token;
+            var options = {
+                url: encodedUrl,
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                },
+                json: true
+            };
+            request.get(options, function (error, response, body) {
+                // If successful
+                if (!error && response.statusCode === 200) {
+                    win.webContents.send("from_getAudioFeatures", [body]);
+                }
+                // On error
+                else {
+                    win.webContents.send("server_error", error);
+                } 
+            });
+        }
+    });
+});
+*/
+
+/*
 // Get recommendations based on spotify artist ID
 ipcMain.on('spotify_recommendations', (event, data) => {
     var query = data[0];
@@ -926,7 +931,7 @@ ipcMain.on('spotify_recommendations', (event, data) => {
                 }
                 // On error
                 else {
-                    win.webContents.send("spotify_error", error);
+                    win.webContents.send("server_error", error);
                 }
             });
         }
@@ -957,13 +962,14 @@ ipcMain.on('spotify_album', (event, data) => {
                 }
                 // On error
                 else {
-                    win.webContents.send("spotify_error", error);
+                    win.webContents.send("server_error", error);
                 }
             });
         }
     });
 });
-
+*/
+/*
 // Get new releases
 ipcMain.on('spotify_getNewReleases', (event) => {
     request.post(authOptions, function (error, response, body) {
@@ -986,7 +992,7 @@ ipcMain.on('spotify_getNewReleases', (event) => {
                 }
                 // On error
                 else {
-                    win.webContents.send("spotify_error", [error, "releases"]);
+                    win.webContents.send("server_error", [error, "releases"]);
                 }
             });
         }
@@ -1018,10 +1024,52 @@ ipcMain.on('spotify_discography', (event, data) => {
                 }
                 // On error
                 else {
-                    win.webContents.send("spotify_error", error);
+                    win.webContents.send("server_error", error);
                 }
             });
         }
+    });
+});
+*/
+
+//#########################
+// SOUNDSTAT.INFO CODE
+//-------------------------
+// Get Audio Features from SoundStat of tracks from album
+ipcMain.on('soundStat_getAudioFeatures', (event, data) => {
+    var tracks = data[0];
+
+    tracks.forEach(function (track) {
+        var trackID = track.spotifyID;
+        var trackNO = track.trackNumber;
+
+        request.post(authOptions, function (error, response, body) {
+            if (!error && response.statusCode === 200) {
+                // Encode URL
+                var url = 'https://XXXsoundstat.info/api/v1/track/' + trackID;
+                var encodedUrl = encodeURI(url);
+
+                // Use soundStatKey API key in headers
+                var options = {
+                    url: encodedUrl,
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-Api-Key': soundStatKey
+                    },
+                    json: true
+                };
+                request.get(options, function (error, response, body) {
+                    // If successful
+                    if (!error && response.statusCode === 200) {
+                        win.webContents.send("from_soundStatGetAudioFeatures", [body, trackNO]);
+                    }
+                    // On error
+                    else {
+                        win.webContents.send("server_error", error);
+                    }
+                });
+            }
+        });
     });
 });
 

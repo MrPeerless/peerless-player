@@ -1,6 +1,7 @@
 $(function () {
     // Declare artist variable
     var artist;
+    var artistID = "";
 
     // Get artist name from hidden field
     artist = $("#hiddenArtistName").text();
@@ -35,7 +36,6 @@ $(function () {
         $(xml).find('artist').each(function () {
             var discographyDetails = "";
             var $artist = $(this);
-            //var Name = $artist.find('name').eq(0).text();
             var matchScore = Number($artist.attr('ns2:score'))
             if (matchScore >= "90") {
                 var artistName = $artist.find('name').eq(0).text();
@@ -55,6 +55,7 @@ $(function () {
                     var type = $artist.attr('type')
                     var begin = $artist.find('begin').text();
                     var end = $artist.find('end').text();
+                    var releaseList = [];
 
                     // Display start and end date of artist
                     if (artistID != "") {
@@ -95,16 +96,169 @@ $(function () {
                         }
                         $("#discographyDetails").empty();
                         $("#discographyDetails").append(discographyDetails);
-                    }
-                    // No information found on Musicbrainz
-                    else {
-                        $("#discographyDetails").append(" * ");
-                    }
+
+                        // Set variable for overlay class on album image
+                        var overlay = "overlay";
+                        if (global_ArtIconShape == "round") {
+                            overlay = "overlayRound";
+                        }
+                        // Remove any li from list
+                        ul.empty()
+
+                        artistReleaseQuery(artistID).then(processDataRelease);
+
+                        // Function to send ajax xml query to Musicbrainz server
+                        function artistReleaseQuery(query) {
+                            var queryArtistID = query;
+                            // Artist search url
+                            var url = musicbrainzUrl + "release-group?artist=" + queryArtistID + "&limit=100&type=album"
+                            // Encode url
+                            var encodedUrl = encodeURI(url);
+                            return $.ajax({
+                                url: encodedUrl,
+                                error: function (textStatus) {
+                                    ajaxError(textStatus.statusText, textStatus.status, url)
+                                }
+                            });
+                        }
+
+                        // Function to process data from received xml file searching for artistID
+                        function processDataRelease(xml) {
+                            //console.log("xml :: " + JSON.stringify(xml))
+                            var releaseGroupID;
+                            var type;
+                            var title;
+                            var date;
+                            var sortDate;
+                            var numberReleases = $(xml).find('release-group-list').attr('count');
+                            numberReleases = Number(numberReleases);
+                            if (numberReleases > 100) {
+                                numberReleases = 100;
+                            }
+                            var i = 0;
+                            // Loop through each release-group and get data
+                            $(xml).find('release-group').each(function () {
+                                var $release = $(this);
+                                releaseGroupID = $release.attr('id')                               
+                                type = $release.attr('type')
+                                title = $release.find('title').text();
+                                date = $release.find('first-release-date').text();
+                                sortDate = new Date(date);
+                                releaseList.push({ id: releaseGroupID, type: type, title: title, date: date, sortDate: sortDate });
+                                i += 1;
+                                if (numberReleases == i) {
+                                    releaseList.sort(function (a, b) {
+                                        return new Date(b.sortDate) - new Date(a.sortDate);
+                                    });
+                                    //console.log("releaseList :: " + JSON.stringify(releaseList))
+
+                                    // Loop through releaseList and populate in ul
+                                    releaseList.forEach(function (release) {
+                                        // Create youtube music search url
+                                        if (release.type == "Album") {
+                                            var searchAlbum = release.title.replace(/\s+/g, '+')
+                                            var searchArtist = artist.replace(/\s+/g, '+')
+                                            var searchLink = musicYoutubeUrl + 'search?q=' + searchAlbum + '+' + searchArtist
+
+                                            // Small art icons
+                                            if (global_ArtIconSize == "small") {
+                                                $(ul).attr('class', 'albumDisplay');
+                                                var li = $('<li><a><img class="' + global_ArtIconShape + '"><span></span></a></li>');
+                                                li.find('a').attr('href', searchLink);
+                                                li.find('a').attr('target', '_blank');
+                                                li.find('span').append('</b><br>' + release.title + '</b><br>' + release.date);
+                                                li.appendTo(ul);
+                                            }
+                                            // Large art icons
+                                            else {
+                                                $(ul).attr('class', 'albumDisplayLarge');
+                                                var li = $('<li><a><img class="' + global_ArtIconShape + '"><div class="' + overlay + '"><div class="textAlbum"><span></span></div></div></a></li>');
+                                                li.find('a').attr('href', searchLink);
+                                                li.find('a').attr('target', '_blank');
+                                                li.find('span').append('<b><br>' + release.title + '</b><br>' + release.date);
+                                                li.appendTo(ul);
+                                            }
+                                            coverartQuery(release.id).then(processAlbum);
+                                        }
+                                        else {
+                                            i -= 1;
+                                        }
+
+                                        // Ajax call to get URL for cover art
+                                        function coverartQuery(query) {
+                                            // Artist search url
+                                            var url = coverartArchiveUrl + "release-group/" + query
+                                            return $.ajax({
+                                                url: url,
+                                                error: function (request, status, error) {
+                                                    console.log("COVER ART ERROR :: " + request.responseText);
+                                                    li.remove();
+                                                    i -= 1;
+                                                }
+                                            });
+                                        }
+                                        // Add coverart to list items
+                                        function processAlbum(response) {
+                                            // Get cover art and add thumbnail url
+                                            coverArt = response['images'][0]['image']
+                                            coverArt = coverArt.substring(0, coverArt.length - 4);
+                                            coverArt = coverArt + "-250.jpg";                                            
+                                            li.find('img').attr('src', coverArt);
+                                            // Display number of albums found
+                                            $("#discographyCount").empty();
+                                            $("#discographyCount").append(i + " albums found.");
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    }  
                 }
             }
+
+            // Calculate width of divAlbumList so that it fills screen width
+            var winWidth = $(window).width();
+            var divContentWidth = $("#divContent").width();
+            var divSidemenu;
+
+            if ($("#divSideMenu").is(":visible")) {
+                divSidemenu = 35;
+            }
+            else {
+                divSidemenu = 240;
+            }
+            // Set width for divAlbumList
+            $("#divDiscography").css("width", winWidth - (divSidemenu + divContentWidth));
         });
+        if (!artistID) {
+            noResult();
+        }
     }
 
+    function noResult() {
+        // Hide please wait modal box
+        $('#okModal').css('display', 'none');
+        $('.background').css('filter', 'blur(0px)');
+        // Display modal box if no artist found in Musicbrainz database
+        $('#okModal').css('display', 'block');
+        $('.modalHeader').empty();
+        $('#okModalText').empty();
+        $(".modalFooter").empty();
+        $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
+        $('#okModalText').append("<div class='modalIcon'><img src='./graphics/information.png'></div><p>&nbsp<br><b>" + artist + "</b> not found in Musicbrainz database.<br>&nbsp<br>&nbsp</p>");
+        var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
+        $('.modalFooter').append(buttons);
+        $("#btnOkModal")[0].focus();
+        $('.background').css('filter', 'blur(5px)');
+        // Go back to track listing page for album
+        $("#divTrackListing").css("display", "none");
+        $("#divContent").css("width", "auto");
+        return;
+    }
+
+
+    /*
+    //####### SPOTIFY CODE ##########
     // Send IPC to search Spotify for album and artist
     ipcRenderer.send("spotify_getArtistID", [artist, "discography"])
 
@@ -188,6 +342,9 @@ $(function () {
         // Set width for divSpotifyAlbumList
         $("#divSpotifyDiscography").css("width", winWidth - (divSidemenu + divContentWidth));
     });
+    //##### END SPOTIFY CODE ######
+    */
+
 
     // Error handling for ajax errors
     function ajaxError(statusText, status, url) {
@@ -217,13 +374,8 @@ $(function () {
         return;
     }
 
-    // Display Spotify logo depending on which skin is selected
-    if (global_Background == "#eeeeee") {
-        $(".spotifyLogo").attr('src', './graphics/spotify_black.png');
-    }
-    else {
-        $(".spotifyLogo").attr('src', './graphics/spotify_white.png');
-    }
+    // Display MusicBrainz
+    $("#discogMusicBrainzLogo").attr('src', './graphics/metaBrainz_logo.png');
 
     // Append X to close button here so that its position adjusts to scrollbars
     $("#btnClose").empty();

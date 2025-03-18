@@ -267,6 +267,22 @@ $(document).on('click', '#btnGetMetadata', function (event) {
     // Check if online
     var connection = navigator.onLine;
     if (connection) {
+        // Hide modal box
+        $('#okModal').css('display', 'none');
+        $('.background').css('filter', 'blur(0px)');
+        // Display modal box information that no audio features can be automatically downloaded from Spotify
+        $('#okModal').css('display', 'block');
+        $('.modalHeader').empty();
+        $('#okModalText').empty();
+        $(".modalFooter").empty();
+        $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
+        $('#okModalText').append("<div class='modalIcon'><img src='./graphics/information.png'></div><p><b>IMPORTANT INFORMATION</b><br><br><b>Spotify have stopped access to their servers</b>, which means that track data (mood and tempo) can no longer be automatically populated into the database.<br><br><b>Manual work around.</b> Search manually for each track data and complete the input boxes for Energy, Valence (Happiness/Positivity) and Tempo as a whole number between 0-100. This will then select the relevant selections for the Mood and Tempo fields.<br><br>You can search these 2 sites to find track audio data:<br> https://www.chosic.com <br> https://musicstax.com<br>&nbsp<br></p>");
+        var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
+        $('.modalFooter').append(buttons);
+        $("#btnOkModal")[0].focus();
+        $('.background').css('filter', 'blur(5px)');
+
+        // Call function
         getMetadata();
     }
     else {
@@ -451,8 +467,8 @@ function getMetadata() {
     ipcRenderer.send("read_ID3tags", [audioSource])
 
     // Send IPC to search Spotify for album and artist
-    var query = 'album:' + album + ' artist:' + artist + '&type=album';
-    ipcRenderer.send("spotify_search", [query, album, artist, "edit"])
+    //var query = 'album:' + album + ' artist:' + artist + '&type=album';
+    //ipcRenderer.send("spotify_search", [query, album, artist, "edit"])
 }
 
 // Receive IPC search response Spotify for album and artist
@@ -495,7 +511,7 @@ ipcRenderer.on("from_spotify_getArtist", (event, data) => {
         }
     });
 });
-
+/*
 // Receive IPC search response Spotify for album and artist
 ipcRenderer.on("from_spotify_search_edit", (event, data) => {
     var spotifyResponse = data[0];
@@ -549,7 +565,7 @@ ipcRenderer.on("from_spotify_search_edit", (event, data) => {
     }
     // The rest of the metadata received from Spotify is updated in the databaseadd.js file reusing the import code.
 });
-
+*/
 
 //############################
 //## Save Album to Database ##

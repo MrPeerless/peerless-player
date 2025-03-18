@@ -326,6 +326,7 @@ ipcRenderer.on("from_recommendations", (event, data) => {
     }
 });
 
+/*
 // Data received for discography.js from main to display artist discography from spotify
 ipcRenderer.on("from_getArtistID_discography", (event, data) => {
     var spotifyResponse = data[0];
@@ -379,6 +380,7 @@ ipcRenderer.on("from_getArtistID_discography", (event, data) => {
         return false;
     }
 });
+*/
 
 ipcRenderer.on("from_album", (event, data) => {
     var spotifyResponse = data[0];
@@ -462,7 +464,7 @@ ipcRenderer.on("from_album", (event, data) => {
     $("#btnClose").append("&times;");
 });
 
-ipcRenderer.on("spotify_error", (event, data) => {
+ipcRenderer.on("server_error", (event, data) => {
     var error = data[0];
     var from = data[1];
 
@@ -472,7 +474,7 @@ ipcRenderer.on("spotify_error", (event, data) => {
     $('#okModalText').empty();
     $(".modalFooter").empty();
     $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
-    $('#okModalText').append("<div class='modalIcon'><img src='./graphics/warning.png'></div><p><b>Error accessing Spotify server.</b><br>See error code below for more details.<br><b>" + error + "</b><br>&nbsp<br></p>");
+    $('#okModalText').append("<div class='modalIcon'><img src='./graphics/warning.png'></div><p><b>Error accessing external server.</b><br>See error code below for more details.<br><b>" + error + "</b><br>&nbsp<br></p>");
     var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
     $('.modalFooter').append(buttons);
     $("#btnOkModal")[0].focus();

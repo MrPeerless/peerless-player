@@ -93,6 +93,22 @@ $(document).on('click', '#btnImport', function (event) {
     var connection = navigator.onLine;
 
     if (connection) {
+        // Hide modal box
+        $('#okModal').css('display', 'none');
+        $('.background').css('filter', 'blur(0px)');
+        // Display modal box information that no audio features can be automatically downloaded from Spotify
+        $('#okModal').css('display', 'block');
+        $('.modalHeader').empty();
+        $('#okModalText').empty();
+        $(".modalFooter").empty();
+        $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>' + global_AppName + '</h2>');
+        $('#okModalText').append("<div class='modalIcon'><img src='./graphics/information.png'></div><p><b>IMPORTANT INFORMATION</b><br><br><b>Spotify have stopped access to their servers</b>, which means that track data (mood and tempo) can no longer be automatically populated into the database.<br><br><b>Manual work around.</b> Search manually for each track data and complete the input boxes for Energy, Valence (Happiness/Positivity) and Tempo as a whole number between 0-100. This will then select the relevant selections for the Mood and Tempo fields.<br><br>You can search these 2 sites to find track audio data:<br> https://www.chosic.com <br> https://musicstax.com<br>&nbsp<br></p>");
+        var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
+        $('.modalFooter').append(buttons);
+        $("#btnOkModal")[0].focus();
+        $('.background').css('filter', 'blur(5px)');
+
+
         newArtist = $("#tblImportMusic tr.highlight").find('td:first').text();
         newAlbum = $("#tblImportMusic tr.highlight").find('td:nth-child(2)').text();
         if (!newArtist) {
@@ -165,7 +181,7 @@ ipcRenderer.on("files_album_directory", (event, data) => {
             }
 
             $("#divAudioElements").append(audio);
-            var fieldset = $("<fieldset><legend>Track " + counter + "</legend><label class='lblTrackName'>Name: </label><input required class='inpTrackName' id='" + counter + "trackName' name=" + counter + "trackName' type='text' size='79' value='' /><label class='lblFileName'>File Name:</label><input required class='inpFileName' id='" + counter + "fileName' name='" + counter + "fileName' type='text' size='79' value='' readonly /><label class='lblTrackTime'>Time:</label><input required class='inpTrackTime' id='" + counter + "pTime' name='" + counter + "pTime' type='text' size='8 value='' readonly /><br><label class='lblTrackName'>Mood 1:</label><select class='sltMood1' id='" + counter + "mood1' name=" + counter + "mood1'><option value=''></option><option value='Aggressive'>Aggressive</option><option value='Brooding'>Brooding</option><option value='Cool'>Cool</option><option value='Defiant'>Defiant</option><option value='Easygoing'>Easygoing</option><option value='Empowering'>Empowering</option><option value='Energizing'>Energizing</option><option value='Excited'>Excited</option><option value='Fiery'>Fiery</option><option value='Gritty'>Gritty</option><option value='Lively'>Lively</option><option value='Melancholy'>Melancholy</option><option value='Peaceful'>Peaceful</option><option value='Romantic'>Romantic</option><option value='Rowdy'>Rowdy</option><option value='Sensual'>Sensual</option><option value='Sentimental'>Sentimental</option><option value='Serious'>Serious</option><option value='Somber'>Somber</option><option value='Sophisticated'>Sophisticated</option><option value='Stirring'>Stirring</option><option value='Tender'>Tender</option><option value='Upbeat'>Upbeat</option><option value='Urgent'>Urgent</option><option value='Yearning'>Yearning</option><option value='Other'>Other</option></select><label class='lblFileName'>Mood 2: </label><select class='sltMood2' id='" + counter + "mood2' name=" + counter + "mood2'></select><br><label class='lblTrackName'>Tempo 1:</label><select class='sltTempo1' id='" + counter + "tempo1' name=" + counter + "tempo1'><option value=''></option><option value='Slow Tempo'>Slow Tempo</option><option value='Medium Tempo'>Medium Tempo</option><option value='Fast Tempo'>Fast Tempo</option></select><label class='lblFileName'>Tempo 2:</label><select class='sltTempo2' id='" + counter + "tempo2' name=" + counter + "tempo2'></select><br><label class='lblTrackName'>Genre 2:</label><input class='inpTrackGenre' id='" + counter + "genre2' name=" + counter + "genre2' type='text' size='40' value='' readonly/><label class='lblFileName'>Genre 3:</label><input class='inpTrackGenre' id='" + counter + "genre3' name=" + counter + "genre3' type='text' size='40' value='' readonly/></fieldset>");
+            var fieldset = $("<fieldset><legend>Track " + counter + "</legend><label class='lblTrackName'>Name: </label><input required class='inpTrackName' id='" + counter + "trackName' name=" + counter + "trackName' type='text' size='79' value='' /><label class='lblFileName'>File Name:</label><input required class='inpFileName' id='" + counter + "fileName' name='" + counter + "fileName' type='text' size='79' value='' readonly /><label class='lblTrackTime'>Time:</label><input required class='inpTrackTime' id='" + counter + "pTime' name='" + counter + "pTime' type='text' size='8 value='' readonly /><br><label class='lblTrackName'>Mood 1:</label><select class='sltMood1' id='" + counter + "mood1' name=" + counter + "mood1'><option value=''></option><option value='Aggressive'>Aggressive</option><option value='Brooding'>Brooding</option><option value='Cool'>Cool</option><option value='Defiant'>Defiant</option><option value='Easygoing'>Easygoing</option><option value='Empowering'>Empowering</option><option value='Energizing'>Energizing</option><option value='Excited'>Excited</option><option value='Fiery'>Fiery</option><option value='Gritty'>Gritty</option><option value='Lively'>Lively</option><option value='Melancholy'>Melancholy</option><option value='Peaceful'>Peaceful</option><option value='Romantic'>Romantic</option><option value='Rowdy'>Rowdy</option><option value='Sensual'>Sensual</option><option value='Sentimental'>Sentimental</option><option value='Serious'>Serious</option><option value='Somber'>Somber</option><option value='Sophisticated'>Sophisticated</option><option value='Stirring'>Stirring</option><option value='Tender'>Tender</option><option value='Upbeat'>Upbeat</option><option value='Urgent'>Urgent</option><option value='Yearning'>Yearning</option><option value='Other'>Other</option></select><label class='lblFileName'>Mood 2: </label><select class='sltMood2' id='" + counter + "mood2' name=" + counter + "mood2'></select><label class='lblTrackTime'>Energy:</label><input class='inpManualEnergy' id='" + counter + "energy' name='" + counter + "energy' type='text' size='3 value='' /><br><label class='lblTrackName'>Tempo 1:</label><select class='sltTempo1' id='" + counter + "tempo1' name=" + counter + "tempo1'><option value=''></option><option value='Slow Tempo'>Slow Tempo</option><option value='Medium Tempo'>Medium Tempo</option><option value='Fast Tempo'>Fast Tempo</option></select><label class='lblFileName'>Tempo 2:</label><select class='sltTempo2' id='" + counter + "tempo2' name=" + counter + "tempo2'></select><label class='lblTrackTime'>Valence:</label><input class='inpManualValence' id='" + counter + "valence' name='" + counter + "valence' type='text' size='3 value='' /><br><label class='lblTrackName'>Genre 2:</label><input class='inpTrackGenre' id='" + counter + "genre2' name=" + counter + "genre2' type='text' size='40' value='' readonly/><label class='lblFileName'>Genre 3:</label><input class='inpTrackGenre' id='" + counter + "genre3' name=" + counter + "genre3' type='text' size='40' value='' readonly/><label class='lblTrackTime'>Tempo:</label><input class='inpManualTempo' id='" + counter + "tempo' name='" + counter + "tempo' type='text' size='3 value='' /></fieldset>");
 
             // Append fieldset to form
             fieldset.appendTo(form);
@@ -323,10 +339,10 @@ ipcRenderer.on("from_spotify_search_add", (event, data) => {
     });
 
     // Send IPC to get albums tracks from Spotify
-    if (albumSpotID != "") {
-        var query = albumSpotID + '/tracks';
-        ipcRenderer.send("spotify_getTracks", [query])
-    }
+    //if (albumSpotID != "") {
+    //    var query = albumSpotID + '/tracks';
+    //    ipcRenderer.send("spotify_getTracks", [query])
+    //}
 
     var albumCheck = $("#selectedAlbum").text();
     // Call ajax function artistIDQuery
@@ -466,7 +482,7 @@ ipcRenderer.on("from_spotify_search_add", (event, data) => {
                             // Function to send ajax xml query to Musicbrainz server
                             function releaseIDQuery(query) {
                                 var queryreleaseGroupID = query;
-                                // Artist search url
+                                // Release Group search url
                                 var url = musicbrainzUrl + "release?release-group=" + queryreleaseGroupID
                                 return $.ajax({
                                     url: url,
@@ -610,35 +626,705 @@ ipcRenderer.on("from_spotify_search_add", (event, data) => {
     }
 });
 
+/*
 // Receive IPC response from Spotify for album tracks
 ipcRenderer.on("from_getTracks", (event, data) => {
     var spotifyResponse = data[0];
-    var tracksSpotID = "";
+    var tracksSpotID = [];
 
     // Get each track ID
-    $.each(spotifyResponse.items, function (i, items) {
-        tracksSpotID += items.id + ","
+    $.each(spotifyResponse.items, function (i, item) {
+        tracksSpotID.push({ trackNumber: item.track_number, spotifyID: item.id })
     });
-    tracksSpotID = tracksSpotID.substring(0, tracksSpotID.length - 1);
 
-    // Send IPC to get audio features from Spotify
+    // Send IPC to get audio features from SoundStat
     var query = tracksSpotID;
 
     if (tracksSpotID != "") {
-        var query = tracksSpotID;
-        ipcRenderer.send("spotify_getAudioFeatures", [query])
+        ipcRenderer.send("soundStat_getAudioFeatures", [query])
     }
 });
+*/
+/*
+// Receive IPC response from SoundStat for album tracks
+ipcRenderer.on("from_soundStatGetAudioFeatures", (event, data) => {
+    var soundStatResponse = data[0];
+    var trackNumberResponse = data[1];
 
-// Receive IPC response from Spotify for album tracks
-ipcRenderer.on("from_getAudioFeatures", (event, data) => {
-    var spotifyResponse = data[0];
-    // Check if any data returned from spotify
-    if (spotifyResponse.audio_features[0] != null) {
+    if (soundStatResponse.features != null) {
         // Declare variables
         var valence;
         var mood1;
-        var spotifyNoTracks = spotifyResponse.audio_features.length;
+        var tempo2;
+        var baseX;
+        var baseY;
+
+        try {
+            // Get energy from json file
+            var energyFloat = soundStatResponse.features.energy;
+            energyFloat *= 100;
+            var energyInt = Math.round(energyFloat);
+
+            // Get valence from json file
+            var valenceFloat = soundStatResponse.features.valence;
+            valenceFloat *= 100;
+            var valenceInt = Math.round(valenceFloat);
+
+            // Conversion formula from SoundStat to Spotify see link for details:
+            // https://soundstat.info/article/Understanding-Audio-Analysis.html
+            // SoundStat energy value * 2.25 = Spotify energy value
+            energyInt = energyInt * 2.25;
+
+            // Get tempo from json file
+            var tempoFloat = soundStatResponse.features.tempo;
+            var tempoInt = Math.round(tempoFloat);
+        }
+        catch {
+            console.log("Error reading json file.")
+            return false;
+        }
+
+        // Populate Tempo 1 into form
+        if (tempoInt <= 26) {
+            $("#" + trackNumberResponse + "tempo1").val("Slow Tempo");
+            tempo2 = "Static";
+        }
+        else if (tempoInt <= 53) {
+            $("#" + trackNumberResponse + "tempo1").val("Slow Tempo");
+            tempo2 = "Very Slow";
+        }
+        else if (tempoInt <= 79) {
+            $("#" + trackNumberResponse + "tempo1").val("Slow Tempo");
+            tempo2 = "Slow";
+        }
+        else if (tempoInt <= 96) {
+            $("#" + trackNumberResponse + "tempo1").val("Medium Tempo");
+            tempo2 = "Medium Slow";
+        }
+        else if (tempoInt <= 112) {
+            $("#" + trackNumberResponse + "tempo1").val("Medium Tempo");
+            tempo2 = "Medium";
+        }
+        else if (tempoInt <= 129) {
+            $("#" + trackNumberResponse + "tempo1").val("Medium Tempo");
+            tempo2 = "Medium Fast";
+        }
+        else if (tempoInt <= 149) {
+            $("#" + trackNumberResponse + "tempo1").val("Fast Tempo");
+            tempo2 = "Fast";
+        }
+        else if (tempoInt >= 150) {
+            $("#" + trackNumberResponse + "tempo1").val("Fast Tempo");
+            tempo2 = "Very Fast";
+        }
+        else {
+            $("#" + trackNumberResponse + "tempo1").val("");
+            tempo2 = "";
+        }
+        var tempo1 = $("#" + trackNumberResponse + "tempo1").val();
+
+        // Populate Tempo 2 value and options into selection box
+        switch (tempo1) {
+            case "Slow Tempo":
+                $("#" + trackNumberResponse + "tempo2").empty();
+                $("#" + trackNumberResponse + "tempo2").append("<option></option>");
+                $("#" + trackNumberResponse + "tempo2").append("<option>Static</option>");
+                $("#" + trackNumberResponse + "tempo2").append("<option>Very Slow</option>");
+                $("#" + trackNumberResponse + "tempo2").append("<option>Slow</option>");
+                $("#" + trackNumberResponse + "tempo2").val(tempo2);
+                break;
+            case "Medium Tempo":
+                $("#" + trackNumberResponse + "tempo2").empty();
+                $("#" + trackNumberResponse + "tempo2").append("<option></option>");
+                $("#" + trackNumberResponse + "tempo2").append("<option>Medium Slow</option>");
+                $("#" + trackNumberResponse + "tempo2").append("<option>Medium</option>");
+                $("#" + trackNumberResponse + "tempo2").append("<option>Medium Fast</option>");
+                $("#" + trackNumberResponse + "tempo2").val(tempo2);
+                break;
+            case "Fast Tempo":
+                $("#" + trackNumberResponse + "tempo2").empty();
+                $("#" + trackNumberResponse + "tempo2").append("<option></option>");
+                $("#" + trackNumberResponse + "tempo2").append("<option>Fast</option>");
+                $("#" + trackNumberResponse + "tempo2").append("<option>Very Fast</option>");
+                $("#" + trackNumberResponse + "tempo2").val(tempo2);
+                break;
+        }
+
+        // Mood 1
+        // Create array of for values for mood1 grouped by valence
+        if (valenceInt <= 19) {
+            valence = ['Somber', 'Gritty', 'Serious', 'Brooding', 'Aggressive'];
+            baseY = 0;
+        }
+        else if (valenceInt <= 39) {
+            valence = ['Melancholy', 'Cool', 'Yearning', 'Urgent', 'Defiant'];
+            baseY = 20;
+        }
+        else if (valenceInt <= 59) {
+            valence = ['Sentimental', 'Sophisticated', 'Sensual', 'Fiery', 'Energizing'];
+            baseY = 40;
+        }
+        else if (valenceInt <= 79) {
+            valence = ['Tender', 'Romantic', 'Empowering', 'Stirring', 'Rowdy'];
+            baseY = 60;
+        }
+        else {
+            valence = ['Peaceful', 'Easygoing', 'Upbeat', 'Lively', 'Excited'];
+            baseY = 80;
+        }
+
+        // Select mood1 array matching energy data from json file
+        if (energyInt <= 19) {
+            mood1 = valence[0];
+            baseX = 0;
+        }
+        else if (energyInt <= 39) {
+            mood1 = valence[1];
+            baseX = 20;
+        }
+        else if (energyInt <= 59) {
+            mood1 = valence[2];
+            baseX = 40;
+        }
+        else if (energyInt <= 79) {
+            mood1 = valence[3];
+            baseX = 60;
+        }
+        else {
+            mood1 = valence[4];
+            baseX = 80;
+        }
+        // Populate mood1 value into form
+        $("#" + trackNumberResponse + "mood1").val(mood1);
+
+        // Calculate x and y values for mood2 matric, which is a 2 x 2 matrix
+        var mood2X = (energyInt - baseX) / 20;
+        var mood2Y = (valenceInt - baseY) / 20;
+
+        // Populate mood2 selection options
+        switch (mood1) {
+            case "Peaceful":
+                $("#" + trackNumberResponse + "mood2").append("<option></option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Pastoral / Serene</option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Delicate / Tranquil</option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Reverent / Healing</option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Quiet / Introspective</option>");
+                // Calm Positive
+                if (mood2X <= 0.5 && mood2Y > 0.5) {
+                    $("#" + trackNumberResponse + "mood2").val("Pastoral / Serene");
+                }
+                // Energetic Positive
+                else if (mood2X > 0.5 && mood2Y > 0.5) {
+                    $("#" + trackNumberResponse + "mood2").val("Delicate / Tranquil");
+                }
+                // Calm Dark
+                else if (mood2X <= 0.5 && mood2Y <= 0.5) {
+                    $("#" + trackNumberResponse + "mood2").val("Reverent / Healing");
+                }
+                // Energetic Dark
+                else {
+                    $("#" + trackNumberResponse + "mood2").val("Quiet / Introspective");
+                }
+                break;
+            case "Romantic":
+                $("#" + trackNumberResponse + "mood2").empty();
+                $("#" + trackNumberResponse + "mood2").append("<option></option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Sweet / Sincere</option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Heartfelt Passion</option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Dramatic / Romantic</option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Lush / Romantic</option>");
+                if (mood2X <= 0.5 && mood2Y > 0.5) {
+                    $("#" + trackNumberResponse + "mood2").val("Sweet / Sincere");
+                }
+                else if (mood2X > 0.5 && mood2Y > 0.5) {
+                    $("#" + trackNumberResponse + "mood2").val("Heartfelt Passion");
+                }
+                else if (mood2X <= 0.5 && mood2Y <= 0.5) {
+                    $("#" + trackNumberResponse + "mood2").val("Dramatic / Romantic");
+                }
+                else {
+                    $("#" + trackNumberResponse + "mood2").val("Lush / Romantic");
+                }
+                break;
+            case "Sentimental":
+                $("#" + trackNumberResponse + "mood2").empty();
+                $("#" + trackNumberResponse + "mood2").append("<option></option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Tender / Sincere</option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Gentle Bittersweet</option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Lyrical Sentimental</option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Cool Melancholy</option>");
+                if (mood2X <= 0.5 && mood2Y > 0.5) {
+                    $("#" + trackNumberResponse + "mood2").val("Tender / Sincere");
+                }
+                else if (mood2X > 0.5 && mood2Y > 0.5) {
+                    $("#" + trackNumberResponse + "mood2").val("Gentle Bittersweet");
+                }
+                else if (mood2X <= 0.5 && mood2Y <= 0.5) {
+                    $("#" + trackNumberResponse + "mood2").val("Lyrical Sentimental");
+                }
+                else {
+                    $("#" + trackNumberResponse + "mood2").val("Cool Melancholy");
+                }
+                break;
+            case "Tender":
+                $("#" + trackNumberResponse + "mood2").empty();
+                $("#" + trackNumberResponse + "mood2").append("<option></option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Refined / Mannered</option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Awakening / Stately</option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Romantic / Lyrical</option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Light Groovy</option>");
+                if (mood2X <= 0.5 && mood2Y > 0.5) {
+                    $("#" + trackNumberResponse + "mood2").val("Refined / Mannered");
+                }
+                else if (mood2X > 0.5 && mood2Y > 0.5) {
+                    $("#" + trackNumberResponse + "mood2").val("Awakening / Stately");
+                }
+                else if (mood2X <= 0.5 && mood2Y <= 0.5) {
+                    $("#" + trackNumberResponse + "mood2").val("Romantic / Lyrical");
+                }
+                else {
+                    $("#" + trackNumberResponse + "mood2").val("Light Groovy");
+                }
+                break;
+            case "Easygoing":
+                $("#" + trackNumberResponse + "mood2").empty();
+                $("#" + trackNumberResponse + "mood2").append("<option></option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Hopeful / Breezy</option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Cheerful / Playful</option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Friendly</option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Charming / Easygoing</option>");
+                if (mood2X <= 0.5 && mood2Y > 0.5) {
+                    $("#" + trackNumberResponse + "mood2").val("Hopeful / Breezy");
+                }
+                else if (mood2X > 0.5 && mood2Y > 0.5) {
+                    $("#" + trackNumberResponse + "mood2").val("Cheerful / Playful");
+                }
+                else if (mood2X <= 0.5 && mood2Y <= 0.5) {
+                    $("#" + trackNumberResponse + "mood2").val("Friendly");
+                }
+                else {
+                    $("#" + trackNumberResponse + "mood2").val("Charming / Easygoing");
+                }
+                break;
+            case "Yearning":
+                $("#" + trackNumberResponse + "mood2").empty();
+                $("#" + trackNumberResponse + "mood2").append("<option></option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Bittersweet Pop</option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Energetic Yearning</option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Sensitive / Exploring</option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Energetic Dreamy</option>");
+                if (mood2X <= 0.5 && mood2Y > 0.5) {
+                    $("#" + trackNumberResponse + "mood2").val("Bittersweet Pop");
+                }
+                else if (mood2X > 0.5 && mood2Y > 0.5) {
+                    $("#" + trackNumberResponse + "mood2").val("Energetic Yearning");
+                }
+                else if (mood2X <= 0.5 && mood2Y <= 0.5) {
+                    $("#" + trackNumberResponse + "mood2").val("Sensitive / Exploring");
+                }
+                else {
+                    $("#" + trackNumberResponse + "mood2").val("Energetic Dreamy");
+                }
+                break;
+            case "Sophisticated":
+                $("#" + trackNumberResponse + "mood2").empty();
+                $("#" + trackNumberResponse + "mood2").append("<option></option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Suave / Sultry</option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Dark Playful</option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Intimate Bittersweet</option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Smoky / Romantic</option>");
+                if (mood2X <= 0.5 && mood2Y > 0.5) {
+                    $("#" + trackNumberResponse + "mood2").val("Suave / Sultry");
+                }
+                else if (mood2X > 0.5 && mood2Y > 0.5) {
+                    $("#" + trackNumberResponse + "mood2").val("Dark Playful");
+                }
+                else if (mood2X <= 0.5 && mood2Y <= 0.5) {
+                    $("#" + trackNumberResponse + "mood2").val("Intimate Bittersweet");
+                }
+                else {
+                    $("#" + trackNumberResponse + "mood2").val("Smoky / Romantic");
+                }
+                break;
+            case "Sensual":
+                $("#" + trackNumberResponse + "mood2").empty();
+                $("#" + trackNumberResponse + "mood2").append("<option></option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Soft Soulful</option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Sensual Groove</option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Dreamy Pulse</option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Intimate</option>");
+                if (mood2X <= 0.5 && mood2Y > 0.5) {
+                    $("#" + trackNumberResponse + "mood2").val("Soft Soulful");
+                }
+                else if (mood2X > 0.5 && mood2Y > 0.5) {
+                    $("#" + trackNumberResponse + "mood2").val("Sensual Groove");
+                }
+                else if (mood2X <= 0.5 && mood2Y <= 0.5) {
+                    $("#" + trackNumberResponse + "mood2").val("Dreamy Pulse");
+                }
+                else {
+                    $("#" + trackNumberResponse + "mood2").val("Intimate");
+                }
+                break;
+            case "Cool":
+                $("#" + trackNumberResponse + "mood2").empty();
+                $("#" + trackNumberResponse + "mood2").append("<option></option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Casual Groove</option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Wary / Defiant</option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Cool Confidence</option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Dark Groovy</option>");
+                if (mood2X <= 0.5 && mood2Y > 0.5) {
+                    $("#" + trackNumberResponse + "mood2").val("Casual Groove");
+                }
+                else if (mood2X > 0.5 && mood2Y > 0.5) {
+                    $("#" + trackNumberResponse + "mood2").val("Wary / Defiant");
+                }
+                else if (mood2X <= 0.5 && mood2Y <= 0.5) {
+                    $("#" + trackNumberResponse + "mood2").val("Cool Confidence");
+                }
+                else {
+                    $("#" + trackNumberResponse + "mood2").val("Dark Groovy");
+                }
+                break;
+            case "Gritty":
+                $("#" + trackNumberResponse + "mood2").empty();
+                $("#" + trackNumberResponse + "mood2").append("<option></option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Sober / Determined</option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Strumming Yearning</option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Depressed / Lonely</option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Gritty / Soulful</option>");
+                if (mood2X <= 0.5 && mood2Y > 0.5) {
+                    $("#" + trackNumberResponse + "mood2").val("Sober / Determined");
+                }
+                else if (mood2X > 0.5 && mood2Y > 0.5) {
+                    $("#" + trackNumberResponse + "mood2").val("Strumming Yearning");
+                }
+                else if (mood2X <= 0.5 && mood2Y <= 0.5) {
+                    $("#" + trackNumberResponse + "mood2").val("Depressed / Lonely");
+                }
+                else {
+                    $("#" + trackNumberResponse + "mood2").val("Gritty / Soulful");
+                }
+                break;
+            case "Somber":
+                $("#" + trackNumberResponse + "mood2").empty();
+                $("#" + trackNumberResponse + "mood2").append("<option></option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Solemn / Spiritual</option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Enigmatic / Mysterious</option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Dark Cosmic</option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Creepy / Ominous</option>");
+                if (mood2X <= 0.5 && mood2Y > 0.5) {
+                    $("#" + trackNumberResponse + "mood2").val("Solemn / Spiritual");
+                }
+                else if (mood2X > 0.5 && mood2Y > 0.5) {
+                    $("#" + trackNumberResponse + "mood2").val("Enigmatic / Mysterious");
+                }
+                else if (mood2X <= 0.5 && mood2Y <= 0.5) {
+                    $("#" + trackNumberResponse + "mood2").val("Dark Cosmic");
+                }
+                else {
+                    $("#" + trackNumberResponse + "mood2").val("Creepy / Ominous");
+                }
+                break;
+            case "Melancholy":
+                $("#" + trackNumberResponse + "mood2").empty();
+                $("#" + trackNumberResponse + "mood2").append("<option></option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Mysterious / Dreamy</option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Light Melancholy</option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Wistful / Forlorn</option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Sad / Soulful</option>");
+                if (mood2X <= 0.5 && mood2Y > 0.5) {
+                    $("#" + trackNumberResponse + "mood2").val("Mysterious / Dreamy");
+                }
+                else if (mood2X > 0.5 && mood2Y > 0.5) {
+                    $("#" + trackNumberResponse + "mood2").val("Light Melancholy");
+                }
+                else if (mood2X <= 0.5 && mood2Y <= 0.5) {
+                    $("#" + trackNumberResponse + "mood2").val("Wistful / Forlorn");
+                }
+                else {
+                    $("#" + trackNumberResponse + "mood2").val("Sad / Soulful");
+                }
+                break;
+            case "Serious":
+                $("#" + trackNumberResponse + "mood2").empty();
+                $("#" + trackNumberResponse + "mood2").append("<option></option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Melodramatic</option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Hypnotic Rhythm</option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Serious / Cerebral</option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Thrilling</option>");
+                if (mood2X <= 0.5 && mood2Y > 0.5) {
+                    $("#" + trackNumberResponse + "mood2").val("Melodramatic");
+                }
+                else if (mood2X > 0.5 && mood2Y > 0.5) {
+                    $("#" + trackNumberResponse + "mood2").val("Hypnotic Rhythm");
+                }
+                else if (mood2X <= 0.5 && mood2Y <= 0.5) {
+                    $("#" + trackNumberResponse + "mood2").val("Serious / Cerebral");
+                }
+                else {
+                    $("#" + trackNumberResponse + "mood2").val("Thrilling");
+                }
+                break;
+            case "Brooding":
+                $("#" + trackNumberResponse + "mood2").empty();
+                $("#" + trackNumberResponse + "mood2").append("<option></option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Evocative / Intriguing</option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Energetic Melancholy</option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Dreamy Brooding</option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Alienated / Brooding</option>");
+                if (mood2X <= 0.5 && mood2Y > 0.5) {
+                    $("#" + trackNumberResponse + "mood2").val("Evocative / Intriguing");
+                }
+                else if (mood2X > 0.5 && mood2Y > 0.5) {
+                    $("#" + trackNumberResponse + "mood2").val("Energetic Melancholy");
+                }
+                else if (mood2X <= 0.5 && mood2Y <= 0.5) {
+                    $("#" + trackNumberResponse + "mood2").val("Dreamy Brooding");
+                }
+                else {
+                    $("#" + trackNumberResponse + "mood2").val("Alienated / Brooding");
+                }
+                break;
+            case "Fiery":
+                $("#" + trackNumberResponse + "mood2").empty();
+                $("#" + trackNumberResponse + "mood2").append("<option></option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Dark Sparkling Lyrical</option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Fiery Groove</option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Passionate Rhythm</option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Energetic Abstract Groove</option>");
+                if (mood2X <= 0.5 && mood2Y > 0.5) {
+                    $("#" + trackNumberResponse + "mood2").val("Dark Sparkling Lyrical");
+                }
+                else if (mood2X > 0.5 && mood2Y > 0.5) {
+                    $("#" + trackNumberResponse + "mood2").val("Fiery Groove");
+                }
+                else if (mood2X <= 0.5 && mood2Y <= 0.5) {
+                    $("#" + trackNumberResponse + "mood2").val("Passionate Rhythm");
+                }
+                else {
+                    $("#" + trackNumberResponse + "mood2").val("Energetic Abstract Groove");
+                }
+                break;
+            case "Urgent":
+                $("#" + trackNumberResponse + "mood2").empty();
+                $("#" + trackNumberResponse + "mood2").append("<option></option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Dark Pop</option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Dark Pop Intensity</option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Dark Urgent</option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Energetic Anxious</option>");
+                if (mood2X <= 0.5 && mood2Y > 0.5) {
+                    $("#" + trackNumberResponse + "mood2").val("Dark Pop");
+                }
+                else if (mood2X > 0.5 && mood2Y > 0.5) {
+                    $("#" + trackNumberResponse + "mood2").val("Dark Pop Intensity");
+                }
+                else if (mood2X <= 0.5 && mood2Y <= 0.5) {
+                    $("#" + trackNumberResponse + "mood2").val("Dark Urgent");
+                }
+                else {
+                    $("#" + trackNumberResponse + "mood2").val("Energetic Anxious");
+                }
+                break;
+            case "Defiant":
+                $("#" + trackNumberResponse + "mood2").empty();
+                $("#" + trackNumberResponse + "mood2").append("<option></option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Heavy Brooding</option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Hard Positive Excitement</option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Attitude / Defiant</option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Hard Dark Excitement</option>");
+                if (mood2X <= 0.5 && mood2Y > 0.5) {
+                    $("#" + trackNumberResponse + "mood2").val("Heavy Brooding");
+                }
+                else if (mood2X > 0.5 && mood2Y > 0.5) {
+                    $("#" + trackNumberResponse + "mood2").val("Hard Positive Excitement");
+                }
+                else if (mood2X <= 0.5 && mood2Y <= 0.5) {
+                    $("#" + trackNumberResponse + "mood2").val("Attitude / Defiant");
+                }
+                else {
+                    $("#" + trackNumberResponse + "mood2").val("Hard Dark Excitement");
+                }
+                break;
+            case "Aggressive":
+                $("#" + trackNumberResponse + "mood2").empty();
+                $("#" + trackNumberResponse + "mood2").append("<option></option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Dark Hard Beat</option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Heavy Triumphant</option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Chaotic / Intense</option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Aggressive Power</option>");
+                if (mood2X <= 0.5 && mood2Y > 0.5) {
+                    $("#" + trackNumberResponse + "mood2").val("Dark Hard Beat");
+                }
+                else if (mood2X > 0.5 && mood2Y > 0.5) {
+                    $("#" + trackNumberResponse + "mood2").val("Heavy Triumphant");
+                }
+                else if (mood2X <= 0.5 && mood2Y <= 0.5) {
+                    $("#" + trackNumberResponse + "mood2").val("Chaotic / Intense");
+                }
+                else {
+                    $("#" + trackNumberResponse + "mood2").val("Aggressive Power");
+                }
+                break;
+            case "Rowdy":
+                $("#" + trackNumberResponse + "mood2").empty();
+                $("#" + trackNumberResponse + "mood2").append("<option></option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Ramshackle / Rollicking</option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Wild / Rowdy</option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Confident / Tough</option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Driving Dark Groove</option>");
+                if (mood2X <= 0.5 && mood2Y > 0.5) {
+                    $("#" + trackNumberResponse + "mood2").val("Ramshackle / Rollicking");
+                }
+                else if (mood2X > 0.5 && mood2Y > 0.5) {
+                    $("#" + trackNumberResponse + "mood2").val("Wild / Rowdy");
+                }
+                else if (mood2X <= 0.5 && mood2Y <= 0.5) {
+                    $("#" + trackNumberResponse + "mood2").val("Confident / Tough");
+                }
+                else {
+                    $("#" + trackNumberResponse + "mood2").val("Driving Dark Groove");
+                }
+                break;
+            case "Excited":
+                $("#" + trackNumberResponse + "mood2").empty();
+                $("#" + trackNumberResponse + "mood2").append("<option></option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Loud Celebratory</option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Euphoric Energy</option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Upbeat Pop Groove</option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Happy Excitement</option>");
+                if (mood2X <= 0.5 && mood2Y > 0.5) {
+                    $("#" + trackNumberResponse + "mood2").val("Loud Celebratory");
+                }
+                else if (mood2X > 0.5 && mood2Y > 0.5) {
+                    $("#" + trackNumberResponse + "mood2").val("Euphoric Energy");
+                }
+                else if (mood2X <= 0.5 && mood2Y <= 0.5) {
+                    $("#" + trackNumberResponse + "mood2").val("Upbeat Pop Groove");
+                }
+                else {
+                    $("#" + trackNumberResponse + "mood2").val("Happy Excitement");
+                }
+                break;
+            case "Energizing":
+                $("#" + trackNumberResponse + "mood2").empty();
+                $("#" + trackNumberResponse + "mood2").append("<option></option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Arousing Groove</option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Heavy Beat</option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Edgy / Sexy</option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Abstract Beat</option>");
+                if (mood2X <= 0.5 && mood2Y > 0.5) {
+                    $("#" + trackNumberResponse + "mood2").val("Arousing Groove");
+                }
+                else if (mood2X > 0.5 && mood2Y > 0.5) {
+                    $("#" + trackNumberResponse + "mood2").val("Heavy Beat");
+                }
+                else if (mood2X <= 0.5 && mood2Y <= 0.5) {
+                    $("#" + trackNumberResponse + "mood2").val("Edgy / Sexy");
+                }
+                else {
+                    $("#" + trackNumberResponse + "mood2").val("Abstract Beat");
+                }
+                break;
+            case "Empowering":
+                $("#" + trackNumberResponse + "mood2").empty();
+                $("#" + trackNumberResponse + "mood2").append("<option></option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Strong / Stable</option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Powerful / Heroic</option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Dramatic Emotion</option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Idealistic / Stirring</option>");
+                if (mood2X <= 0.5 && mood2Y > 0.5) {
+                    $("#" + trackNumberResponse + "mood2").val("Strong / Stable");
+                }
+                else if (mood2X > 0.5 && mood2Y > 0.5) {
+                    $("#" + trackNumberResponse + "mood2").val("Powerful / Heroic");
+                }
+                else if (mood2X <= 0.5 && mood2Y <= 0.5) {
+                    $("#" + trackNumberResponse + "mood2").val("Dramatic Emotion");
+                }
+                else {
+                    $("#" + trackNumberResponse + "mood2").val("Idealistic / Stirring");
+                }
+                break;
+            case "Stirring":
+                $("#" + trackNumberResponse + "mood2").empty();
+                $("#" + trackNumberResponse + "mood2").append("<option></option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Invigorating / Joyous</option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Jubilant / Soulful</option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Focused Sparkling</option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Triumphant / Rousing</option>");
+                if (mood2X <= 0.5 && mood2Y > 0.5) {
+                    $("#" + trackNumberResponse + "mood2").val("Invigorating / Joyous");
+                }
+                else if (mood2X > 0.5 && mood2Y > 0.5) {
+                    $("#" + trackNumberResponse + "mood2").val("Jubilant / Soulful");
+                }
+                else if (mood2X <= 0.5 && mood2Y <= 0.5) {
+                    $("#" + trackNumberResponse + "mood2").val("Focused Sparkling");
+                }
+                else {
+                    $("#" + trackNumberResponse + "mood2").val("Triumphant / Rousing");
+                }
+                break;
+            case "Lively":
+                $("#" + trackNumberResponse + "mood2").empty();
+                $("#" + trackNumberResponse + "mood2").append("<option></option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Showy / Rousing</option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Lusty / Jaunty</option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Playful / Swinging</option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Exuberant / Festive</option>");
+                if (mood2X <= 0.5 && mood2Y > 0.5) {
+                    $("#" + trackNumberResponse + "mood2").val("Showy / Rousing");
+                }
+                else if (mood2X > 0.5 && mood2Y > 0.5) {
+                    $("#" + trackNumberResponse + "mood2").val("Lusty / Jaunty");
+                }
+                else if (mood2X <= 0.5 && mood2Y <= 0.5) {
+                    $("#" + trackNumberResponse + "mood2").val("Playful / Swinging");
+                }
+                else {
+                    $("#" + trackNumberResponse + "mood2").val("Exuberant / Festive");
+                }
+                break;
+            case "Upbeat":
+                $("#" + trackNumberResponse + "mood2").empty();
+                $("#" + trackNumberResponse + "mood2").append("<option></option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Carefree Pop</option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Party / Fun</option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Soulful / Easygoing</option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Happy / Soulful</option>");
+                if (mood2X <= 0.5 && mood2Y > 0.5) {
+                    $("#" + trackNumberResponse + "mood2").val("Carefree Pop");
+                }
+                else if (mood2X > 0.5 && mood2Y > 0.5) {
+                    $("#" + trackNumberResponse + "mood2").val("Party / Fun");
+                }
+                else if (mood2X <= 0.5 && mood2Y <= 0.5) {
+                    $("#" + trackNumberResponse + "mood2").val("Soulful / Easygoing");
+                }
+                else {
+                    $("#" + trackNumberResponse + "mood2").val("Happy / Soulful");
+                }
+                break;
+            case "Other":
+                $("#" + trackNumberResponse + "mood2").empty();
+                $("#" + trackNumberResponse + "mood2").append("<option></option>");
+                $("#" + trackNumberResponse + "mood2").append("<option>Other</option>");
+                break;
+        }
+    }
+    $("#trackData").html('<img width="15" height="15" src="./graphics/tick.png"/>');
+});
+*/
+/*
+    //########################################
+    //########################################
+    // Check if any data returned from spotify
+    if (soundStatResponse.features == null) {
+        // Declare variables
+        var valence;
+        var mood1;
+        var soundStatNoTracks = soundStatResponse.features.length;
         var noTracks = $("#inpCount").val();
         var counter;
         var baseX;
@@ -646,8 +1332,8 @@ ipcRenderer.on("from_getAudioFeatures", (event, data) => {
 
         // Check if number of tracks from spotify matches database, if not alter noTracks to match spotify
         // Otherwise it throws an error trying to get data for a track that doesn't exist in spotify
-        if (noTracks > spotifyNoTracks) {
-            noTracks = spotifyNoTracks;
+        if (noTracks > soundStatNoTracks) {
+            noTracks = soundStatNoTracks;
         }
 
         // Loop over each track and match track number to spotify array
@@ -665,17 +1351,17 @@ ipcRenderer.on("from_getAudioFeatures", (event, data) => {
 
             try {
                 // Get valence from json file
-                var valenceFloat = spotifyResponse.audio_features[trackNumber].valence;
+                var valenceFloat = soundStatResponse.features[trackNumber].valence;
                 valenceFloat *= 100;
                 var valenceInt = Math.round(valenceFloat);
 
                 // Get energy from json file
-                var energyFloat = spotifyResponse.audio_features[trackNumber].energy;
+                var energyFloat = soundStatResponse.features[trackNumber].energy;
                 energyFloat *= 100;
                 var energyInt = Math.round(energyFloat);
 
                 // Get tempo from json file
-                var tempoFloat = spotifyResponse.audio_features[trackNumber].tempo;
+                var tempoFloat = soundStatResponse.features[trackNumber].tempo;
                 var tempoInt = Math.round(tempoFloat);
                 var tempo2;
             }
@@ -1320,6 +2006,7 @@ ipcRenderer.on("from_getAudioFeatures", (event, data) => {
         $("#trackData").html('<img width="15" height="15" src="./graphics/tick.png"/>');
     }
 });
+*/
 
 // Receive IPC response from reading first track file's ID3 metadata tags
 ipcRenderer.on("from_read_ID3tags", (event, data) => {
@@ -2558,6 +3245,694 @@ $(document).on('change', '.sltTempo1', function () {
             break;
     }
 });
+
+// Update Mood when Energy value manually changed; this code works for both add and edit albums
+$(document).on('change', '.inpManualEnergy', function () {
+    // Get ID of selection element
+    var energyID = $(this).attr('id');
+    // Get value selected
+    var energyValue = $(this).val();
+    // Get first digit of ID which represents track no.
+    var trackNo = energyID.substring(0, 2);
+    // Remove aplha characters to just get track number
+    trackNo = trackNo.replace(/\D/g, '');
+    // Get valence value
+    var valenceValue = $("#" + trackNo + "valence").val();
+    updateMood(trackNo, energyValue, valenceValue)
+});
+
+// Update Mood when Valence value manually changed
+$(document).on('change', '.inpManualValence', function () {
+    // Get ID of selection element
+    var valenceID = $(this).attr('id');
+    // Get value selected
+    var valenceValue = $(this).val();
+    // Get first digit of ID which represents track no.
+    var trackNo = valenceID.substring(0, 2);
+    // Remove aplha characters to just get track number
+    trackNo = trackNo.replace(/\D/g, '');
+    // Get energy value
+    var energyValue = $("#" + trackNo + "energy").val();
+    updateMood(trackNo, energyValue, valenceValue)
+});
+
+// Update tempo when Tempo value manually changed
+$(document).on('change', '.inpManualTempo', function () {
+    // Get ID of selection element
+    var tempoID = $(this).attr('id');
+    // Get value selected
+    var tempoValue = $(this).val();
+    // Get first digit of ID which represents track no.
+    var trackNo = tempoID.substring(0, 2);
+    // Remove aplha characters to just get track number
+    trackNo = trackNo.replace(/\D/g, '');
+    // Get Tempo value
+    var tempValue = $("#" + trackNo + "tempo").val();
+    updateTempo(trackNo, tempoValue)
+});
+
+// Function to update Tempo from manual entry
+function updateTempo(trackNo, tempoValue) {
+    var tempoInt = tempoValue;
+    var tempo2;
+    var trackNumberResponse = trackNo;
+
+    // Populate Tempo 1 into form
+    if (tempoInt <= 26) {
+        $("#" + trackNumberResponse + "tempo1").val("Slow Tempo");
+        tempo2 = "Static";
+    }
+    else if (tempoInt <= 53) {
+        $("#" + trackNumberResponse + "tempo1").val("Slow Tempo");
+        tempo2 = "Very Slow";
+    }
+    else if (tempoInt <= 79) {
+        $("#" + trackNumberResponse + "tempo1").val("Slow Tempo");
+        tempo2 = "Slow";
+    }
+    else if (tempoInt <= 96) {
+        $("#" + trackNumberResponse + "tempo1").val("Medium Tempo");
+        tempo2 = "Medium Slow";
+    }
+    else if (tempoInt <= 112) {
+        $("#" + trackNumberResponse + "tempo1").val("Medium Tempo");
+        tempo2 = "Medium";
+    }
+    else if (tempoInt <= 129) {
+        $("#" + trackNumberResponse + "tempo1").val("Medium Tempo");
+        tempo2 = "Medium Fast";
+    }
+    else if (tempoInt <= 149) {
+        $("#" + trackNumberResponse + "tempo1").val("Fast Tempo");
+        tempo2 = "Fast";
+    }
+    else if (tempoInt >= 150) {
+        $("#" + trackNumberResponse + "tempo1").val("Fast Tempo");
+        tempo2 = "Very Fast";
+    }
+    else {
+        $("#" + trackNumberResponse + "tempo1").val("");
+        tempo2 = "";
+    }
+    var tempo1 = $("#" + trackNumberResponse + "tempo1").val();
+
+    // Populate Tempo 2 value and options into selection box
+    switch (tempo1) {
+        case "Slow Tempo":
+            $("#" + trackNumberResponse + "tempo2").empty();
+            $("#" + trackNumberResponse + "tempo2").append("<option></option>");
+            $("#" + trackNumberResponse + "tempo2").append("<option>Static</option>");
+            $("#" + trackNumberResponse + "tempo2").append("<option>Very Slow</option>");
+            $("#" + trackNumberResponse + "tempo2").append("<option>Slow</option>");
+            $("#" + trackNumberResponse + "tempo2").val(tempo2);
+            break;
+        case "Medium Tempo":
+            $("#" + trackNumberResponse + "tempo2").empty();
+            $("#" + trackNumberResponse + "tempo2").append("<option></option>");
+            $("#" + trackNumberResponse + "tempo2").append("<option>Medium Slow</option>");
+            $("#" + trackNumberResponse + "tempo2").append("<option>Medium</option>");
+            $("#" + trackNumberResponse + "tempo2").append("<option>Medium Fast</option>");
+            $("#" + trackNumberResponse + "tempo2").val(tempo2);
+            break;
+        case "Fast Tempo":
+            $("#" + trackNumberResponse + "tempo2").empty();
+            $("#" + trackNumberResponse + "tempo2").append("<option></option>");
+            $("#" + trackNumberResponse + "tempo2").append("<option>Fast</option>");
+            $("#" + trackNumberResponse + "tempo2").append("<option>Very Fast</option>");
+            $("#" + trackNumberResponse + "tempo2").val(tempo2);
+            break;
+    }
+}
+
+// Function to update Mood from manual entry
+function updateMood(trackNo, energyValue, valenceValue) {
+    var energyInt = energyValue;
+    var valenceInt = valenceValue;
+    var trackNumberResponse = trackNo;
+
+    // Mood 1
+    // Create array of for values for mood1 grouped by valence
+    if (valenceInt <= 19) {
+        valence = ['Somber', 'Gritty', 'Serious', 'Brooding', 'Aggressive'];
+        baseY = 0;
+    }
+    else if (valenceInt <= 39) {
+        valence = ['Melancholy', 'Cool', 'Yearning', 'Urgent', 'Defiant'];
+        baseY = 20;
+    }
+    else if (valenceInt <= 59) {
+        valence = ['Sentimental', 'Sophisticated', 'Sensual', 'Fiery', 'Energizing'];
+        baseY = 40;
+    }
+    else if (valenceInt <= 79) {
+        valence = ['Tender', 'Romantic', 'Empowering', 'Stirring', 'Rowdy'];
+        baseY = 60;
+    }
+    else {
+        valence = ['Peaceful', 'Easygoing', 'Upbeat', 'Lively', 'Excited'];
+        baseY = 80;
+    }
+
+    // Select mood1 array matching energy data from json file
+    if (energyInt <= 19) {
+        mood1 = valence[0];
+        baseX = 0;
+    }
+    else if (energyInt <= 39) {
+        mood1 = valence[1];
+        baseX = 20;
+    }
+    else if (energyInt <= 59) {
+        mood1 = valence[2];
+        baseX = 40;
+    }
+    else if (energyInt <= 79) {
+        mood1 = valence[3];
+        baseX = 60;
+    }
+    else {
+        mood1 = valence[4];
+        baseX = 80;
+    }
+    // Populate mood1 value into form
+    $("#" + trackNumberResponse + "mood1").val(mood1);
+
+    // Calculate x and y values for mood2 matric, which is a 2 x 2 matrix
+    var mood2X = (energyInt - baseX) / 20;
+    var mood2Y = (valenceInt - baseY) / 20;
+
+    // Populate mood2 selection options
+    switch (mood1) {
+        case "Peaceful":
+            $("#" + trackNumberResponse + "mood2").append("<option></option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Pastoral / Serene</option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Delicate / Tranquil</option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Reverent / Healing</option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Quiet / Introspective</option>");
+            // Calm Positive
+            if (mood2X <= 0.5 && mood2Y > 0.5) {
+                $("#" + trackNumberResponse + "mood2").val("Pastoral / Serene");
+            }
+            // Energetic Positive
+            else if (mood2X > 0.5 && mood2Y > 0.5) {
+                $("#" + trackNumberResponse + "mood2").val("Delicate / Tranquil");
+            }
+            // Calm Dark
+            else if (mood2X <= 0.5 && mood2Y <= 0.5) {
+                $("#" + trackNumberResponse + "mood2").val("Reverent / Healing");
+            }
+            // Energetic Dark
+            else {
+                $("#" + trackNumberResponse + "mood2").val("Quiet / Introspective");
+            }
+            break;
+        case "Romantic":
+            $("#" + trackNumberResponse + "mood2").empty();
+            $("#" + trackNumberResponse + "mood2").append("<option></option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Sweet / Sincere</option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Heartfelt Passion</option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Dramatic / Romantic</option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Lush / Romantic</option>");
+            if (mood2X <= 0.5 && mood2Y > 0.5) {
+                $("#" + trackNumberResponse + "mood2").val("Sweet / Sincere");
+            }
+            else if (mood2X > 0.5 && mood2Y > 0.5) {
+                $("#" + trackNumberResponse + "mood2").val("Heartfelt Passion");
+            }
+            else if (mood2X <= 0.5 && mood2Y <= 0.5) {
+                $("#" + trackNumberResponse + "mood2").val("Dramatic / Romantic");
+            }
+            else {
+                $("#" + trackNumberResponse + "mood2").val("Lush / Romantic");
+            }
+            break;
+        case "Sentimental":
+            $("#" + trackNumberResponse + "mood2").empty();
+            $("#" + trackNumberResponse + "mood2").append("<option></option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Tender / Sincere</option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Gentle Bittersweet</option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Lyrical Sentimental</option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Cool Melancholy</option>");
+            if (mood2X <= 0.5 && mood2Y > 0.5) {
+                $("#" + trackNumberResponse + "mood2").val("Tender / Sincere");
+            }
+            else if (mood2X > 0.5 && mood2Y > 0.5) {
+                $("#" + trackNumberResponse + "mood2").val("Gentle Bittersweet");
+            }
+            else if (mood2X <= 0.5 && mood2Y <= 0.5) {
+                $("#" + trackNumberResponse + "mood2").val("Lyrical Sentimental");
+            }
+            else {
+                $("#" + trackNumberResponse + "mood2").val("Cool Melancholy");
+            }
+            break;
+        case "Tender":
+            $("#" + trackNumberResponse + "mood2").empty();
+            $("#" + trackNumberResponse + "mood2").append("<option></option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Refined / Mannered</option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Awakening / Stately</option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Romantic / Lyrical</option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Light Groovy</option>");
+            if (mood2X <= 0.5 && mood2Y > 0.5) {
+                $("#" + trackNumberResponse + "mood2").val("Refined / Mannered");
+            }
+            else if (mood2X > 0.5 && mood2Y > 0.5) {
+                $("#" + trackNumberResponse + "mood2").val("Awakening / Stately");
+            }
+            else if (mood2X <= 0.5 && mood2Y <= 0.5) {
+                $("#" + trackNumberResponse + "mood2").val("Romantic / Lyrical");
+            }
+            else {
+                $("#" + trackNumberResponse + "mood2").val("Light Groovy");
+            }
+            break;
+        case "Easygoing":
+            $("#" + trackNumberResponse + "mood2").empty();
+            $("#" + trackNumberResponse + "mood2").append("<option></option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Hopeful / Breezy</option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Cheerful / Playful</option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Friendly</option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Charming / Easygoing</option>");
+            if (mood2X <= 0.5 && mood2Y > 0.5) {
+                $("#" + trackNumberResponse + "mood2").val("Hopeful / Breezy");
+            }
+            else if (mood2X > 0.5 && mood2Y > 0.5) {
+                $("#" + trackNumberResponse + "mood2").val("Cheerful / Playful");
+            }
+            else if (mood2X <= 0.5 && mood2Y <= 0.5) {
+                $("#" + trackNumberResponse + "mood2").val("Friendly");
+            }
+            else {
+                $("#" + trackNumberResponse + "mood2").val("Charming / Easygoing");
+            }
+            break;
+        case "Yearning":
+            $("#" + trackNumberResponse + "mood2").empty();
+            $("#" + trackNumberResponse + "mood2").append("<option></option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Bittersweet Pop</option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Energetic Yearning</option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Sensitive / Exploring</option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Energetic Dreamy</option>");
+            if (mood2X <= 0.5 && mood2Y > 0.5) {
+                $("#" + trackNumberResponse + "mood2").val("Bittersweet Pop");
+            }
+            else if (mood2X > 0.5 && mood2Y > 0.5) {
+                $("#" + trackNumberResponse + "mood2").val("Energetic Yearning");
+            }
+            else if (mood2X <= 0.5 && mood2Y <= 0.5) {
+                $("#" + trackNumberResponse + "mood2").val("Sensitive / Exploring");
+            }
+            else {
+                $("#" + trackNumberResponse + "mood2").val("Energetic Dreamy");
+            }
+            break;
+        case "Sophisticated":
+            $("#" + trackNumberResponse + "mood2").empty();
+            $("#" + trackNumberResponse + "mood2").append("<option></option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Suave / Sultry</option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Dark Playful</option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Intimate Bittersweet</option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Smoky / Romantic</option>");
+            if (mood2X <= 0.5 && mood2Y > 0.5) {
+                $("#" + trackNumberResponse + "mood2").val("Suave / Sultry");
+            }
+            else if (mood2X > 0.5 && mood2Y > 0.5) {
+                $("#" + trackNumberResponse + "mood2").val("Dark Playful");
+            }
+            else if (mood2X <= 0.5 && mood2Y <= 0.5) {
+                $("#" + trackNumberResponse + "mood2").val("Intimate Bittersweet");
+            }
+            else {
+                $("#" + trackNumberResponse + "mood2").val("Smoky / Romantic");
+            }
+            break;
+        case "Sensual":
+            $("#" + trackNumberResponse + "mood2").empty();
+            $("#" + trackNumberResponse + "mood2").append("<option></option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Soft Soulful</option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Sensual Groove</option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Dreamy Pulse</option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Intimate</option>");
+            if (mood2X <= 0.5 && mood2Y > 0.5) {
+                $("#" + trackNumberResponse + "mood2").val("Soft Soulful");
+            }
+            else if (mood2X > 0.5 && mood2Y > 0.5) {
+                $("#" + trackNumberResponse + "mood2").val("Sensual Groove");
+            }
+            else if (mood2X <= 0.5 && mood2Y <= 0.5) {
+                $("#" + trackNumberResponse + "mood2").val("Dreamy Pulse");
+            }
+            else {
+                $("#" + trackNumberResponse + "mood2").val("Intimate");
+            }
+            break;
+        case "Cool":
+            $("#" + trackNumberResponse + "mood2").empty();
+            $("#" + trackNumberResponse + "mood2").append("<option></option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Casual Groove</option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Wary / Defiant</option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Cool Confidence</option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Dark Groovy</option>");
+            if (mood2X <= 0.5 && mood2Y > 0.5) {
+                $("#" + trackNumberResponse + "mood2").val("Casual Groove");
+            }
+            else if (mood2X > 0.5 && mood2Y > 0.5) {
+                $("#" + trackNumberResponse + "mood2").val("Wary / Defiant");
+            }
+            else if (mood2X <= 0.5 && mood2Y <= 0.5) {
+                $("#" + trackNumberResponse + "mood2").val("Cool Confidence");
+            }
+            else {
+                $("#" + trackNumberResponse + "mood2").val("Dark Groovy");
+            }
+            break;
+        case "Gritty":
+            $("#" + trackNumberResponse + "mood2").empty();
+            $("#" + trackNumberResponse + "mood2").append("<option></option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Sober / Determined</option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Strumming Yearning</option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Depressed / Lonely</option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Gritty / Soulful</option>");
+            if (mood2X <= 0.5 && mood2Y > 0.5) {
+                $("#" + trackNumberResponse + "mood2").val("Sober / Determined");
+            }
+            else if (mood2X > 0.5 && mood2Y > 0.5) {
+                $("#" + trackNumberResponse + "mood2").val("Strumming Yearning");
+            }
+            else if (mood2X <= 0.5 && mood2Y <= 0.5) {
+                $("#" + trackNumberResponse + "mood2").val("Depressed / Lonely");
+            }
+            else {
+                $("#" + trackNumberResponse + "mood2").val("Gritty / Soulful");
+            }
+            break;
+        case "Somber":
+            $("#" + trackNumberResponse + "mood2").empty();
+            $("#" + trackNumberResponse + "mood2").append("<option></option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Solemn / Spiritual</option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Enigmatic / Mysterious</option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Dark Cosmic</option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Creepy / Ominous</option>");
+            if (mood2X <= 0.5 && mood2Y > 0.5) {
+                $("#" + trackNumberResponse + "mood2").val("Solemn / Spiritual");
+            }
+            else if (mood2X > 0.5 && mood2Y > 0.5) {
+                $("#" + trackNumberResponse + "mood2").val("Enigmatic / Mysterious");
+            }
+            else if (mood2X <= 0.5 && mood2Y <= 0.5) {
+                $("#" + trackNumberResponse + "mood2").val("Dark Cosmic");
+            }
+            else {
+                $("#" + trackNumberResponse + "mood2").val("Creepy / Ominous");
+            }
+            break;
+        case "Melancholy":
+            $("#" + trackNumberResponse + "mood2").empty();
+            $("#" + trackNumberResponse + "mood2").append("<option></option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Mysterious / Dreamy</option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Light Melancholy</option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Wistful / Forlorn</option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Sad / Soulful</option>");
+            if (mood2X <= 0.5 && mood2Y > 0.5) {
+                $("#" + trackNumberResponse + "mood2").val("Mysterious / Dreamy");
+            }
+            else if (mood2X > 0.5 && mood2Y > 0.5) {
+                $("#" + trackNumberResponse + "mood2").val("Light Melancholy");
+            }
+            else if (mood2X <= 0.5 && mood2Y <= 0.5) {
+                $("#" + trackNumberResponse + "mood2").val("Wistful / Forlorn");
+            }
+            else {
+                $("#" + trackNumberResponse + "mood2").val("Sad / Soulful");
+            }
+            break;
+        case "Serious":
+            $("#" + trackNumberResponse + "mood2").empty();
+            $("#" + trackNumberResponse + "mood2").append("<option></option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Melodramatic</option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Hypnotic Rhythm</option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Serious / Cerebral</option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Thrilling</option>");
+            if (mood2X <= 0.5 && mood2Y > 0.5) {
+                $("#" + trackNumberResponse + "mood2").val("Melodramatic");
+            }
+            else if (mood2X > 0.5 && mood2Y > 0.5) {
+                $("#" + trackNumberResponse + "mood2").val("Hypnotic Rhythm");
+            }
+            else if (mood2X <= 0.5 && mood2Y <= 0.5) {
+                $("#" + trackNumberResponse + "mood2").val("Serious / Cerebral");
+            }
+            else {
+                $("#" + trackNumberResponse + "mood2").val("Thrilling");
+            }
+            break;
+        case "Brooding":
+            $("#" + trackNumberResponse + "mood2").empty();
+            $("#" + trackNumberResponse + "mood2").append("<option></option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Evocative / Intriguing</option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Energetic Melancholy</option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Dreamy Brooding</option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Alienated / Brooding</option>");
+            if (mood2X <= 0.5 && mood2Y > 0.5) {
+                $("#" + trackNumberResponse + "mood2").val("Evocative / Intriguing");
+            }
+            else if (mood2X > 0.5 && mood2Y > 0.5) {
+                $("#" + trackNumberResponse + "mood2").val("Energetic Melancholy");
+            }
+            else if (mood2X <= 0.5 && mood2Y <= 0.5) {
+                $("#" + trackNumberResponse + "mood2").val("Dreamy Brooding");
+            }
+            else {
+                $("#" + trackNumberResponse + "mood2").val("Alienated / Brooding");
+            }
+            break;
+        case "Fiery":
+            $("#" + trackNumberResponse + "mood2").empty();
+            $("#" + trackNumberResponse + "mood2").append("<option></option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Dark Sparkling Lyrical</option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Fiery Groove</option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Passionate Rhythm</option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Energetic Abstract Groove</option>");
+            if (mood2X <= 0.5 && mood2Y > 0.5) {
+                $("#" + trackNumberResponse + "mood2").val("Dark Sparkling Lyrical");
+            }
+            else if (mood2X > 0.5 && mood2Y > 0.5) {
+                $("#" + trackNumberResponse + "mood2").val("Fiery Groove");
+            }
+            else if (mood2X <= 0.5 && mood2Y <= 0.5) {
+                $("#" + trackNumberResponse + "mood2").val("Passionate Rhythm");
+            }
+            else {
+                $("#" + trackNumberResponse + "mood2").val("Energetic Abstract Groove");
+            }
+            break;
+        case "Urgent":
+            $("#" + trackNumberResponse + "mood2").empty();
+            $("#" + trackNumberResponse + "mood2").append("<option></option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Dark Pop</option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Dark Pop Intensity</option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Dark Urgent</option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Energetic Anxious</option>");
+            if (mood2X <= 0.5 && mood2Y > 0.5) {
+                $("#" + trackNumberResponse + "mood2").val("Dark Pop");
+            }
+            else if (mood2X > 0.5 && mood2Y > 0.5) {
+                $("#" + trackNumberResponse + "mood2").val("Dark Pop Intensity");
+            }
+            else if (mood2X <= 0.5 && mood2Y <= 0.5) {
+                $("#" + trackNumberResponse + "mood2").val("Dark Urgent");
+            }
+            else {
+                $("#" + trackNumberResponse + "mood2").val("Energetic Anxious");
+            }
+            break;
+        case "Defiant":
+            $("#" + trackNumberResponse + "mood2").empty();
+            $("#" + trackNumberResponse + "mood2").append("<option></option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Heavy Brooding</option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Hard Positive Excitement</option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Attitude / Defiant</option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Hard Dark Excitement</option>");
+            if (mood2X <= 0.5 && mood2Y > 0.5) {
+                $("#" + trackNumberResponse + "mood2").val("Heavy Brooding");
+            }
+            else if (mood2X > 0.5 && mood2Y > 0.5) {
+                $("#" + trackNumberResponse + "mood2").val("Hard Positive Excitement");
+            }
+            else if (mood2X <= 0.5 && mood2Y <= 0.5) {
+                $("#" + trackNumberResponse + "mood2").val("Attitude / Defiant");
+            }
+            else {
+                $("#" + trackNumberResponse + "mood2").val("Hard Dark Excitement");
+            }
+            break;
+        case "Aggressive":
+            $("#" + trackNumberResponse + "mood2").empty();
+            $("#" + trackNumberResponse + "mood2").append("<option></option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Dark Hard Beat</option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Heavy Triumphant</option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Chaotic / Intense</option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Aggressive Power</option>");
+            if (mood2X <= 0.5 && mood2Y > 0.5) {
+                $("#" + trackNumberResponse + "mood2").val("Dark Hard Beat");
+            }
+            else if (mood2X > 0.5 && mood2Y > 0.5) {
+                $("#" + trackNumberResponse + "mood2").val("Heavy Triumphant");
+            }
+            else if (mood2X <= 0.5 && mood2Y <= 0.5) {
+                $("#" + trackNumberResponse + "mood2").val("Chaotic / Intense");
+            }
+            else {
+                $("#" + trackNumberResponse + "mood2").val("Aggressive Power");
+            }
+            break;
+        case "Rowdy":
+            $("#" + trackNumberResponse + "mood2").empty();
+            $("#" + trackNumberResponse + "mood2").append("<option></option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Ramshackle / Rollicking</option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Wild / Rowdy</option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Confident / Tough</option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Driving Dark Groove</option>");
+            if (mood2X <= 0.5 && mood2Y > 0.5) {
+                $("#" + trackNumberResponse + "mood2").val("Ramshackle / Rollicking");
+            }
+            else if (mood2X > 0.5 && mood2Y > 0.5) {
+                $("#" + trackNumberResponse + "mood2").val("Wild / Rowdy");
+            }
+            else if (mood2X <= 0.5 && mood2Y <= 0.5) {
+                $("#" + trackNumberResponse + "mood2").val("Confident / Tough");
+            }
+            else {
+                $("#" + trackNumberResponse + "mood2").val("Driving Dark Groove");
+            }
+            break;
+        case "Excited":
+            $("#" + trackNumberResponse + "mood2").empty();
+            $("#" + trackNumberResponse + "mood2").append("<option></option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Loud Celebratory</option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Euphoric Energy</option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Upbeat Pop Groove</option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Happy Excitement</option>");
+            if (mood2X <= 0.5 && mood2Y > 0.5) {
+                $("#" + trackNumberResponse + "mood2").val("Loud Celebratory");
+            }
+            else if (mood2X > 0.5 && mood2Y > 0.5) {
+                $("#" + trackNumberResponse + "mood2").val("Euphoric Energy");
+            }
+            else if (mood2X <= 0.5 && mood2Y <= 0.5) {
+                $("#" + trackNumberResponse + "mood2").val("Upbeat Pop Groove");
+            }
+            else {
+                $("#" + trackNumberResponse + "mood2").val("Happy Excitement");
+            }
+            break;
+        case "Energizing":
+            $("#" + trackNumberResponse + "mood2").empty();
+            $("#" + trackNumberResponse + "mood2").append("<option></option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Arousing Groove</option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Heavy Beat</option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Edgy / Sexy</option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Abstract Beat</option>");
+            if (mood2X <= 0.5 && mood2Y > 0.5) {
+                $("#" + trackNumberResponse + "mood2").val("Arousing Groove");
+            }
+            else if (mood2X > 0.5 && mood2Y > 0.5) {
+                $("#" + trackNumberResponse + "mood2").val("Heavy Beat");
+            }
+            else if (mood2X <= 0.5 && mood2Y <= 0.5) {
+                $("#" + trackNumberResponse + "mood2").val("Edgy / Sexy");
+            }
+            else {
+                $("#" + trackNumberResponse + "mood2").val("Abstract Beat");
+            }
+            break;
+        case "Empowering":
+            $("#" + trackNumberResponse + "mood2").empty();
+            $("#" + trackNumberResponse + "mood2").append("<option></option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Strong / Stable</option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Powerful / Heroic</option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Dramatic Emotion</option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Idealistic / Stirring</option>");
+            if (mood2X <= 0.5 && mood2Y > 0.5) {
+                $("#" + trackNumberResponse + "mood2").val("Strong / Stable");
+            }
+            else if (mood2X > 0.5 && mood2Y > 0.5) {
+                $("#" + trackNumberResponse + "mood2").val("Powerful / Heroic");
+            }
+            else if (mood2X <= 0.5 && mood2Y <= 0.5) {
+                $("#" + trackNumberResponse + "mood2").val("Dramatic Emotion");
+            }
+            else {
+                $("#" + trackNumberResponse + "mood2").val("Idealistic / Stirring");
+            }
+            break;
+        case "Stirring":
+            $("#" + trackNumberResponse + "mood2").empty();
+            $("#" + trackNumberResponse + "mood2").append("<option></option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Invigorating / Joyous</option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Jubilant / Soulful</option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Focused Sparkling</option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Triumphant / Rousing</option>");
+            if (mood2X <= 0.5 && mood2Y > 0.5) {
+                $("#" + trackNumberResponse + "mood2").val("Invigorating / Joyous");
+            }
+            else if (mood2X > 0.5 && mood2Y > 0.5) {
+                $("#" + trackNumberResponse + "mood2").val("Jubilant / Soulful");
+            }
+            else if (mood2X <= 0.5 && mood2Y <= 0.5) {
+                $("#" + trackNumberResponse + "mood2").val("Focused Sparkling");
+            }
+            else {
+                $("#" + trackNumberResponse + "mood2").val("Triumphant / Rousing");
+            }
+            break;
+        case "Lively":
+            $("#" + trackNumberResponse + "mood2").empty();
+            $("#" + trackNumberResponse + "mood2").append("<option></option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Showy / Rousing</option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Lusty / Jaunty</option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Playful / Swinging</option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Exuberant / Festive</option>");
+            if (mood2X <= 0.5 && mood2Y > 0.5) {
+                $("#" + trackNumberResponse + "mood2").val("Showy / Rousing");
+            }
+            else if (mood2X > 0.5 && mood2Y > 0.5) {
+                $("#" + trackNumberResponse + "mood2").val("Lusty / Jaunty");
+            }
+            else if (mood2X <= 0.5 && mood2Y <= 0.5) {
+                $("#" + trackNumberResponse + "mood2").val("Playful / Swinging");
+            }
+            else {
+                $("#" + trackNumberResponse + "mood2").val("Exuberant / Festive");
+            }
+            break;
+        case "Upbeat":
+            $("#" + trackNumberResponse + "mood2").empty();
+            $("#" + trackNumberResponse + "mood2").append("<option></option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Carefree Pop</option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Party / Fun</option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Soulful / Easygoing</option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Happy / Soulful</option>");
+            if (mood2X <= 0.5 && mood2Y > 0.5) {
+                $("#" + trackNumberResponse + "mood2").val("Carefree Pop");
+            }
+            else if (mood2X > 0.5 && mood2Y > 0.5) {
+                $("#" + trackNumberResponse + "mood2").val("Party / Fun");
+            }
+            else if (mood2X <= 0.5 && mood2Y <= 0.5) {
+                $("#" + trackNumberResponse + "mood2").val("Soulful / Easygoing");
+            }
+            else {
+                $("#" + trackNumberResponse + "mood2").val("Happy / Soulful");
+            }
+            break;
+        case "Other":
+            $("#" + trackNumberResponse + "mood2").empty();
+            $("#" + trackNumberResponse + "mood2").append("<option></option>");
+            $("#" + trackNumberResponse + "mood2").append("<option>Other</option>");
+            break;
+    }
+}
 
 //#############################
 // Import new album to database

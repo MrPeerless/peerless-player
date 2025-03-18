@@ -406,8 +406,17 @@ textarea {
 #divMusicLibrary {
     display: block;
 }
-
+/*
 .divSpotifyAlbumList {
+    clear: left;
+    position: relative;
+    float: left;
+    left: 0px;
+    padding-top: 15px;
+    height: auto;
+}
+*/
+.divAlbumList {
     clear: left;
     position: relative;
     float: left;
@@ -704,6 +713,18 @@ textarea {
     display: inline-block;
     width: 50px;
     background: #d2d2d2;
+}
+.inpManualEnergy {
+    display: inline-block;
+    width: 50px;
+}
+.inpManualValence {
+    display: inline-block;
+    width: 50px;
+}
+.inpManualTempo {
+    display: inline-block;
+    width: 50px;
 }
 .inpEditTrackTime {
     display: inline-block;
@@ -1041,6 +1062,18 @@ button#btnMostPlayedShow {
     outline: none;
 }
 
+button#btnNewReleasesShow {
+    width: 30px;
+    height: 15px;
+    background: url(../graphics/expand_large.png) no-repeat;
+    margin-top: -5px;
+    margin-left: 10px;
+    border: none;
+    cursor: pointer;
+    vertical-align: middle;
+    outline: none;
+}
+
 button#btnBioTextShow {
     width: 30px;
     height: 15px;
@@ -1185,6 +1218,10 @@ button#btnMoodExpand {
         display: none;
     }
 
+    .albumDisplay li.newReleasesHidden {
+        display: none;
+    }
+
     .albumDisplay li img {
         opacity: 1;
         width: 100px;
@@ -1234,6 +1271,9 @@ button#btnMoodExpand {
         display: none;
     }
     .albumDisplayLarge li.mostPlayedHidden {
+        display: none;
+    }
+    .albumDisplayLarge li.newReleasesHidden {
         display: none;
     }
     .albumDisplayLarge li img {

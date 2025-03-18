@@ -112,6 +112,9 @@
 
 **** VERSION 0.6.2 UPDATES ****
 
-
+1. Replaced Spotify data from Discography page with data from Musicbrainz and linked to YouTube.
+2. Replaced Spotify data for audio features for track meta data with data from SoundStat.
+3. Removed links to X/Twitter from artist links.
+4. 
 
 

@@ -321,6 +321,19 @@ $(function () {
                                     // Append X to close button here so that its position adjusts to scrollbars
                                     $("#btnClose").empty();
                                     $("#btnClose").append("&times;");
+                                    // Calculate width of divAlbumList so that it fills screen width
+                                    var winWidth = $(window).width();
+                                    var divContentWidth = $("#divContent").width();
+                                    var divSidemenu;
+
+                                    if ($("#divSideMenu").is(":visible")) {
+                                        divSidemenu = 35;
+                                    }
+                                    else {
+                                        divSidemenu = 240;
+                                    }
+                                    // Set width for divAlbumList
+                                    $("#divBio").css("width", winWidth - (divSidemenu + divContentWidth)); 
                                 }
                             }
                         }

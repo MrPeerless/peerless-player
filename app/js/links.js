@@ -103,7 +103,6 @@ function processLinksQuery(xml) {
     var youtubeUrl = "";
     var discogsUrl = "";
     var lastfmUrl = "";
-    var twitterUrl = ""
     var instagramUrl = ""
     var facebookUrl = "";
 
@@ -114,7 +113,6 @@ function processLinksQuery(xml) {
             var homepageIcon = "./graphics/socialmedia/homepage_white.png";
             var bandcampIcon = "./graphics/socialmedia/bandcamp_white.png";
             var facebookIcon = "./graphics/socialmedia/facebook_blue.png";
-            var twitterIcon = "./graphics/socialmedia/twitter_blue.png";
             var instagramIcon = "./graphics/socialmedia/instagram_white.png";
             var discogsIcon = "./graphics/socialmedia/discogs_white.png";
             var youtubeIcon = "./graphics/socialmedia/youtube_red.png";
@@ -125,7 +123,6 @@ function processLinksQuery(xml) {
             var homepageIcon = "./graphics/socialmedia/homepage_black.png";
             var bandcampIcon = "./graphics/socialmedia/bandcamp_black.png";
             var facebookIcon = "./graphics/socialmedia/facebook_blue.png";
-            var twitterIcon = "./graphics/socialmedia/twitter_blue.png";
             var instagramIcon = "./graphics/socialmedia/instagram_black.png";
             var discogsIcon = "./graphics/socialmedia/discogs_black.png";
             var youtubeIcon = "./graphics/socialmedia/youtube_red.png";
@@ -136,7 +133,6 @@ function processLinksQuery(xml) {
             var homepageIcon = "./graphics/socialmedia/homepage_white.png";
             var bandcampIcon = "./graphics/socialmedia/bandcamp_white.png";
             var facebookIcon = "./graphics/socialmedia/facebook_blue.png";
-            var twitterIcon = "./graphics/socialmedia/twitter_blue.png";
             var instagramIcon = "./graphics/socialmedia/instagram_white.png";
             var discogsIcon = "./graphics/socialmedia/discogs_white.png";
             var youtubeIcon = "./graphics/socialmedia/youtube_red.png";
@@ -149,8 +145,8 @@ function processLinksQuery(xml) {
     $('#bioArtistLink').empty();
     $("#bioArtistLink").append(artist + " Links")
     $("#linksCredits").empty();
-    $("#linksCredits").text("Data supplied by musicbrainz.org")
-    $(".musicBrainzLogo").attr('src', './graphics/metaBrainz_logo.png');
+    $("#linksCredits").text("Data supplied by MusicBrainz.org")
+    $("#linksMusicBrainzLogo").attr('src', './graphics/metaBrainz_logo.png');
 
     // Loop through each relation in xml
     $(xml).find('relation').each(function () {
@@ -204,15 +200,6 @@ function processLinksQuery(xml) {
         }
         if (linkType == "social network") {
             var checkUrl = $link.find('target').text();
-            if (checkUrl.includes("twitter") && twitterUrl == "") {
-                twitterUrl = checkUrl;
-                var li = $('<li><a><img><span></span></a></li>');
-                li.find('img').attr('src', twitterIcon);
-                li.find('a').attr('href', twitterUrl);
-                li.find('a').attr('target', '_blank');
-                li.find('span').append('<br>Twitter<br>');
-                li.appendTo(ul);
-            }
             if (checkUrl.includes("instagram") && instagramUrl == "") {
                 instagramUrl = checkUrl;
                 var li = $('<li><a><img><span></span></a></li>');

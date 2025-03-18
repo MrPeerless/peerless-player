@@ -5,12 +5,14 @@ var global_SrnWidth;
 var global_SrnHeight;
 var global_playingHeight;
 var global_playingDivClicked;
+var global_newReleases = [];
 
 // Expand/Collapse DIVs
 var global_AddedExpand = false;
 var global_GenreExpand = false;
 var global_LibraryExpand = true;
 var global_MostPlayedExpand = false;
+var global_NewReleasesExpand = false;
 var global_MoodExpand = false;
 var global_PlayedExpand = false;
 var global_PlayerExpand = false;
@@ -56,6 +58,9 @@ var global_YearID;
 // URLs
 var musicbrainzUrl = "https://musicbrainz.org/ws/2/";
 var wikiQueryUrl = "https://en.wikipedia.org/w/api.php?"
+var coverartArchiveUrl = "https://coverartarchive.org/"
+var youtubeUrl = "https://www.youtube.com/"
+var musicYoutubeUrl = "https://music.youtube.com/"
 
 // CONSTANT VARIABLES
 // Path to users music directory
@@ -70,8 +75,8 @@ const app_path = splitString[1];
 const dBase = require(splitString[3]);
 
 // Path to database file
-const DB_PATH = app_path + "/peerless-player-TEST.db";
-//const DB_PATH = app_path + "/peerless-player-database.db";
+//const DB_PATH = app_path + "/peerless-player-TEST.db";
+const DB_PATH = app_path + "/peerless-player-database.db";
 
 // JQuery
 window.$ = window.jQuery = require('jquery')
@@ -1286,6 +1291,11 @@ $(function () {
         ipcRenderer.send('open_external', this.href)
     });
 
+    // Open external web link from discography page
+    $(document).on('click', '#ulDiscography a', function (event) {
+        ipcRenderer.send('open_external', this.href)
+    });
+
     // Open external github link from about modal
     $(document).on('click', '#openLink', function () {
         ipcRenderer.send('open_external', this.href)
@@ -1293,6 +1303,11 @@ $(function () {
 
     // Open external web link from biography page
     $(document).on('click', '#ulLinks li a', function (event) {
+        ipcRenderer.send('open_external', this.href)
+    });
+
+    // Open external web link for New Releases from Home page
+    $(document).on('click', '#ulNewReleases li a', function (event) {
         ipcRenderer.send('open_external', this.href)
     });
 
@@ -1702,6 +1717,30 @@ $(function () {
             }
             $("button#btnMostPlayedShow").css("background", "url(./graphics/expand_large.png) no-repeat");
             global_MostPlayedExpand = false;
+        }
+    });
+
+    // New Releases
+    $(document).on('click', '#btnNewReleasesShow', function () {
+        if (global_NewReleasesExpand == false) {
+            if (global_ArtIconSize == "small") {
+                $(".albumDisplay li.newReleasesHidden").slideToggle("slow");
+            }
+            else {
+                $(".albumDisplayLarge li.newReleasesHidden").slideToggle("slow");
+            }
+            $("button#btnNewReleasesShow").css("background", "url(./graphics/collapse_large.png) no-repeat");
+            global_NewReleasesExpand = true;
+        }
+        else {
+            if (global_ArtIconSize == "small") {
+                $(".albumDisplay li.newReleasesHidden").slideToggle("slow");
+            }
+            else {
+                $(".albumDisplayLarge li.newReleasesHidden").slideToggle("slow");
+            }
+            $("button#btnNewReleasesShow").css("background", "url(./graphics/expand_large.png) no-repeat");
+            global_NewReleasesExpand = false;
         }
     });
 

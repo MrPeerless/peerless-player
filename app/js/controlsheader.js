@@ -31,11 +31,11 @@ ipcRenderer.on('Next Track', (event) => {
 ipcRenderer.on('Shuffle', (event) => {
     btnShuffleClick()
 });
-
+/*
 ipcRenderer.on('New Music Releases', (event) => {
     btnNewReleases()
 });
-
+*/
 // Pi-Player Menu
 ipcRenderer.on('Pi-Player Settings', (event) => {
     $("#divTrackListing").css("display", "none");
@@ -334,7 +334,7 @@ $(document).on('click', '#btnRewind', function () {
 $(document).on('click', '#btnMood', function () {
     moodShuffle()
 });
-
+/*
 $(document).on('click', '#btnNewReleases', function () {
     btnNewReleases()
 });
@@ -368,7 +368,7 @@ function btnNewReleases() {
         return
     }
 }
-
+*/
 async function moodShuffle() {
     var mood = $('#sltMood').val();
     // Select all artist's albums from the database
@@ -448,6 +448,7 @@ $(document).on('click', '#menuHome', function (event) {
     $('#spnAtoZmenu').css('display', 'inline')
     var link = $(this).attr('href');
     global_SrnWidth = $(window).width();
+
     // Reset drop down arrow graphic buttons and global variable
     $("button#btnAddedShow").css("background", "url(./graphics/expand_large.png) no-repeat");
     global_AddedExpand = false;
@@ -455,6 +456,9 @@ $(document).on('click', '#menuHome', function (event) {
     global_PlayedExpand = false;
     $("button#btnmostplayedshow").css("background", "url(./graphics/expand_large.png) no-repeat");
     global_MostPlayedExpand = false;
+    $("button#btnNewReleasesShow").css("background", "url(./graphics/expand_large.png) no-repeat");
+    global_NewReleasesExpand = false;
+
     // Enable btnSync
     $("#btnSync").prop("disabled", false);
     // Load home page

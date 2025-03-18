@@ -3,9 +3,8 @@
     "",
     "\\app",
     "\\app\\css",
-    "\\app\\js",
-    "\\docs"
+    "\\app\\html"
   ],
-  "SelectedNode": "\\app\\js\\discography.js",
+  "SelectedNode": "\\app\\html\\newmusic.html",
   "PreviewInSolutionExplorer": false
 }

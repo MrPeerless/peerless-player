@@ -1,4 +1,7 @@
 $(function () {
+    // Check if online
+    var connection = navigator.onLine;
+
     // Set variable for overlay class on album image
     var overlay = "overlay";
     if (global_ArtIconShape == "round") {
@@ -246,6 +249,161 @@ $(function () {
         var sql = "SELECT trackID FROM track";
         var tracks = await dBase.all(sql);
         shuffleArray(tracks)
+    }
+
+    // If online populate New Releases
+    if (connection) {
+        $("#spnNewReleases").append('<h1 style="margin-left: 0.0em;"><button id="btnNewReleasesShow"></button> New Album Releases</h1>');
+        newReleases();
+    }
+    
+    function newReleases() {
+        // Set search dates for last 40 days
+        var today = new Date();
+        var pastDate = new Date(new Date().setDate(today.getDate() - 40));
+        today = today.toISOString().split('T')[0];        
+        pastDate = pastDate.toISOString().split('T')[0];
+
+        // If starting up app query Musicbrainz for new releases
+        if (global_newReleases.length == 0) {
+            newReleasesQuery(today, pastDate).then(processNewReleases);
+        }
+        else {
+            processNewReleases();
+        }
+
+        // Function to send ajax query to Musicbrainz server to get list of new releases
+        function newReleasesQuery(today, pastDate) {
+            // Artist search url
+            var url = musicbrainzUrl + "release/?query=date:[" + pastDate + " TO " + today + "] AND country:(XE OR GB) AND format:cd"
+            // Encode url
+            var encodedUrl = encodeURI(url);
+            return $.ajax({
+                url: encodedUrl,
+                error: function (textStatus) {
+                    ajaxError(textStatus.statusText, textStatus.status, url)
+                }
+            });
+        }
+
+        // Function to process data recieved from Musicbrainz or already stored in global variable
+        function processNewReleases(xml) {
+            // Variable for New Releaeses list
+            var ul = $('#ulNewReleases');
+            var counter = 1;
+
+            // If global_newReleases is empty populate from xml file
+            if (global_newReleases.length == 0) {
+                $(xml).find('release').each(function () {
+                    var $release = $(this);
+                    var releaseGroupId = $release.find('release-group').attr('id');
+                    var releaseTitle = $release.find('title').eq(0).text();
+                    var artistName = $release.find('name').eq(0).text();
+                    var releaseDate = $release.find('date').eq(0).text();
+                    var releaseType = $release.find('release-group').attr('type');
+                    // Populate global_newReleases array
+                    global_newReleases.push({ id: releaseGroupId, type: releaseType, date: releaseDate, title: releaseTitle, artist: artistName, artUrl: '' })
+                });
+                // Sort newReleases into date order
+                global_newReleases.sort(function (a, b) {
+                    return new Date(b.date) - new Date(a.date);
+                });
+            }
+
+            // Loop through array and populate list of new releases
+            global_newReleases.forEach(function (newRelease) {
+                if (newRelease.type == "Album" || newRelease.type == "EP") {
+                    var elementLength = newRelease.date.length;
+                    // Check that a full release date is available
+                    if (elementLength == 10) {
+                        var searchAlbum = newRelease.title.replace(/\s+/g, '+')
+                        var searchArtist = newRelease.artist.replace(/\s+/g, '+')
+                        var searchLink = musicYoutubeUrl + 'search?q=album+' + searchAlbum + '+' + searchArtist
+                        
+                        // Visible first row of new releases
+                        if (counter <= totalFirstRow) {
+                            // Increment counter for list items
+                            counter += 1;
+                            // Small art icons
+                            if (global_ArtIconSize == "small") {
+                                $(ul).attr('class', 'albumDisplay');
+                                var li = $('<li><a><img class="' + global_ArtIconShape + '"><span></span></a></li>');
+                                li.find('a').attr('href', searchLink);
+                                li.find('a').attr('target', '_blank');
+                                li.find('span').append('<b><br>' + newRelease.title + '</b><br>' + newRelease.artist + '<br>' + newRelease.date);
+                                li.appendTo(ul);
+                            }
+                            // Large art icons
+                            else {
+                                $(ul).attr('class', 'albumDisplayLarge');
+                                var li = $('<li><a><img class="' + global_ArtIconShape + '"><div class="' + overlay + '"><div class="textAlbum"><span></span></div></div></a></li>');
+                                li.find('a').attr('href', searchLink);
+                                li.find('a').attr('target', '_blank');
+                                li.find('span').append('<b><br>' + newRelease.title + '</b><br>' + newRelease.artist + '<br>' + newRelease.date);
+                                li.appendTo(ul);
+                            }
+                        }
+                        // Hidden rows of list
+                        else {
+                            // Small art icons
+                            if (global_ArtIconSize == "small") {
+                                $(ul).attr('class', 'albumDisplay');
+                                var li = $('<li class="newReleasesHidden"><a><img class="' + global_ArtIconShape + '"><span></span></a></li>');
+                                li.find('a').attr('href', searchLink);
+                                li.find('a').attr('target', '_blank');
+                                li.find('span').append('<br><b>' + newRelease.title + '</b><br>' + newRelease.artist + '<br>' + newRelease.date);
+                                li.appendTo(ul);
+                            }
+                            // Large art icons
+                            else {
+                                $(ul).attr('class', 'albumDisplayLarge');
+                                var li = $('<li class="newReleasesHidden"><a><img class="' + global_ArtIconShape + '"><div class="' + overlay + '"><div class="textAlbum"><span></span></div></div></a></li>');
+                                li.find('a').attr('href', searchLink);
+                                li.find('a').attr('target', '_blank');
+                                li.find('span').append('<br><b>' + newRelease.title + '</b><br>' + newRelease.artist + '<br>' + newRelease.date);
+                                li.appendTo(ul);
+                            }
+                        }
+
+                        // Functions to get cover art for new releases
+                        // If no cover art URL in array send ajax query
+                        if (newRelease.artUrl == '') {
+                            coverartQuery(newRelease.id).then(processCoverArt);
+                        }
+                        // Use cover art URL in array
+                        else {
+                            li.find('img').attr('src', newRelease.artUrl);
+                        }
+
+                        // Ajax call to get URL for cover art
+                        function coverartQuery(query) {
+                            // Artist search url
+                            var url = coverartArchiveUrl + "release-group/" + query
+                            return $.ajax({
+                                url: url,
+                                error: function (request, status, error) {
+                                    console.log("COVER ART ERROR :: " + request.responseText);
+                                    // If no cover art found remove li and change class of li so it is visible
+                                    li.remove();
+                                    $('li:nth-child(' + totalFirstRow + ')').removeClass('newReleasesHidden')
+                                }
+                            });
+                        }
+
+                        // Add coverart to list items
+                        function processCoverArt(response) {
+                            // Get cover art and add thumbnail url
+                            coverArt = response['images'][0]['image']
+                            coverArt = coverArt.substring(0, coverArt.length - 4);
+                            coverArt = coverArt + "-250.jpg";
+                            li.find('img').attr('src', coverArt);
+                            // Add cover art URL to array
+                            newRelease.artUrl = coverArt;
+                        }
+                    }
+                }
+            });           
+        }
     }
 
     backgroundChange();
