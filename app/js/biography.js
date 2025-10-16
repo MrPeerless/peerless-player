@@ -46,9 +46,8 @@ $(function () {
         $(xml).find('artist').each(function () {
             var $artist = $(this);
             var matchScore = Number($artist.attr('ns2:score'))
-            if (matchScore >= "90") {
+            if (matchScore >= "70") {
                 var artistName = $artist.find('name').eq(0).text();
-                artistID = $artist.attr("id");
 
                 // Check if artist name is in xml result
                 var checkArtist = artist.replace(/\W/g, '');
@@ -133,10 +132,17 @@ $(function () {
                                         wikidata = $link.find('target').text();
                                     }
                                 });
-                                wikidata = wikidata.split("wiki/");
-                                wikiID = wikidata[1];
-                                // Call ajax function wikiUrlQuery
-                                wikiUrlQuery(wikiID).done(processWikiUrlQuery);
+
+                                if (wikidata != "") {
+                                    wikidata = wikidata.split("wiki/");
+                                    wikiID = wikidata[1];
+                                    // Call ajax function wikiUrlQuery
+                                    wikiUrlQuery(wikiID).done(processWikiUrlQuery);
+                                }
+                                else {
+                                    noResult();
+                                    return false;
+                                }
 
                                 // Function to send ajax xml query to Wikidata server to get URLs
                                 function wikiUrlQuery(query) {
@@ -337,12 +343,12 @@ $(function () {
                                 }
                             }
                         }
+                        return false;
                     }
                     // No information found on Musicbrainz
                     else {
                         noResult();
-                    }
-                    return false;
+                    }              
                 }
             }
         });

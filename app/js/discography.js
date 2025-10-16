@@ -37,9 +37,8 @@ $(function () {
             var discographyDetails = "";
             var $artist = $(this);
             var matchScore = Number($artist.attr('ns2:score'))
-            if (matchScore >= "90") {
+            if (matchScore >= "70") {
                 var artistName = $artist.find('name').eq(0).text();
-                artistID = $artist.attr("id");
 
                 // Check if artist name is in xml result
                 var checkArtist = artist.replace(/\W/g, '');
@@ -135,6 +134,12 @@ $(function () {
                             if (numberReleases > 100) {
                                 numberReleases = 100;
                             }
+
+                            if (numberReleases == 0) {
+                                $("#discographyCount").append("No albums found.");
+                                return;
+                            }
+
                             var i = 0;
                             // Loop through each release-group and get data
                             $(xml).find('release-group').each(function () {
@@ -192,13 +197,17 @@ $(function () {
                                                 url: url,
                                                 error: function (request, status, error) {
                                                     console.log("COVER ART ERROR :: " + request.responseText);
-                                                    li.remove();
-                                                    i -= 1;
+                                                    console.log("COVER ART ERROR :: " + error);
+                                                    //li.remove();
+                                                    //i -= 1;
+                                                    // If no artwork found use default image
+                                                    li.find('img').attr('src', "./graphics/playlist_background.png");
                                                 }
                                             });
                                         }
                                         // Add coverart to list items
                                         function processAlbum(response) {
+                                            console.log("cover art response :: " + response)
                                             // Get cover art and add thumbnail url
                                             coverArt = response['images'][0]['image']
                                             coverArt = coverArt.substring(0, coverArt.length - 4);
@@ -212,23 +221,23 @@ $(function () {
                                 }
                             });
                         }
-                    }  
+                    }
+                    // Calculate width of divAlbumList so that it fills screen width
+                    var winWidth = $(window).width();
+                    var divContentWidth = $("#divContent").width();
+                    var divSidemenu;
+
+                    if ($("#divSideMenu").is(":visible")) {
+                        divSidemenu = 35;
+                    }
+                    else {
+                        divSidemenu = 240;
+                    }
+                    // Set width for divAlbumList
+                    $("#divDiscography").css("width", winWidth - (divSidemenu + divContentWidth));
+                    return false;
                 }
             }
-
-            // Calculate width of divAlbumList so that it fills screen width
-            var winWidth = $(window).width();
-            var divContentWidth = $("#divContent").width();
-            var divSidemenu;
-
-            if ($("#divSideMenu").is(":visible")) {
-                divSidemenu = 35;
-            }
-            else {
-                divSidemenu = 240;
-            }
-            // Set width for divAlbumList
-            $("#divDiscography").css("width", winWidth - (divSidemenu + divContentWidth));
         });
         if (!artistID) {
             noResult();

@@ -333,7 +333,7 @@ ipcRenderer.on('Help Release', (event) => {
     $('#okModalText').empty();
     $(".modalFooter").empty();
     $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>Release Notes Version: ' + global_Version + '</h2>');
-    $('#okModalText').append("<div class='modalIcon'><img src='./graphics/peerless_player_thumb.png'></div><p><b>Released 19.11.2024</b><br>1. Bug fixed in artist links query to search all names returned from Musicbrainz for a match.<br>2. Discography and recommendation searches of Spotify database improved by removing non alpha-numeric characters from search string.<br>3. Bug fixed in Biography page to search all matches returned by Musicbrainz for a match.<br>4. Recommended playlist bug fixed where if only 1 recent genre or mood found caused a database error.<br>5. Deprecated jQuery functions updated.<br></p >");//<br> &nbsp
+    $('#okModalText').append("<div class='modalIcon'><img src='./graphics/peerless_player_thumb.png'></div><p><b>Released 16.10.2025</b><br>1. Replaced Spotify data from Discography page with data from Musicbrainz and linked to YouTube Music.<br>2. Adding or editing music in the database, there are now fields to enter Energy, Valence and Tempo manually after Spotify stopped access to their server.<br>3. Removed links to X/Twitter from artist links.<br>4. Removed the music recommendation button because Spotify have stopped access to their server.<br>5. Moved the New Releases to the Home page using data from Musicbrainz instead of Spotify.<br></p >");//<br> &nbsp
     var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
     $('.modalFooter').append(buttons);
     $("#btnOkModal")[0].focus();

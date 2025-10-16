@@ -254,13 +254,13 @@ $(function () {
     // If online populate New Releases
     if (connection) {
         $("#spnNewReleases").append('<h1 style="margin-left: 0.0em;"><button id="btnNewReleasesShow"></button> New Album Releases</h1>');
-        newReleases();
+          newReleases();
     }
     
     function newReleases() {
         // Set search dates for last 40 days
         var today = new Date();
-        var pastDate = new Date(new Date().setDate(today.getDate() - 40));
+        var pastDate = new Date(new Date().setDate(today.getDate() - 60));
         today = today.toISOString().split('T')[0];        
         pastDate = pastDate.toISOString().split('T')[0];
 
@@ -288,7 +288,8 @@ $(function () {
 
         // Function to process data recieved from Musicbrainz or already stored in global variable
         function processNewReleases(xml) {
-            // Variable for New Releaeses list
+            // Variable for New Releases list
+            var newReleases = [];
             var ul = $('#ulNewReleases');
             var counter = 1;
 
@@ -301,13 +302,17 @@ $(function () {
                     var artistName = $release.find('name').eq(0).text();
                     var releaseDate = $release.find('date').eq(0).text();
                     var releaseType = $release.find('release-group').attr('type');
-                    // Populate global_newReleases array
-                    global_newReleases.push({ id: releaseGroupId, type: releaseType, date: releaseDate, title: releaseTitle, artist: artistName, artUrl: '' })
+                    // Populate newReleases array
+                    newReleases.push({ id: releaseGroupId, type: releaseType, date: releaseDate, title: releaseTitle, artist: artistName, artUrl: '' })
                 });
                 // Sort newReleases into date order
-                global_newReleases.sort(function (a, b) {
+                newReleases.sort(function (a, b) {
                     return new Date(b.date) - new Date(a.date);
                 });
+
+                // Remove duplicates from newReleases and add unique array to global_newReleases variable
+                const key = 'id';
+                global_newReleases = [...new Map(newReleases.map(item => [item[key], item])).values()]
             }
 
             // Loop through array and populate list of new releases

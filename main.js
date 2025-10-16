@@ -1031,7 +1031,7 @@ ipcMain.on('spotify_discography', (event, data) => {
     });
 });
 */
-
+/*
 //#########################
 // SOUNDSTAT.INFO CODE
 //-------------------------
@@ -1072,6 +1072,7 @@ ipcMain.on('soundStat_getAudioFeatures', (event, data) => {
         });
     });
 });
+*/
 
 //#########################
 // READ AUDIO FILE METADATA
