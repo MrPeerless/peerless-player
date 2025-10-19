@@ -65,6 +65,7 @@ function processDataArtistID(xml) {
                 artistID = $artist.attr("id");
                 // Call ajax function artistLinksQuery
                 artistLinksQuery(artistID).done(processLinksQuery);
+                return false;
             }
         }
     });

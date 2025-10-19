@@ -3,8 +3,9 @@
     "",
     "\\app",
     "\\app\\css",
+    "\\app\\html",
     "\\docs"
   ],
-  "SelectedNode": "\\app\\graphics",
+  "SelectedNode": "\\app\\html\\userguide.html",
   "PreviewInSolutionExplorer": false
 }
