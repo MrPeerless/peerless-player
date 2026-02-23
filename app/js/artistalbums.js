@@ -130,16 +130,16 @@ $(function () {
                 li.find('img').attr('src', artworkSource);
                 li.find('a').attr('href', albumLink);
                 if (global_AlbumSort == "most") {
-                    li.find('span').append('<br><b>' + albumName + '<br>No. ' + i);
+                    li.find('span').append('<br><b>' + albumName + '</b><br>No. ' + i);
                 }
                 else if (global_AlbumSort == "added") {
-                    li.find('span').append('<br><b>' + albumName + '<br>' + dateAdd);
+                    li.find('span').append('<br><b>' + albumName + '</b><br>' + dateAdd);
                 }
                 else if (global_AlbumSort == "release") {
-                    li.find('span').append('<br><b>' + albumName + '<br>' + row.releaseDate);
+                    li.find('span').append('<br><b>' + albumName + '</b><br>' + row.releaseDate);
                 }
                 else if (global_AlbumSort == "played") {
-                    li.find('span').append('<br><b>' + albumName + '<br>' + lastPlayed);
+                    li.find('span').append('<br><b>' + albumName + '</b><br>' + lastPlayed);
                 }
                 else {
                     li.find('span').append('<br><b>' + albumName + '</b><br>' + row.releaseDate);

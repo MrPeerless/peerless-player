@@ -1,11 +1,8 @@
 {
   "ExpandedNodes": [
     "",
-    "\\app",
-    "\\app\\css",
-    "\\app\\html",
-    "\\docs"
+    "\\app"
   ],
-  "SelectedNode": "\\app\\html\\userguide.html",
+  "SelectedNode": "\\main.js",
   "PreviewInSolutionExplorer": false
 }

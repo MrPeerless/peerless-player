@@ -258,24 +258,33 @@ $(function () {
     }
     
     function newReleases() {
-        // Set search dates for last 40 days
+        // Set variables
+        var newReleases = [];
+        var ul = $('#ulNewReleases');
+        var offset = 0;
+        var callsProcessed = 0;
+        var counter = 1;
+        var count = 0;
+        var numberCalls = 0;
+
+        // Set search dates for last 50 days
         var today = new Date();
-        var pastDate = new Date(new Date().setDate(today.getDate() - 60));
+        var pastDate = new Date(new Date().setDate(today.getDate() - 50));
         today = today.toISOString().split('T')[0];        
         pastDate = pastDate.toISOString().split('T')[0];
 
         // If starting up app query Musicbrainz for new releases
         if (global_newReleases.length == 0) {
-            newReleasesQuery(today, pastDate).then(processNewReleases);
+            newReleasesQuery(today, pastDate, offset).then(processLoops);
         }
         else {
-            processNewReleases();
+            populateNewReleases();
         }
 
         // Function to send ajax query to Musicbrainz server to get list of new releases
-        function newReleasesQuery(today, pastDate) {
-            // Artist search url
-            var url = musicbrainzUrl + "release/?query=date:[" + pastDate + " TO " + today + "] AND country:(XE OR GB) AND format:cd"
+        function newReleasesQuery(today, pastDate, offset) {
+            // Releases search url
+            var url = musicbrainzUrl + "release/?query=date:[" + pastDate + " TO " + today + "] AND country:(XE OR GB) AND format:cd&offset=" + offset + "&limit=100"
             // Encode url
             var encodedUrl = encodeURI(url);
             return $.ajax({
@@ -286,15 +295,22 @@ $(function () {
             });
         }
 
-        // Function to process data recieved from Musicbrainz or already stored in global variable
-        function processNewReleases(xml) {
-            // Variable for New Releases list
-            var newReleases = [];
-            var ul = $('#ulNewReleases');
-            var counter = 1;
+        // Functions to process data recieved from Musicbrainz
+        function processLoops(xml) {
+            // Find number of items returned
+            count = $(xml).find('release-list').attr('count');
+            // Set number of time to loop
+            var offsetLoop = Math.ceil(count / 100);
 
-            // If global_newReleases is empty populate from xml file
-            if (global_newReleases.length == 0) {
+            // Loop throughitems returned making api calls by increasing offset by 100 each loop
+            for (var i = 0; i < offsetLoop; i++) {
+                newReleasesQuery(today, pastDate, offset).then(processNewReleases);
+                offset += 100;
+                numberCalls += 1;
+            }
+
+            function processNewReleases(xml) {
+                callsProcessed += 1;
                 $(xml).find('release').each(function () {
                     var $release = $(this);
                     var releaseGroupId = $release.find('release-group').attr('id');
@@ -313,8 +329,16 @@ $(function () {
                 // Remove duplicates from newReleases and add unique array to global_newReleases variable
                 const key = 'id';
                 global_newReleases = [...new Map(newReleases.map(item => [item[key], item])).values()]
-            }
 
+                // When last api call processed call function to show new releases
+                if (callsProcessed >= offsetLoop) {
+                    populateNewReleases();
+                }
+            }
+        }
+
+        // Display new releases album art and details in home page
+        function populateNewReleases() {
             // Loop through array and populate list of new releases
             global_newReleases.forEach(function (newRelease) {
                 if (newRelease.type == "Album" || newRelease.type == "EP") {
@@ -324,7 +348,7 @@ $(function () {
                         var searchAlbum = newRelease.title.replace(/\s+/g, '+')
                         var searchArtist = newRelease.artist.replace(/\s+/g, '+')
                         var searchLink = musicYoutubeUrl + 'search?q=album+' + searchAlbum + '+' + searchArtist
-                        
+
                         // Visible first row of new releases
                         if (counter <= totalFirstRow) {
                             // Increment counter for list items
@@ -387,7 +411,7 @@ $(function () {
                             return $.ajax({
                                 url: url,
                                 error: function (request, status, error) {
-                                    console.log("COVER ART ERROR :: " + request.responseText);
+                                    console.log("COVER ART ERROR :: " + error.responseText);
                                     // If no cover art found remove li and change class of li so it is visible
                                     li.remove();
                                     $('li:nth-child(' + totalFirstRow + ')').removeClass('newReleasesHidden')
@@ -407,7 +431,7 @@ $(function () {
                         }
                     }
                 }
-            });           
+            });
         }
     }
 
