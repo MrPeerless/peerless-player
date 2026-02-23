@@ -20,7 +20,7 @@
     "jquery": "^3.6.3",
     "jquery-validation": "^1.20.0",
     "jsmediatags": "^3.9.7",
-    "lodash": "^4.17.21",
+    "lodash": "^4.17.23",
     "request": "^2.88.2",
     "sanitize-html": "^2.12.1",
     "sqlite3": "^5.1.4",
