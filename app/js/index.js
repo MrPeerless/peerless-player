@@ -333,7 +333,7 @@ ipcRenderer.on('Help Release', (event) => {
     $('#okModalText').empty();
     $(".modalFooter").empty();
     $('.modalHeader').append('<span id="btnXModal">&times;</span><h2>Release Notes Version: ' + global_Version + '</h2>');
-    $('#okModalText').append("<div class='modalIcon'><img src='./graphics/peerless_player_thumb.png'></div><p><b>Released 16.10.2025</b><br>1. Replaced Spotify data from Discography page with data from Musicbrainz and linked to YouTube Music.<br>2. Adding or editing music in the database, there are now fields to enter Energy, Valence and Tempo manually after Spotify stopped access to their server.<br>3. Removed links to X/Twitter from artist links.<br>4. Removed the music recommendation button because Spotify have stopped access to their server.<br>5. Moved the New Releases to the Home page using data from Musicbrainz instead of Spotify.<br></p >");//<br> &nbsp
+    $('#okModalText').append("<div class='modalIcon'><img src='./graphics/peerless_player_thumb.png'></div><p><b>Released 24.02.2026</b><br>1. Update to New Releases to page through search results from Musicbrainz using offset.<br>2. Various security updates on dependencies.<br></p >");//<br> &nbsp
     var buttons = $("<button class='btnContent' id='btnOkModal'>OK</button>");
     $('.modalFooter').append(buttons);
     $("#btnOkModal")[0].focus();

@@ -120,6 +120,7 @@
 
 **** VERSION 0.6.3 UPDATES ****
 
-
+1. Update to New Releases to page through search results from Musicbrainz using offset.
+2. Various security updates on dependencies.
 
 
