@@ -35,18 +35,170 @@ $(document).on('click', '#btnArtworkAlbum', function (event) {
     // If connected to internet
     if (connection) {
         // Set variables
+        var frontFound = false;
+        var backFound = false;
         var artist = $("#inpArtistName").val();
         var album = $("#inpAlbumName").val();       
         $("#frontArtwork").html('<img width="15" height="15" src="./graphics/cross.png"/>');
         $("#backArtwork").html('<img width="15" height="15" src="./graphics/cross.png"/>');
+        var albumCheck = album.replace(/[.,;:?()'\-\[\]\/]/g, ' ')
+
+        // Remove any multiple spaces
+        albumCheck = albumCheck.replace(/  +/g, ' ')
+        // Remove any spaces at start and end
+        albumCheck = albumCheck.trim();
+        albumCheck = albumCheck.trimEnd();
+        albumCheck = albumCheck.toLowerCase();
+
+        var artistMBID = $("#inpArtistMBID").val();
+        var artist = $("#inpArtistName").val();
+
+        if (artistMBID != "") {
+            // Call ajax function artistIDQuery
+            releaseQueryArtist(artistMBID).done(dataReleaseProcess);
+
+            // Function to send ajax xml query to Musicbrainz server
+            function releaseQueryArtist(query) {
+                var queryArtistID = query;
+                var url;
+                // Artist search url
+                if (importType == "single") {
+                    url = musicbrainzUrl + "release-group?artist=" + queryArtistID + "&limit=100&type=single"
+                }
+                else {
+                    url = musicbrainzUrl + "release-group?artist=" + queryArtistID + "&limit=100&type=album|ep"
+                }
+                return $.ajax({
+                    url: url,
+                    error: function (textStatus) {
+                        ajaxErrorDE(textStatus.statusText, textStatus.status, url)
+                    }
+                });
+            }
+
+            // Function to process data from received xml file searching for releaseQueryArtist
+            function dataReleaseProcess(xml) {
+                // Get number of releases from xml file
+                var $releaseCount = $(xml).find('release-group-list');
+                var count = $releaseCount.attr('count')
+                var checkCount = parseInt(count)
+                if (checkCount > 100) {
+                    count = "100";
+                }
+
+                // Check if any albums found
+                if (count != "0") {
+                    var releaseFound = false;
+                    // Loop through each release-group and get data
+                    $(xml).find('release-group').each(function () {
+                        var $release = $(this);
+                        var title = $release.find('title').text().toLowerCase();
+                        // Remove any punctuation to aid matching
+                        title = title.replace(/[.,;:?()'\-\[\]\/]/g, ' ')
+                        // Remove  non standard unicode charcters from MB xml result
+                        // Remove unicode char u-2019 single comma quotation mark
+                        title = title.replace(/\u2019/g, ' ')
+                        // Remove unicode char u-2013 en dash
+                        title = title.replace(/\u2013/g, ' ')
+                        // Remove unicode char u-2010 hyphen
+                        title = title.replace(/\u2010/g, ' ')
+                        // Remove any multiple spaces
+                        title = title.replace(/  +/g, ' ')
+                        // Remove any spaces at start and end
+                        title = title.trim();
+                        title = title.trimEnd();
+
+                        if (albumCheck.startsWith(title)) {
+                            releaseFound = true;
+                            releaseGroupID = $release.attr('id')
+
+                            // Get cover artwork
+                            // Call ajax function releaseIDQuery
+                            releaseIDQuery(releaseGroupID).done(dataReleaseIDProcess);
+
+                            // Function to send ajax xml query to Musicbrainz server
+                            function releaseIDQuery(query) {
+                                var queryreleaseGroupID = query;
+                                // Artist search url
+                                var url = musicbrainzUrl + "release?release-group=" + queryreleaseGroupID
+                                return $.ajax({
+                                    url: url,
+                                    error: function (textStatus) {
+                                        ajaxErrorDE(textStatus.statusText, textStatus.status, url)
+                                    }
+                                });
+                            }
+
+                            // Function to process data from received xml file searching for releaseIDQuery
+                            function dataReleaseIDProcess(xml) {
+                                // Check if art url already found from spotify
+                                var coverArtUrl = $("#inpEditCoverArtURL").val();
+                                if (coverArtUrl) {
+                                    frontFound = true;
+                                }
+
+                                $(xml).find('release').each(function () {
+                                    var $release = $(this);
+                                    var releaseID = $release.attr('id');
+                                    var title = $release.find('title').text().toLowerCase();
+                                    // Remove any punctuation to aid matching
+                                    title = title.replace(/[.,;:?()'\-\[\]\/]/g, ' ')
+                                    // Remove  non standard unicode charcters from MB xml result
+                                    // Remove unicode char u-2019 single comma quotation mark
+                                    title = title.replace(/\u2019/g, ' ')
+                                    // Remove unicode char u-2013 en dash
+                                    title = title.replace(/\u2013/g, ' ')
+                                    // Remove unicode char u-2010 hyphen
+                                    title = title.replace(/\u2010/g, ' ')
+                                    // Remove any multiple spaces
+                                    title = title.replace(/  +/g, ' ')
+                                    // Remove any spaces at start and end
+                                    title = title.trim();
+                                    title = title.trimEnd();
+
+                                    var front = $release.find('front').text();
+                                    var back = $release.find('back').text();
+                                    if (albumCheck.startsWith(title)) {
+                                        // Back cover art
+                                        if (back == "true" && backFound == false) {
+                                            backFound = true;
+                                            var backArt = "https://coverartarchive.org/release/" + releaseID + "/back-1200"
+                                            $("#inpEditBackArtURL").val(backArt);
+                                            $("#backArtwork").html('<img width="15" height="15" src="./graphics/tick.png"/>');
+                                        }
+
+                                        if (front == "true" && frontFound == false) {
+                                            // Front cover art
+                                            frontFound = true;
+                                            var coverArt = "https://coverartarchive.org/release/" + releaseID + "/front-1200"
+
+                                            $("#imgCoverArt").attr('src', coverArt);
+                                            $("#inpEditCoverArtURL").val(coverArt);
+                                            coverArtUrl = $("#inpEditCoverArtURL").val();
+
+                                            var artFilePath = MUSIC_PATH + artist + "/" + album + "/tempArt.jpg"
+                                            $("#frontArtwork").html('<img width="15" height="15" src="./graphics/tick.png"/>');
+                                            // Send message to main.js to save and tempArt image
+                                            ipcRenderer.send("save_temp_artwork", [artFilePath, coverArtUrl]);
+                                        }
+                                    }
+                                });
+                            }
+                            return false;
+                        }
+                    });
+                }
+            }
+        }
+
 
         // Replace encoded &amp with &
-        artist = artist.replace(/&amp;/g, '&');
-        album = album.replace(/&amp;/g, '&');
+        //artist = artist.replace(/&amp;/g, '&');
+        //album = album.replace(/&amp;/g, '&');
 
         // Send IPC to search Spotify for album and artist
-        var query = "album:" + album + " artist:" + artist
-        ipcRenderer.send("spotify_search", [query, album, artist, "artwork"])
+        //var query = "album:" + album + " artist:" + artist
+        //ipcRenderer.send("spotify_search", [query, album, artist, "artwork"])
     }
     else {
         // If not connected display modal box warning
@@ -63,7 +215,7 @@ $(document).on('click', '#btnArtworkAlbum', function (event) {
         return
     }
 });
-
+/*
 ipcRenderer.on("from_spotify_search_artwork", (event, data) => {
     var frontFound = false;
     var backFound = false;
@@ -257,6 +409,7 @@ ipcRenderer.on("from_spotify_search_artwork", (event, data) => {
         }
     }
 });
+*/
 
 //##################
 //### METADATA   ###
@@ -511,7 +664,7 @@ ipcRenderer.on("from_spotify_getArtist", (event, data) => {
         }
     });
 });
-/*
+
 // Receive IPC search response Spotify for album and artist
 ipcRenderer.on("from_spotify_search_edit", (event, data) => {
     var spotifyResponse = data[0];
@@ -565,7 +718,7 @@ ipcRenderer.on("from_spotify_search_edit", (event, data) => {
     }
     // The rest of the metadata received from Spotify is updated in the databaseadd.js file reusing the import code.
 });
-*/
+
 
 //############################
 //## Save Album to Database ##
@@ -671,6 +824,7 @@ $(document).on('click', '#btnSaveAlbum', function (event) {
                 }
 
                 // COVER ART
+                // Front Cover Art
                 // Check first 4 chars of coverArtUrl to see if it is a URL or filepath
                 var check = coverArtUrl.substring(0, 4);
                 // CoverArtUrl is a URL
@@ -695,6 +849,7 @@ $(document).on('click', '#btnSaveAlbum', function (event) {
                 }
 
                 // Back cover art
+                // saves a URL but not a filepath. Also URL does not show in image box on page
                 var backCoverArt = $('#inpEditBackArtURL').val();
                 if (backCoverArt) {
                     var artFilePath = MUSIC_PATH + artist + "/" + album + "/backCover.jpg";
@@ -798,6 +953,20 @@ ipcRenderer.on("edit_artwork", (event, data) => {
     $("#inpEditCoverArtURL").val(coverArt);
 });
 
+// Manual add back artwork
+// Click event from clicking on back artwork in add album
+$(document).on('click', '#editAlbumBack', function (event) {
+    event.preventDefault();
+    // Send message to main.js to open dialog box
+    ipcRenderer.send("open_file_dialog", ["edit_artworkBack", "Select Album Back Artwork Image File", "C:\\", "Select File", [{ name: 'Images', extensions: ['jpg'] }], "openFile"]);
+});
+
+// Response from selecting manual artwork browse dialog box
+ipcRenderer.on("edit_artworkBack", (event, data) => {
+    var coverArt = data[0];
+    $("#imgBackArt").attr('src', coverArt);
+    $("#inpEditBackArtURL").val(coverArt);
+});
 
 //###########################
 // DELETE ALBUM FROM DATABASE

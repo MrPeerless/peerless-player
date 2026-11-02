@@ -1422,7 +1422,8 @@ $(function () {
 
     // Add backcover filepath to backcover image src.
     ipcRenderer.on('from_check_backcover', (event, data) => {
-        var backcoverSource = data[0];
+        var modifiedDate = Date().toLocaleString();
+        var backcoverSource = data[0] + "?modified=" + modifiedDate
         // Add title to image on mouseover
         $("#artModalImage").prop('title', 'Click for back cover');
         $("#artModalImage").css('cursor', 'pointer');

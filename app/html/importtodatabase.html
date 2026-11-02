@@ -2,14 +2,23 @@
     <form class="frmDatabase" id="frmAdd" enctype="multipart/form-data">
         <span class="btnX" id="btnImportCancel">&times;</span>
         <div class="divAlbumHeader">
-            <a id="addAlbum" title="Click to manually select image file">
-                <img id="imgCoverArt" width="200" height="200" src="./graphics/spacer.png" alt="Cover Art NOT Found">
+            <a id="addAlbum" title="Click to manually select front cover image">
+                <img id="imgCoverArt" width="200" height="200" src="./graphics/spacer.png" alt="Front Cover Art NOT Found">
             </a>
         </div>
-        <div class="divAlbumImportText">
-            <h1 style="margin-right: 1em;">Adding New Music to Database<br />&nbsp;<br /></h1>
+        <div class="divAlbumHeader">
+            <a id="addAlbumBack" title="Click to manually select back cover image">
+                <img id="imgBackArt" width="200" height="200" src="./graphics/spacer.png" alt="Back Cover Art NOT Found">
+            </a>
+        </div>
+
+        <div class="divAlbumText">
+            <h1>Adding New Music to Database<br /></h1>
             <h2 id="addToDatabaseDetails"></h2>
-            <p id="addToDatabaseInfo"></p>
+        </div>
+
+        <div id="divDatabaseBtns">
+            <p>&#x2022 Blank metadata fields can also be changed or completed later when editing the album.<br>&#x2022 The only required fields are Release Date and Genre.<br></p>
             <button class="btnTrackListing" id="btnImportAlbum">Import</button>
             <button class="btnTrackListing" id="btnImportCancel">Cancel</button>
             <p>&nbsp;<br></p>

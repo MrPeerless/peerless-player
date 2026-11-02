@@ -374,7 +374,6 @@ ipcMain.on('save_temp_artwork', (event, message) => {
 ipcMain.on('save_artXlarge_file', (event, message) => {
     var tempArtPath = message[0];
     var artFilePath = message[1];
-
     if (fs.existsSync(tempArtPath)) {
         // Check size of image tempArt file to check it downloaded
         var stats = fs.statSync(tempArtPath)
@@ -393,7 +392,7 @@ ipcMain.on('save_artXlarge_file', (event, message) => {
     }
 });
 
-// Save back Cover Art from URL
+// Save back Cover Art
 ipcMain.on('save_backCover_art', (event, message) => {
     var artFilePath = message[0];
     var coverArtUrl = message[1];
@@ -401,21 +400,18 @@ ipcMain.on('save_backCover_art', (event, message) => {
     if (fs.existsSync(artFilePath)) {
         fs.unlinkSync(artFilePath);
     }
-    // Function to save art image
-    var saveImage = function (url, fileName, callback) {
-        request(url).pipe(fs.createWriteStream(fileName)).on('close', callback);
-    }
-    // Call function to save art image
+
+    // Save back cover art image
     // If there is cover art found on server
     if (coverArtUrl != "") {
         try {
-            saveImage(coverArtUrl, artFilePath, function () {
-                // save image
-                Jimp.read(artFilePath).then(tpl => (tpl.clone().write(artFilePath)))
+            Jimp.read(coverArtUrl, function (err, image) {
+                //if (err) throw err;
+                image.write(artFilePath);
             });
         }
-        catch{
-            console.log("Error saving back image.")
+        catch {
+            console.log("Error saving back cover image.")
         }
     }
 });
@@ -691,6 +687,7 @@ autoUpdater.on('update-downloaded', () => {
     win.webContents.send('update_downloaded');
 });
 
+/*
 //#############
 // SPOTIFY CODE
 //-------------
@@ -768,6 +765,7 @@ ipcMain.on('spotify_search', (event, data) => {
     });
 });
 
+
 // Get artist details in order to get artist genres
 ipcMain.on('spotify_getArtist', (event, data) => {
     var query = data[0];
@@ -833,7 +831,7 @@ ipcMain.on('spotify_getTracks', (event, data) => {
         }
     });
 });
-/*
+
 // Get artist ID
 ipcMain.on('spotify_getArtistID', (event, data) => {
     var artist = data[0];
@@ -871,8 +869,7 @@ ipcMain.on('spotify_getArtistID', (event, data) => {
         }
     });
 });
-*/
-/*
+
 // Get Audio Features from Spotify of tracks from album
 ipcMain.on('spotify_getAudioFeatures', (event, data) => {
     var query = data[0];
@@ -904,9 +901,7 @@ ipcMain.on('spotify_getAudioFeatures', (event, data) => {
         }
     });
 });
-*/
 
-/*
 // Get recommendations based on spotify artist ID
 ipcMain.on('spotify_recommendations', (event, data) => {
     var query = data[0];
@@ -968,8 +963,7 @@ ipcMain.on('spotify_album', (event, data) => {
         }
     });
 });
-*/
-/*
+
 // Get new releases
 ipcMain.on('spotify_getNewReleases', (event) => {
     request.post(authOptions, function (error, response, body) {

@@ -266,6 +266,9 @@ $(function () {
         var counter = 1;
         var count = 0;
         var numberCalls = 0;
+        var totalReleases = 0;
+        var numberRows = 0;
+        var numberRemove = 0;
 
         // Set search dates for last 50 days
         var today = new Date();
@@ -349,6 +352,9 @@ $(function () {
                         var searchArtist = newRelease.artist.replace(/\s+/g, '+')
                         var searchLink = musicYoutubeUrl + 'search?q=album+' + searchAlbum + '+' + searchArtist
 
+                        // Increment total number releases found
+                        totalReleases += 1;
+
                         // Visible first row of new releases
                         if (counter <= totalFirstRow) {
                             // Increment counter for list items
@@ -415,6 +421,8 @@ $(function () {
                                     // If no cover art found remove li and change class of li so it is visible
                                     li.remove();
                                     $('li:nth-child(' + totalFirstRow + ')').removeClass('newReleasesHidden')
+                                    // Decrease total number releases found
+                                    totalReleases -= 1;
                                 }
                             });
                         }
@@ -428,8 +436,22 @@ $(function () {
                             li.find('img').attr('src', coverArt);
                             // Add cover art URL to array
                             newRelease.artUrl = coverArt;
+
+                            // Calculate number of rows 
+                            numberRows = totalReleases / totalFirstRow;
+                            numberRows = Math.floor(numberRows);
+                            // Calculate new number of full rows 
+                            var amendedTotal = numberRows * totalFirstRow;
+                            // Calculate number of items to remove from end of list
+                            numberRemove = totalReleases - amendedTotal;
                         }
                     }
+                }
+            });
+            // When all ajax calls completed remove last items from new releases list to make complete rows
+            $(document).ajaxStop(function () {
+                for (let i = 0; i < numberRemove; i++) {
+                    $('#ulNewReleases li:last-child').remove();
                 }
             });
         }

@@ -31,14 +31,21 @@ $(function () {
         $("#inpEditAlbumTime").val(albumTime);
 
         // Header details
-        $("#editAlbumDetails").text("Editing: " + album + " by " + artist);
-        $("#editAlbumInfo").empty();
-        $("#editAlbumInfo").append("&#x2022 Click on <b>GET</b> to update track and album metadata.<br>&#x2022 Click on <b>ARTWORK</b> to update album cover art.<br>&#x2022 Click on <b>Album Artwork</b> to select an image file manually.<br>&#x2022 Click on <b>DELETE</b> to delete the album from the database.");
+        $("#editAlbumDetails").html(album + "<br>by " + artist);
 
         // Path to album artwork
         var modifiedDate = Date().toLocaleString();
         var artworkSource = MUSIC_PATH + artist + "/" + album + "/folder.jpg?modified=" + modifiedDate;
         $("#imgCoverArt").attr('src', artworkSource);
+
+        // Back cover artwork
+        // If back cover artwork does not exist get default image
+        var backArtworkSource = MUSIC_PATH + artist + "/" + album + "/backCover.jpg?modified=" + modifiedDate;
+        $.get(backArtworkSource).done(function () {
+            $("#imgBackArt").attr('src', backArtworkSource);
+        }).fail(function () {
+            $("#imgBackArt").attr('src', "./graphics/notFound.gif");
+        })
 
         // Get genre name from genre table
         var sql = "SELECT genreName FROM genre WHERE genreID=?";

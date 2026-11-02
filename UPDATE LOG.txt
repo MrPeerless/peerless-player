@@ -123,4 +123,9 @@
 1. Update to New Releases to page through search results from Musicbrainz using offset.
 2. Various security updates on dependencies.
 
+**** VERSION 0.6.4 UPDATES ****
+
+1. Update to New Releases to display full rows of new albums.
+2. Display back cover art work when importing or editing an album.
+
 

@@ -495,6 +495,7 @@ textarea {
         border: 1px solid red;
     }
     .frmDatabase fieldset {
+        clear: left;
         border-radius: 8px;
     }
 
@@ -772,17 +773,6 @@ button#btnSearch {
         cursor: pointer;
         float: right;
         outline: none;
-    }
-
-#imgCoverArt {
-    opacity: 1;
-    width: 195px;
-    height: 195px;
-    border-radius: 3%;
-    border-radius: 3%;
-}
-    #imgCoverArt:hover {
-        cursor: pointer;
     }
 
 /*PLAYER BUTTON CONTROLS
@@ -1395,11 +1385,15 @@ button#btnMoodExpand {
 
 /*OTHER STYLE
 #####################*/
+#divDatabaseBtns {
+    clear: both;
+    float: left;
+    margin-left: 5px;
+}
 
 .divAlbumHeader {
     float: left;
     width: 240px;
-    animation: fadein 0s;
 }
 .divAlbumHeader img {
         float: left;
@@ -1407,6 +1401,9 @@ button#btnMoodExpand {
         width: 195px;
         height: 195px;
         border-radius: 3%;
+    }
+    .divAlbumHeader img:hover {
+        cursor: pointer;
     }
 
 .divBioHeader {
@@ -1422,33 +1419,17 @@ button#btnMoodExpand {
 
 .divAlbumText {
     float: left;
-    overflow: visible;
-    animation: fadein 0s;
+    width: 450px;
     margin-bottom: 15px;
     margin-left: 15px;
 }
+
     .divAlbumText h1 {
         float: left;
         margin-top: 15px;
     }
+
     .divAlbumText h2 {
-        margin-top: 15px;
-        clear: left;
-    }
-.divAlbumImportText {
-    float: left;
-    width: 600px;
-    animation: fadein 0s;
-    margin-bottom: 15px;
-    margin-left: 15px;
-}
-
-    .divAlbumImportText h1 {
-        float: left;
-        margin-top: 15px;
-    }
-
-    .divAlbumImportText h2 {
         margin-top: 15px;
         clear: left;
     }
@@ -1473,9 +1454,6 @@ button#btnMoodExpand {
 
 .divPlayingText {
     float: left;
-    /*
-    padding-left: 15px;
-        */
     margin: 0px 0 0 20px;
 }
 

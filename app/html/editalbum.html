@@ -6,16 +6,25 @@
                 <img id="imgCoverArt" width="200" height="200" src="./graphics/spacer.png" alt="Cover Art NOT Found">
             </a>
         </div>
+        <div class="divAlbumHeader">
+            <a id="editAlbumBack" title="Click to manually select back cover image">
+                <img id="imgBackArt" width="200" height="200" src="./graphics/spacer.png" alt="Back Cover Art NOT Found">
+            </a>
+        </div>
+
 
         <div class="divAlbumText">
-            <h1 style="margin-right: 1em;">Edit Music in Database<br /></h1>
+            <h1>Edit Music in Database<br /></h1>
             <h2 id="editAlbumDetails"></h2>
-            <span id="editAlbumInfo"></span>
             <br />
             Select to search data for
             <input type="radio" name="albumType" id="radioAlbum" value="album"> Album
             <input type="radio" name="albumType" id="radioSingle" value="single"> Single
             <br />
+        </div>
+
+        <div id="divDatabaseBtns">
+            <p>&#x2022 Click on <b>GET</b> to update track and album metadata.<br>&#x2022 Click on <b>ARTWORK</b> to update album cover art.<br>&#x2022 Click on <b>Album Artwork</b> to select an image file manually.<br>&#x2022 Click on <b>DELETE</b> to delete the album from the database.<br></p>
             <button class="btnTrackListing" id="btnGetMetadata">Get</button>
             <button class="btnTrackListing" id="btnArtworkAlbum">Artwork</button>
             <button class="btnTrackListing" id="btnSaveAlbum">Save</button>
@@ -23,6 +32,8 @@
             <button class="btnTrackListing" id="btnEditCancel">Cancel</button>
             <p>&nbsp;<br></p>
         </div>
+
+
 
         <input class="hidden" id="inpEditCoverArtURL" name="inpEditCoverArtURL" type="text" value="" />
         <input class="hidden" id="inpEditBackArtURL" name="inpEditBackArtURL" type="text" value="" />
